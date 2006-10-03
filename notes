@@ -1,0 +1,20 @@
+useful pages for help:
+http://developer.mozilla.org/en/docs/Building_an_Extension
+http://kb.mozillazine.org/Setting_up_extension_development_environment
+http://developer.mozilla.org/en/docs/Extensions
+
+download xpidl: http://dietrich.ganx4.com/mozilla/gecko_sdk_osx.tar.gz
+install prereqs (from http://developer.mozilla.org/en/docs/Mac_OS_X_Build_Prerequisites):
+  $ sudo apt-get install orbit orbit-dev glib
+
+compile idl file:
+  ../gecko-sdk/bin/xpidl -m typelib -I ../gecko-sdk/idl/ simple-facebook.idl
+
+
+useful script to start FF using my dev profile alongside a normal copy of FF:
+ari@Ari:platform/client/firefox$ cat `which FirefoxDev.sh`
+    #!/bin/sh
+    set MOZ_NO_REMOTE=1;
+    rm "/Users/ari/Library/Application Support/Firefox/Profiles/949k0h9m.dev/compreg.dat" "/Users/ari/Library/Application Support/Firefox/Profiles/949k0h9m.dev/xpti.dat"
+    /Applications/Firefox2.app/Contents/MacOS/firefox -P dev -console
+
