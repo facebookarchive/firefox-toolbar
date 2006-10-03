@@ -172,32 +172,3 @@ function MD5(str)
   }
   return rhex(a) + rhex(b) + rhex(c) + rhex(d);
 }
-
-function valid_js() {
-   // anything that claims NS 4 or higher functionality better work 
-   if (navigator.userAgent.indexOf("Mozilla/") == 0) {
-      return (parseInt(navigator.appVersion) >= 4);
-   }
-   return false;
-}
-
-function hash(form,login_url) {
-  // do the quicklogin functionality in here
-  document.cookie= "test_cookie=1;domain=.facebook.com";
-
-  if (valid_js()) {
-    var challenge = form.challenge.value;
-    var hash2 = MD5(form.pass.value) + challenge;
-    var hash;
-
-    if(form.pass.value){
-      hash=MD5(hash2);
-    } else {
-      hash="";
-    }
-    
-    form.md5pass.value = hash;
-    form.pass.value = '';
-  }
-  return true;
-}
