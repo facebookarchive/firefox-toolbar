@@ -19,11 +19,12 @@ FacebookRestClient.prototype = {
         return MD5(str);
     },
     callMethod: function (method, params, callback) {
+        var sessionMethod = (method.indexOf('facebook.auth') == -1);
         params.push('method=' + method);
         params.push('session_key=' + this.settings.sessionKey);
         params.push('api_key=' + this.settings.apiKey);
         params.push('call_id=' + (new Date()).getTime());
-        params.push('sig=' + this.generateSig(params, method.indexOf('facebook.auth')));
+        params.push('sig=' + this.generateSig(params, sessionMethod));
 
         var req = new XMLHttpRequest();
         req.onreadystatechange = function (event) {
@@ -43,7 +44,12 @@ FacebookRestClient.prototype = {
             }
         };
         try {
-            req.open('POST', 'http://api.dev005.facebook.com:4750/restserver.php', true);
+            if (sessionMethod) {
+                var protocol = 'http';
+            } else {
+                var protocol = 'https';
+            }
+            req.open('POST', protocol + '://api.facebook.com/restserver.php', true);
             req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             req.send(params.join('&'));
         } catch (e) {

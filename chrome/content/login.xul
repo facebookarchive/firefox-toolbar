@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<window id="facebook-login-window"
+        title="Login to Facebook"
+        orient="vertical"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <script src="chrome://facebook/content/md5.js"/>
+    <script src="chrome://facebook/content/facebook.js"/>
+    <script src="chrome://facebook/content/login.js"/>
+    <browser id="facebook-login-body"
+             src=""
+             type="content"
+             flex="1"
+             onreadystatechange="ready()"/>
+    <!--<toolbar>-->
+        <!--
+        <spacer flex="1"/>
+        <button id="facebook-login-cancel"
+                class="dialog"
+                label="Cancel"
+                oncommand="window.close()"/>
+                -->
+        <button id="facebook-login-done"
+                class="dialog"
+                label="Close login window"
+                oncommand="done()"/>
+    <!--</toolbar>-->
+</window>

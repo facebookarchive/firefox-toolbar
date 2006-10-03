@@ -11,6 +11,4 @@ interface fbISimpleFacebookService : nsISupports
     attribute AString sessionKey;
     attribute AString sessionSecret;
     attribute AString uid;
-
-    attribute boolean loginPending;
 };

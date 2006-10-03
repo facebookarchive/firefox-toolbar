@@ -15,7 +15,6 @@ function facebookSimpleService()
     this.sessionKey = null;
     this.sessionSecret = null;
     this.uid = null;
-    this.loginPending = false;
 }
 
 facebookSimpleService.prototype = {
@@ -77,12 +76,6 @@ facebookSimpleService.prototype = {
     },
     setUid: function(uid) {
         this.uid = uid;
-    },
-    getLoginPending: function() {
-        return this.loginPending;
-    },
-    setLoginPending: function(loginPending) {
-        this.loginPending = loginPending
     },
 };
 
