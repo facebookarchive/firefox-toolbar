@@ -4,6 +4,6 @@
  <script type="text/javascript;e4x=1" src="chrome://facebook/content/facebook.js"></script>
  <script type="text/javascript;e4x=1" src="chrome://facebook/content/sample.js"></script>
  <statusbar id="status-bar">
-  <statusbarpanel id="facebook-panel" onmousedown="if (event.button == 0) FacebookLogin()" label="Logged out"/>
+  <statusbarpanel id="facebook-panel" onmousedown="if (event.button == 0) FacebookLogin(this)" />
  </statusbar>
 </overlay>
