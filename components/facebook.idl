@@ -1,0 +1,37 @@
+#include "nsISupports.idl"
+
+/*
+[scriptable, uuid(c4051391-2b3a-427d-8cd0-8398d168858d)]
+interface fbIFacebookCallListener : nsISupports
+{
+    void onFail(in string result);
+    void onSuccess(in string result);
+};
+*/
+
+[scriptable, uuid(19baf81b-d1bd-4a99-9010-dd6f478bfd22)]
+interface fbIFacebookService : nsISupports
+{
+    readonly attribute AString apiKey;
+    readonly attribute AString secret;
+
+    // login.xul is responsible for performing the login sequence.  Once that
+    // is finished, it should call sessionStart, which initiates the polling
+    // process.  If the session ever ends, the polling will stop until
+    // sessionStart is called again.  Aside from the facebook.auth methods,
+    // all other Facebook API calls should be done inside this service.
+    void sessionStart(in AString sessionKey, in AString sessionSecret, in AString uid);
+    void sessionEnd();
+
+    // All other interaction comes by windows listing themselves as observers
+    // and notifications that get triggered by the polling process.
+    // Notifications that we fire:
+    //   facebook-session-start
+    //   facebook-session-end
+    //   facebook-new-message
+    //   facebook-new-poke
+    // Windows can also query the most recent status of these things via the
+    // readonly attributes below:
+    readonly attribute boolean loggedIn;
+    readonly attribute long    numMsgs;
+};

@@ -1,49 +1,45 @@
-var client = new FacebookRestClient();
+function debug(s) { dump('** login.js: ' + s + '\n'); }
+var client = new FacebookLoginClient();
 function startup() {
-    if (client.settings.sessionKey) {
-        dump('already logged in!\n');
+    if (client.fbSvc.loggedIn) {
+        debug('already logged in!');
         window.close();
-    } else if (!client.settings.authToken) {
-        client.settings.apiKey = '64f19267b0e6177ea503046d801c00df';
-        client.settings.secret = 'a8a5a57a9f9cd57473797c4612418908';
-        dump('requesting token\n');
+    } else if (!client.authToken) {
+        debug('requesting token');
         try {
         client.callMethod('facebook.auth.createToken', [], function(req) {
-            dump('received token response:\n');
+            debug('received token response:');
             dump(req.responseText);
-            client.settings.authToken = req.xmldata.token;
-            dump('token is: '+client.settings.authToken+'\n');
+            client.authToken = req.xmldata.token;
+            debug('token is: '+client.authToken);
             startup();
         });
         } catch (e) {
-            dump('exception: ' + e + '\n');
+            debug('exception: ' + e);
         }
     } else {
         document.getElementById('facebook-login-body').
             setAttribute('src', 'http://api.facebook.com/login.php?api_key=' +
-                                client.settings.apiKey + '&auth_token=' +
-                                client.settings.authToken);
-        dump('loading login page\n');
+                                client.fbSvc.apiKey + '&auth_token=' + client.authToken);
+        debug('loading login page');
     }
 }
 window.addEventListener('load', startup, false);
 
 function done() {
-    dump('done called\n');
-    client.callMethod('facebook.auth.getSession', ['auth_token='+client.settings.authToken], function(req) {
-        dump('received session response:\n');
+    debug('done()');
+    client.callMethod('facebook.auth.getSession', ['auth_token='+client.authToken], function(req) {
+        debug('received session response:');
         dump(req.responseText);
-        client.settings.sessionKey = req.xmldata.session_key;
-        client.settings.uid        = req.xmldata.uid;
-        client.settings.sessionSecret = req.xmldata.secret;
-        client.settings.authToken  = null;
-        dump('session: ' + client.settings.sessionKey + ', uid: ' + client.settings.uid + ', secret: ' + client.settings.sessionSecret + '\n');
+        var sessionKey    = req.xmldata.session_key;
+        var sessionSecret = req.xmldata.secret;
+        var uid           = req.xmldata.uid;
+        client.fbSvc.sessionStart(sessionKey, sessionSecret, uid);
+        client.authToken  = null;
+        debug('session: ' + sessionKey + ', uid: ' + uid + ', secret: ' + sessionSecret);
         window.setTimeout("window.close();",1); // for some reason calling window.close directly does not work
-        parent.getElementById('facebook-panel').label = 'logged in!';
+        parent.getElementById('facebook-panel').label = 'logged in!'; // XXX will be handled by observer
     });
 }
 
-function ready() {
-    dump('readystatechanged\n');
-}
-dump('loaded login.js\n');
+debug('loaded login.js');

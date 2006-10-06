@@ -18,3 +18,4 @@ ari@Ari:platform/client/firefox$ cat `which FirefoxDev.sh`
     rm "/Users/ari/Library/Application Support/Firefox/Profiles/949k0h9m.dev/compreg.dat" "/Users/ari/Library/Application Support/Firefox/Profiles/949k0h9m.dev/xpti.dat"
     /Applications/Firefox2.app/Contents/MacOS/firefox -P dev -console
 
+to persist data across multiple windows, try http://www.xulplanet.com/references/xpcomref/comps/c_hashpropertybag1.html

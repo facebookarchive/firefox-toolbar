@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
 <overlay id="facebook" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
- <script src="chrome://facebook/content/md5.js"/>
- <script src="chrome://facebook/content/facebook.js"/>
  <script src="chrome://facebook/content/sample.js"/>
  <statusbar id="status-bar">
   <statusbarpanel id="facebook-panel" onmousedown="if (event.button == 0) FacebookLogin(this)" />
