@@ -172,3 +172,5 @@ function MD5(str)
   }
   return rhex(a) + rhex(b) + rhex(c) + rhex(d);
 }
+
+dump('loaded md5.js\n');

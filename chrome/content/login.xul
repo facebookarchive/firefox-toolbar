@@ -4,8 +4,6 @@
         title="Login to Facebook"
         orient="vertical"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-    <script src="chrome://facebook/content/md5.js"/>
-    <script src="chrome://facebook/content/facebook.js"/>
     <script src="chrome://facebook/content/login.js"/>
     <browser id="facebook-login-body"
              src=""

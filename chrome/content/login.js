@@ -1,4 +1,13 @@
 function debug(s) { dump('** login.js: ' + s + '\n'); }
+
+var Cc = Components.classes;
+var Ci = Components.interfaces;
+
+// load FacebookLoginClient code
+Cc['@mozilla.org/moz/jssubscript-loader;1']
+    .getService(Ci.mozIJSSubScriptLoader)
+    .loadSubScript('chrome://facebook/content/facebook.js');
+
 var client = new FacebookLoginClient();
 function startup() {
     if (client.fbSvc.loggedIn) {
