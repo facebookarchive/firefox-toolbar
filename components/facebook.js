@@ -32,6 +32,8 @@ function facebookService()
             // XXX poll for other stuff
         }
     };
+
+    this.observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
 }
 
 facebookService.prototype = {
@@ -80,6 +82,8 @@ facebookService.prototype = {
         // fire off another thread to get things started
         this.timer2 = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
         this.timer2.initWithCallback(this.poll, 1, Ci.nsITimer.TYPE_ONE_SHOT);
+
+        this.observerService.notifyObservers(null, 'facebook-session-start', null);
     },
     sessionEnd: function() {
         debug('sessionEnd');
@@ -87,8 +91,11 @@ facebookService.prototype = {
         this.sessionSecret = null;
         this.uid           = null;
         this.loggedIn      = false;
+        this.numMsgs       = 0;
         this.timer.cancel();
         this.timer2.cancel();
+
+        this.observerService.notifyObservers(null, 'facebook-session-end', null);
     },
 
     checkMessages: function() {
@@ -96,9 +103,10 @@ facebookService.prototype = {
         var data = this.callMethod('facebook.messages.getCount', []);
         // XXX error-check
         var newMsgCount = data.unread;
-        if (!this.numMsgs || newMsgCount > this.numMsgs) {
+        // XXX what do we do if someone reads a message and then gets another one in this time interval??
+        if (newMsgCount != this.numMsgs) {
             this.numMsgs = newMsgCount;
-            // XXX fire signal facebook-new-message
+            this.observerService.notifyObservers(null, 'facebook-new-message', newMsgCount);
         }
         debug('you have ' + this.numMsgs + ' unread messages');
     },

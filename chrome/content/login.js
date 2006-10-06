@@ -43,11 +43,12 @@ function done() {
         var sessionKey    = req.xmldata.session_key;
         var sessionSecret = req.xmldata.secret;
         var uid           = req.xmldata.uid;
-        client.fbSvc.sessionStart(sessionKey, sessionSecret, uid);
-        client.authToken  = null;
-        debug('session: ' + sessionKey + ', uid: ' + uid + ', secret: ' + sessionSecret);
+        if (sessionKey && sessionSecret && uid) {
+            client.fbSvc.sessionStart(sessionKey, sessionSecret, uid);
+            client.authToken  = null;
+            debug('session: ' + sessionKey + ', uid: ' + uid + ', secret: ' + sessionSecret);
+        }
         window.setTimeout("window.close();",1); // for some reason calling window.close directly does not work
-        parent.getElementById('facebook-panel').label = 'logged in!'; // XXX will be handled by observer
     });
 }
 
