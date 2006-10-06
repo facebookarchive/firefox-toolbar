@@ -1,8 +1,8 @@
 function debug(s) { dump('** facebookService: ' + s + '\n'); }
 
-const FB_SVC_CONTRACTID  = '@facebook.com/facebook-service;1';
-const FB_SVC_CID         = '{e983db0e-05fc-46e7-9fba-a22041c894ac}';
-const FB_SVC_DESC        = 'Facebook API Connector';
+const CONTRACT_ID  = '@facebook.com/facebook-service;1';
+const CLASS_ID     = Components.ID('{e983db0e-05fc-46e7-9fba-a22041c894ac}');
+const CLASS_NAME   = 'Facebook API Connector';
 
 var Cc = Components.classes;
 var Ci = Components.interfaces;
@@ -40,22 +40,10 @@ facebookService.prototype = {
     // nsISupports implementation
     QueryInterface: function (iid) {
         if (!iid.equals(Ci.fbIFacebookService) && 
-            !iid.equals(Ci.nsIClassInfo) &&
             !iid.equals(Ci.nsISupports))
             throw Components.results.NS_ERROR_NO_INTERFACE;
         return this;
     },
-
-    // nsIClassInfo implementation
-    flags: Ci.nsIClassInfo.SINGLETON,
-    classDescription: FB_SVC_DESC,
-    getInterfaces: function(count) {
-        debug('getInterfaces');
-        var interfaceList = [Ci.fbIFacebookService, Ci.nsIClassInfo];
-        count.value = interfaceList.length;
-        return interfaceList;
-    },
-    getHelperForLanguage: function (count) {return null;},
 
     getNumMsgs: function() {
         return this.numMsgs;
@@ -161,72 +149,45 @@ facebookService.prototype = {
     },
 };
 
-// JavaScript XPCOM stuff
-function facebookModule (aCID, aContractId, aComponentName, aConstructor) {
-    debug('module constructor');
-    this.mCID = Components.ID (aCID);
-    this.mContractId = aContractId;
-    this.mComponentName = aComponentName;
-    this.mConstructor = aConstructor;
-
-    // factory object
-    this.mFactory = {
-        constructor: this.mConstructor,
-        createInstance: function (aOuter, aIID) {
-            debug('createInstance');
-            if (aOuter != null) {
-                throw Components.results.NS_ERROR_NO_AGGREGATION;
-            }
-
-            return (new (this.constructor) ()).QueryInterface (aIID);
+// boilerplate stuff
+var facebookFactory = {
+    createInstance: function (aOuter, aIID) {
+        debug('createInstance');
+        if (aOuter != null) {
+            throw Components.results.NS_ERROR_NO_AGGREGATION;
         }
-    };
-}
-facebookModule.prototype = {
-    // the module should register itself
-    registerSelf: function (aCompMgr, aLocation, aLoaderStr, aType) {
+        return (new facebookService()).QueryInterface (aIID);
+    }
+};
+var facebookModule = {
+    registerSelf: function (aCompMgr, aFileSpec, aLocation, aType) {
         debug('registerSelf');
         aCompMgr = aCompMgr.QueryInterface(Ci.nsIComponentRegistrar);
-        aCompMgr.registerFactoryLocation(this.mCID, this.mComponentName, this.mContractId,
-                                         aLocation, aLoaderStr, aType);
-
-        // make the service get constructed at app-startup
-        var catMan = Cc["@mozilla.org/categorymanager;1"].getService(Ci.nsICategoryManager);
-        catMan.addCategoryEntry("app-startup", this.mComponentName, "service," + this.mContractId, true, true, null);
+        aCompMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, aFileSpec, aLocation, aType);
     },
-
     unregisterSelf: function(aCompMgr, aLocation, aType) {
         debug('unregisterSelf');
-        var catMan = Cc["@mozilla.org/categorymanager;1"].getService(Ci.nsICategoryManager);
-        catMan.deleteCategoryEntry("app-startup", "service," + this.mContractId, true);
-
-        aCompMgr = aCompMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
+        aCompMgr = aCompMgr.QueryInterface(Ci.nsIComponentRegistrar);
         aCompMgr.unregisterFactoryLocation(CLASS_ID, aLocation);        
     },
-
-    // get the factory                  
     getClassObject: function (aCompMgr, aCID, aIID) {
         debug('getClassObject');
-        if (!aCID.equals (this.mCID)) {
-            throw Components.results.NS_ERROR_NO_INTERFACE;
-        }
-
-        if (!aIID.equals (Ci.nsIFactory)) {
+        if (!aIID.equals (Ci.nsIFactory))
             throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
-        }
 
-        return this.mFactory;
+        if (aCID.equals (CLASS_ID))
+            return facebookFactory;
+
+        throw Components.results.NS_ERROR_NO_INTERFACE;
     },
-
     canUnload: function(compMgr) {
         debug('canUnload');
         return true;
     }
 };
-// entrypoint
 function NSGetModule(compMgr, fileSpec) {
     debug('NSGetModule');
-    return new facebookModule(FB_SVC_CID, FB_SVC_CONTRACTID, FB_SVC_DESC, facebookService);
+    return facebookModule;
 }
 
 debug('loaded facebook.js');
