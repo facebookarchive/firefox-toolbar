@@ -1,56 +1,48 @@
 <?xml version="1.0"?>
-<overlay id="facebook" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<?xml-stylesheet href="chrome://facebook/skin/toolbar.css" type="text/css"?>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="facebook">
+  <script type="text/javascript" src="chrome://facebook/content/toolbar.js" />
   <toolbox id="navigator-toolbox">
-    <toolbar id="fbtoolbar" accesskey="F" class="chromeclass-toolbar" 
-    context="toolbar-context-menu" toolbarname="Facebook Toolbar" hidden="false" 
-    persist="hidden">
+    <toolbar id="facebook-toolbar" class="chromeclass-toolbar" context="toolbar-context-menu" toolbarname="Facebook Toolbar" hidden="false" persist="hidden">
 
-   <toolbaritem id="searchbox" persist="width">
-  	<textbox id="searchbox" class="searchbox" value="Search Facebook" maxlength="50" />
-   </toolbaritem>
+      <toolbaritem id="facebook-searchbox">
+        <textbox value="Search Facebook" maxlength="50"/>
+      </toolbaritem>
 
-   <toolbarseparator />
+      <toolbarseparator/>
 
-   <toolbaritem flex="0">
- 	  <toolbarbutton id="Button" type="menu" tooltiptext="Friends' status" label="Friends' Status" oncommand="status(event,'web')">
-    		<menupopup>
-	   	   <menuseparator />
-		   <menuitem label="Friend 1" oncommand="TutTB_LoardURL('http://google.com')" />
-		</menupopup>
-	  </toolbarbutton>
-   </toolbaritem>
+      <toolbarbutton type="menu" tooltiptext="Friends' status" label="Friends' Status">
+        <menupopup>
+          <menuitem label="Friend 1" />
+        </menupopup>
+      </toolbarbutton>
 
+      <toolbarbutton type="menu" tooltiptext="Latest Feed" label="Latest Feed">
+        <menupopup>
+          <menuitem label="Friend 1" />
+        </menupopup>
+      </toolbarbutton>
 
-   <toolbaritem flex="0">
-          <toolbarbutton id="Button" type="menu" tooltiptext="Latest Feed" label="Latest Feed" oncommand="status(event,'web')">
-                <menupopup>
-                   <menuitem label="Friend 1" oncommand="TutTB_LoardURL('http://google.com')" />
-                </menupopup>
-          </toolbarbutton>
-   </toolbaritem>
+      <toolbarseparator/>
 
-   <toolbarseparator />
+      <toolbaritem id="facebook-notifications" flex="0">
+        <toolbarbutton id="facebook-notification-poke" label="0" tooltip="New Pokes" oncommand="if (this.label!='0') facebook.go_url('http://www.facebook.com/home.php?')" />
+        <toolbarbutton id="facebook-notification-reqs" label="0" tooltip="New Friend Requests" oncommand="if (this.label!='0') facebook.go_url('http://www.facebook.com/reqs.php')" />
+        <toolbarbutton id="facebook-notification-msgs" label="1" tooltip="New Messages" oncommand="if (this.label!='0') facebook.go_url('http://www.facebook.com/mailbox.php')" />
+      </toolbaritem>
 
-   <button label="Poke" oncommand="alert('poke!'); return false;" />
-   <button label="Friend" oncommand="alert('friend!'); return false;" />
-   <button label="Messages" oncommand="alert('msg!'); return false;" />
-   <button label="Wall" oncommand="alert('wall'); return false;" />
- 
-   <toolbarseparator />
+      <toolbarseparator/>
 
-   <button label="Share" oncommand="alert('share!'); return false;" />
+      <toolbaritem flex="0">
+        <toolbarbutton id="Button" type="menu" tooltiptext="Settings" label="Settings" oocommand="status(event,'web')">
+          <menupopup>
+            <menuitem label="Friend 1" oncommand="TutTB_LoardURL('http://google.com')"/>
+          </menupopup>
+        </toolbarbutton>
+      </toolbaritem>
 
-   <toolbaritem flex="0">
-          <toolbarbutton id="Button" type="menu" tooltiptext="Settings" label="Settings" oocommand="status(event,'web')">
-                <menupopup>
-                   <menuitem label="Friend 1" oncommand="TutTB_LoardURL('http://google.com')" />
-                </menupopup>
-          </toolbarbutton>
-   </toolbaritem>
+      <toolbarspring/>
 
-  <toolbarspring />
-  </toolbar>
-</toolbox>
-
-
+    </toolbar>
+  </toolbox>
 </overlay>
