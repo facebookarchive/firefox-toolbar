@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<overlay id="facebook" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <toolbox id="navigator-toolbox">
+    <toolbar id="fbtoolbar" accesskey="F" class="chromeclass-toolbar" 
+    context="toolbar-context-menu" toolbarname="Facebook Toolbar" hidden="false" 
+    persist="hidden">
+
+   <toolbaritem id="searchbox" persist="width">
+  	<textbox id="searchbox" class="searchbox" value="Search Facebook" maxlength="50" />
+   </toolbaritem>
+
+   <toolbarseparator />
+
+   <toolbaritem flex="0">
+ 	  <toolbarbutton id="Button" type="menu" tooltiptext="Friends' status" label="Friends' Status" oncommand="status(event,'web')">
+    		<menupopup>
+	   	   <menuseparator />
+		   <menuitem label="Friend 1" oncommand="TutTB_LoardURL('http://google.com')" />
+		</menupopup>
+	  </toolbarbutton>
+   </toolbaritem>
+
+
+   <toolbaritem flex="0">
+          <toolbarbutton id="Button" type="menu" tooltiptext="Latest Feed" label="Latest Feed" oncommand="status(event,'web')">
+                <menupopup>
+                   <menuitem label="Friend 1" oncommand="TutTB_LoardURL('http://google.com')" />
+                </menupopup>
+          </toolbarbutton>
+   </toolbaritem>
+
+   <toolbarseparator />
+
+   <button label="Poke" oncommand="alert('poke!'); return false;" />
+   <button label="Friend" oncommand="alert('friend!'); return false;" />
+   <button label="Messages" oncommand="alert('msg!'); return false;" />
+   <button label="Wall" oncommand="alert('wall'); return false;" />
+ 
+   <toolbarseparator />
+
+   <button label="Share" oncommand="alert('share!'); return false;" />
+
+   <toolbaritem flex="0">
+          <toolbarbutton id="Button" type="menu" tooltiptext="Settings" label="Settings" oocommand="status(event,'web')">
+                <menupopup>
+                   <menuitem label="Friend 1" oncommand="TutTB_LoardURL('http://google.com')" />
+                </menupopup>
+          </toolbarbutton>
+   </toolbaritem>
+
+  <toolbarspring />
+  </toolbar>
+</toolbox>
+
+
+</overlay>
