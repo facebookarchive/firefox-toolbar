@@ -9,6 +9,8 @@ install prereqs (from http://developer.mozilla.org/en/docs/Mac_OS_X_Build_Prereq
 
 compile idl file:
   ../gecko-sdk/bin/xpidl -m typelib -w -v -I ../gecko-sdk/idl/ facebook.idl
+  ../gecko-sdk/bin/xpidl -m typelib -w -v -I ../gecko-sdk/idl/ -I ~/firefox-full/mozilla/rdf/base/idl/ -I ~/firefox-full/mozilla/xpcom/ds/ facebook.idl
+
 
 
 useful script to start FF using my dev profile alongside a normal copy of FF:

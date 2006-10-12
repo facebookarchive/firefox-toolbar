@@ -1,13 +1,14 @@
 #include "nsISupports.idl"
+#include "nsIRDFDataSource.idl"
 
-/*
-[scriptable, uuid(c4051391-2b3a-427d-8cd0-8398d168858d)]
-interface fbIFacebookCallListener : nsISupports
+[scriptable, uuid(46449e1d-69f3-4474-90a1-2aabaddf8447)]
+interface fbIFacebookUser : nsISupports
 {
-    void onFail(in string result);
-    void onSuccess(in string result);
+    attribute AString id;
+    attribute AString name;
+    attribute AString pic;
+    attribute AString status;
 };
-*/
 
 [scriptable, uuid(19baf81b-d1bd-4a99-9010-dd6f478bfd22)]
 interface fbIFacebookService : nsISupports
@@ -34,4 +35,7 @@ interface fbIFacebookService : nsISupports
     // readonly attributes below:
     readonly attribute boolean loggedIn;
     readonly attribute long    numMsgs;
+    // two ways to access your friends: via an RDF data source or as an array of fbIFacebookUser structs
+    readonly attribute nsIRDFDataSource friendsRdf;
+    void getFriends(out PRUint32 count, [retval,array,size_is(count)] out fbIFacebookUser users);
 };

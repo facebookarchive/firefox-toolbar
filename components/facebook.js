@@ -12,17 +12,28 @@ Cc['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Ci.mozIJSSubScriptLoader)
     .loadSubScript('chrome://facebook/content/md5.js');
 
+// Load RDF code...
+Cc['@mozilla.org/moz/jssubscript-loader;1']
+    .getService(Ci.mozIJSSubScriptLoader)
+    .loadSubScript('chrome://facebook/content/rdflib.js');
+
 function facebookService()
 {
     debug('constructor');
-    this.apiKey = '64f19267b0e6177ea503046d801c00df';
-    this.secret = 'a8a5a57a9f9cd57473797c4612418908';
+    this._apiKey = '64f19267b0e6177ea503046d801c00df';
+    this._secret = 'a8a5a57a9f9cd57473797c4612418908';
 
     this.sessionKey    = null;
     this.sessionSecret = null;
     this.uid           = null;
-    this.numMsgs       = 0;
-    this.loggedIn      = false;
+    this._numMsgs      = 0;
+    this._loggedIn     = false;
+
+    this.friends       = [];
+    this.friendsInfo   = {};
+    this.friendsInfoList = [];
+    this.friendTrie    = {};
+    //this.friendsDS     = new RDFDataSource();
 
     var fbSvc = this; // so that poll can access us
     this.poll = {
@@ -30,6 +41,14 @@ function facebookService()
             debug('poll.notify');
             fbSvc.checkMessages();
             // XXX poll for other stuff
+        }
+    };
+    this.initialize = {
+        notify: function(timer) {
+            debug('initialize.notify');
+            fbSvc.loadFriends();
+            fbSvc.observerService.notifyObservers(null, 'facebook-session-start', null);
+            fbSvc.checkMessages();
         }
     };
 
@@ -45,23 +64,30 @@ facebookService.prototype = {
         return this;
     },
 
-    getNumMsgs: function() {
-        return this.numMsgs;
+    get numMsgs() {
+        return this._numMsgs;
     },
-    getApiKey: function() {
-        return this.apiKey;
+    get apiKey() {
+        return this._apiKey;
     },
-    getSecret: function() {
-        return this.secret;
+    get secret() {
+        return this._secret;
     },
-    getLoggedIn: function() {
-        return this.loggedIn;
+    get loggedIn() {
+        return this._loggedIn;
+    },
+    get friendsRdf() {
+        if (this.friendsDS) {
+            return this.friendsDS.getRawDataSource();
+        } else {
+            return null;
+        }
     },
     sessionStart: function(sessionKey, sessionSecret, uid) {
         debug('sessionStart');
         this.sessionKey    = sessionKey;
         this.sessionSecret = sessionSecret;
-        this.loggedIn      = true;
+        this._loggedIn     = true;
         this.uid           = uid;
 
         this.timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
@@ -69,17 +95,15 @@ facebookService.prototype = {
 
         // fire off another thread to get things started
         this.timer2 = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this.timer2.initWithCallback(this.poll, 1, Ci.nsITimer.TYPE_ONE_SHOT);
-
-        this.observerService.notifyObservers(null, 'facebook-session-start', null);
+        this.timer2.initWithCallback(this.initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
     },
     sessionEnd: function() {
         debug('sessionEnd');
         this.sessionKey    = null;
         this.sessionSecret = null;
         this.uid           = null;
-        this.loggedIn      = false;
-        this.numMsgs       = 0;
+        this._loggedIn     = false;
+        this._numMsgs      = 0;
         this.timer.cancel();
         this.timer2.cancel();
 
@@ -92,11 +116,64 @@ facebookService.prototype = {
         // XXX error-check
         var newMsgCount = data.unread;
         // XXX what do we do if someone reads a message and then gets another one in this time interval??
-        if (newMsgCount != this.numMsgs) {
-            this.numMsgs = newMsgCount;
+        if (newMsgCount != this._numMsgs) {
+            this._numMsgs = newMsgCount;
             this.observerService.notifyObservers(null, 'facebook-new-message', newMsgCount);
         }
-        debug('you have ' + this.numMsgs + ' unread messages');
+        debug('you have ' + this._numMsgs + ' unread messages');
+    },
+    loadFriends: function() {
+        debug('loadFriends');
+        var data = this.callMethod('facebook.friends.get', []);
+        for each (var id in data.result_elt) {
+            this.friends.push(id);
+        }
+
+        // RDF STUFF
+        this.friendsDS = new RDFDataSource();
+        var parent = this.friendsDS.getNode('urn:facebook:friends');
+        parent.makeBag();
+        var USER_RDF_NS = 'http://www.facebook.com/rdf/users#';
+
+        data = this.callMethod('facebook.users.getInfo', ['users='+this.friends.join(','), 'fields=name,status,pic']);
+        for each (var friend in data.result_elt) {
+            var name   = String(friend.name),
+                id     = String(friend.@id),
+                status = String(friend.status.message),
+                stime  = String(-parseInt(friend.status.time)), // use negative time to fix sort order
+                pic    = String(decodeURI(friend.pic));
+
+            // RDF STUFF
+            try {
+            var user = this.friendsDS.getNode('urn:facebook:users:'+id);
+            user.addTargetOnce(USER_RDF_NS + 'name', name);
+            user.addTargetOnce(USER_RDF_NS + 'sname', name.toLowerCase());
+            if (status) {
+                user.addTargetOnce(USER_RDF_NS + 'status', name.substr(0, name.indexOf(' ')) + ' is ' + status);
+                user.addTargetOnce(USER_RDF_NS + 'statustime', stime);
+            } else {
+                user.addTargetOnce(USER_RDF_NS + 'statustime', '0');
+            }
+            user.addTargetOnce(USER_RDF_NS + 'pic', pic);
+            parent.addChild(user, false);
+            } catch (e) {
+                debug(e);
+            }
+
+            var friendObj = { id: id, name: name, lname: name.toLowerCase(), status: status, pic: pic };
+            this.friendsInfo[id] = friendObj;
+            this.friendsInfoList.push(friendObj);
+            debug('id: ' + id + ', name: ' + name);
+        }
+
+        // RDF STUFF
+        //this.friendsDS.flush();
+        debug('saved');
+    },
+    getFriends: function(count) {
+        count.value = this.friendsInfoList.length;
+        return this.friendsInfoList;
+        //users.value = this.friendsInfoList;
     },
 
     generateSig: function (params) {
@@ -113,11 +190,11 @@ facebookService.prototype = {
     // calls are done in the chrome layer.
     // Also note that this is synchronous so you should not call it from the UI.
     callMethod: function (method, params) {
-        if (!this.loggedIn) return null;
+        if (!this._loggedIn) return null;
 
         params.push('method=' + method);
         params.push('session_key=' + this.sessionKey);
-        params.push('api_key=' + this.apiKey);
+        params.push('api_key=' + this._apiKey);
         params.push('call_id=' + (new Date()).getTime());
         params.push('sig=' + this.generateSig(params));
         var message = params.join('&');
@@ -136,7 +213,10 @@ facebookService.prototype = {
             var downStream = channel.open();
             var sis = Cc["@mozilla.org/scriptableinputstream;1"].createInstance(Ci.nsIScriptableInputStream);
             sis.init(downStream);
-            var resultText = sis.read(-1);
+            var txt, resultText = '';
+            while (txt = sis.read(-1)) {
+                resultText += txt;
+            }
             resultText = resultText.substr(resultText.indexOf("\n") + 1);
             debug('received text:');
             dump(resultText);

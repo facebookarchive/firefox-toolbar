@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://facebook/skin/sidebar.css" type="text/css"?>
+<page id="facebook-sidebar-page"
+      title="Facebook Sidebar"
+      orient="vertical"
+      onload="SidebarLoad()"
+      onunload="SidebarUnload()"
+      xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script src="chrome://facebook/content/sidebar.js"/>
+  <hbox>
+    <textbox type="timed" timeout="500" id="facebook-search" oncommand="SidebarType(event)" />
+    <button id="do-search" oncommand="DoWebSearch(event, this.previousSibling)" label="Search"/>
+  </hbox>
+  <richlistbox id="fList"
+               datasources="rdf:null"
+               ref="urn:facebook:friends"
+               flex="1"
+               sortResource="http://www.facebook.com/rdf/users#statustime"
+               sortResource2="http://www.facebook.com/rdf/users#name"
+               sortActive="true"
+               sortDirection="ascending">
+    <template>
+      <richlistitem uri="rdf:*" style="padding: 5px;" sname="rdf:http://www.facebook.com/rdf/users#sname">
+        <image style="height:50px; width:50px;" src="rdf:http://www.facebook.com/rdf/users#pic"/>
+        <vbox>
+          <label value="rdf:http://www.facebook.com/rdf/users#name"/>
+          <label value="rdf:http://www.facebook.com/rdf/users#status"/>
+          <!--<label value="rdf:http://www.facebook.com/rdf/users#statustime"/>-->
+        </vbox>
+      </richlistitem>
+    </template>
+  </richlistbox>
+  <!--<richlistbox id="friendList" flex="1" />-->
+</page>
