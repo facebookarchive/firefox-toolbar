@@ -9,7 +9,7 @@
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="chrome://facebook/content/sidebar.js"/>
   <hbox>
-    <textbox type="timed" timeout="500" id="facebook-search" oncommand="SidebarType(event)" />
+    <textbox type="timed" timeout="500" id="facebook-search" oncommand="SidebarType(event)" flex="1"/>
     <button id="do-search" oncommand="DoWebSearch(event, this.previousSibling)" label="Search"/>
   </hbox>
   <richlistbox id="fList"

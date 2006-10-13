@@ -33,11 +33,13 @@ function LoadFriends() {
 
 function SidebarLoad() {
     dump('SidebarLoad\n');
+    top.document.getElementById('facebook-tbbutton').checked = true;
     LoadFriends();
     obsSvc.addObserver(observer, 'facebook-session-start', false);
 }
 function SidebarUnload() {
     dump('SidebarUnload\n');
+    top.document.getElementById('facebook-tbbutton').checked = false;
     obsSvc.removeObserver(observer, 'facebook-session-start');
 }
 

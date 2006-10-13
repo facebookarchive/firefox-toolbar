@@ -158,11 +158,20 @@ facebookService.prototype = {
         var USER_RDF_NS = 'http://www.facebook.com/rdf/users#';
 
         data = this.callMethod('facebook.users.getInfo', ['users='+this._friends.join(','), 'fields=name,status,pic']);
+
+        // We want status times to be sorted in descending order, but we are doing an alphabetical
+        // sort on them via RDF (so that the secondary sort by name works).  So we need all of the
+        // status times to have the same # of characters in order for alphabetical sort to work and
+        // we want the most recent update to have the smallest number so it will show up first.  So
+        // we make a maxdate which corresponds to somewhere in the year 33658 and subtract from
+        // there.  We picked maxdate such that it would not lose any digits during this subtraction
+        // so that the sort will work properly.  Note: this code is not Y33K compliant.
+        const maxdate = 999999999999;
         for each (var friend in data.result_elt) {
             var name   = String(friend.name),
                 id     = String(friend.@id),
                 status = String(friend.status.message),
-                stime  = String(-parseInt(friend.status.time)), // use negative time to fix sort order
+                stime  = String(maxdate-parseInt(friend.status.time)), // note maxdate
                 pic    = String(decodeURI(friend.pic));
 
             // RDF STUFF
@@ -171,10 +180,13 @@ facebookService.prototype = {
             user.addTargetOnce(USER_RDF_NS + 'name', name);
             user.addTargetOnce(USER_RDF_NS + 'searchname', name.toLowerCase());
             if (status) {
-                user.addTargetOnce(USER_RDF_NS + 'status', name.substr(0, name.indexOf(' ')) + ' is ' + status);
+                var firstName = name.substr(0, name.indexOf(' '));
+                if (!firstName) firstName = name;
+                user.addTargetOnce(USER_RDF_NS + 'status', firstName + ' is ' + status);
                 user.addTargetOnce(USER_RDF_NS + 'statustime', stime);
+                debug(firstName + ': ' + stime);
             } else {
-                user.addTargetOnce(USER_RDF_NS + 'statustime', '0');
+                user.addTargetOnce(USER_RDF_NS + 'statustime', String(maxdate));
             }
             user.addTargetOnce(USER_RDF_NS + 'pic', pic);
             parent.addChild(user, false);

@@ -10,7 +10,6 @@
                      label="View Facebook Sidebar"
                      tooltiptext="View Facebook Sidebar"
                      image="chrome://facebook/content/fbbutton.png"
-                     persist="checked"
                      oncommand="this.checked=!this.checked; toggleSidebar('viewFacebookSidebar');"/>
     </toolbarpalette>
   </toolbox>
