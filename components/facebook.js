@@ -23,36 +23,38 @@ function facebookService()
     this._apiKey = '64f19267b0e6177ea503046d801c00df';
     this._secret = 'a8a5a57a9f9cd57473797c4612418908';
 
-    this.sessionKey    = null;
-    this.sessionSecret = null;
-    this.uid           = null;
-    this._numMsgs      = 0;
-    this._loggedIn     = false;
+    this._sessionKey    = null;
+    this._sessionSecret = null;
+    this._uid           = null;
+    this._numMsgs       = 0;
+    this._numPokes      = 0;
+    this._totalPokes    = 0;
+    this._loggedIn      = false;
 
-    this.friends       = [];
-    this.friendsInfo   = {};
-    this.friendsInfoList = [];
-    this.friendTrie    = {};
-    //this.friendsDS     = new RDFDataSource();
+    this._friends       = [];
+    this._friendsInfo   = {};
+    this._friendsInfoList = [];
+    this._friendsDS     = null;
 
-    var fbSvc = this; // so that poll can access us
-    this.poll = {
+    var fbSvc = this; // so that _poll can access us
+    this._poll = {
         notify: function(timer) {
-            debug('poll.notify');
+            debug('_poll.notify');
             fbSvc.checkMessages();
-            // XXX poll for other stuff
+            fbSvc.checkPokes();
         }
     };
-    this.initialize = {
+    this._initialize = {
         notify: function(timer) {
-            debug('initialize.notify');
+            debug('_initialize.notify');
             fbSvc.loadFriends();
-            fbSvc.observerService.notifyObservers(null, 'facebook-session-start', null);
             fbSvc.checkMessages();
+            fbSvc.checkPokes();
+            fbSvc._observerService.notifyObservers(null, 'facebook-session-start', null);
         }
     };
 
-    this.observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
+    this._observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
 }
 
 facebookService.prototype = {
@@ -67,6 +69,9 @@ facebookService.prototype = {
     get numMsgs() {
         return this._numMsgs;
     },
+    get numPokes() {
+        return this._numPokes;
+    },
     get apiKey() {
         return this._apiKey;
     },
@@ -77,37 +82,38 @@ facebookService.prototype = {
         return this._loggedIn;
     },
     get friendsRdf() {
-        if (this.friendsDS) {
-            return this.friendsDS.getRawDataSource();
+        if (this._friendsDS) {
+            return this._friendsDS.getRawDataSource();
         } else {
             return null;
         }
     },
     sessionStart: function(sessionKey, sessionSecret, uid) {
         debug('sessionStart');
-        this.sessionKey    = sessionKey;
-        this.sessionSecret = sessionSecret;
-        this._loggedIn     = true;
-        this.uid           = uid;
+        this._sessionKey    = sessionKey;
+        this._sessionSecret = sessionSecret;
+        this._loggedIn      = true;
+        this._uid           = uid;
 
         this.timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this.timer.initWithCallback(this.poll, 300 * 1000, Ci.nsITimer.TYPE_REPEATING_SLACK); // 5 mins
+        this.timer.initWithCallback(this._poll, 300 * 1000, Ci.nsITimer.TYPE_REPEATING_SLACK); // 5 mins
 
         // fire off another thread to get things started
         this.timer2 = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this.timer2.initWithCallback(this.initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
+        this.timer2.initWithCallback(this._initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
     },
     sessionEnd: function() {
         debug('sessionEnd');
-        this.sessionKey    = null;
-        this.sessionSecret = null;
-        this.uid           = null;
-        this._loggedIn     = false;
-        this._numMsgs      = 0;
+        this._sessionKey    = null;
+        this._sessionSecret = null;
+        this._uid           = null;
+        this._loggedIn      = false;
+        this._numMsgs       = 0;
+        this._numPokes      = 0;
         this.timer.cancel();
         this.timer2.cancel();
 
-        this.observerService.notifyObservers(null, 'facebook-session-end', null);
+        this._observerService.notifyObservers(null, 'facebook-session-end', null);
     },
 
     checkMessages: function() {
@@ -118,24 +124,40 @@ facebookService.prototype = {
         // XXX what do we do if someone reads a message and then gets another one in this time interval??
         if (newMsgCount != this._numMsgs) {
             this._numMsgs = newMsgCount;
-            this.observerService.notifyObservers(null, 'facebook-new-message', newMsgCount);
+            this._observerService.notifyObservers(null, 'facebook-new-message', newMsgCount);
         }
         debug('you have ' + this._numMsgs + ' unread messages');
     },
+    checkPokes: function() {
+        debug('checkPokes');
+        var data = this.callMethod('facebook.pokes.getCount', []);
+        // XXX error-check
+        var newPokeCount = data.unseen;
+        var totalPokeCount = data.total;
+        if (totalPokeCount > this._totalPokes && newPokeCount > 0) {
+            // we send the notification if you have any unseen pokes and the total # of pokes has gone up.
+            // note that your unseen poke count could theoretically stay the same or even if you have new pokes.
+            this._numPokes = newPokeCount;
+            this._totalPokes = totalPokeCount;
+            this._observerService.notifyObservers(null, 'facebook-new-poke', newPokeCount);
+        }
+        debug('you have ' + this._numPokes + ' unseen pokes');
+    },
     loadFriends: function() {
+        // XXX make this support updating your existing list
         debug('loadFriends');
         var data = this.callMethod('facebook.friends.get', []);
         for each (var id in data.result_elt) {
-            this.friends.push(id);
+            this._friends.push(id);
         }
 
         // RDF STUFF
-        this.friendsDS = new RDFDataSource();
-        var parent = this.friendsDS.getNode('urn:facebook:friends');
+        this._friendsDS = new RDFDataSource(); // could pass in a file name if you want to save it
+        var parent = this._friendsDS.getNode('urn:facebook:friends');
         parent.makeBag();
         var USER_RDF_NS = 'http://www.facebook.com/rdf/users#';
 
-        data = this.callMethod('facebook.users.getInfo', ['users='+this.friends.join(','), 'fields=name,status,pic']);
+        data = this.callMethod('facebook.users.getInfo', ['users='+this._friends.join(','), 'fields=name,status,pic']);
         for each (var friend in data.result_elt) {
             var name   = String(friend.name),
                 id     = String(friend.@id),
@@ -144,10 +166,10 @@ facebookService.prototype = {
                 pic    = String(decodeURI(friend.pic));
 
             // RDF STUFF
-            try {
-            var user = this.friendsDS.getNode('urn:facebook:users:'+id);
+            var user = this._friendsDS.getNode('urn:facebook:users:'+id);
+            user.addTargetOnce(USER_RDF_NS + 'id', id);
             user.addTargetOnce(USER_RDF_NS + 'name', name);
-            user.addTargetOnce(USER_RDF_NS + 'sname', name.toLowerCase());
+            user.addTargetOnce(USER_RDF_NS + 'searchname', name.toLowerCase());
             if (status) {
                 user.addTargetOnce(USER_RDF_NS + 'status', name.substr(0, name.indexOf(' ')) + ' is ' + status);
                 user.addTargetOnce(USER_RDF_NS + 'statustime', stime);
@@ -156,24 +178,17 @@ facebookService.prototype = {
             }
             user.addTargetOnce(USER_RDF_NS + 'pic', pic);
             parent.addChild(user, false);
-            } catch (e) {
-                debug(e);
-            }
 
             var friendObj = { id: id, name: name, lname: name.toLowerCase(), status: status, pic: pic };
-            this.friendsInfo[id] = friendObj;
-            this.friendsInfoList.push(friendObj);
-            debug('id: ' + id + ', name: ' + name);
+            this._friendsInfo[id] = friendObj;
+            this._friendsInfoList.push(friendObj);
         }
 
-        // RDF STUFF
-        //this.friendsDS.flush();
-        debug('saved');
+        //this._friendsDS.flush(); (use this if you are saving to a file)
     },
     getFriends: function(count) {
-        count.value = this.friendsInfoList.length;
-        return this.friendsInfoList;
-        //users.value = this.friendsInfoList;
+        count.value = this._friendsInfoList.length;
+        return this._friendsInfoList;
     },
 
     generateSig: function (params) {
@@ -182,7 +197,7 @@ facebookService.prototype = {
         for (var i = 0; i < params.length; i++) {
             str += params[i];
         }
-        str += this.sessionSecret;
+        str += this._sessionSecret;
         return MD5(str);
     },
     // Note that this is intended to call non-login related Facebook API
@@ -193,7 +208,7 @@ facebookService.prototype = {
         if (!this._loggedIn) return null;
 
         params.push('method=' + method);
-        params.push('session_key=' + this.sessionKey);
+        params.push('session_key=' + this._sessionKey);
         params.push('api_key=' + this._apiKey);
         params.push('call_id=' + (new Date()).getTime());
         params.push('sig=' + this.generateSig(params));

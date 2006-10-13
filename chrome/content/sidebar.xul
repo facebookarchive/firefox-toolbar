@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://facebook/skin/sidebar.css" type="text/css"?>
+<?xml-stylesheet href="chrome://facebook/skin/toolbar.css" type="text/css"?>
 <page id="facebook-sidebar-page"
       title="Facebook Sidebar"
       orient="vertical"
@@ -21,15 +21,23 @@
                sortActive="true"
                sortDirection="ascending">
     <template>
-      <richlistitem uri="rdf:*" style="padding: 5px;" sname="rdf:http://www.facebook.com/rdf/users#sname">
-        <image style="height:50px; width:50px;" src="rdf:http://www.facebook.com/rdf/users#pic"/>
+      <richlistitem uri="rdf:*" style="padding: 5px;" searchname="rdf:http://www.facebook.com/rdf/users#searchname">
+        <image class="facebook-link" style="height:50px; width:50px;"
+               src="rdf:http://www.facebook.com/rdf/users#pic"
+               onclick="gotoFbUrl(event, 'profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
         <vbox>
-          <label value="rdf:http://www.facebook.com/rdf/users#name"/>
+          <label class="facebook-link" value="rdf:http://www.facebook.com/rdf/users#name"
+                 onclick="gotoFbUrl(event, 'profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
           <label value="rdf:http://www.facebook.com/rdf/users#status"/>
+          <hbox class="facebook-friendlinks">
+            <toolbarbutton class="facebook-icon-msgs facebook-link"
+                           oncommand="gotoFbUrl(event, 'message.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
+            <toolbarbutton class="facebook-icon-poke facebook-link"
+                           oncommand="gotoFbUrl(event, 'poke.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
+          </hbox>
           <!--<label value="rdf:http://www.facebook.com/rdf/users#statustime"/>-->
         </vbox>
       </richlistitem>
     </template>
   </richlistbox>
-  <!--<richlistbox id="friendList" flex="1" />-->
 </page>

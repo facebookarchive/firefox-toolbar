@@ -35,6 +35,7 @@ interface fbIFacebookService : nsISupports
     // readonly attributes below:
     readonly attribute boolean loggedIn;
     readonly attribute long    numMsgs;
+    readonly attribute long    numPokes;
     // two ways to access your friends: via an RDF data source or as an array of fbIFacebookUser structs
     readonly attribute nsIRDFDataSource friendsRdf;
     void getFriends(out PRUint32 count, [retval,array,size_is(count)] out fbIFacebookUser users);

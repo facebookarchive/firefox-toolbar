@@ -25,10 +25,10 @@
 
       <toolbarseparator/>
 
-      <toolbaritem id="facebook-notifications" flex="0">
-        <toolbarbutton id="facebook-notification-poke" label="0" tooltip="New Pokes" oncommand="if (this.label!='0') facebook.go_url('http://www.facebook.com/home.php?')" />
-        <toolbarbutton id="facebook-notification-reqs" label="0" tooltip="New Friend Requests" oncommand="if (this.label!='0') facebook.go_url('http://www.facebook.com/reqs.php')" />
-        <toolbarbutton id="facebook-notification-msgs" label="1" tooltip="New Messages" oncommand="if (this.label!='0') facebook.go_url('http://www.facebook.com/mailbox.php')" />
+      <toolbaritem class="facebook-notifications" flex="0">
+        <toolbarbutton id="facebook-notification-poke" class="facebook-icon-poke" label="0" tooltip="New Pokes" oncommand="if (this.label!='0') facebook.go_url('http://www.facebook.com/home.php?')" />
+        <toolbarbutton id="facebook-notification-reqs" class="facebook-icon-reqs" label="0" tooltip="New Friend Requests" oncommand="if (this.label!='0') facebook.go_url('http://www.facebook.com/reqs.php')" />
+        <toolbarbutton id="facebook-notification-msgs" class="facebook-icon-msgs" label="1" tooltip="New Messages" oncommand="if (this.label!='0') facebook.go_url('http://www.facebook.com/mailbox.php')" />
       </toolbaritem>
 
       <toolbarseparator/>

@@ -72,9 +72,10 @@ function SearchFriends(searchBox) {
     */
     if (search) {
         for each (var node in document.getElementById('fList').childNodes) {
-            var sname = node.getAttribute('sname');
+            var sname = node.getAttribute('searchname');
             if (sname) {
-                if (sname.indexOf(search) == -1) {
+                var i = sname.indexOf(search);
+                if (i == -1 || (i != 0 && sname[i-1] != ' ')) {
                     node.style.display = 'none';
                 } else {
                     node.style.display = '';
@@ -95,7 +96,12 @@ function DoWebSearch(event) {
              encodeURIComponent(document.getElementById('facebook-search').value), false);
 }
 
+function gotoFbUrl(event, page, uid, aMouseClick) {
+  loadLink(event, 'http://www.facebook.com/' + page + '?uid=' + uid + '&api_key=' + fbSvc.apiKey, aMouseClick);
+}
+
 function loadLink(event, url, aMouseClick) {
+  dump('loadLink: ' + url + '\n');
     var browser = top.document.getElementById("content");
     if (aMouseClick) {
         if (event.button == 1) {

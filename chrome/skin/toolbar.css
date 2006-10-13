@@ -1,29 +1,43 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
-#facebook-notifications toolbarbutton {
+.facebook-notifications toolbarbutton {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding-left: 0px;
 }
+.facebook-friendlinks toolbarbutton {
+  list-style-image: url('chrome://facebook/skin/toolbar.png');
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+}
+.facebook-friendlinks {
+  margin-left: 6px;
+}
 
-#facebook-notifications toolbarbutton > .toolbarbutton-text {
+.facebook-notifications toolbarbutton > .toolbarbutton-text {
   padding-left: 2px;
 }
 
-#facebook-notifications toolbarbutton {
+.facebook-notifications toolbarbutton {
   cursor: pointer;
 }
 
-#facebook-notifications toolbarbutton[label="0"] {
+.facebook-notifications toolbarbutton[label="0"] {
   cursor: default;
 }
 
-#facebook-notification-poke {
+.facebook-icon-poke {
   -moz-image-region: rect(0px 16px 14px 0px);
 }
 
-#facebook-notification-reqs {
+.facebook-icon-reqs {
   -moz-image-region: rect(0px 32px 14px 16px);
 }
 
-#facebook-notification-msgs {
+.facebook-icon-msgs {
   -moz-image-region: rect(0px 48px 14px 32px);
 }
+.facebook-link {
+  cursor: pointer;
+  color: #3B5998;
+}
+
