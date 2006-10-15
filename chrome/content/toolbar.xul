@@ -6,7 +6,11 @@
     <toolbar id="facebook-toolbar" class="chromeclass-toolbar" context="toolbar-context-menu" toolbarname="Facebook Toolbar" hidden="false" persist="hidden">
 
       <toolbaritem id="facebook-searchbox">
-        <textbox value="Search Facebook" maxlength="50"/>
+        <textbox value=""
+                 maxlength="50"
+                 onfocus="document.getElementById('PopupFacebookFriends').showPopup(this, -1, -1, 'tooltip', 'bottomleft', 'topleft');"
+                 onblur="document.getElementById('PopupFacebookFriends').hidePopup();"
+                 oninput="facebook.searchFriends(this)"/>
       </toolbaritem>
 
       <toolbarseparator/>
@@ -43,6 +47,30 @@
 
       <toolbarspring/>
 
+      <popup position="after_start"
+             id="PopupFacebookFriends"
+             style="width: 300px; height:300px;">
+      <richlistbox id="PopupFacebookFriendsList"
+                   datasources="rdf:null"
+                   ref="urn:facebook:friends"
+                   flex="1"
+                   sortResource="http://www.facebook.com/rdf/users#name"
+                   sortActive="true"
+                   sortDirection="ascending">
+        <template>
+          <richlistitem uri="rdf:*" style="padding: 5px;" searchname="rdf:http://www.facebook.com/rdf/users#searchname">
+            <image class="facebook-link" style="height:50px; width:50px;"
+                   src="rdf:http://www.facebook.com/rdf/users#pic"
+                   onclick="gotoFbUrl(event, 'profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
+            <vbox>
+              <label class="facebook-link" value="rdf:http://www.facebook.com/rdf/users#name"
+                     onclick="gotoFbUrl(event, 'profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
+              <label value="rdf:http://www.facebook.com/rdf/users#status"/>
+            </vbox>
+          </richlistitem>
+        </template>
+      </richlistbox>
+      </popup>
     </toolbar>
   </toolbox>
 </overlay>

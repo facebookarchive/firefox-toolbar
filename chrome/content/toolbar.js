@@ -30,6 +30,7 @@ var facebook = {
     obsSvc.addObserver(fbToolbarObserver, 'facebook-new-poke', false);
     document.getElementById('facebook-notification-msgs').label = fbSvc.numMsgs;
     document.getElementById('facebook-notification-poke').label = fbSvc.numPokes;
+    facebook.loadFriends();
     dump('facebook toolbar loaded.\n');
   },
 
@@ -47,6 +48,55 @@ var facebook = {
 
   go_url: function(url) {
     this.get_current_document().location.href=url;
+  },
+  loadFriends: function() {
+    dump('loadFriends()\n');
+    var list = document.getElementById('PopupFacebookFriendsList');
+    var friends = fbSvc.friendsRdf;
+    if (friends) {
+      list.database.AddDataSource(friends);
+      list.builder.rebuild();
+    } else {
+      dump('no friends\n');
+    }
+  },
+  searchFriends: function(searchBox) {
+    if (searchBox.value) {
+        var search = searchBox.value.toLowerCase();
+    }
+    dump('searching for: ' + search+ '\n');
+    if (search == this.currentSearch) {
+      dump('already searched for that\n');
+      return;
+    }
+    this.currentSearch = search;
+    /*
+    var now = (new Date()).getTime();
+    if (waitTil > now) {
+        dump('still waiting\n');
+        window.setTimeout("SearchFriends(document.getElementById('facebook-search'))", waitTil - now);
+        return;
+    }
+    */
+    if (search) {
+      for each (var node in document.getElementById('PopupFacebookFriendsList').childNodes) {
+        var sname = node.getAttribute('searchname');
+        if (sname) {
+          var i = sname.indexOf(search);
+          if (i == -1 || (i != 0 && sname[i-1] != ' ')) {
+            node.style.display = 'none';
+          } else {
+            node.style.display = '';
+          }
+        }
+      }
+    } else {
+      for each (var node in document.getElementById('PopupFacebookFriendsList').childNodes) {
+        if (node.style) {
+          node.style.display = '';
+        }
+      }
+    }
   }
 };
 window.addEventListener('load', facebook.load, false);
