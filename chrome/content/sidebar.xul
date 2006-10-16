@@ -8,10 +8,6 @@
       onunload="SidebarUnload()"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="chrome://facebook/content/sidebar.js"/>
-  <hbox>
-    <textbox type="timed" timeout="500" id="facebook-search" oncommand="SidebarType(event)" flex="1"/>
-    <button id="do-search" oncommand="DoWebSearch(event, this.previousSibling)" label="Search"/>
-  </hbox>
   <richlistbox id="fList"
                datasources="rdf:null"
                ref="urn:facebook:friends"
@@ -21,7 +17,10 @@
                sortActive="true"
                sortDirection="ascending">
     <template>
-      <richlistitem uri="rdf:*" style="padding: 5px;" searchname="rdf:http://www.facebook.com/rdf/users#name">
+      <richlistitem uri="rdf:*"
+                    style="padding: 5px;"
+                    searchname="rdf:http://www.facebook.com/rdf/users#name"
+                    userid="rdf:http://www.facebook.com/rdf/users#id">
         <image class="facebook-link" style="height:50px; width:50px;"
                src="rdf:http://www.facebook.com/rdf/users#pic"
                onclick="gotoFbUrl(event, 'profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>

@@ -80,12 +80,16 @@ var facebook = {
         return;
     }
     */
-    var list = document.getElementById('PopupFacebookFriendsList');
+    if (document.getElementById('viewFacebookSidebar').getAttribute('checked') == 'true') {
+      var list = document.getElementById('sidebar').contentDocument.getElementById('fList');
+    }
+    if (!list) {
+      var list = document.getElementById('PopupFacebookFriendsList');
+    }
     if (search) {
       var searches = [];
       for each (var s in search.split(/\s+/)) {
         if (s) {
-          dump('search: ' + s + '\n');
           searches.push(new RegExp('\\b' + s, 'i'));
         }
       }
@@ -123,7 +127,12 @@ var facebook = {
     }
   },
   searchKeyPress: function(searchBox, e) {
-    var list = document.getElementById('PopupFacebookFriendsList');
+    if (document.getElementById('viewFacebookSidebar').getAttribute('checked') == 'true') {
+      var list = document.getElementById('sidebar').contentDocument.getElementById('fList');
+    }
+    if (!list) {
+      var list = document.getElementById('PopupFacebookFriendsList');
+    }
     switch (e.keyCode) {
       case e.DOM_VK_UP:
         var prop = 'previousSibling';

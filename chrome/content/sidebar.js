@@ -25,7 +25,7 @@ function LoadFriends() {
     if (friends) {
         list.database.AddDataSource(friends);
         list.builder.rebuild();
-        SearchFriends(document.getElementById('facebook-search'));
+        facebook.searchFriends(top.document.getElementById('facebook-search'));// XXX this doesn't work
     } else {
         dump('no friends\n');
     }
@@ -36,78 +36,16 @@ function SidebarLoad() {
     top.document.getElementById('facebook-tbbutton').checked = true;
     LoadFriends();
     obsSvc.addObserver(observer, 'facebook-session-start', false);
+    // XXX if the toolbar is not present, add a search box to the top of the sidebar, kind of like this:
+    // <hbox>
+    //   <textbox type="timed" timeout="500" id="facebook-search" oncommand="SidebarType(event)" flex="1"/>
+    //   <button id="do-search" oncommand="DoWebSearch(event, this.previousSibling)" label="Search"/>
+    // </hbox>
 }
 function SidebarUnload() {
     dump('SidebarUnload\n');
     top.document.getElementById('facebook-tbbutton').checked = false;
     obsSvc.removeObserver(observer, 'facebook-session-start');
-}
-
-function SidebarType(event) {
-    //waitTil = (new Date()).getTime() + 500;
-    //window.setTimeout("SearchFriends(document.getElementById('facebook-search'))", 500);
-    SearchFriends(document.getElementById('facebook-search'));
-}
-
-//var waitTil=0;
-var currentSearch;
-function SearchFriends(searchBox) {
-    if (!fbSvc.loggedIn) {
-        dump('not logged in\n');
-        return;
-    }
-    if (searchBox.value) {
-        var search = searchBox.value.toLowerCase();
-    }
-    if (search == currentSearch) {
-        dump('already searched for that\n');
-        return;
-    }
-    currentSearch = search;
-    /*
-    var now = (new Date()).getTime();
-    if (waitTil > now) {
-        dump('still waiting\n');
-        window.setTimeout("SearchFriends(document.getElementById('facebook-search'))", waitTil - now);
-        return;
-    }
-    */
-    if (search) {
-        var searches = [];
-        for each (var s in search.split(/\s+/)) {
-            if (s) {
-                searches.push(new RegExp('\\b' + s, 'i'));
-            }
-        }
-        for each (var node in document.getElementById('fList').childNodes) {
-            var sname = node.getAttribute('searchname');
-            if (sname) {
-                var match = true;
-                for each (var s in searches) {
-                    if (!s.test(sname)) {
-                        match = false;
-                        break;
-                    }
-                }
-                if (match) {
-                    node.style.display = '';
-                } else {
-                    node.style.display = 'none';
-                }
-            }
-        }
-    } else {
-        for each (var node in document.getElementById('fList').childNodes) {
-            if (node.style) {
-                node.style.display = '';
-            }
-        }
-    }
-}
-
-function DoWebSearch(event) {
-    loadLink(event, 'http://www.facebook.com/s.php?q=' +
-             encodeURIComponent(document.getElementById('facebook-search').value), false);
 }
 
 function gotoFbUrl(event, page, uid, aMouseClick) {
