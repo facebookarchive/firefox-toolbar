@@ -11,10 +11,10 @@
         <textbox id="facebook-search"
                  value=""
                  maxlength="50"
-                 onfocus="if (document.getElementById('viewFacebookSidebar').getAttribute('checked') != 'true') document.getElementById('PopupFacebookFriends').showPopup(this, -1, -1, 'tooltip', 'bottomleft', 'topleft');"
-                 onblur="if (!facebook.ignoreBlur) document.getElementById('PopupFacebookFriends').hidePopup();"
-                 oninput="SearchFriends(this.value)"
-                 onkeypress="facebook.searchKeyPress(this, event)"/>
+                 onfocus="facebook.searchBoxFocus(this);"
+                 onblur="facebook.searchBoxBlur(this);"
+                 oninput="SearchFriends(this.value);"
+                 onkeypress="facebook.searchKeyPress(this, event);"/>
       </toolbaritem>
 
       <toolbarseparator/>

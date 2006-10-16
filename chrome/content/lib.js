@@ -32,15 +32,9 @@ function GetFriendsListElement() {
   return list;
 }
 
-var currentSearch;
 function SearchFriends(search) {
   search = search.toLowerCase();
   debug('searching for: ' + search);
-  if (search == currentSearch) {
-    debug('already searched for that');
-    return;
-  }
-  currentSearch = search;
   /* this would delay searching until a given time after the last key was
    * typed so that we don't burn cpu searching when the user's still typing.
   var now = (new Date()).getTime();

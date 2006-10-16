@@ -54,6 +54,18 @@ var facebook = {
       debug('no friends');
     }
   },
+  searchBoxFocus: function(searchBox) {
+    if (document.getElementById('viewFacebookSidebar').getAttribute('checked') != 'true') {
+      document.getElementById('PopupFacebookFriends').showPopup(searchBox, -1, -1, 'tooltip', 'bottomleft', 'topleft');
+      SearchFriends(searchBox.value); // this will usually no-op since we already did this search
+                                      // but just make sure we're not out of sync
+    }
+  },
+  searchBoxBlur: function(searchBox) {
+    if (!facebook.ignoreBlur) {
+      document.getElementById('PopupFacebookFriends').hidePopup();
+    }
+  },
   searchKeyPress: function(searchBox, e) {
     var list = GetFriendsListElement();
     switch (e.keyCode) {
