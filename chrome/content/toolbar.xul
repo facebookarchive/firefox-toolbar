@@ -9,7 +9,7 @@
         <textbox value=""
                  maxlength="50"
                  onfocus="document.getElementById('PopupFacebookFriends').showPopup(this, -1, -1, 'tooltip', 'bottomleft', 'topleft');"
-                 onblur="document.getElementById('PopupFacebookFriends').hidePopup();"
+                 onblur="if (!facebook.ignoreBlur) document.getElementById('PopupFacebookFriends').hidePopup();"
                  oninput="facebook.searchFriends(this)"
                  onkeypress="facebook.searchKeyPress(this, event)"/>
       </toolbaritem>

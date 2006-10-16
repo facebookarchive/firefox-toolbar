@@ -161,9 +161,13 @@ var facebook = {
         } while (item && item.style.display == 'none');
       }
       if (item && item.nodeName == 'richlistitem') {
+        // for some reason, calling hidePopup followed by showPopup results in the popup being hidden!
+        // so we need to disable the hidePopup call temporarily while the focus shifts around
+        this.ignoreBlur = true;
         list.selectedItem = item;
+        searchBox.focus();
+        this.ignoreBlur = false;
       }
-      searchBox.focus();
     }
   }
 };
