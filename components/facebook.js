@@ -178,7 +178,6 @@ facebookService.prototype = {
             var user = this._friendsDS.getNode('urn:facebook:users:'+id);
             user.addTargetOnce(USER_RDF_NS + 'id', id);
             user.addTargetOnce(USER_RDF_NS + 'name', name);
-            user.addTargetOnce(USER_RDF_NS + 'searchname', name.toLowerCase());
             if (status) {
                 var firstName = name.substr(0, name.indexOf(' '));
                 if (!firstName) firstName = name;

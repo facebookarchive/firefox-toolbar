@@ -73,14 +73,26 @@ function SearchFriends(searchBox) {
     }
     */
     if (search) {
+        var searches = [];
+        for each (var s in search.split(/\s+/)) {
+            if (s) {
+                searches.push(new RegExp('\\b' + s, 'i'));
+            }
+        }
         for each (var node in document.getElementById('fList').childNodes) {
             var sname = node.getAttribute('searchname');
             if (sname) {
-                var i = sname.indexOf(search);
-                if (i == -1 || (i != 0 && sname[i-1] != ' ')) {
-                    node.style.display = 'none';
-                } else {
+                var match = true;
+                for each (var s in searches) {
+                    if (!s.test(sname)) {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match) {
                     node.style.display = '';
+                } else {
+                    node.style.display = 'none';
                 }
             }
         }

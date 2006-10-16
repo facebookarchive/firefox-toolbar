@@ -15,6 +15,7 @@ var fbToolbarObserver = {
         document.getElementById('facebook-notification-poke').label = data;
         break;
       case 'facebook-session-start':
+        facebook.loadFriends();
         break;
       case 'facebook-session-end':
         break;
@@ -47,6 +48,7 @@ var facebook = {
   },
 
   go_url: function(url) {
+    dump('go_url(' + url + ')\n');
     this.get_current_document().location.href=url;
   },
   loadFriends: function() {
@@ -78,24 +80,90 @@ var facebook = {
         return;
     }
     */
+    var list = document.getElementById('PopupFacebookFriendsList');
     if (search) {
-      for each (var node in document.getElementById('PopupFacebookFriendsList').childNodes) {
+      var searches = [];
+      for each (var s in search.split(/\s+/)) {
+        if (s) {
+          dump('search: ' + s + '\n');
+          searches.push(new RegExp('\\b' + s, 'i'));
+        }
+      }
+      for each (var node in list.childNodes) {
         var sname = node.getAttribute('searchname');
         if (sname) {
-          var i = sname.indexOf(search);
-          if (i == -1 || (i != 0 && sname[i-1] != ' ')) {
-            node.style.display = 'none';
-          } else {
+          var match = true;
+          for each (var s in searches) {
+            if (!s.test(sname)) {
+              match = false;
+              break;
+            }
+          }
+          if (match) {
             node.style.display = '';
+          } else {
+            node.style.display = 'none';
           }
         }
       }
     } else {
-      for each (var node in document.getElementById('PopupFacebookFriendsList').childNodes) {
+      for each (var node in list.childNodes) {
         if (node.style) {
           node.style.display = '';
         }
       }
+    }
+    var item = list.selectedItem;
+    if (item) {
+      if (item.style.display == 'none') {
+        list.selectedIndex = -1;
+      } else {
+        list.ensureElementIsVisible(item);
+      }
+    }
+  },
+  searchKeyPress: function(searchBox, e) {
+    var list = document.getElementById('PopupFacebookFriendsList');
+    switch (e.keyCode) {
+      case e.DOM_VK_UP:
+        var prop = 'previousSibling';
+        break;
+      case e.DOM_VK_DOWN:
+        var prop = 'nextSibling';
+        break;
+      case e.DOM_VK_RETURN: // fall-through
+      case e.DOM_VK_ENTER:
+        var item = list.selectedItem;
+        if (item) {
+          this.go_url('http://www.facebook.com/profile.php?uid=' + item.getAttribute('userid') +
+                      '&api_key=' + fbSvc.apiKey);
+        } else {
+          this.go_url('http://www.facebook.com/s.php?q=' + encodeURIComponent(searchBox.value));
+        }
+        // fall-through to hide the pop-up...
+      case e.DOM_VK_ESCAPE:
+        // for some reason calling blur() doesn't work here...lets just focus the browser instead
+        document.getElementById('content').selectedBrowser.focus();
+        return;
+    }
+
+    if (prop) {
+      var item = list.selectedItem;
+      if (!item) {
+        if (prop == 'previousSibling') {
+          item = list.lastChild;
+        } else {
+          item = list.firstChild;
+        }
+      } else {
+        do {
+          item = item[prop];
+        } while (item && item.style.display == 'none');
+      }
+      if (item && item.nodeName == 'richlistitem') {
+        list.selectedItem = item;
+      }
+      searchBox.focus();
     }
   }
 };

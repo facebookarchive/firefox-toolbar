@@ -21,7 +21,7 @@
                sortActive="true"
                sortDirection="ascending">
     <template>
-      <richlistitem uri="rdf:*" style="padding: 5px;" searchname="rdf:http://www.facebook.com/rdf/users#searchname">
+      <richlistitem uri="rdf:*" style="padding: 5px;" searchname="rdf:http://www.facebook.com/rdf/users#name">
         <image class="facebook-link" style="height:50px; width:50px;"
                src="rdf:http://www.facebook.com/rdf/users#pic"
                onclick="gotoFbUrl(event, 'profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
