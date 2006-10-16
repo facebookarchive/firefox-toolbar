@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://facebook/skin/toolbar.css" type="text/css"?>
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="facebook">
-  <script type="text/javascript" src="chrome://facebook/content/toolbar.js" />
+  <script type="application/x-javascript" src="chrome://browser/content/utilityOverlay.js"/>
+  <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
+  <script type="application/x-javascript" src="chrome://facebook/content/toolbar.js"/>
   <toolbox id="navigator-toolbox">
     <toolbar id="facebook-toolbar" class="chromeclass-toolbar" context="toolbar-context-menu" toolbarname="Facebook Toolbar" hidden="false" persist="hidden">
 
@@ -11,7 +13,7 @@
                  maxlength="50"
                  onfocus="if (document.getElementById('viewFacebookSidebar').getAttribute('checked') != 'true') document.getElementById('PopupFacebookFriends').showPopup(this, -1, -1, 'tooltip', 'bottomleft', 'topleft');"
                  onblur="if (!facebook.ignoreBlur) document.getElementById('PopupFacebookFriends').hidePopup();"
-                 oninput="facebook.searchFriends(this)"
+                 oninput="SearchFriends(this.value)"
                  onkeypress="facebook.searchKeyPress(this, event)"/>
       </toolbaritem>
 
@@ -32,9 +34,9 @@
       <toolbarseparator/>
 
       <toolbaritem class="facebook-notifications" flex="0">
-        <toolbarbutton id="facebook-notification-poke" class="facebook-icon-poke" label="0" tooltip="New Pokes" oncommand="if (this.label!='0') facebook.go_url('http://www.facebook.com/home.php?')" />
-        <toolbarbutton id="facebook-notification-reqs" class="facebook-icon-reqs" label="0" tooltip="New Friend Requests" oncommand="if (this.label!='0') facebook.go_url('http://www.facebook.com/reqs.php')" />
-        <toolbarbutton id="facebook-notification-msgs" class="facebook-icon-msgs" label="1" tooltip="New Messages" oncommand="if (this.label!='0') facebook.go_url('http://www.facebook.com/mailbox.php')" />
+        <toolbarbutton id="facebook-notification-poke" class="facebook-icon-poke" label="0" tooltip="New Pokes" oncommand="if (this.label!='0') openUILink('http://www.facebook.com/home.php', event)" />
+        <toolbarbutton id="facebook-notification-reqs" class="facebook-icon-reqs" label="0" tooltip="New Friend Requests" oncommand="if (this.label!='0') openUILink('http://www.facebook.com/reqs.php', event)" />
+        <toolbarbutton id="facebook-notification-msgs" class="facebook-icon-msgs" label="1" tooltip="New Messages" oncommand="if (this.label!='0') openUILink('http://www.facebook.com/mailbox.php', event)" />
       </toolbaritem>
 
       <toolbarseparator/>
@@ -66,10 +68,10 @@
                           userid="rdf:http://www.facebook.com/rdf/users#id">
               <image class="facebook-link" style="height:50px; width:50px;"
                      src="rdf:http://www.facebook.com/rdf/users#pic"
-                     onclick="gotoFbUrl(event, 'profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
+                     onclick="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
               <vbox>
                 <label class="facebook-link" value="rdf:http://www.facebook.com/rdf/users#name"
-                       onclick="gotoFbUrl(event, 'profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
+                       onclick="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
                 <label value="rdf:http://www.facebook.com/rdf/users#status"/>
               </vbox>
             </richlistitem>

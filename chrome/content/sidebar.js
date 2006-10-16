@@ -8,7 +8,7 @@ var obsSvc = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverServ
 
 var observer = {
     observe: function(subject, topic, data) {
-        dump('OBSERVING SOMETHING: ' + topic + '\n');
+        debug('OBSERVING SOMETHING: ' + topic);
         var panel = document.getElementById('facebook-panel');
         switch (topic) {
             case 'facebook-session-start':
@@ -19,20 +19,20 @@ var observer = {
 };
 
 function LoadFriends() {
-    dump('LoadFriends()\n');
-    var list = document.getElementById('fList');
+    debug('LoadFriends()');
+    var list = document.getElementById('SidebarFriendsList');
     var friends = fbSvc.friendsRdf;
     if (friends) {
         list.database.AddDataSource(friends);
         list.builder.rebuild();
-        facebook.searchFriends(top.document.getElementById('facebook-search'));// XXX this doesn't work
+        SearchFriends(top.document.getElementById('facebook-search').value);
     } else {
-        dump('no friends\n');
+        debug('no friends');
     }
 }
 
 function SidebarLoad() {
-    dump('SidebarLoad\n');
+    debug('SidebarLoad');
     top.document.getElementById('facebook-tbbutton').checked = true;
     LoadFriends();
     obsSvc.addObserver(observer, 'facebook-session-start', false);
@@ -43,44 +43,9 @@ function SidebarLoad() {
     // </hbox>
 }
 function SidebarUnload() {
-    dump('SidebarUnload\n');
+    debug('SidebarUnload');
     top.document.getElementById('facebook-tbbutton').checked = false;
     obsSvc.removeObserver(observer, 'facebook-session-start');
 }
 
-function gotoFbUrl(event, page, uid, aMouseClick) {
-  loadLink(event, 'http://www.facebook.com/' + page + '?uid=' + uid + '&api_key=' + fbSvc.apiKey, aMouseClick);
-}
-
-function loadLink(event, url, aMouseClick) {
-  dump('loadLink: ' + url + '\n');
-    var browser = top.document.getElementById("content");
-    if (aMouseClick) {
-        if (event.button == 1) {
-            var tab = browser.addTab(url);  
-            browser.selectedTab = tab;
-            if (event.target.localName == "menuitem") {
-                event.target.parentNode.hidePopup();
-            }
-        } else {
-            browser.loadURI(url);
-        }
-    } else {
-        if(!event){
-            browser.loadURI(url);
-            return;
-        }
-        var shift = event.shiftKey;     
-        var ctrl =  event.ctrlKey;
-        var meta =  event.metaKey;
-        if (event.button == 1 || ctrl || meta) {    
-            var tab = browser.addTab(url);  
-            browser.selectedTab = tab;
-        } else if(shift) {
-            openDialog("chrome://browser/content/browser.xul", "_blank", "chrome,all,dialog=no", url);
-        } else {
-            browser.loadURI(url);
-        }
-    }
-    return;  
-}
+debug('loaded sidebar.js');

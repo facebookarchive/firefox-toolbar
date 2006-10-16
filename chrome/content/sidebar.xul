@@ -7,8 +7,10 @@
       onload="SidebarLoad()"
       onunload="SidebarUnload()"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script src="chrome://facebook/content/sidebar.js"/>
-  <richlistbox id="fList"
+  <script type="application/x-javascript" src="chrome://browser/content/utilityOverlay.js"/>
+  <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
+  <script type="application/x-javascript" src="chrome://facebook/content/sidebar.js"/>
+  <richlistbox id="SidebarFriendsList"
                datasources="rdf:null"
                ref="urn:facebook:friends"
                flex="1"
@@ -23,16 +25,18 @@
                     userid="rdf:http://www.facebook.com/rdf/users#id">
         <image class="facebook-link" style="height:50px; width:50px;"
                src="rdf:http://www.facebook.com/rdf/users#pic"
-               onclick="gotoFbUrl(event, 'profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
+               onclick="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
         <vbox>
           <label class="facebook-link" value="rdf:http://www.facebook.com/rdf/users#name"
-                 onclick="gotoFbUrl(event, 'profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
+                 onclick="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
           <label value="rdf:http://www.facebook.com/rdf/users#status"/>
           <hbox class="facebook-friendlinks">
             <toolbarbutton class="facebook-icon-msgs facebook-link"
-                           oncommand="gotoFbUrl(event, 'message.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
+                           onclick="checkForMiddleClick(this, event);"
+                           oncommand="OpenFBUrl('message.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
             <toolbarbutton class="facebook-icon-poke facebook-link"
-                           oncommand="gotoFbUrl(event, 'poke.php', 'rdf:http://www.facebook.com/rdf/users#id^', true)"/>
+                           onclick="checkForMiddleClick(this, event);"
+                           oncommand="OpenFBUrl('poke.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
           </hbox>
           <!--<label value="rdf:http://www.facebook.com/rdf/users#statustime"/>-->
         </vbox>
