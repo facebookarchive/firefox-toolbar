@@ -49,6 +49,11 @@
         </toolbarbutton>
       </toolbaritem>
 
+      <toolbaritem flex="1">
+        <spacer flex="1"/>
+        <toolbarbutton id="facebook-login-info"/>
+      </toolbaritem>
+
       <toolbarspring/>
 
       <popup position="after_start"

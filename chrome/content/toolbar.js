@@ -14,8 +14,12 @@ var fbToolbarObserver = {
       case 'facebook-new-poke':
         document.getElementById('facebook-notification-poke').label = data;
         break;
-      case 'facebook-session-start':
+      case 'facebook-friends-updated':
         facebook.loadFriends();
+        break;
+      case 'facebook-session-start':
+        subject = subject.QueryInterface(Ci.fbIFacebookUser);
+        document.getElementById('facebook-login-info').label = subject.name;
         break;
       case 'facebook-session-end':
         break;
@@ -26,17 +30,24 @@ var fbToolbarObserver = {
 var facebook = {
   load: function() {
     obsSvc.addObserver(fbToolbarObserver, 'facebook-session-start', false);
+    obsSvc.addObserver(fbToolbarObserver, 'facebook-friends-updated', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-session-end', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-new-message', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-new-poke', false);
     document.getElementById('facebook-notification-msgs').label = fbSvc.numMsgs;
     document.getElementById('facebook-notification-poke').label = fbSvc.numPokes;
+    var loggedInUser = fbSvc.loggedInUser;
+    if (loggedInUser) {
+      loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
+      document.getElementById('facebook-login-info').label = loggedInUser.name;
+    }
     facebook.loadFriends();
     debug('facebook toolbar loaded.');
   },
 
   unload: function() {
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-session-start');
+    obsSvc.removeObserver(fbToolbarObserver, 'facebook-friends-updated');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-session-end');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-new-message');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-new-poke');

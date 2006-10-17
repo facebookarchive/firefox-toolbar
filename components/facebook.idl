@@ -31,12 +31,17 @@ interface fbIFacebookService : nsISupports
     //   facebook-session-end
     //   facebook-new-message
     //   facebook-new-poke
+    //   facebook-new-friend
+    //   facebook-new-status
+    //   facebook-friends-updated
     // Windows can also query the most recent status of these things via the
     // readonly attributes below:
-    readonly attribute boolean loggedIn;
-    readonly attribute long    numMsgs;
-    readonly attribute long    numPokes;
+    readonly attribute boolean         loggedIn;
+    readonly attribute fbIFacebookUser loggedInUser;
+    readonly attribute long            numMsgs;
+    readonly attribute long            numPokes;
     // two ways to access your friends: via an RDF data source or as an array of fbIFacebookUser structs
+    // the array method is now kind of slow (O(n)) since we're not using it...if we start using it it can be optimized
     readonly attribute nsIRDFDataSource friendsRdf;
     void getFriends(out PRUint32 count, [retval,array,size_is(count)] out fbIFacebookUser users);
 };

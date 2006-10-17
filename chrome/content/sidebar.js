@@ -11,7 +11,7 @@ var observer = {
         debug('OBSERVING SOMETHING: ' + topic);
         var panel = document.getElementById('facebook-panel');
         switch (topic) {
-            case 'facebook-session-start':
+            case 'facebook-friends-updated':
                 LoadFriends();
                 break;
         }
@@ -35,7 +35,7 @@ function SidebarLoad() {
     debug('SidebarLoad');
     top.document.getElementById('facebook-tbbutton').checked = true;
     LoadFriends();
-    obsSvc.addObserver(observer, 'facebook-session-start', false);
+    obsSvc.addObserver(observer, 'facebook-friends-updated', false);
     // XXX if the toolbar is not present, add a search box to the top of the sidebar, kind of like this:
     // <hbox>
     //   <textbox type="timed" timeout="500" id="facebook-search" oncommand="SidebarType(event)" flex="1"/>
@@ -45,7 +45,7 @@ function SidebarLoad() {
 function SidebarUnload() {
     debug('SidebarUnload');
     top.document.getElementById('facebook-tbbutton').checked = false;
-    obsSvc.removeObserver(observer, 'facebook-session-start');
+    obsSvc.removeObserver(observer, 'facebook-friends-updated');
 }
 
 debug('loaded sidebar.js');

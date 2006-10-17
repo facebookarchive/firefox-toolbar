@@ -1,4 +1,23 @@
-function debug(s) { dump('** facebookService: ' + s + '\n'); }
+const FRIEND_CHECK_INTERVAL = 15*60*1000;
+const MSG_CHECK_INTERVAL    = 5*60*1000;
+const USER_RDF_NS = 'http://www.facebook.com/rdf/users#';
+
+const VERBOSITY = 1; // 0: no dumping, 1: normal dumping, 2: massive dumping
+
+function debug() {
+  if (VERBOSITY == 0) return;
+  dump('facebookService: ');
+  if (debug.caller && debug.caller.name) {
+    dump(debug.caller.name + ':\t');
+  } else {
+    dump('\t\t');
+  }
+  for (var i = 0; i < arguments.length; i++) {
+    if (i > 0) dump(', ');
+    dump(arguments[i]);
+  }
+  dump('\n');
+}
 
 const CONTRACT_ID  = '@facebook.com/facebook-service;1';
 const CLASS_ID     = Components.ID('{e983db0e-05fc-46e7-9fba-a22041c894ac}');
@@ -20,37 +39,37 @@ Cc['@mozilla.org/moz/jssubscript-loader;1']
 function facebookService()
 {
     debug('constructor');
+
     this._apiKey = '64f19267b0e6177ea503046d801c00df';
     this._secret = 'a8a5a57a9f9cd57473797c4612418908';
 
-    this._sessionKey    = null;
-    this._sessionSecret = null;
-    this._uid           = null;
-    this._numMsgs       = 0;
-    this._numPokes      = 0;
-    this._totalPokes    = 0;
-    this._loggedIn      = false;
+    this.initValues();
 
-    this._friends       = [];
-    this._friendsInfo   = {};
-    this._friendsInfoList = [];
-    this._friendsDS     = null;
-
-    var fbSvc = this; // so that _poll can access us
-    this._poll = {
+    var fbSvc = this; // so that our timer callback objects can access us
+    this._msgChecker = {
         notify: function(timer) {
-            debug('_poll.notify');
+            debug('_msgChecker.notify');
             fbSvc.checkMessages();
             fbSvc.checkPokes();
+        }
+    };
+    this._friendChecker = {
+        notify: function(timer) {
+            debug('_friendChecker.notify');
+            fbSvc.checkFriends();
         }
     };
     this._initialize = {
         notify: function(timer) {
             debug('_initialize.notify');
-            fbSvc.loadFriends();
+            fbSvc.getMyInfo();
+            fbSvc._observerService.notifyObservers(fbSvc._loggedInUser, 'facebook-session-start',
+                                                   fbSvc._loggedInUser.id);
             fbSvc.checkMessages();
             fbSvc.checkPokes();
-            fbSvc._observerService.notifyObservers(null, 'facebook-session-start', null);
+            fbSvc._holdFriendNotifications = true;
+            fbSvc.checkFriends();
+            fbSvc._holdFriendNotifications = false;
         }
     };
 
@@ -88,32 +107,49 @@ facebookService.prototype = {
             return null;
         }
     },
+    get loggedInUser() {
+        return this._loggedInUser;
+    },
     sessionStart: function(sessionKey, sessionSecret, uid) {
         debug('sessionStart');
+        if (!sessionKey || !sessionSecret || !uid) return;
         this._sessionKey    = sessionKey;
         this._sessionSecret = sessionSecret;
         this._loggedIn      = true;
         this._uid           = uid;
 
         this.timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this.timer.initWithCallback(this._poll, 300 * 1000, Ci.nsITimer.TYPE_REPEATING_SLACK); // 5 mins
+        this.timer.initWithCallback(this._msgChecker, MSG_CHECK_INTERVAL, Ci.nsITimer.TYPE_REPEATING_SLACK);
+
+        this.timer2 = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
+        this.timer2.initWithCallback(this._friendChecker, FRIEND_CHECK_INTERVAL, Ci.nsITimer.TYPE_REPEATING_SLACK);
 
         // fire off another thread to get things started
-        this.timer2 = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this.timer2.initWithCallback(this._initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
+        this.timer3 = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
+        this.timer3.initWithCallback(this._initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
     },
     sessionEnd: function() {
         debug('sessionEnd');
+
+        this.initValues();
+        this.timer.cancel();
+        this.timer2.cancel();
+        this.timer3.cancel();
+
+        this._observerService.notifyObservers(null, 'facebook-session-end', null);
+    },
+    initValues: function() {
         this._sessionKey    = null;
         this._sessionSecret = null;
         this._uid           = null;
         this._loggedIn      = false;
+        this._loggedInUser  = null;
         this._numMsgs       = 0;
         this._numPokes      = 0;
-        this.timer.cancel();
-        this.timer2.cancel();
-
-        this._observerService.notifyObservers(null, 'facebook-session-end', null);
+        this._totalPokes    = 0;
+        this._friends       = [];
+        this._friendsInfo   = {};
+        this._friendsDS     = null;
     },
 
     checkMessages: function() {
@@ -143,19 +179,24 @@ facebookService.prototype = {
         }
         debug('you have ' + this._numPokes + ' unseen pokes');
     },
-    loadFriends: function() {
-        // XXX make this support updating your existing list
-        debug('loadFriends');
+    checkFriends: function() {
+        debug('checkFriends');
+        var friendUpdate = false;
         var data = this.callMethod('facebook.friends.get', []);
         for each (var id in data.result_elt) {
-            this._friends.push(id);
+            if (!this._friendsInfo[id]) {
+                if (!this._holdFriendNotifications) {
+                    this._observerService.notifyObservers(null, 'facebook-new-friend', id);
+                }
+                this._friends.push(id);
+                friendUpdate = true;
+            }
         }
 
         // RDF STUFF
         this._friendsDS = new RDFDataSource(); // could pass in a file name if you want to save it
         var parent = this._friendsDS.getNode('urn:facebook:friends');
         parent.makeBag();
-        var USER_RDF_NS = 'http://www.facebook.com/rdf/users#';
 
         data = this.callMethod('facebook.users.getInfo', ['users='+this._friends.join(','), 'fields=name,status,pic']);
 
@@ -183,23 +224,45 @@ facebookService.prototype = {
                 if (!firstName) firstName = name;
                 user.addTargetOnce(USER_RDF_NS + 'status', firstName + ' is ' + status);
                 user.addTargetOnce(USER_RDF_NS + 'statustime', stime);
-                debug(firstName + ': ' + stime);
             } else {
                 user.addTargetOnce(USER_RDF_NS + 'statustime', String(maxdate));
             }
             user.addTargetOnce(USER_RDF_NS + 'pic', pic);
             parent.addChild(user, false);
 
-            var friendObj = { id: id, name: name, lname: name.toLowerCase(), status: status, pic: pic };
+            var friendObj = new facebookUser(id, name, pic, status);
+            if (this._friendsInfo[id] && this._friendsInfo[id].status != status) {
+                if (!this._holdFriendNotifications) {
+                    this._observerService.notifyObservers(friendObj, 'facebook-new-status', id);
+                }
+                friendUpdate = true;
+            }
             this._friendsInfo[id] = friendObj;
-            this._friendsInfoList.push(friendObj);
         }
-
         //this._friendsDS.flush(); (use this if you are saving to a file)
+        if (friendUpdate) {
+            this._observerService.notifyObservers(null, 'facebook-friends-updated', null);
+        }
+        debug('done checkFriends', friendUpdate);
     },
     getFriends: function(count) {
-        count.value = this._friendsInfoList.length;
-        return this._friendsInfoList;
+        var list = [];
+        for each (var friendObj in this._friendsInfo) {
+            list.push(friendObj);
+        }
+        count.value = list.length;
+        return list;
+    },
+    getMyInfo: function() {
+        debug('getMyInfo');
+        var data = this.callMethod('facebook.users.getInfo', ['users='+this._uid, 'fields=name,status,pic']);
+        var myData = data.result_elt;
+        var name   = String(myData.name),
+            id     = String(myData.@id),
+            status = String(myData.status.message),
+            pic    = String(decodeURI(myData.pic));
+        this._loggedInUser = new facebookUser(id, name, pic, status);
+        debug('hello', name);
     },
 
     generateSig: function (params) {
@@ -244,8 +307,10 @@ facebookService.prototype = {
                 resultText += txt;
             }
             resultText = resultText.substr(resultText.indexOf("\n") + 1);
-            debug('received text:');
-            dump(resultText);
+            if (VERBOSITY == 2) {
+              debug('received text:');
+              dump(resultText);
+            }
             var xmldata = new XML(resultText);
             return xmldata;
         } catch (e) {
@@ -295,5 +360,21 @@ function NSGetModule(compMgr, fileSpec) {
     debug('NSGetModule');
     return facebookModule;
 }
+
+function facebookUser(id, name, pic, status) {
+    this.id     = id;
+    this.name   = name;
+    this.pic    = pic;
+    this.status = status;
+}
+facebookUser.prototype = {
+    // nsISupports implementation
+    QueryInterface: function (iid) {
+        if (!iid.equals(Ci.fbIFacebookUser) && 
+            !iid.equals(Ci.nsISupports))
+            throw Components.results.NS_ERROR_NO_INTERFACE;
+        return this;
+    }
+};
 
 debug('loaded facebook.js');
