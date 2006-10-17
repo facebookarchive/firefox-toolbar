@@ -1,5 +1,4 @@
-@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
-.facebook-notifications toolbarbutton {
+.facebook-notifications toolbarbutton, #facebook-searchbox image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding-left: 0px;
 }
@@ -11,6 +10,24 @@
 }
 .facebook-friendlinks {
   margin-left: 6px;
+}
+
+#facebook-search .textbox-input-box {
+  -moz-binding: url('chrome://facebook/content/bindings.xml#facebook-search-hbox');
+  padding: 0px
+}
+
+#facebook-search image {
+  -moz-image-region: rect(0px 64px 14px 48px);
+}
+
+#facebook-search .textbox-input {
+  border: none!important;
+  padding-left: 3px!important;
+}
+
+#facebook-toolbar .typeahead_placeholder {
+  color: #777;
 }
 
 .facebook-notifications toolbarbutton > .toolbarbutton-text {
@@ -40,4 +57,3 @@
   cursor: pointer;
   color: #3B5998;
 }
-

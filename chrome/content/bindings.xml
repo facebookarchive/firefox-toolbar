@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<bindings id="textboxBindings"
+   xmlns="http://www.mozilla.org/xbl"
+   xmlns:html="http://www.w3.org/1999/xhtml"
+   xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+   <binding id="facebook-search-hbox">
+     <content>
+       <xul:image />
+       <children />
+     </content>
+   </binding>
+</bindings>
