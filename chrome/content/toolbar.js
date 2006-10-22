@@ -129,6 +129,32 @@ var facebook = {
         this.ignoreBlur = false;
       }
     }
+  },
+  share: function() {
+    try {
+      // If we're not on a facebook page, just jump down to the catch block and open the popup...
+      if (!/^(?:.*\.)?facebook\.[^.]*$/.test(content.document.location.host))
+        throw null;
+      // We're on a facebook page, so let's try using share_internal_bookmarklet...
+
+      // We can access the function easily through content's wrappedJSObject, but unfortunately if
+      // we try calling it directly, then the relative URL's in XMLHttpRequests are interpretted
+      // relative to our current chrome:// url and fail.  So instead we check for the function...
+      if (!content.wrappedJSObject.share_internal_bookmarklet)
+          throw null;
+      // ...and if the function is there then we have to do this lame <script> injection hack to
+      // execute it.
+      var script = content.document.createElement('script');
+      script.appendChild(content.document.createTextNode("share_internal_bookmarklet();"));
+      content.document.body.appendChild(script);
+      content.document.body.removeChild(script);
+    } catch(e) {
+      debug('title is: ' + document.title, 'url: ' + content.document.location.href);
+      window.open('http://www.dev.facebook.com/sharer.php?bm&v=1&u=' +
+                  encodeURIComponent(content.document.location.href) +
+                  '&t=' + encodeURIComponent(document.title),
+                  'sharer','toolbar=no,status=yes,width=626,height=436');
+    }
   }
 };
 window.addEventListener('load', facebook.load, false);

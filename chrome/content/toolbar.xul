@@ -25,11 +25,9 @@
         </menupopup>
       </toolbarbutton>
 
-      <toolbarbutton type="menu" tooltiptext="Latest Feed" label="Latest Feed">
-        <menupopup>
-          <menuitem label="Friend 1" />
-        </menupopup>
-      </toolbarbutton>
+      <toolbarbutton tooltiptext="Share on Facebook"
+                     label="Share on Facebook"
+                     oncommand="facebook.share()"/>
 
       <toolbarseparator/>
 
