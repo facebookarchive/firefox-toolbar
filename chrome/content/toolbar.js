@@ -42,6 +42,7 @@ var facebook = {
       document.getElementById('facebook-login-info').label = loggedInUser.name;
     }
     facebook.loadFriends();
+    document.getElementById('facebook-search').addEventListener('keypress', HandleKeyPress, true);
     debug('facebook toolbar loaded.');
   },
 
@@ -75,59 +76,6 @@ var facebook = {
   searchBoxBlur: function(searchBox) {
     if (!facebook.ignoreBlur) {
       document.getElementById('PopupFacebookFriends').hidePopup();
-    }
-  },
-  searchKeyPress: function(searchBox, e) {
-    var list = GetFriendsListElement();
-    switch (e.keyCode) {
-      case e.DOM_VK_UP:
-        var prop = 'previousSibling';
-        break;
-      case e.DOM_VK_DOWN:
-        var prop = 'nextSibling';
-        break;
-      case e.DOM_VK_RETURN: // fall-through
-      case e.DOM_VK_ENTER:
-        var item = list.selectedItem;
-        if (item) {
-          OpenFBUrl('profile.php', item.getAttribute('userid'), e);
-        } else {
-          openUILink('http://www.facebook.com/s.php?q=' + encodeURIComponent(searchBox.value), e);
-        }
-        // fall-through to hide the pop-up...
-      case e.DOM_VK_ESCAPE:
-        // for some reason calling blur() doesn't work here...lets just focus the browser instead
-        document.getElementById('content').selectedBrowser.focus();
-        return;
-    }
-
-    if (prop) {
-      function isSelectableItem(item) {
-        return (item && item.nodeName == 'richlistitem' && item.style.display != 'none');
-      }
-      var item = list.selectedItem;
-      if (!isSelectableItem(item)) {
-        if (prop == 'previousSibling') {
-          item = list.lastChild;
-        } else {
-          item = list.firstChild;
-        }
-        while (!isSelectableItem(item)) {
-          item = item[prop];
-        }
-      } else {
-        do {
-          item = item[prop];
-        } while (item && !isSelectableItem(item));
-      }
-      if (isSelectableItem(item)) {
-        // for some reason, calling hidePopup followed by showPopup results in the popup being hidden!
-        // so we need to disable the hidePopup call temporarily while the focus shifts around
-        this.ignoreBlur = true;
-        list.selectedItem = item;
-        searchBox.focus();
-        this.ignoreBlur = false;
-      }
     }
   },
   share: function() {

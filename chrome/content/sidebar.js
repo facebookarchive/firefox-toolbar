@@ -36,6 +36,7 @@ function SidebarLoad() {
     top.document.getElementById('facebook-tbbutton').checked = true;
     LoadFriends();
     obsSvc.addObserver(observer, 'facebook-friends-updated', false);
+    document.getElementById('SidebarFriendsList').addEventListener('keypress', HandleKeyPress, true);
     // XXX if the toolbar is not present, add a search box to the top of the sidebar, kind of like this:
     // <hbox>
     //   <textbox type="timed" timeout="500" id="facebook-search" oncommand="SidebarType(event)" flex="1"/>
@@ -47,5 +48,6 @@ function SidebarUnload() {
     top.document.getElementById('facebook-tbbutton').checked = false;
     obsSvc.removeObserver(observer, 'facebook-friends-updated');
 }
+var facebook=null; // for some reason lib.js can't seem to handle not having something named facebook defined
 
 debug('loaded sidebar.js');

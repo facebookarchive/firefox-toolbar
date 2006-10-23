@@ -13,8 +13,7 @@
                  maxlength="50"
                  onfocus="facebook.searchBoxFocus(this);"
                  onblur="facebook.searchBoxBlur(this);"
-                 oninput="SearchFriends(this.value);"
-                 onkeypress="facebook.searchKeyPress(this, event);"/>
+                 oninput="SearchFriends(this.value);"/>
       </toolbaritem>
 
       <toolbarseparator/>
@@ -56,7 +55,7 @@
 
       <popup position="after_start"
              id="PopupFacebookFriends"
-             style="width: 300px; height:300px;">
+             style="width: 300px; max-height:300px;">
         <richlistbox id="PopupFacebookFriendsList"
                      datasources="rdf:null"
                      ref="urn:facebook:friends"
@@ -65,19 +64,31 @@
                      sortActive="true"
                      sortDirection="ascending">
           <template>
-            <richlistitem uri="rdf:*"
-                          style="padding: 5px;"
-                          searchname="rdf:http://www.facebook.com/rdf/users#name"
-                          userid="rdf:http://www.facebook.com/rdf/users#id">
-              <image class="facebook-link" style="height:50px; width:50px;"
-                     src="rdf:http://www.facebook.com/rdf/users#pic"
-                     onclick="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
-              <vbox>
-                <label class="facebook-link" value="rdf:http://www.facebook.com/rdf/users#name"
-                       onclick="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
-                <label value="rdf:http://www.facebook.com/rdf/users#status"/>
-              </vbox>
-            </richlistitem>
+            <vbox uri="rdf:*"
+                  searchname="rdf:http://www.facebook.com/rdf/users#name"
+                  userid="rdf:http://www.facebook.com/rdf/users#id">
+              <richlistitem style="padding: 5px;"
+                            oncommand="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)">
+                <image class="facebook-link" style="height:50px; width:50px;"
+                       src="rdf:http://www.facebook.com/rdf/users#pic"/>
+                <vbox>
+                  <label class="facebook-link" value="rdf:http://www.facebook.com/rdf/users#name"/>
+                  <label value="rdf:http://www.facebook.com/rdf/users#status"/>
+                </vbox>
+              </richlistitem>
+              <richlistitem style="padding: 5px; display: none;"
+                            class="facebook-friendlinks"
+                            oncommand="OpenFBUrl('message.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)">
+                <toolbarbutton class="facebook-icon-msgs facebook-link" />
+                <label class="facebook-link" value="Message rdf:http://www.facebook.com/rdf/users#name"/>
+              </richlistitem>
+              <richlistitem style="padding: 5px; display: none;"
+                            class="facebook-friendlinks"
+                            oncommand="OpenFBUrl('poke.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)">
+                <toolbarbutton class="facebook-icon-poke facebook-link" />
+                <label class="facebook-link" value="Poke rdf:http://www.facebook.com/rdf/users#name"/>
+              </richlistitem>
+            </vbox>
           </template>
         </richlistbox>
       </popup>

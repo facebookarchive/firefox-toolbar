@@ -22,7 +22,8 @@
       <richlistitem uri="rdf:*"
                     style="padding: 5px;"
                     searchname="rdf:http://www.facebook.com/rdf/users#name"
-                    userid="rdf:http://www.facebook.com/rdf/users#id">
+                    userid="rdf:http://www.facebook.com/rdf/users#id"
+                    oncommand="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)">
         <image class="facebook-link" style="height:50px; width:50px;"
                src="rdf:http://www.facebook.com/rdf/users#pic"
                onclick="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
