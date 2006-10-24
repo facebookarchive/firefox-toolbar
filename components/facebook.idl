@@ -27,19 +27,38 @@ interface fbIFacebookService : nsISupports
     // All other interaction comes by windows listing themselves as observers
     // and notifications that get triggered by the polling process.
     // Notifications that we fire:
-    //   facebook-session-start
-    //   facebook-session-end
-    //   facebook-new-message
-    //   facebook-new-poke
-    //   facebook-new-friend
-    //   facebook-new-status
-    //   facebook-friends-updated
+    //   Topic                              Subject                      Data
+    //   facebook-session-start             your fbIFacebookUser         your id
+    //       (the session has started)                                   
+    //   facebook-session-end               null                         null
+    //
+    //   facebook-new-req                   requester's fbIFacebookUser  requester's id
+    //       (you have a new friend request)
+    //   facebook-reqs-updated              null                         new req count
+    //       (the count of reqs has been updated)
+    //   facebook-new-msgs                  null                         new msg count
+    //       (you have received new messages)
+    //   facebook-msgs-updated              null                         new msg count
+    //       (the count of msgs has been updated)
+    //   facebook-new-poke                  null                         new poke count
+    //       (you have received a new poke)
+    //   facebook-pokes-updated             null                         new poke count
+    //       (the count of pokes has been updated)
+    //
+    //   facebook-new-friend                friend's fbIFacebookUser     friend's id
+    //       (you have a new friend)
+    //   facebook-friend-updated            updater's fbIFacebookUser    updater's id
+    //       (a friend has updated his status)
+    //   facebook-friends-updated           null                         null
+    //       (the collection of friends has been modified in some way)
+    //
     // Windows can also query the most recent status of these things via the
     // readonly attributes below:
     readonly attribute boolean         loggedIn;
     readonly attribute fbIFacebookUser loggedInUser;
     readonly attribute long            numMsgs;
     readonly attribute long            numPokes;
+    readonly attribute long            numReqs;
     // two ways to access your friends: via an RDF data source or as an array of fbIFacebookUser structs
     // the array method is now kind of slow (O(n)) since we're not using it...if we start using it it can be optimized
     readonly attribute nsIRDFDataSource friendsRdf;

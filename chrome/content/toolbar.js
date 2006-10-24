@@ -8,11 +8,14 @@ var fbToolbarObserver = {
   observe: function(subject, topic, data) {
     debug('facebook toolbar observing something: ' + topic);
     switch (topic) {
-      case 'facebook-new-message':
+      case 'facebook-msgs-updated':
         document.getElementById('facebook-notification-msgs').label = data;
         break;
-      case 'facebook-new-poke':
+      case 'facebook-pokes-updated':
         document.getElementById('facebook-notification-poke').label = data;
+        break;
+      case 'facebook-reqs-updated':
+        document.getElementById('facebook-notification-reqs').label = data;
         break;
       case 'facebook-friends-updated':
         facebook.loadFriends();
@@ -32,10 +35,12 @@ var facebook = {
     obsSvc.addObserver(fbToolbarObserver, 'facebook-session-start', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-friends-updated', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-session-end', false);
-    obsSvc.addObserver(fbToolbarObserver, 'facebook-new-message', false);
-    obsSvc.addObserver(fbToolbarObserver, 'facebook-new-poke', false);
+    obsSvc.addObserver(fbToolbarObserver, 'facebook-msgs-updated', false);
+    obsSvc.addObserver(fbToolbarObserver, 'facebook-pokes-updated', false);
+    obsSvc.addObserver(fbToolbarObserver, 'facebook-reqs-updated', false);
     document.getElementById('facebook-notification-msgs').label = fbSvc.numMsgs;
     document.getElementById('facebook-notification-poke').label = fbSvc.numPokes;
+    document.getElementById('facebook-notification-reqs').label = fbSvc.numReqs;
     var loggedInUser = fbSvc.loggedInUser;
     if (loggedInUser) {
       loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
@@ -50,8 +55,9 @@ var facebook = {
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-session-start');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-friends-updated');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-session-end');
-    obsSvc.removeObserver(fbToolbarObserver, 'facebook-new-message');
-    obsSvc.removeObserver(fbToolbarObserver, 'facebook-new-poke');
+    obsSvc.removeObserver(fbToolbarObserver, 'facebook-msgs-updated');
+    obsSvc.removeObserver(fbToolbarObserver, 'facebook-pokes-updated');
+    obsSvc.removeObserver(fbToolbarObserver, 'facebook-reqs-updated');
     debug('facebook toolbar unloaded.');
   },
 

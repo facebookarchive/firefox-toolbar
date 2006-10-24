@@ -51,6 +51,7 @@ function facebookService()
             debug('_msgChecker.notify');
             fbSvc.checkMessages();
             fbSvc.checkPokes();
+            fbSvc.checkReqs();
         }
     };
     this._friendChecker = {
@@ -67,6 +68,7 @@ function facebookService()
                                                    fbSvc._loggedInUser.id);
             fbSvc.checkMessages();
             fbSvc.checkPokes();
+            fbSvc.checkReqs();
             fbSvc._holdFriendNotifications = true;
             fbSvc.checkFriends();
             fbSvc._holdFriendNotifications = false;
@@ -90,6 +92,9 @@ facebookService.prototype = {
     },
     get numPokes() {
         return this._numPokes;
+    },
+    get numReqs() {
+        return this._numReqs;
     },
     get apiKey() {
         return this._apiKey;
@@ -145,52 +150,74 @@ facebookService.prototype = {
         this._loggedIn      = false;
         this._loggedInUser  = null;
         this._numMsgs       = 0;
+        this._lastMsgTime   = 0;
         this._numPokes      = 0;
+        this._numReqs       = 0;
+        this._reqs          = [];
+        this._reqsInfo      = {};
         this._totalPokes    = 0;
-        this._friends       = [];
         this._friendsInfo   = {};
         this._friendsDS     = null;
     },
 
     checkMessages: function() {
-        debug('checkMessages');
         var data = this.callMethod('facebook.messages.getCount', []);
-        // XXX error-check
         var newMsgCount = data.unread;
-        // XXX what do we do if someone reads a message and then gets another one in this time interval??
-        if (newMsgCount != this._numMsgs) {
-            this._numMsgs = newMsgCount;
-            this._observerService.notifyObservers(null, 'facebook-new-message', newMsgCount);
+        if (data.most_recent > this._lastMsgTime) {
+            this._observerService.notifyObservers(null, 'facebook-new-msgs', newMsgCount);
+            this._lastMsgTime = data.most_recent;
         }
-        debug('you have ' + this._numMsgs + ' unread messages');
+        if (newMsgCount != this._numMsgs) {
+            this._observerService.notifyObservers(null, 'facebook-msgs-updated', newMsgCount);
+            this._numMsgs = newMsgCount;
+        }
+        debug('checkMessages: you have ' + this._numMsgs + ' unread messages');
     },
     checkPokes: function() {
-        debug('checkPokes');
         var data = this.callMethod('facebook.pokes.getCount', []);
-        // XXX error-check
         var newPokeCount = data.unseen;
         var totalPokeCount = data.total;
         if (totalPokeCount > this._totalPokes && newPokeCount > 0) {
             // we send the notification if you have any unseen pokes and the total # of pokes has gone up.
             // note that your unseen poke count could theoretically stay the same or even if you have new pokes.
-            this._numPokes = newPokeCount;
             this._totalPokes = totalPokeCount;
             this._observerService.notifyObservers(null, 'facebook-new-poke', newPokeCount);
         }
-        debug('you have ' + this._numPokes + ' unseen pokes');
+        if (newPokeCount != this._numPokes) {
+            this._numPokes = newPokeCount;
+            this._observerService.notifyObservers(null, 'facebook-pokes-updated', newPokeCount);
+        }
+        debug('checkPokes: you have ' + this._numPokes + ' unseen pokes');
+    },
+    checkReqs: function() {
+        var data = this.callMethod('facebook.friends.getRequests', []);
+        var newReqCount = data.result_elt.length();
+        var reqsToGet = [];
+        for each (var id in data.result_elt) {
+            if (!this._reqsInfo[id]) {
+                reqsToGet.push(id);
+            }
+        }
+        if (reqsToGet.length > 0) {
+            this._reqsInfo = this.getUsersInfo(reqsToGet);
+            for each (var reqInfo in this._reqsInfo) {
+                this._observerService.notifyObservers(reqInfo, 'facebook-new-req', reqInfo['id']);
+            }
+        }
+        if (newReqCount != this._numReqs) {
+            this._numReqs = newReqCount;
+            this._observerService.notifyObservers(null, 'facebook-reqs-updated', newReqCount);
+        }
+        debug('checkReqs: you have ' + this._numReqs + ' outstanding reqs');
     },
     checkFriends: function() {
         debug('checkFriends');
         var friendUpdate = false;
         var data = this.callMethod('facebook.friends.get', []);
+        // make a new friends array every time so that we handle losing friends properly
+        var friends = [];
         for each (var id in data.result_elt) {
-            if (!this._friendsInfo[id]) {
-                if (!this._holdFriendNotifications) {
-                    this._observerService.notifyObservers(null, 'facebook-new-friend', id);
-                }
-                this._friends.push(id);
-                friendUpdate = true;
-            }
+            friends.push(id);
         }
 
         // RDF STUFF
@@ -198,7 +225,7 @@ facebookService.prototype = {
         var parent = this._friendsDS.getNode('urn:facebook:friends');
         parent.makeBag();
 
-        data = this.callMethod('facebook.users.getInfo', ['users='+this._friends.join(','), 'fields=name,status,pic']);
+        data = this.callMethod('facebook.users.getInfo', ['users='+friends.join(','), 'fields=name,status,pic']);
 
         // We want status times to be sorted in descending order, but we are doing an alphabetical
         // sort on them via RDF (so that the secondary sort by name works).  So we need all of the
@@ -231,18 +258,21 @@ facebookService.prototype = {
             parent.addChild(user, false);
 
             var friendObj = new facebookUser(id, name, pic, status);
-            if (this._friendsInfo[id] && this._friendsInfo[id].status != status) {
-                if (!this._holdFriendNotifications) {
-                    this._observerService.notifyObservers(friendObj, 'facebook-new-status', id);
+            if (!this._holdFriendNotifications) {
+                if (!this._friendsInfo[id]) {
+                    this._observerService.notifyObservers(friendObj, 'facebook-new-friend', id);
+                    friendUpdate = true;
+                } else if (this._friendsInfo[id].status != status) {
+                    this._observerService.notifyObservers(friendObj, 'facebook-friend-updated', id);
+                    friendUpdate = true;
                 }
-                friendUpdate = true;
             }
             this._friendsInfo[id] = friendObj;
         }
-        //this._friendsDS.flush(); (use this if you are saving to a file)
-        if (friendUpdate) {
+        if (this._holdFriendNotifications || friendUpdate) {
             this._observerService.notifyObservers(null, 'facebook-friends-updated', null);
         }
+        //this._friendsDS.flush(); (use this if you are saving to a file)
         debug('done checkFriends', friendUpdate);
     },
     getFriends: function(count) {
@@ -254,15 +284,20 @@ facebookService.prototype = {
         return list;
     },
     getMyInfo: function() {
-        debug('getMyInfo');
-        var data = this.callMethod('facebook.users.getInfo', ['users='+this._uid, 'fields=name,status,pic']);
-        var myData = data.result_elt;
-        var name   = String(myData.name),
-            id     = String(myData.@id),
-            status = String(myData.status.message),
-            pic    = String(decodeURI(myData.pic));
-        this._loggedInUser = new facebookUser(id, name, pic, status);
-        debug('hello', name);
+        this._loggedInUser = this.getUsersInfo([this._uid])[this._uid];
+        debug('getMyInfo: hello', this._loggedInUser['name']);
+    },
+    getUsersInfo: function(users) {
+        var data = this.callMethod('facebook.users.getInfo', ['users='+users.join(','), 'fields=name,status,pic']);
+        var usersInfo = {};
+        for each (var user in data.result_elt) {
+            var name   = String(user.name),
+                id     = String(user.@id),
+                status = String(user.status.message),
+                pic    = String(decodeURI(user.pic));
+            usersInfo[id] = new facebookUser(id, name, pic, status);
+        }
+        return usersInfo;
     },
 
     generateSig: function (params) {
@@ -312,6 +347,7 @@ facebookService.prototype = {
               dump(resultText);
             }
             var xmldata = new XML(resultText);
+            // XXX check for fb_error here
             return xmldata;
         } catch (e) {
             debug('Exception sending REST request: ' + e);

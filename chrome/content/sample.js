@@ -9,7 +9,7 @@ var observer = {
         dump('OBSERVING SOMETHING: ' + topic + '\n');
         var panel = document.getElementById('facebook-panel');
         switch (topic) {
-            case 'facebook-new-message':
+            case 'facebook-new-msgs':
                 panel.label = data + ' new messages';
                 break;
             case 'facebook-new-friend':
@@ -35,7 +35,7 @@ function startup() {
     } else {
         document.getElementById('facebook-panel').label = 'logged out';
     }
-    obsSvc.addObserver(observer, 'facebook-new-message', false);
+    obsSvc.addObserver(observer, 'facebook-new-msgs', false);
     obsSvc.addObserver(observer, 'facebook-session-end', false);
     obsSvc.addObserver(observer, 'facebook-session-start', false);
     obsSvc.addObserver(observer, 'facebook-new-friend', false);
@@ -45,7 +45,7 @@ window.addEventListener('load', startup, false);
 
 function shutdown() {
     dump('shutdown\n');
-    obsSvc.removeObserver(observer, 'facebook-new-message');
+    obsSvc.removeObserver(observer, 'facebook-new-msgs');
     obsSvc.removeObserver(observer, 'facebook-session-end');
     obsSvc.removeObserver(observer, 'facebook-session-start');
     obsSvc.removeObserver(observer, 'facebook-new-friend');
