@@ -25,7 +25,7 @@ function LoadFriends() {
     if (friends) {
         list.database.AddDataSource(friends);
         list.builder.rebuild();
-        SearchFriends(top.document.getElementById('facebook-search').value);
+        SearchFriends(GetFBSearchBox().value);
     } else {
         debug('no friends');
     }
@@ -37,11 +37,15 @@ function SidebarLoad() {
     LoadFriends();
     obsSvc.addObserver(observer, 'facebook-friends-updated', false);
     document.getElementById('SidebarFriendsList').addEventListener('keypress', HandleKeyPress, true);
-    // XXX if the toolbar is not present, add a search box to the top of the sidebar, kind of like this:
-    // <hbox>
-    //   <textbox type="timed" timeout="500" id="facebook-search" oncommand="SidebarType(event)" flex="1"/>
-    //   <button id="do-search" oncommand="DoWebSearch(event, this.previousSibling)" label="Search"/>
-    // </hbox>
+    if (!top.document.getElementById('facebook-search')) {
+        // XXX for some reason even if the toolbar is hidden we can still see
+        // the search-box, so this never happens...we'll keep the code in case
+        // we get a chance to figure it out later, though.
+        document.getElementById('facebook-search-sidebar').style.display = '';
+        document.getElementById('facebook-search-sidebar').addEventListener('keypress', HandleKeyPress, true);
+    } else {
+        document.getElementById('facebook-search-sidebar').style.display = 'none';
+    }
 }
 function SidebarUnload() {
     debug('SidebarUnload');

@@ -102,4 +102,7 @@
                  sidebartitle="Facebook Sidebar"
                  oncommand="toggleSidebar('viewFacebookSidebar');event.stopPropagation();" />
   </broadcasterset>
+  <menupopup id="viewSidebarMenu">
+    <menuitem key="viewFacebookSidebarKb" observes="viewFacebookSidebar" label="Facebook" accesskey=""/>
+  </menupopup>
 </overlay>

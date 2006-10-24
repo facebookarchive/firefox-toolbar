@@ -37,6 +37,14 @@ function GetFriendsListElement() {
   return list;
 }
 
+function GetFBSearchBox() {
+  var box = top.document.getElementById('facebook-search');
+  if (!box) {
+    box = top.document.getElementById('sidebar').contentDocument.getElementById('facebook-search-sidebar');
+  }
+  return box;
+}
+
 function SelectItemInList(item, list) {
   if (!facebook) {
     // this must have been called via the sidebar
@@ -46,7 +54,7 @@ function SelectItemInList(item, list) {
     // so we need to disable the hidePopup call temporarily while the focus shifts around
     facebook.ignoreBlur = true;
     list.selectedItem = item;
-    document.getElementById('facebook-search').focus();
+    GetFBSearchBox().focus();
     facebook.ignoreBlur = false;
   }
 }
@@ -59,7 +67,7 @@ function SearchFriends(search) {
   var now = (new Date()).getTime();
   if (waitTil > now) {
       debug('still waiting');
-      window.setTimeout("SearchFriends(top.document.getElementById('facebook-search').value)", waitTil - now);
+      window.setTimeout("SearchFriends(GetFBSearchBox().value)", waitTil - now);
       return;
   }
   */
@@ -147,7 +155,7 @@ function HandleKeyPress(e) {
         item.doCommand();
       } else {
         openUILink('http://www.facebook.com/s.php?q=' +
-                   encodeURIComponent(document.getElementById('facebook-search').value), e);
+                   encodeURIComponent(GetFBSearchBox().value), e);
       }
       // fall-through to hide the pop-up...
     case e.DOM_VK_ESCAPE:

@@ -10,6 +10,12 @@
   <script type="application/x-javascript" src="chrome://browser/content/utilityOverlay.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/sidebar.js"/>
+  <hbox>
+    <textbox id="facebook-search-sidebar"
+             oninput="SearchFriends(this.value)"
+             flex="1"
+             style="display: none;"/>
+  </hbox>
   <richlistbox id="SidebarFriendsList"
                datasources="rdf:null"
                ref="urn:facebook:friends"
