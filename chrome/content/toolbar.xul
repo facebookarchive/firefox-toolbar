@@ -94,4 +94,12 @@
       </richlistbox>
     </popup>
   </toolbox>
+  <broadcasterset id="mainBroadcasterSet">
+    <broadcaster id="viewFacebookSidebar" autoCheck="false" 
+                 label="Facebook Sidebar"
+                 type="checkbox" group="sidebar"
+                 sidebarurl="chrome://facebook/content/sidebar.xul"
+                 sidebartitle="Facebook Sidebar"
+                 oncommand="toggleSidebar('viewFacebookSidebar');event.stopPropagation();" />
+  </broadcasterset>
 </overlay>

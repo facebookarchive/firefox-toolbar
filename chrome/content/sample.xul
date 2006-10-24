@@ -4,21 +4,4 @@
   <statusbar id="status-bar">
     <statusbarpanel id="facebook-panel" onmousedown="if (event.button == 0) FacebookLogin(this)" />
   </statusbar>
-  <toolbox id="navigator-toolbox">
-    <toolbarpalette id="BrowserToolbarPalette">
-      <toolbarbutton id="facebook-tbbutton" 
-                     label="View Facebook Sidebar"
-                     tooltiptext="View Facebook Sidebar"
-                     image="chrome://facebook/content/fbbutton.png"
-                     oncommand="this.checked=!this.checked; toggleSidebar('viewFacebookSidebar');"/>
-    </toolbarpalette>
-  </toolbox>
-  <broadcasterset id="mainBroadcasterSet">
-    <broadcaster id="viewFacebookSidebar" autoCheck="false" 
-                 label="facebook sidebar"
-                 type="checkbox" group="sidebar"
-                 sidebarurl="chrome://facebook/content/sidebar.xul"
-                 sidebartitle="Facebook Sidebar"
-                 oncommand="toggleSidebar('viewFacebookSidebar');event.stopPropagation();" />
-  </broadcasterset>
 </overlay>
