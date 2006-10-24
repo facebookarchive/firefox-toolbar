@@ -1,4 +1,4 @@
-.facebook-notifications toolbarbutton, #facebook-searchbox image {
+.facebook-notifications, #facebook-searchbox image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding-left: 0px;
 }
@@ -12,9 +12,13 @@
   margin-left: 6px;
 }
 
+#facebook-sidebar-toggle {
+  list-style-image: url("chrome://global/skin/icons/autocomplete-dropmarker.png");
+}
+
 #facebook-search .textbox-input-box {
   -moz-binding: url('chrome://facebook/content/bindings.xml#facebook-search-hbox');
-  padding: 0px
+  padding: 0px;
 }
 
 #facebook-search image {
@@ -30,15 +34,15 @@
   color: #777;
 }
 
-.facebook-notifications toolbarbutton > .toolbarbutton-text {
+.facebook-notifications > .toolbarbutton-text {
   padding-left: 2px;
 }
 
-.facebook-notifications toolbarbutton {
+.facebook-notifications {
   cursor: pointer;
 }
 
-.facebook-notifications toolbarbutton[label="0"] {
+.facebook-notifications[label="0"] {
   cursor: default;
 }
 

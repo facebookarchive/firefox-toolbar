@@ -19,7 +19,7 @@ var fbToolbarObserver = {
         break;
       case 'facebook-session-start':
         subject = subject.QueryInterface(Ci.fbIFacebookUser);
-        document.getElementById('facebook-login-info').label = subject.name;
+        document.getElementById('facebook-login-info-name').label = subject.name;
         break;
       case 'facebook-session-end':
         break;
@@ -39,7 +39,7 @@ var facebook = {
     var loggedInUser = fbSvc.loggedInUser;
     if (loggedInUser) {
       loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
-      document.getElementById('facebook-login-info').label = loggedInUser.name;
+      document.getElementById('facebook-login-info-name').label = loggedInUser.name;
     }
     facebook.loadFriends();
     document.getElementById('facebook-search').addEventListener('keypress', HandleKeyPress, true);
@@ -67,14 +67,14 @@ var facebook = {
     }
   },
   searchBoxFocus: function(searchBox) {
-    if (document.getElementById('viewFacebookSidebar').getAttribute('checked') != 'true') {
+    if (!this.ignoreBlur && document.getElementById('viewFacebookSidebar').getAttribute('checked') != 'true') {
       document.getElementById('PopupFacebookFriends').showPopup(searchBox, -1, -1, 'tooltip', 'bottomleft', 'topleft');
-      SearchFriends(searchBox.value); // this will usually no-op since we already did this search
-                                      // but just make sure we're not out of sync
+      // if the sidebar was just open then we would be out of sync, so let's just filter the list to be safe
+      SearchFriends(searchBox.value);
     }
   },
   searchBoxBlur: function(searchBox) {
-    if (!facebook.ignoreBlur) {
+    if (!this.ignoreBlur) {
       document.getElementById('PopupFacebookFriends').hidePopup();
     }
   },

@@ -23,12 +23,12 @@ function OpenFBUrl(page, uid, e) {
   e.stopPropagation();
 }
 
-function SidebarOpen() {
+function IsSidebarOpen() {
   return (top.document.getElementById('viewFacebookSidebar').getAttribute('checked') == 'true');
 }
 
 function GetFriendsListElement() {
-  if (SidebarOpen()) {
+  if (IsSidebarOpen()) {
     var list = top.document.getElementById('sidebar').contentDocument.getElementById('SidebarFriendsList');
   }
   if (!list) {
@@ -63,7 +63,7 @@ function SearchFriends(search) {
       return;
   }
   */
-  var sidebar = SidebarOpen();
+  var sidebar = IsSidebarOpen();
   if (sidebar) var childNodeName = 'richlistitem';
   else var childNodeName = 'vbox';
   var list = GetFriendsListElement();
@@ -163,7 +163,7 @@ function IsSelectableItem(item, childNodeName) {
 
 function MoveInList(dir) {
   var list = GetFriendsListElement();
-  var sidebar = SidebarOpen();
+  var sidebar = IsSidebarOpen();
   if (sidebar) var childNodeName = 'richlistitem';
   else var childNodeName = 'vbox';
   var item = list.selectedItem;

@@ -4,94 +4,94 @@
   <script type="application/x-javascript" src="chrome://browser/content/utilityOverlay.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/toolbar.js"/>
-  <toolbox id="navigator-toolbox">
-    <toolbar id="facebook-toolbar" class="chromeclass-toolbar" context="toolbar-context-menu" toolbarname="Facebook Toolbar" hidden="false" persist="hidden">
-
+  <toolbox id="navigator-toolbox" crop="end">
+    <toolbarpalette id="BrowserToolbarPalette">
+      <toolbarbutton id="facebook-sidebar-toggle" 
+                     tooltiptext="View Facebook Sidebar"
+                     persist="checked"
+                     oncommand="this.checked=!this.checked; toggleSidebar('viewFacebookSidebar');"/>
       <toolbaritem id="facebook-searchbox">
         <textbox id="facebook-search"
-                 value=""
                  maxlength="50"
                  onfocus="facebook.searchBoxFocus(this);"
                  onblur="facebook.searchBoxBlur(this);"
                  oninput="SearchFriends(this.value);"/>
       </toolbaritem>
 
-      <toolbarseparator/>
-
-      <toolbarbutton type="menu" tooltiptext="Friends' status" label="Friends' Status">
-        <menupopup>
-          <menuitem label="Friend 1" />
-        </menupopup>
-      </toolbarbutton>
-
-      <toolbarbutton tooltiptext="Share on Facebook"
+      <toolbarbutton id="facebook-share"
+                     tooltiptext="Share on Facebook"
                      label="Share on Facebook"
                      oncommand="facebook.share()"/>
 
-      <toolbarseparator/>
+      <toolbarbutton id="facebook-notification-poke"
+                     class="facebook-icon-poke facebook-notifications"
+                     label="0"
+                     tooltip="New Pokes"
+                     oncommand="if (this.label!='0') openUILink('http://www.facebook.com/home.php', event)"/>
+      <toolbarbutton id="facebook-notification-reqs"
+                     class="facebook-icon-reqs facebook-notifications"
+                     label="0"
+                     tooltip="New Friend Requests"
+                     oncommand="if (this.label!='0') openUILink('http://www.facebook.com/reqs.php', event)"/>
+      <toolbarbutton id="facebook-notification-msgs"
+                     class="facebook-icon-msgs facebook-notifications"
+                     label="0"
+                     tooltip="New Messages"
+                     oncommand="if (this.label!='0') openUILink('http://www.facebook.com/mailbox.php', event)"/>
 
-      <toolbaritem class="facebook-notifications" flex="0">
-        <toolbarbutton id="facebook-notification-poke" class="facebook-icon-poke" label="0" tooltip="New Pokes" oncommand="if (this.label!='0') openUILink('http://www.facebook.com/home.php', event)" />
-        <toolbarbutton id="facebook-notification-reqs" class="facebook-icon-reqs" label="0" tooltip="New Friend Requests" oncommand="if (this.label!='0') openUILink('http://www.facebook.com/reqs.php', event)" />
-        <toolbarbutton id="facebook-notification-msgs" class="facebook-icon-msgs" label="1" tooltip="New Messages" oncommand="if (this.label!='0') openUILink('http://www.facebook.com/mailbox.php', event)" />
+      <toolbaritem id="facebook-login-info">
+        <toolbarbutton id="facebook-login-info-name"/>
       </toolbaritem>
-
-      <toolbarseparator/>
-
-      <toolbaritem flex="0">
-        <toolbarbutton id="Button" type="menu" tooltiptext="Settings" label="Settings" oocommand="status(event,'web')">
-          <menupopup>
-            <menuitem label="Friend 1" oncommand="TutTB_LoardURL('http://google.com')"/>
-          </menupopup>
-        </toolbarbutton>
-      </toolbaritem>
-
-      <toolbaritem flex="1">
-        <spacer flex="1"/>
-        <toolbarbutton id="facebook-login-info"/>
-      </toolbaritem>
-
-      <toolbarspring/>
-
-      <popup position="after_start"
-             id="PopupFacebookFriends"
-             style="width: 300px; max-height:300px;">
-        <richlistbox id="PopupFacebookFriendsList"
-                     datasources="rdf:null"
-                     ref="urn:facebook:friends"
-                     flex="1"
-                     sortResource="http://www.facebook.com/rdf/users#name"
-                     sortActive="true"
-                     sortDirection="ascending">
-          <template>
-            <vbox uri="rdf:*"
-                  searchname="rdf:http://www.facebook.com/rdf/users#name"
-                  userid="rdf:http://www.facebook.com/rdf/users#id">
-              <richlistitem style="padding: 5px;"
-                            oncommand="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)">
-                <image class="facebook-link" style="height:50px; width:50px;"
-                       src="rdf:http://www.facebook.com/rdf/users#pic"/>
-                <vbox>
-                  <label class="facebook-link" value="rdf:http://www.facebook.com/rdf/users#name"/>
-                  <label value="rdf:http://www.facebook.com/rdf/users#status"/>
-                </vbox>
-              </richlistitem>
-              <richlistitem style="padding: 5px; display: none;"
-                            class="facebook-friendlinks"
-                            oncommand="OpenFBUrl('message.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)">
-                <toolbarbutton class="facebook-icon-msgs facebook-link" />
-                <label class="facebook-link" value="Message rdf:http://www.facebook.com/rdf/users#name"/>
-              </richlistitem>
-              <richlistitem style="padding: 5px; display: none;"
-                            class="facebook-friendlinks"
-                            oncommand="OpenFBUrl('poke.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)">
-                <toolbarbutton class="facebook-icon-poke facebook-link" />
-                <label class="facebook-link" value="Poke rdf:http://www.facebook.com/rdf/users#name"/>
-              </richlistitem>
-            </vbox>
-          </template>
-        </richlistbox>
-      </popup>
+    </toolbarpalette>
+    <toolbar id="facebook-toolbar"
+             class="chromeclass-toolbar-additional" 
+             oldclass="chromeclass-toolbar"
+             mode="full"
+             iconsize="small"
+             customizable="true"
+             context="toolbar-context-menu"
+             toolbarname="Facebook Toolbar"
+             crop="end"
+             defaultset="facebook-sidebar-toggle,facebook-searchbox,separator,facebook-share,spring,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,separator,facebook-login-info">
     </toolbar>
+    <popup position="after_start"
+           id="PopupFacebookFriends"
+           style="width: 300px; max-height:300px;">
+      <richlistbox id="PopupFacebookFriendsList"
+                   datasources="rdf:null"
+                   ref="urn:facebook:friends"
+                   flex="1"
+                   sortResource="http://www.facebook.com/rdf/users#name"
+                   sortActive="true"
+                   sortDirection="ascending">
+        <template>
+          <vbox uri="rdf:*"
+                searchname="rdf:http://www.facebook.com/rdf/users#name"
+                userid="rdf:http://www.facebook.com/rdf/users#id">
+            <richlistitem style="padding: 5px;"
+                          oncommand="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)">
+              <image class="facebook-link" style="height:50px; width:50px;"
+                     src="rdf:http://www.facebook.com/rdf/users#pic"/>
+              <vbox>
+                <label class="facebook-link" value="rdf:http://www.facebook.com/rdf/users#name"/>
+                <label value="rdf:http://www.facebook.com/rdf/users#status"/>
+              </vbox>
+            </richlistitem>
+            <richlistitem style="padding: 5px; display: none;"
+                          class="facebook-friendlinks"
+                          oncommand="OpenFBUrl('message.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)">
+              <toolbarbutton class="facebook-icon-msgs facebook-link" />
+              <label class="facebook-link" value="Message rdf:http://www.facebook.com/rdf/users#name"/>
+            </richlistitem>
+            <richlistitem style="padding: 5px; display: none;"
+                          class="facebook-friendlinks"
+                          oncommand="OpenFBUrl('poke.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)">
+              <toolbarbutton class="facebook-icon-poke facebook-link" />
+              <label class="facebook-link" value="Poke rdf:http://www.facebook.com/rdf/users#name"/>
+            </richlistitem>
+          </vbox>
+        </template>
+      </richlistbox>
+    </popup>
   </toolbox>
 </overlay>

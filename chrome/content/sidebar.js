@@ -33,7 +33,7 @@ function LoadFriends() {
 
 function SidebarLoad() {
     debug('SidebarLoad');
-    top.document.getElementById('facebook-tbbutton').checked = true;
+    top.document.getElementById('facebook-sidebar-toggle').checked = true;
     LoadFriends();
     obsSvc.addObserver(observer, 'facebook-friends-updated', false);
     document.getElementById('SidebarFriendsList').addEventListener('keypress', HandleKeyPress, true);
@@ -45,7 +45,7 @@ function SidebarLoad() {
 }
 function SidebarUnload() {
     debug('SidebarUnload');
-    top.document.getElementById('facebook-tbbutton').checked = false;
+    top.document.getElementById('facebook-sidebar-toggle').checked = false;
     obsSvc.removeObserver(observer, 'facebook-friends-updated');
 }
 var facebook=null; // for some reason lib.js can't seem to handle not having something named facebook defined
