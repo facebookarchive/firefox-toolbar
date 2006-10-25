@@ -347,10 +347,16 @@ facebookService.prototype = {
               dump(resultText);
             }
             var xmldata = new XML(resultText);
-            // XXX check for fb_error here
+            if ((String)(xmldata.fb_error.code)) { // need to cast to string or else the check will never fail
+                throw xmldata.fb_error;
+            }
             return xmldata;
         } catch (e) {
-            debug('Exception sending REST request: ' + e);
+            if (e.code == 102) {
+                debug('session expired, logging out.');
+                this.sessionEnd();
+            }
+            debug('Exception sending REST request: ', e);
             return null;
         }
     },

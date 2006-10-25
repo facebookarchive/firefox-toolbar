@@ -25,6 +25,7 @@ var fbToolbarObserver = {
         document.getElementById('facebook-login-info-name').label = subject.name;
         break;
       case 'facebook-session-end':
+        document.getElementById('facebook-login-info-name').label = '';
         break;
     }
   }

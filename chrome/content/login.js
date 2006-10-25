@@ -28,7 +28,7 @@ function startup() {
         }
     } else {
         document.getElementById('facebook-login-body').
-            setAttribute('src', 'http://api.facebook.com/login.php?api_key=' +
+            setAttribute('src', 'http://api.facebook.com/login.php?popup&api_key=' +
                                 client.fbSvc.apiKey + '&auth_token=' + client.authToken);
         debug('loading login page');
     }
