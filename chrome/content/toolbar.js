@@ -55,7 +55,8 @@ var facebook = {
     var loggedInUser = fbSvc.loggedInUser;
     if (loggedInUser) {
       loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
-      document.getElementById('facebook-login-info-name').label = loggedInUser.name;
+      document.getElementById('facebook-name-info').label = loggedInUser.name;
+      document.getElementById('facebook-login-status').label = 'Logout';
     }
     facebook.loadFriends();
     document.getElementById('facebook-search').addEventListener('keypress', HandleKeyPress, true);
@@ -113,6 +114,8 @@ var facebook = {
     if (friend.status) {
       item.setAttribute('status', firstName + ' is ' + friend.status);
     }
+    item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
+    item.setAttribute('onmouseup', "this.doCommand();"); // for some reason onclick events aren't getting fired so we'll just use mouseup
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
     item.setAttribute('userid', friend.id);
     item.setAttribute('pic', friend.pic);

@@ -70,6 +70,15 @@ function facebookService()
     };
 
     this._observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
+    this._prefService     = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+
+    if (this._prefService.prefHasUserValue('extensions.facebook.sessionKey') &&
+        this._prefService.prefHasUserValue('extensions.facebook.sessionSecret') &&
+        this._prefService.prefHasUserValue('extensions.facebook.uid')) {
+        this.sessionStart(this._prefService.getCharPref('extensions.facebook.sessionKey'),
+                          this._prefService.getCharPref('extensions.facebook.sessionSecret'),
+                          this._prefService.getCharPref('extensions.facebook.uid'));
+    }
 }
 
 facebookService.prototype = {
@@ -110,6 +119,10 @@ facebookService.prototype = {
         this._loggedIn      = true;
         this._uid           = uid;
 
+        this._prefService.setCharPref('extensions.facebook.sessionKey',    sessionKey);
+        this._prefService.setCharPref('extensions.facebook.sessionSecret', sessionSecret);
+        this._prefService.setCharPref('extensions.facebook.uid',           uid);
+
         this.timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
         this.timer.initWithCallback(this._msgChecker, MSG_CHECK_INTERVAL, Ci.nsITimer.TYPE_REPEATING_SLACK);
 
@@ -124,6 +137,11 @@ facebookService.prototype = {
         debug('sessionEnd');
 
         this.initValues();
+
+        this._prefService.clearUserPref('extensions.facebook.sessionKey');
+        this._prefService.clearUserPref('extensions.facebook.sessionSecret');
+        this._prefService.clearUserPref('extensions.facebook.uid');
+
         this.timer.cancel();
         this.timer2.cancel();
         this.timer3.cancel();

@@ -122,12 +122,16 @@ function SearchFriends(search) {
         item.setAttribute('id', 'PopupMessager');
         item.setAttribute('class', 'facebook-friendlinks');
         item.setAttribute('value', 'Send ' + lastDisplayed.getAttribute('firstname') + ' a message');
+        item.setAttribute('onmouseup', "this.doCommand();");
+        item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
         item.setAttribute('oncommand', "OpenFBUrl('message.php', '" + lastDisplayed.getAttribute('userid') + "', event)");
         list.appendChild(item);
         item = document.createElement('richlistitem');
         item.setAttribute('id', 'PopupPoker');
         item.setAttribute('class', 'facebook-friendlinks');
         item.setAttribute('value', 'Poke ' + lastDisplayed.getAttribute('firstname'));
+        item.setAttribute('onmouseup', "this.doCommand();");
+        item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
         item.setAttribute('oncommand', "OpenFBUrl('poke.php', '" + lastDisplayed.getAttribute('userid') + "', event)");
         list.appendChild(item);
       }
