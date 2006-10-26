@@ -40,14 +40,6 @@
   padding: 0px;
 }
 
-.facebook-notifications {
-  cursor: pointer;
-}
-
-.facebook-notifications[label="0"] {
-  cursor: default;
-}
-
 .facebook-icon-poke {
   -moz-image-region: rect(0px 16px 14px 0px);
 }
@@ -66,12 +58,10 @@
 }
 
 .facebook-icon-reqs:hover {
-  margin-left: 5px;
   -moz-image-region: rect(0px 204px 14px 188px);
 }
 
 .facebook-icon-reqs:active {
-  margin-left: 5px;
   -moz-image-region: rect(0px 252px 14px 236px);
 }
 
@@ -81,12 +71,10 @@
 }
 
 .facebook-icon-msgs:hover {
-  margin-left: 5px;
   -moz-image-region: rect(0px 220px 14px 204px);
 }
 
 .facebook-icon-msgs:active {
-  margin-left: 5px;
   -moz-image-region: rect(0px 268px 14px 252px);
 }
 
@@ -96,7 +84,6 @@
 }
 
 .facebook-icon-share:hover {
-  padding: 0px;
   -moz-image-region: rect(0px 172px 18px 118px);
 }
 
