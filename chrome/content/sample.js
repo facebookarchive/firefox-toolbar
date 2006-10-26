@@ -20,7 +20,7 @@ var observer = {
                 panel.label = subject.name + ' updated status to ' + subject.status;
                 break;
             case 'facebook-session-start':
-                panel.label = 'logged in!';
+	        panel.label = 'logged in!';
                 break;
             case 'facebook-session-end':
                 panel.label = 'logged out';

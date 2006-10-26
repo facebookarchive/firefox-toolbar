@@ -3,6 +3,7 @@
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="facebook">
   <script type="application/x-javascript" src="chrome://browser/content/utilityOverlay.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
+  <script type="application/x-javascript" src="chrome://facebook/content/sample.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/toolbar.js"/>
   <toolbox id="navigator-toolbox" crop="end">
     <toolbarpalette id="BrowserToolbarPalette">
@@ -19,28 +20,35 @@
       </toolbaritem>
 
       <toolbarbutton id="facebook-share"
+                     class="facebook-icon-share facebook-share"
                      tooltiptext="Share on Facebook"
-                     label="Share on Facebook"
                      oncommand="facebook.share()"/>
 
       <toolbarbutton id="facebook-notification-poke"
-                     class="facebook-icon-poke facebook-notifications"
+                     class="facebook-icon-poke facebook-notifications button"
                      label="0"
                      tooltip="New Pokes"
-                     oncommand="if (this.label!='0') openUILink('http://www.facebook.com/home.php', event)"/>
+                     oncommand="openUILink('http://www.facebook.com/home.php', event)"/>
       <toolbarbutton id="facebook-notification-reqs"
-                     class="facebook-icon-reqs facebook-notifications"
+                     class="facebook-icon-reqs facebook-notifications button"
                      label="0"
                      tooltip="New Friend Requests"
-                     oncommand="if (this.label!='0') openUILink('http://www.facebook.com/reqs.php', event)"/>
+                     oncommand="openUILink('http://www.facebook.com/reqs.php', event)"/>
       <toolbarbutton id="facebook-notification-msgs"
-                     class="facebook-icon-msgs facebook-notifications"
+                     class="facebook-icon-msgs facebook-notifications button"
                      label="0"
                      tooltip="New Messages"
-                     oncommand="if (this.label!='0') openUILink('http://www.facebook.com/mailbox.php', event)"/>
+                     oncommand="openUILink('http://www.facebook.com/mailbox.php', event)"/>
 
       <toolbaritem id="facebook-login-info">
-        <toolbarbutton id="facebook-login-info-name"/>
+        <toolbarbutton id="facebook-name-info"
+                       class="button"
+                       oncommand="if (this.label!='') openUILink('http://www.facebook.com')" />
+        <toolbarbutton id="facebook-login-status" 
+                       class="button"
+		       label="Login to Facebook"
+                       tooltip="Login to Facebook"
+                       oncommand="FacebookLogin(this)" />
       </toolbaritem>
     </toolbarpalette>
     <toolbar id="facebook-toolbar"
@@ -52,7 +60,7 @@
              context="toolbar-context-menu"
              toolbarname="Facebook Toolbar"
              crop="end"
-             defaultset="facebook-sidebar-toggle,facebook-searchbox,separator,facebook-share,spring,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,separator,facebook-login-info">
+             defaultset="facebook-sidebar-toggle,facebook-searchbox,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,separator,facebook-share,spring,facebook-login-info">
     </toolbar>
     <popup position="after_start"
            id="PopupFacebookFriends"

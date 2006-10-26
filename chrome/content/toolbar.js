@@ -22,10 +22,12 @@ var fbToolbarObserver = {
         break;
       case 'facebook-session-start':
         subject = subject.QueryInterface(Ci.fbIFacebookUser);
-        document.getElementById('facebook-login-info-name').label = subject.name;
+        document.getElementById('facebook-name-info').label = subject.name;
+        document.getElementById('facebook-login-status').label = 'Logout';
         break;
       case 'facebook-session-end':
-        document.getElementById('facebook-login-info-name').label = '';
+        document.getElementById('facebook-login-status').label = 'Login to Facebook';
+        document.getElementById('facebook-name-info').label = '';
         break;
     }
   }

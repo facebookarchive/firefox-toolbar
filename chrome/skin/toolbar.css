@@ -1,7 +1,8 @@
-.facebook-notifications, #facebook-searchbox image {
+.facebook-notifications, .facebook-share, #facebook-searchbox image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
-  padding-left: 0px;
+  padding: 0px;
 }
+
 .facebook-friendlinks toolbarbutton {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding: 0px;
@@ -13,6 +14,7 @@
 }
 
 #facebook-sidebar-toggle {
+  padding-left: 12px;
   list-style-image: url("chrome://global/skin/icons/autocomplete-dropmarker.png");
 }
 
@@ -35,7 +37,7 @@
 }
 
 .facebook-notifications > .toolbarbutton-text {
-  padding-left: 2px;
+  padding: 0px;
 }
 
 .facebook-notifications {
@@ -50,14 +52,91 @@
   -moz-image-region: rect(0px 16px 14px 0px);
 }
 
+.facebook-icon-poke:hover {
+  -moz-image-region: rect(0px 188px 14px 172px);
+}
+
+.facebook-icon-poke:active {
+  -moz-image-region: rect(0px 236px 14px 220px);
+}
+
 .facebook-icon-reqs {
+  margin-left: 5px;
   -moz-image-region: rect(0px 32px 14px 16px);
 }
 
+.facebook-icon-reqs:hover {
+  margin-left: 5px;
+  -moz-image-region: rect(0px 204px 14px 188px);
+}
+
+.facebook-icon-reqs:active {
+  margin-left: 5px;
+  -moz-image-region: rect(0px 252px 14px 236px);
+}
+
 .facebook-icon-msgs {
+  margin-left: 5px;
   -moz-image-region: rect(0px 48px 14px 32px);
 }
+
+.facebook-icon-msgs:hover {
+  margin-left: 5px;
+  -moz-image-region: rect(0px 220px 14px 204px);
+}
+
+.facebook-icon-msgs:active {
+  margin-left: 5px;
+  -moz-image-region: rect(0px 268px 14px 252px);
+}
+
+.facebook-icon-share {
+  padding: 0px;
+  -moz-image-region: rect(0px 118px 18px 64px);
+}
+
+.facebook-icon-share:hover {
+  padding: 0px;
+  -moz-image-region: rect(0px 172px 18px 118px);
+}
+
+#facebook-login-info-name {
+  padding: 0px;
+  margin: 0px;
+  border: solid 1px #546324;
+}
+
+#facebook-name-info {
+  padding: -4px;
+  margin: 0px;
+}
+
+#facebook-login-status {
+  padding: -4px;
+  margin: 0px;
+}
+
+.button:hover {
+  color: #3b5998;
+  text-decoration: underline;
+}
+
+.button:active {
+  color: #2f4778;
+  text-decoration: underline;
+}
+
 .facebook-link {
   cursor: pointer;
   color: #3B5998;
+}
+
+.status {
+   color: #808080;
+   width: 100px;
+   margin-bottom: 3px;
+}
+
+.user_name {
+   font-weight: bold;
 }

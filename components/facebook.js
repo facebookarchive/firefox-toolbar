@@ -240,7 +240,7 @@ facebookService.prototype = {
                 id     = String(friend.@id),
                 status = String(friend.status.message),
                 stime  = String(maxdate-parseInt(friend.status.time)), // note maxdate
-                pic    = String(decodeURI(friend.pic));
+                pic    = String(decodeURI(friend.pic)) + '&size=thumb';
 
             // RDF STUFF
             var user = this._friendsDS.getNode('urn:facebook:users:'+id);
