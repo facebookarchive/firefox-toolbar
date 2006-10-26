@@ -3,7 +3,6 @@
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="facebook">
   <script type="application/x-javascript" src="chrome://browser/content/utilityOverlay.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
-  <script type="application/x-javascript" src="chrome://facebook/content/sample.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/toolbar.js"/>
   <toolbox id="navigator-toolbox" crop="end">
     <toolbarpalette id="BrowserToolbarPalette">
@@ -48,7 +47,7 @@
                        class="button"
 		       label="Login to Facebook"
                        tooltip="Login to Facebook"
-                       oncommand="FacebookLogin(this)" />
+                       oncommand="FacebookLogin()" />
       </toolbaritem>
     </toolbarpalette>
     <toolbar id="facebook-toolbar"

@@ -199,3 +199,15 @@ function MoveInList(dir) {
   }
 }
 
+function FacebookLogin() {
+  if (fbSvc.loggedIn) {
+    dump('logging out\n');
+    fbSvc.sessionEnd();
+  } else {
+    // popup login page height is normally 436, but add 20 pixels for the
+    // button we show at the bottom of the page
+    window.open('chrome://facebook/content/login.xul', '',
+                'chrome,centerscreen,width=626,height=456,modal=yes,dialog=yes,close=no');
+  }
+}
+

@@ -1,4 +1,3 @@
 content facebook chrome/content/
-overlay chrome://browser/content/browser.xul chrome://facebook/content/sample.xul
 overlay chrome://browser/content/browser.xul chrome://facebook/content/toolbar.xul
 skin facebook classic/1.0 chrome/skin/
