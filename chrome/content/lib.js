@@ -72,8 +72,6 @@ function SearchFriends(search) {
   }
   */
   var sidebar = IsSidebarOpen();
-  if (sidebar) var childNodeName = 'richlistitem';
-  else var childNodeName = 'vbox';
   var list = GetFriendsListElement();
   var numDisplayed = 0;
   var lastDisplayed = null;
@@ -84,9 +82,9 @@ function SearchFriends(search) {
         searches.push(new RegExp('\\b' + s, 'i'));
       }
     }
-    for each (var node in list.childNodes) {
-      if (node.nodeName != childNodeName) continue;
-      var sname = node.getAttribute('searchname');
+    for (var i = 0; i < list.childNodes.length; i++) {
+      var node = list.childNodes[i];
+      var sname = node.getAttribute('friendname');
       if (!sname) continue;
       if (searches.every(function(s) { return s.test(sname); })) {
         node.style.display = '';
@@ -98,19 +96,15 @@ function SearchFriends(search) {
     }
   } else {
     // simple version for empty searches
-    for each (var node in list.childNodes) {
-      if (node.style) {
-        node.style.display = '';
-        numDisplayed++;
-        lastDisplayed = node;
-      }
+    for (var i = 0; i < list.childNodes.length; i++) {
+      var node = list.childNodes[i];
+      node.style.display = '';
+      numDisplayed++;
+      lastDisplayed = node;
     }
   }
   var item = list.selectedItem;
   if (item) {
-    if (numDisplayed > 1 && !sidebar) {
-      item = item.parentNode.firstChild; // in case it was on an action link
-    }
     if (item.style.display == 'none') {
       list.selectedIndex = -1;
     } else {
@@ -122,15 +116,32 @@ function SearchFriends(search) {
   }
   if (!sidebar) {
     if (numDisplayed == 1) {
-      lastDisplayed.childNodes[1].style.display = '';
-      lastDisplayed.childNodes[2].style.display = '';
-      if (facebook) {
-        facebook.actionLinksShowing = lastDisplayed;
+      if (!document.getElementById('PopupMessager')) {
+        debug('showing action links', lastDisplayed.id);
+        var item = document.createElement('richlistitem');
+        item.setAttribute('id', 'PopupMessager');
+        item.setAttribute('class', 'facebook-friendlinks');
+        item.setAttribute('value', 'Send ' + lastDisplayed.getAttribute('firstname') + ' a message');
+        item.setAttribute('oncommand', "OpenFBUrl('message.php', '" + lastDisplayed.getAttribute('userid') + "', event)");
+        list.appendChild(item);
+        item = document.createElement('richlistitem');
+        item.setAttribute('id', 'PopupPoker');
+        item.setAttribute('class', 'facebook-friendlinks');
+        item.setAttribute('value', 'Poke ' + lastDisplayed.getAttribute('firstname'));
+        item.setAttribute('oncommand', "OpenFBUrl('poke.php', '" + lastDisplayed.getAttribute('userid') + "', event)");
+        list.appendChild(item);
       }
-    } else if (facebook && facebook.actionLinksShowing) {
-      facebook.actionLinksShowing.childNodes[1].style.display = 'none';
-      facebook.actionLinksShowing.childNodes[2].style.display = 'none';
-      facebook.actionLinksShowing = null;
+    } else {
+      var messager = document.getElementById('PopupMessager');
+      if (messager) {
+        var poker = document.getElementById('PopupPoker');
+        if (list.selectedItem && (list.selectedItem == poker || list.selectedItem == messager)) {
+          debug('unselecting');
+          list.selectedItem = null;
+        }
+        list.removeChild(messager);
+        list.removeChild(poker);
+      }
     }
   }
 }
@@ -165,18 +176,10 @@ function HandleKeyPress(e) {
   }
 }
 
-function IsSelectableItem(item, childNodeName) {
-  return (item && item.nodeName == childNodeName && item.style.display != 'none');
-}
-
 function MoveInList(dir) {
   var list = GetFriendsListElement();
-  var sidebar = IsSidebarOpen();
-  if (sidebar) var childNodeName = 'richlistitem';
-  else var childNodeName = 'vbox';
   var item = list.selectedItem;
-  if (item && !sidebar) item = item.parentNode;
-  if (!IsSelectableItem(item, childNodeName)) {
+  if (!item || item.style.display == 'none') {
     // nothing selected yet, start at the top...
     if (dir == 'previousSibling') {
       item = list.lastChild;
@@ -187,17 +190,12 @@ function MoveInList(dir) {
     // start by moving up/down one
     item = item[dir];
   }
-  while (item && !IsSelectableItem(item, childNodeName)) {
+  while (item && item.style.display == 'none') {
     item = item[dir];
   }
 
-  if (IsSelectableItem(item, childNodeName)) {
-    if (sidebar) {
-      SelectItemInList(item, list);
-    } else {
-      SelectItemInList(item.firstChild, list);
-    }
-  } else if (facebook && facebook.actionLinksShowing && list.selectedItem && list.selectedItem[dir]) {
-    SelectItemInList(list.selectedItem[dir], list);
+  if (item) {
+    SelectItemInList(item, list);
   }
 }
+

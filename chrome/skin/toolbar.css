@@ -130,6 +130,23 @@
   cursor: pointer;
   color: #3B5998;
 }
+.popupFriendBox, .friendBox {
+  -moz-binding: url('chrome://facebook/content/bindings.xml#friendBox');
+  padding: 5px;
+}
+.popupFriendBox .facebook-friendlinks {
+  display: none;
+}
+#PopupMessager {
+  -moz-binding: url('chrome://facebook/content/bindings.xml#popupMessager');
+  padding: 5px;
+  margin: 0px;
+}
+#PopupPoker {
+  -moz-binding: url('chrome://facebook/content/bindings.xml#popupPoker');
+  padding: 5px;
+  margin: 0px;
+}
 
 .status {
    color: #808080;

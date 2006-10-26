@@ -1,8 +1,7 @@
 const FRIEND_CHECK_INTERVAL = 15*60*1000;
 const MSG_CHECK_INTERVAL    = 5*60*1000;
-const USER_RDF_NS = 'http://www.facebook.com/rdf/users#';
 
-const VERBOSITY = 1; // 0: no dumping, 1: normal dumping, 2: massive dumping
+const VERBOSITY = 2; // 0: no dumping, 1: normal dumping, 2: massive dumping
 
 function debug() {
   if (VERBOSITY == 0) return;
@@ -30,11 +29,6 @@ var Ci = Components.interfaces;
 Cc['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Ci.mozIJSSubScriptLoader)
     .loadSubScript('chrome://facebook/content/md5.js');
-
-// Load RDF code...
-Cc['@mozilla.org/moz/jssubscript-loader;1']
-    .getService(Ci.mozIJSSubScriptLoader)
-    .loadSubScript('chrome://facebook/content/rdflib.js');
 
 function facebookService()
 {
@@ -105,13 +99,6 @@ facebookService.prototype = {
     get loggedIn() {
         return this._loggedIn;
     },
-    get friendsRdf() {
-        if (this._friendsDS) {
-            return this._friendsDS.getRawDataSource();
-        } else {
-            return null;
-        }
-    },
     get loggedInUser() {
         return this._loggedInUser;
     },
@@ -157,7 +144,7 @@ facebookService.prototype = {
         this._reqsInfo      = {};
         this._totalPokes    = 0;
         this._friendsInfo   = {};
-        this._friendsDS     = null;
+        this._friendsInfoArr = [];
     },
 
     checkMessages: function() {
@@ -220,68 +207,33 @@ facebookService.prototype = {
             friends.push(id);
         }
 
-        // RDF STUFF
-        this._friendsDS = new RDFDataSource(); // could pass in a file name if you want to save it
-        var parent = this._friendsDS.getNode('urn:facebook:friends');
-        parent.makeBag();
+        var friendsInfo = this.getUsersInfo(friends);
+        var friendsInfoArr = [];
 
-        data = this.callMethod('facebook.users.getInfo', ['users='+friends.join(','), 'fields=name,status,pic']);
-
-        // We want status times to be sorted in descending order, but we are doing an alphabetical
-        // sort on them via RDF (so that the secondary sort by name works).  So we need all of the
-        // status times to have the same # of characters in order for alphabetical sort to work and
-        // we want the most recent update to have the smallest number so it will show up first.  So
-        // we make a maxdate which corresponds to somewhere in the year 33658 and subtract from
-        // there.  We picked maxdate such that it would not lose any digits during this subtraction
-        // so that the sort will work properly.  Note: this code is not Y33K compliant.
-        const maxdate = 999999999999;
-        for each (var friend in data.result_elt) {
-            var name   = String(friend.name),
-                id     = String(friend.@id),
-                status = String(friend.status.message),
-                stime  = String(maxdate-parseInt(friend.status.time)), // note maxdate
-                pic    = String(decodeURI(friend.pic)) + '&size=thumb';
-
-            // RDF STUFF
-            var user = this._friendsDS.getNode('urn:facebook:users:'+id);
-            user.addTargetOnce(USER_RDF_NS + 'id', id);
-            user.addTargetOnce(USER_RDF_NS + 'name', name);
-            if (status) {
-                var firstName = name.substr(0, name.indexOf(' '));
-                if (!firstName) firstName = name;
-                user.addTargetOnce(USER_RDF_NS + 'status', firstName + ' is ' + status);
-                user.addTargetOnce(USER_RDF_NS + 'statustime', stime);
-            } else {
-                user.addTargetOnce(USER_RDF_NS + 'statustime', String(maxdate));
-            }
-            user.addTargetOnce(USER_RDF_NS + 'pic', pic);
-            parent.addChild(user, false);
-
-            var friendObj = new facebookUser(id, name, pic, status);
+        for each (var friend in friendsInfo) {
             if (!this._holdFriendNotifications) {
-                if (!this._friendsInfo[id]) {
-                    this._observerService.notifyObservers(friendObj, 'facebook-new-friend', id);
+                if (!this._friendsInfo[friend['id']]) {
+                    this._observerService.notifyObservers(friend, 'facebook-new-friend', friend['id']);
                     friendUpdate = true;
-                } else if (this._friendsInfo[id].status != status) {
-                    this._observerService.notifyObservers(friendObj, 'facebook-friend-updated', id);
+                } else if (this._friendsInfo[friend['id']].status != friend['status']) {
+                    this._observerService.notifyObservers(friend, 'facebook-friend-updated', friend['id']);
                     friendUpdate = true;
                 }
             }
-            this._friendsInfo[id] = friendObj;
+            friendsInfoArr.push(friend);
         }
+        this._friendsInfo = friendsInfo;
+        this._friendsInfoArr = friendsInfoArr;
+
         if (this._holdFriendNotifications || friendUpdate) {
+            debug('sending notification');
             this._observerService.notifyObservers(null, 'facebook-friends-updated', null);
         }
-        //this._friendsDS.flush(); (use this if you are saving to a file)
         debug('done checkFriends', friendUpdate);
     },
     getFriends: function(count) {
-        var list = [];
-        for each (var friendObj in this._friendsInfo) {
-            list.push(friendObj);
-        }
-        count.value = list.length;
-        return list;
+        count.value = this._friendsInfoArr.length;
+        return this._friendsInfoArr;
     },
     getMyInfo: function() {
         this._loggedInUser = this.getUsersInfo([this._uid])[this._uid];
@@ -294,8 +246,9 @@ facebookService.prototype = {
             var name   = String(user.name),
                 id     = String(user.@id),
                 status = String(user.status.message),
-                pic    = String(decodeURI(user.pic));
-            usersInfo[id] = new facebookUser(id, name, pic, status);
+                stime  = parseInt(user.status.time),
+                pic    = String(decodeURI(user.pic)) + '&size=thumb';
+            usersInfo[id] = new facebookUser(id, name, pic, status, stime);
         }
         return usersInfo;
     },
@@ -324,6 +277,7 @@ facebookService.prototype = {
         var message = params.join('&');
 
         try {
+            debug('about to call method', method);
             // Yuck...xmlhttprequest doesn't always work so we have to do this
             // the hard way.  Thanks to Manish from Flock for the tip!
             var channel = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService)
@@ -403,11 +357,12 @@ function NSGetModule(compMgr, fileSpec) {
     return facebookModule;
 }
 
-function facebookUser(id, name, pic, status) {
+function facebookUser(id, name, pic, status, stime) {
     this.id     = id;
     this.name   = name;
     this.pic    = pic;
     this.status = status;
+    this.stime  = stime;
 }
 facebookUser.prototype = {
     // nsISupports implementation

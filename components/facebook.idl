@@ -8,6 +8,7 @@ interface fbIFacebookUser : nsISupports
     attribute AString name;
     attribute AString pic;
     attribute AString status;
+    attribute long    stime;
 };
 
 [scriptable, uuid(19baf81b-d1bd-4a99-9010-dd6f478bfd22)]
@@ -59,8 +60,5 @@ interface fbIFacebookService : nsISupports
     readonly attribute long            numMsgs;
     readonly attribute long            numPokes;
     readonly attribute long            numReqs;
-    // two ways to access your friends: via an RDF data source or as an array of fbIFacebookUser structs
-    // the array method is now kind of slow (O(n)) since we're not using it...if we start using it it can be optimized
-    readonly attribute nsIRDFDataSource friendsRdf;
     void getFriends(out PRUint32 count, [retval,array,size_is(count)] out fbIFacebookUser users);
 };

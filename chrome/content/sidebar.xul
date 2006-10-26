@@ -16,37 +16,5 @@
              flex="1"
              style="display: none;"/>
   </hbox>
-  <richlistbox id="SidebarFriendsList"
-               datasources="rdf:null"
-               ref="urn:facebook:friends"
-               flex="1"
-               sortResource="http://www.facebook.com/rdf/users#statustime"
-               sortResource2="http://www.facebook.com/rdf/users#name"
-               sortActive="true"
-               sortDirection="ascending">
-    <template>
-      <richlistitem uri="rdf:*"
-                    style="padding: 5px"
-                    searchname="rdf:http://www.facebook.com/rdf/users#name"
-                    userid="rdf:http://www.facebook.com/rdf/users#id"
-                    oncommand="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)">
-        <image class="facebook-link"
-               src="rdf:http://www.facebook.com/rdf/users#pic"
-               onclick="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
-        <vbox>
-          <label class="facebook-link user_name" value="rdf:http://www.facebook.com/rdf/users#name" onclick="OpenFBUrl('profile.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
-          <label value="rdf:http://www.facebook.com/rdf/users#status" class="status"/>
-          <hbox class="facebook-friendlinks">
-            <toolbarbutton class="facebook-icon-msgs facebook-link"
-                           onclick="checkForMiddleClick(this, event);"
-                           oncommand="OpenFBUrl('message.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
-            <toolbarbutton class="facebook-icon-poke facebook-link"
-                           onclick="checkForMiddleClick(this, event);"
-                           oncommand="OpenFBUrl('poke.php', 'rdf:http://www.facebook.com/rdf/users#id^', event)"/>
-          </hbox>
-          <!--<label value="rdf:http://www.facebook.com/rdf/users#statustime"/>-->
-        </vbox>
-      </richlistitem>
-    </template>
-  </richlistbox>
+  <richlistbox id="SidebarFriendsList" flex="1"/>
 </page>

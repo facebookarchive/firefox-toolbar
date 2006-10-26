@@ -17,9 +17,6 @@ var fbToolbarObserver = {
       case 'facebook-reqs-updated':
         document.getElementById('facebook-notification-reqs').label = data;
         break;
-      case 'facebook-friends-updated':
-        facebook.loadFriends();
-        break;
       case 'facebook-session-start':
         subject = subject.QueryInterface(Ci.fbIFacebookUser);
         document.getElementById('facebook-name-info').label = subject.name;
@@ -28,6 +25,15 @@ var fbToolbarObserver = {
       case 'facebook-session-end':
         document.getElementById('facebook-login-status').label = 'Login to Facebook';
         document.getElementById('facebook-name-info').label = '';
+        facebook.clearFriends();
+        break;
+      case 'facebook-friends-updated':
+        facebook.loadFriends();
+        break;
+      case 'facebook-new-friend':
+      case 'facebook-friend-updated':
+        subject = subject.QueryInterface(Ci.fbIFacebookUser);
+        facebook.updateFriend(subject);
         break;
     }
   }
@@ -37,6 +43,8 @@ var facebook = {
   load: function() {
     obsSvc.addObserver(fbToolbarObserver, 'facebook-session-start', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-friends-updated', false);
+    obsSvc.addObserver(fbToolbarObserver, 'facebook-friend-updated', false);
+    obsSvc.addObserver(fbToolbarObserver, 'facebook-new-friend', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-session-end', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-msgs-updated', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-pokes-updated', false);
@@ -57,6 +65,8 @@ var facebook = {
   unload: function() {
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-session-start');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-friends-updated');
+    obsSvc.removeObserver(fbToolbarObserver, 'facebook-friend-updated');
+    obsSvc.removeObserver(fbToolbarObserver, 'facebook-new-friend');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-session-end');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-msgs-updated');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-pokes-updated');
@@ -64,15 +74,52 @@ var facebook = {
     debug('facebook toolbar unloaded.');
   },
 
+  sortFriends: function(f1, f2) {
+    if (f1.name < f2.name) return -1;
+    else if (f1.name > f2.name) return 1;
+    else return 0;
+  },
   loadFriends: function() {
     debug('loadFriends()');
     var list = document.getElementById('PopupFacebookFriendsList');
-    var friends = fbSvc.friendsRdf;
-    if (friends) {
-      list.database.AddDataSource(friends);
-      list.builder.rebuild();
+    if (list.firstChild) {
+      return;
+    }
+    var count = {};
+    var friends = fbSvc.getFriends(count);
+    debug('got friends', count.value);
+    friends.sort(this.sortFriends);
+    for each (var friend in friends) {
+      this.createFriendNode(list, friend, null);
+    }
+  },
+  updateFriend: function(friend) {
+    friend = friend.QueryInterface(Ci.fbIFacebookUser);
+    var elem = document.getElementById('popup-' + friend.id);
+    this.createFriendNode(list, friend, elem);
+  },
+  createFriendNode: function(list, friend, elem) {
+    if (!elem) {
+      var item = document.createElement('richlistitem');
+      item.setAttribute('id', 'popup-' + friend.id);
+      item.setAttribute('class', 'popupFriendBox');
     } else {
-      debug('no friends');
+      var item = elem;
+    }
+    item.setAttribute('friendname', friend.name);
+    var firstName = friend.name.substr(0, friend.name.indexOf(' '));
+    if (!firstName) firstName = friend.name;
+    item.setAttribute('firstname', firstName);
+    if (friend.status) {
+      item.setAttribute('status', firstName + ' is ' + friend.status);
+    }
+    item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
+    item.setAttribute('userid', friend.id);
+    item.setAttribute('pic', friend.pic);
+    if (!elem) {
+      // Note that this will put new friends at the bottom instead of alphabetized, but I think that's ok.
+      // It would get fixed in any new windows or when the browser restarts.
+      list.appendChild(item);
     }
   },
   searchBoxFocus: function(searchBox) {
@@ -111,6 +158,12 @@ var facebook = {
                   encodeURIComponent(content.document.location.href) +
                   '&t=' + encodeURIComponent(document.title),
                   'sharer','toolbar=no,status=yes,width=626,height=436');
+    }
+  },
+  clearFriends: function() {
+    var list = document.getElementById('PopupFacebookFriendsList');
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
     }
   }
 };
