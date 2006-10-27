@@ -12,7 +12,9 @@
   </binding>
   <binding id="friendBox" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
     <content>
-      <xul:image xbl:inherits="src=pic,onclick=oncommand" class="facebook-link" />
+      <xul:vbox>
+        <xul:image xbl:inherits="src=pic,onclick=oncommand" class="facebook-link" />
+      </xul:vbox>
       <xul:vbox>
         <xul:label xbl:inherits="value=friendname,onclick=oncommand" class="facebook-link user_name" />
         <xul:label xbl:inherits="value=status" class="status" />

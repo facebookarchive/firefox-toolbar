@@ -187,7 +187,7 @@ facebookService.prototype = {
     checkMessages: function() {
         var data = this.callMethod('facebook.messages.getCount', []);
         var newMsgCount = data.unread;
-        if (data.most_recent > this._lastMsgTime) {
+        if (data.most_recent > this._lastMsgTime && newMsgCount > 0) {
             this._observerService.notifyObservers(null, 'facebook-new-msgs', newMsgCount);
             if (newMsgCount > 1) {
                 this.showPopup('', 'You have new messages', 'http://www.facebook.com/mailbox.php');
@@ -233,7 +233,7 @@ facebookService.prototype = {
             for each (var reqInfo in this._reqsInfo) {
                 this._observerService.notifyObservers(reqInfo, 'facebook-new-req', reqInfo['id']);
                 this.showPopup(reqInfo.pic, reqInfo.name + ' wants to be your friend',
-                               'http://www.facebook.com/req.php');
+                               'http://www.facebook.com/reqs.php');
             }
         }
         if (newReqCount != this._numReqs) {
@@ -389,7 +389,7 @@ facebookService.prototype = {
                 var w = window.openDialog("chrome://facebook/content/notifier.xul", "Facebook Notification",
                                           'toolbar=no,status=no,left=' + left + ',top=' + top + ',width=150,height=100',
                                           pic, label, url);
-                window.setTimeout(function() { w.close(); }, 8000);
+                w.setTimeout(function() { w.close(); }, 8000);
             }
         }
     }

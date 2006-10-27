@@ -20,6 +20,7 @@ var fbToolbarObserver = {
       case 'facebook-session-start':
         subject = subject.QueryInterface(Ci.fbIFacebookUser);
         document.getElementById('facebook-name-info').label = subject.name;
+        document.getElementById('facebook-name-info').setAttribute('userid', subject.id);
         document.getElementById('facebook-login-status').label = 'Logout';
         break;
       case 'facebook-session-end':
@@ -56,6 +57,7 @@ var facebook = {
     if (loggedInUser) {
       loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
       document.getElementById('facebook-name-info').label = loggedInUser.name;
+      document.getElementById('facebook-name-info').setAttribute('userid', loggedInUser.id);
       document.getElementById('facebook-login-status').label = 'Logout';
     }
     facebook.loadFriends();
@@ -115,7 +117,8 @@ var facebook = {
       item.setAttribute('status', firstName + ' is ' + friend.status);
     }
     item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
-    item.setAttribute('onmouseup', "this.doCommand();"); // for some reason onclick events aren't getting fired so we'll just use mouseup
+    item.setAttribute('onmousedown', "this.doCommand();"); // in linux all we get is mousedown
+    item.setAttribute('onmouseup', "this.doCommand();");   // on mac all we get is mouseup
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
     item.setAttribute('userid', friend.id);
     item.setAttribute('pic', friend.pic);
@@ -157,7 +160,7 @@ var facebook = {
       content.document.body.removeChild(script);
     } catch(e) {
       debug('title is: ' + document.title, 'url: ' + content.document.location.href);
-      window.open('http://www.dev.facebook.com/sharer.php?bm&v=1&u=' +
+      window.open('http://www.facebook.com/sharer.php?bm&v=1&u=' +
                   encodeURIComponent(content.document.location.href) +
                   '&t=' + encodeURIComponent(document.title),
                   'sharer','toolbar=no,status=yes,width=626,height=436');

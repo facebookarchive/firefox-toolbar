@@ -46,7 +46,8 @@
         <toolbarbutton id="facebook-name-info"
                        class="button"
                        onclick="checkForMiddleClick(this, event);"
-                       oncommand="if (this.label!='') openUILink('http://www.facebook.com', event)" />
+                       oncommand="if (this.label!='') OpenFBUrl('profile.php', this.getAttribute('userid'), event)" />
+        <toolbarseparator/>
         <toolbarbutton id="facebook-login-status" 
                        class="button"
 		       label="Login to Facebook"
