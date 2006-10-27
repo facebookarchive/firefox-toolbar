@@ -8,6 +8,9 @@ var fbToolbarObserver = {
   observe: function(subject, topic, data) {
     debug('facebook toolbar observing something: ' + topic);
     switch (topic) {
+      case 'facebook-wall-updated':
+        document.getElementById('facebook-notification-wall').label = data;
+        break;
       case 'facebook-msgs-updated':
         document.getElementById('facebook-notification-msgs').label = data;
         break;
@@ -50,6 +53,7 @@ var facebook = {
     obsSvc.addObserver(fbToolbarObserver, 'facebook-msgs-updated', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-pokes-updated', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-reqs-updated', false);
+    obsSvc.addObserver(fbToolbarObserver, 'facebook-wall-updated', false);
     document.getElementById('facebook-notification-msgs').label = fbSvc.numMsgs;
     document.getElementById('facebook-notification-poke').label = fbSvc.numPokes;
     document.getElementById('facebook-notification-reqs').label = fbSvc.numReqs;
@@ -74,6 +78,7 @@ var facebook = {
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-msgs-updated');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-pokes-updated');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-reqs-updated');
+    obsSvc.removeObserver(fbToolbarObserver, 'facebook-wall-updated');
     debug('facebook toolbar unloaded.');
   },
 

@@ -9,6 +9,8 @@ interface fbIFacebookUser : nsISupports
     attribute AString pic;
     attribute AString status;
     attribute long    stime;
+    attribute long    notes;
+    attribute long    wall;
 };
 
 [scriptable, uuid(19baf81b-d1bd-4a99-9010-dd6f478bfd22)]
@@ -45,11 +47,13 @@ interface fbIFacebookService : nsISupports
     //       (you have received a new poke)
     //   facebook-pokes-updated             null                         new poke count
     //       (the count of pokes has been updated)
+    //   facebook-wall-updated              null                         new wall count
+    //       (the count of your wall posts has been updated)
     //
     //   facebook-new-friend                friend's fbIFacebookUser     friend's id
     //       (you have a new friend)
-    //   facebook-friend-updated            updater's fbIFacebookUser    updater's id
-    //       (a friend has updated his status)
+    //   facebook-friend-updated            updater's fbIFacebookUser    field updated
+    //       (something updated about a friend - status msg, wall count, or notes count)
     //   facebook-friends-updated           null                         null
     //       (the collection of friends has been modified in some way)
     //

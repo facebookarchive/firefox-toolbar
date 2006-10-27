@@ -44,6 +44,7 @@ function facebookService()
     this._msgChecker = {
         notify: function(timer) {
             debug('_msgChecker.notify');
+            fbSvc.getMyInfo(); // to check for wall posts
             fbSvc.checkMessages();
             fbSvc.checkPokes();
             fbSvc.checkReqs();
@@ -267,11 +268,23 @@ facebookService.prototype = {
                             fbSvc.showPopup(friend.pic, friend.name + ' is now your friend',
                                             'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
                             friendUpdate = true;
-                        } else if (fbSvc._friendsInfo[friend['id']].status != friend['status']) {
-                            fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', friend['id']);
-                            fbSvc.showPopup(friend.pic, friend.name + ' is now ' + friend.status,
-                                            'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
-                            friendUpdate = true;
+                        } else {
+                            if (fbSvc._friendsInfo[friend.id].status != friend.status) {
+                                fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'status');
+                                fbSvc.showPopup(friend.pic, friend.name + ' is now ' + friend.status,
+                                                'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
+                                friendUpdate = true;
+                            }
+                            if (fbSvc._friendsInfo[friend.id].wall != friend.wall) {
+                                fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'wall');
+                                fbSvc.showPopup(friend.pic, 'Someone wrote on ' + friend.name + "'s wall",
+                                                'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
+                            }
+                            if (fbSvc._friendsInfo[friend.id].notes != friend.notes) {
+                                fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'notes');
+                                fbSvc.showPopup(friend.pic, friend.name + ' wrote a note.',
+                                                'http://www.facebook.com/notes.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
+                            }
                         }
                     }
                     friendsInfoArr.push(friend);
@@ -293,14 +306,27 @@ facebookService.prototype = {
     },
     getMyInfo: function() {
         this.getUsersInfo([this._uid], function(users) {
-            fbSvc._loggedInUser = users[fbSvc._uid];
-            fbSvc._observerService.notifyObservers(fbSvc._loggedInUser, 'facebook-session-start',
-                                                   fbSvc._loggedInUser.id);
-            debug('getMyInfo: hello', fbSvc._loggedInUser['name']);
+            if (fbSvc._loggedInUser) {
+                var user = users[fbSvc._uid];
+                if (fbSvc._loggedInUser.wall != user.wall) {
+                    fbSvc._observerService.notifyObservers(null, 'facebook-wall-updated', user.wall);
+                    if (fbSvc._loggedInUser.wall < user.wall) {
+                        fbSvc.showPopup('', 'Someone wrote on your wall',
+                                        'http://www.facebook.com/profile.php?uid=' + user.id + '&api_key=' + fbSvc._apiKey);
+                    }
+                }
+                fbSvc._loggedInUser = user;
+            } else {
+                fbSvc._loggedInUser = users[fbSvc._uid];
+                fbSvc._observerService.notifyObservers(fbSvc._loggedInUser, 'facebook-session-start',
+                                                       fbSvc._loggedInUser.id);
+                debug('getMyInfo: hello', fbSvc._loggedInUser['name']);
+            }
         });
     },
     getUsersInfo: function(users, callback) {
-        this.callMethod('facebook.users.getInfo', ['users='+users.join(','), 'fields=name,status,pic'],
+        this.callMethod('facebook.users.getInfo', ['users='+users.join(','),
+                        'fields=name,status,pic,wall_count,notes_count'],
                         function(data) {
             var usersInfo = {};
             for each (var user in data.result_elt) {
@@ -308,8 +334,10 @@ facebookService.prototype = {
                     id     = String(user.@id),
                     status = String(user.status.message),
                     stime  = parseInt(user.status.time),
+                    notes  = parseInt(user.notes_count),
+                    wall   = parseInt(user.wall_count),
                     pic    = String(decodeURI(user.pic));
-                usersInfo[id] = new facebookUser(id, name, pic, status, stime);
+                usersInfo[id] = new facebookUser(id, name, pic, status, stime, notes, wall);
             }
             callback(usersInfo);
         });
@@ -460,12 +488,14 @@ function NSGetModule(compMgr, fileSpec) {
     return facebookModule;
 }
 
-function facebookUser(id, name, pic, status, stime) {
+function facebookUser(id, name, pic, status, stime, notes, wall) {
     this.id     = id;
     this.name   = name;
     this.pic    = pic;
     this.status = status;
     this.stime  = stime;
+    this.notes  = notes;
+    this.wall   = wall;
 }
 facebookUser.prototype = {
     // nsISupports implementation

@@ -41,6 +41,12 @@
                      tooltip="New Messages"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="openUILink('http://www.facebook.com/mailbox.php', event)"/>
+      <toolbarbutton id="facebook-notification-wall"
+                     class="facebook-icon-msgs facebook-notifications button"
+                     label="0"
+                     tooltip="Total Wall Posts"
+                     onclick="checkForMiddleClick(this, event);"
+                     oncommand="openUILink('http://www.facebook.com/wall.php', event)"/>
 
       <toolbaritem id="facebook-login-info">
         <toolbarbutton id="facebook-name-info"
@@ -64,7 +70,7 @@
              context="toolbar-context-menu"
              toolbarname="Facebook Toolbar"
              crop="end"
-             defaultset="facebook-sidebar-toggle,facebook-searchbox,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,separator,facebook-share,spring,facebook-login-info">
+             defaultset="facebook-sidebar-toggle,facebook-searchbox,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-wall,separator,facebook-share,spring,facebook-login-info">
     </toolbar>
     <popup position="after_start"
            id="PopupFacebookFriends"

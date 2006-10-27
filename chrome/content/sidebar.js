@@ -15,8 +15,13 @@ var observer = {
             case 'facebook-friends-updated':
                 UpdateFriends();
                 break;
-            case 'facebook-new-friend':
             case 'facebook-friend-updated':
+                if (data != 'status') {
+                    document.getElementById('sidebar-' + friend.id).setAttribute(data, friend[data]);
+                    break;
+                }
+                // else fall-through...
+            case 'facebook-new-friend':
                 friendsToUpdate.push(subject);
                 break;
         }
@@ -90,6 +95,8 @@ function CreateFriendNode(list, friend, insertBefore) {
     item.setAttribute('id', 'sidebar-' + friend.id);
     item.setAttribute('class', 'friendBox');
     item.setAttribute('friendname', friend.name);
+    item.setAttribute('wall', 'wall: ' + friend.wall);
+    item.setAttribute('notes', 'notes: ' + friend.notes);
     var firstName = friend.name.substr(0, friend.name.indexOf(' '));
     if (!firstName) firstName = friend.name;
     item.setAttribute('firstname', firstName);
@@ -99,6 +106,8 @@ function CreateFriendNode(list, friend, insertBefore) {
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
     item.setAttribute('msgCmd', "OpenFBUrl('message.php', '" + friend.id + "', event)");
     item.setAttribute('pokeCmd', "OpenFBUrl('poke.php', '" + friend.id + "', event)");
+    item.setAttribute('wallCmd', "OpenFBUrl('wall.php', '" + friend.id + "', event)");
+    item.setAttribute('notesCmd', "OpenFBUrl('notes.php', '" + friend.id + "', event)");
     if (!friend.pic) {
       item.setAttribute('pic', 'http://static.ak.facebook.com/pics/t_default.jpg');
     } else {
