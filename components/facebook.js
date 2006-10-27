@@ -66,14 +66,6 @@ function facebookService()
             fbSvc.checkFriends(true);
         }
     };
-    this._ffStart = {
-        notify: function(timer) {
-            fbSvc._oneShotTimer.cancel();
-            fbSvc.sessionStart(fbSvc._prefService.getCharPref('extensions.facebook.sessionKey'),
-                               fbSvc._prefService.getCharPref('extensions.facebook.sessionSecret'),
-                               fbSvc._prefService.getCharPref('extensions.facebook.uid'));
-        }
-    };
     this._alertObserver = {
         observe: function(subject, topic, data) {
             debug('observed', subject, topic, data);
@@ -92,9 +84,9 @@ function facebookService()
     if (this._prefService.prefHasUserValue('extensions.facebook.sessionKey') &&
         this._prefService.prefHasUserValue('extensions.facebook.sessionSecret') &&
         this._prefService.prefHasUserValue('extensions.facebook.uid')) {
-        // let's wait a couple seconds before resuming your session so that your browser can load up normally
-        this._oneShotTimer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this._oneShotTimer.initWithCallback(this._ffStart, 2000, Ci.nsITimer.TYPE_ONE_SHOT);
+        fbSvc.sessionStart(fbSvc._prefService.getCharPref('extensions.facebook.sessionKey'),
+                           fbSvc._prefService.getCharPref('extensions.facebook.sessionSecret'),
+                           fbSvc._prefService.getCharPref('extensions.facebook.uid'));
     }
 }
 

@@ -25,6 +25,7 @@ var fbToolbarObserver = {
         document.getElementById('facebook-name-info').label = subject.name;
         document.getElementById('facebook-name-info').setAttribute('userid', subject.id);
         document.getElementById('facebook-login-status').label = 'Logout';
+        document.getElementById('facebook-notification-wall').label = subject.wall;
         break;
       case 'facebook-session-end':
         document.getElementById('facebook-login-status').label = 'Login to Facebook';
@@ -63,6 +64,7 @@ var facebook = {
       document.getElementById('facebook-name-info').label = loggedInUser.name;
       document.getElementById('facebook-name-info').setAttribute('userid', loggedInUser.id);
       document.getElementById('facebook-login-status').label = 'Logout';
+      document.getElementById('facebook-notification-wall').label = loggedInUser.wall;
     }
     facebook.loadFriends();
     document.getElementById('facebook-search').addEventListener('keypress', HandleKeyPress, true);
