@@ -46,11 +46,15 @@ function LoadFriends() {
     var count = {};
     var friends = fbSvc.getFriends(count);
     debug('got friends', count.value);
-    friends.sort(SortFriends);
-    for each (var friend in friends) {
-        CreateFriendNode(list, friend, null);
+    if (count.value==0) {
+      CreateEmptyNode(list);
+    } else {
+      friends.sort(SortFriends);
+      for each (var friend in friends) {
+         CreateFriendNode(list, friend, null);
+      }
+      SearchFriends(GetFBSearchBox().value);
     }
-    SearchFriends(GetFBSearchBox().value);
 }
 
 var friendsToUpdate = [];
@@ -73,6 +77,14 @@ function UpdateFriends() {
     friendsToUpdate = [];
 }
 
+function CreateEmptyNode(list) {
+    var item = document.createElement('richlistitem');
+    item.setAttribute('id', 'sidebar-empty');
+    item.setAttribute('class', 'emptyBox');
+    item.appendChild(document.createTextNode('Login from the toolbar to see your friends list.')); 
+    list.insertBefore(item, null);
+}
+
 function CreateFriendNode(list, friend, insertBefore) {
     var item = document.createElement('richlistitem');
     item.setAttribute('id', 'sidebar-' + friend.id);
@@ -82,12 +94,16 @@ function CreateFriendNode(list, friend, insertBefore) {
     if (!firstName) firstName = friend.name;
     item.setAttribute('firstname', firstName);
     if (friend.status) {
-        item.setAttribute('status', firstName + ' is ' + friend.status);
+	item.appendChild(document.createTextNode(firstName + ' is ' + friend.status));
     }
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
     item.setAttribute('msgCmd', "OpenFBUrl('message.php', '" + friend.id + "', event)");
     item.setAttribute('pokeCmd', "OpenFBUrl('poke.php', '" + friend.id + "', event)");
-    item.setAttribute('pic', friend.pic);
+    if (!friend.pic) {
+      item.setAttribute('pic', 'http://static.ak.facebook.com/pics/t_default.jpg');
+    } else {
+      item.setAttribute('pic', friend.pic + '&size=thumb');
+    }
     list.insertBefore(item, insertBefore);
 }
 

@@ -114,14 +114,18 @@ var facebook = {
     if (!firstName) firstName = friend.name;
     item.setAttribute('firstname', firstName);
     if (friend.status) {
-      item.setAttribute('status', firstName + ' is ' + friend.status);
+      item.appendChild(document.createTextNode(firstName + ' is ' + friend.status));
     }
     item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
     item.setAttribute('onmousedown', "this.doCommand();"); // in linux all we get is mousedown
     item.setAttribute('onmouseup', "this.doCommand();");   // on mac all we get is mouseup
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
     item.setAttribute('userid', friend.id);
-    item.setAttribute('pic', friend.pic);
+    if (!friend.pic) {
+      item.setAttribute('pic', 'http://static.ak.facebook.com/pics/t_default.jpg');
+    } else {
+      item.setAttribute('pic', friend.pic + '&size=thumb');
+    }
     if (!elem) {
       // Note that this will put new friends at the bottom instead of alphabetized, but I think that's ok.
       // It would get fixed in any new windows or when the browser restarts.

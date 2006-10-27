@@ -10,20 +10,30 @@
       <children />
     </content>
   </binding>
+  <binding id="emptyBox" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
+    <content>
+        <xul:description class="login_to_see_message" >
+	  <children />
+        </xul:description> 
+    </content>
+  </binding>
   <binding id="friendBox" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
     <content>
       <xul:vbox>
-        <xul:image xbl:inherits="src=pic,onclick=oncommand" class="facebook-link" />
+        <xul:image xbl:inherits="src=pic,onclick=oncommand" class="facebook-link friend-image" />
       </xul:vbox>
       <xul:vbox>
         <xul:label xbl:inherits="value=friendname,onclick=oncommand" class="facebook-link user_name" />
-        <xul:label xbl:inherits="value=status" class="status" />
-        <xul:hbox class="facebook-friendlinks">
-          <xul:toolbarbutton xbl:inherits="oncommand=msgCmd"
-                             class="facebook-icon-msgs facebook-link"
+        <xul:description class="status" >
+	  <children />
+        </xul:description>
+        <xul:hbox pack="start" class="facebook-friendlinks">
+          <xul:label value="message" xbl:inherits="oncommand=msgCmd"
+                             class="facebook-link mini-link"
                              onclick="checkForMiddleClick(this, event);" />
-          <xul:toolbarbutton xbl:inherits="oncommand=pokeCmd"
-                             class="facebook-icon-poke facebook-link"
+          <xul:label value="-" style="color:#808080; font-size:9px;" />
+          <xul:label value="poke" xbl:inherits="oncommand=pokeCmd"
+                             class="facebook-link mini-link"
                              onclick="checkForMiddleClick(this, event);" />
         </xul:hbox>
       </xul:vbox>

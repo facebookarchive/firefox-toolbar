@@ -190,9 +190,9 @@ facebookService.prototype = {
         if (data.most_recent > this._lastMsgTime && newMsgCount > 0) {
             this._observerService.notifyObservers(null, 'facebook-new-msgs', newMsgCount);
             if (newMsgCount > 1) {
-                this.showPopup('', 'You have new messages', 'http://www.facebook.com/mailbox.php');
+                this.showPopup('http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif', 'You have new messages', 'http://www.facebook.com/mailbox.php');
             } else {
-                this.showPopup('', 'You have a new message', 'http://www.facebook.com/mailbox.php');
+                this.showPopup('http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif', 'You have a new message', 'http://www.facebook.com/mailbox.php');
             }
             this._lastMsgTime = data.most_recent;
         }
@@ -211,7 +211,7 @@ facebookService.prototype = {
             // note that your unseen poke count could theoretically stay the same or even if you have new pokes.
             this._totalPokes = totalPokeCount;
             this._observerService.notifyObservers(null, 'facebook-new-poke', newPokeCount);
-            this.showPopup('', 'You have been poked', 'http://www.facebook.com/home.php');
+            this.showPopup('http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif', 'You have been poked', 'http://www.facebook.com/home.php');
         }
         if (newPokeCount != this._numPokes) {
             this._numPokes = newPokeCount;
@@ -296,7 +296,7 @@ facebookService.prototype = {
                 id     = String(user.@id),
                 status = String(user.status.message),
                 stime  = parseInt(user.status.time),
-                pic    = String(decodeURI(user.pic)) + '&size=thumb';
+                pic    = String(decodeURI(user.pic));
             usersInfo[id] = new facebookUser(id, name, pic, status, stime);
         }
         return usersInfo;
@@ -387,7 +387,7 @@ facebookService.prototype = {
                 var top = window.screen.height - 200;
                 debug('opening dialog', left, top);
                 var w = window.openDialog("chrome://facebook/content/notifier.xul", "Facebook Notification",
-                                          'toolbar=no,status=no,left=' + left + ',top=' + top + ',width=150,height=100',
+                                          'toolbar=no,status=no,left=' + left + ',top=' + top + ',width=180,height=100',
                                           pic, label, url);
                 w.setTimeout(function() { w.close(); }, 8000);
             }

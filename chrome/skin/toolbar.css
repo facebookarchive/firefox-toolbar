@@ -115,9 +115,16 @@
   cursor: pointer;
   color: #3B5998;
 }
+
+.emptyBox {
+  -moz-binding: url('chrome://facebook/content/bindings.xml#emptyBox');
+  padding: 5px;
+  width: 200px;
+}
+
 .popupFriendBox, .friendBox {
   -moz-binding: url('chrome://facebook/content/bindings.xml#friendBox');
-  padding: 5px;
+  padding: 5px 5px 8px 5px;
 }
 .popupFriendBox .facebook-friendlinks {
   display: none;
@@ -135,10 +142,27 @@
 
 .status {
    color: #808080;
-   width: 100px;
-   margin-bottom: 3px;
+   width: 215px;
+   padding: 0px 0px 3px 4px;
+   margin: 1px 0px 3px 2px;
 }
 
 .user_name {
+   margin-bottom: 5px;
    font-weight: bold;
 }
+
+.friend-image {
+   min-width: 50px;
+}
+
+.mini-link {
+   font-size: 9px;
+   padding: 0px;
+   margin: 0px;
+}
+
+.login_to_see_message {
+  width: 300px;
+  color: #808080;
+} 
