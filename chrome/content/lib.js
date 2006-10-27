@@ -17,7 +17,7 @@ function debug() {
 }
 
 function OpenFBUrl(page, uid, e) {
-  var url = 'http://www.facebook.com/' + page + '?uid=' + uid + '&api_key=' + fbSvc.apiKey;
+  var url = 'http://www.dev005.facebook.com:4750/' + page + '?uid=' + uid + '&api_key=' + fbSvc.apiKey;
   debug('Opening ' + url);
   openUILink(url, e);
   e.stopPropagation();

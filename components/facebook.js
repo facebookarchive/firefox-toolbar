@@ -317,9 +317,9 @@ facebookService.prototype = {
                 var name   = String(user.name),
                     id     = String(user.@id),
                     status = String(user.status.message),
-                    stime  = String(user.status.time),
-                    notes  = String(user.notes_count),
-                    wall   = String(user.wall_count),
+                    stime  = Number(user.status.time),
+                    notes  = Number(user.notes_count),
+                    wall   = Number(user.wall_count),
                     pic    = String(decodeURI(user.pic));
                 usersInfo[id] = new facebookUser(id, name, pic, status, stime, notes, wall);
             }
@@ -433,13 +433,12 @@ facebookService.prototype = {
             } else {
                 // otherwise we'll just open a chrome window to display the msg
                 var window = this._winService.getMostRecentWindow(null);
-                var left = window.screen.width - 200;
+                var left = window.screen.width - 350;
                 var top = window.screen.height - 200;
                 debug('opening dialog', left, top);
                 var w = window.openDialog("chrome://facebook/content/notifier.xul", "Facebook Notification",
-                                          'toolbar=no,status=no,left=' + left + ',top=' + top + ',width=180,height=100',
+                                          'close=yes,toolbar=no,status=no,left=' + left + ',top=' + top + ',width=300,height=100',
                                           pic, label, url);
-                w.setTimeout(function() { w.close(); }, 8000);
             }
         }
     }
