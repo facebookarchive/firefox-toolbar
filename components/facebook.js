@@ -1,5 +1,4 @@
-const FRIEND_CHECK_INTERVAL = 15*60*1000;
-const MSG_CHECK_INTERVAL    = 5*60*1000;
+const CHECK_INTERVAL = 5*60*1000;
 
 const VERBOSITY = 1; // 0: no dumping, 1: normal dumping, 2: massive dumping
 
@@ -41,18 +40,13 @@ function facebookService()
     this.initValues();
 
     fbSvc = this;
-    this._msgChecker = {
+    this._checker = {
         notify: function(timer) {
-            debug('_msgChecker.notify');
+            debug('_checker.notify');
             fbSvc.getMyInfo(); // to check for wall posts
             fbSvc.checkMessages();
             fbSvc.checkPokes();
             fbSvc.checkReqs();
-        }
-    };
-    this._friendChecker = {
-        notify: function(timer) {
-            debug('_friendChecker.notify');
             fbSvc.checkFriends(false);
         }
     };
@@ -133,10 +127,7 @@ facebookService.prototype = {
         this._prefService.setCharPref('extensions.facebook.uid',           uid);
 
         this._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this._timer.initWithCallback(this._msgChecker, MSG_CHECK_INTERVAL, Ci.nsITimer.TYPE_REPEATING_SLACK);
-
-        this._timer2 = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this._timer2.initWithCallback(this._friendChecker, FRIEND_CHECK_INTERVAL, Ci.nsITimer.TYPE_REPEATING_SLACK);
+        this._timer.initWithCallback(this._checker, CHECK_INTERVAL, Ci.nsITimer.TYPE_REPEATING_SLACK);
 
         // fire off another thread to get things started
         this._oneShotTimer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
@@ -152,7 +143,6 @@ facebookService.prototype = {
         this._prefService.clearUserPref('extensions.facebook.uid');
 
         this._timer.cancel();
-        this._timer2.cancel();
         this._oneShotTimer.cancel();
 
         this._observerService.notifyObservers(null, 'facebook-session-end', null);
@@ -172,6 +162,8 @@ facebookService.prototype = {
         this._totalPokes    = 0;
         this._friendsInfo   = {};
         this._friendsInfoArr = [];
+        this._pendingRequest = false;
+        this._pendingRequests = [];
     },
 
     checkMessages: function() {
@@ -325,9 +317,9 @@ facebookService.prototype = {
                 var name   = String(user.name),
                     id     = String(user.@id),
                     status = String(user.status.message),
-                    stime  = parseInt('0' + user.status.time), // add '0' in front of these so parseInt never fails
-                    notes  = parseInt('0' + user.notes_count),
-                    wall   = parseInt('0' + user.wall_count),
+                    stime  = String(user.status.time),
+                    notes  = String(user.notes_count),
+                    wall   = String(user.wall_count),
                     pic    = String(decodeURI(user.pic));
                 usersInfo[id] = new facebookUser(id, name, pic, status, stime, notes, wall);
             }
@@ -379,6 +371,11 @@ facebookService.prototype = {
                 onStartRequest: function(request, context) {
                     debug('starting request', method, call_id);
                     this.resultTxt = '';
+                    if (fbSvc._pendingRequests.length) {
+                        (fbSvc._pendingRequests.shift())();
+                    } else {
+                        fbSvc._pendingRequest = false;
+                    }
                 },
                 onStopRequest: function(request, context, statusCode) {
                     if (statusCode == Components.results.NS_OK) {
@@ -393,6 +390,7 @@ facebookService.prototype = {
                                 debug('session expired, logging out.');
                                 fbSvc.sessionEnd();
                             } else {
+                                // XXX handle rate limit error
                                 debug('API error:');
                                 dump(xmldata.fb_error);
                             }
@@ -402,7 +400,14 @@ facebookService.prototype = {
                     }
                 }
             };
-            channel.asyncOpen(listener, null);
+            if (this._pendingRequest) {
+                this._pendingRequests.push(function() {
+                    channel.asyncOpen(listener, null);
+                });
+            } else {
+                this._pendingRequest = true;
+                channel.asyncOpen(listener, null);
+            }
         } catch (e) {
             debug('Exception sending REST request: ', e);
             return null;
