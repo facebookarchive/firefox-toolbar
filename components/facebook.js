@@ -68,16 +68,35 @@ function facebookService()
             fbSvc._holdFriendNotifications = false;
         }
     };
+    this._ffStart = {
+        notify: function(timer) {
+            fbSvc._oneShotTimer.cancel();
+            fbSvc.sessionStart(fbSvc._prefService.getCharPref('extensions.facebook.sessionKey'),
+                               fbSvc._prefService.getCharPref('extensions.facebook.sessionSecret'),
+                               fbSvc._prefService.getCharPref('extensions.facebook.uid'));
+        }
+    };
+    this._alertObserver = {
+        observe: function(subject, topic, data) {
+            debug('observed', subject, topic, data);
+            if (topic == 'alertclickcallback') {
+                debug('opening url', data);
+                var window = fbSvc._winService.getMostRecentWindow(null);
+                var w = window.open(data, "Facebook Notification");
+            }
+        }
+    };
 
+    this._winService = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
     this._observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
     this._prefService     = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
 
     if (this._prefService.prefHasUserValue('extensions.facebook.sessionKey') &&
         this._prefService.prefHasUserValue('extensions.facebook.sessionSecret') &&
         this._prefService.prefHasUserValue('extensions.facebook.uid')) {
-        this.sessionStart(this._prefService.getCharPref('extensions.facebook.sessionKey'),
-                          this._prefService.getCharPref('extensions.facebook.sessionSecret'),
-                          this._prefService.getCharPref('extensions.facebook.uid'));
+        // let's wait a couple seconds before resuming your session so that your browser can load up normally
+        this._oneShotTimer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
+        this._oneShotTimer.initWithCallback(this._ffStart, 2000, Ci.nsITimer.TYPE_ONE_SHOT);
     }
 }
 
@@ -123,15 +142,15 @@ facebookService.prototype = {
         this._prefService.setCharPref('extensions.facebook.sessionSecret', sessionSecret);
         this._prefService.setCharPref('extensions.facebook.uid',           uid);
 
-        this.timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this.timer.initWithCallback(this._msgChecker, MSG_CHECK_INTERVAL, Ci.nsITimer.TYPE_REPEATING_SLACK);
+        this._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
+        this._timer.initWithCallback(this._msgChecker, MSG_CHECK_INTERVAL, Ci.nsITimer.TYPE_REPEATING_SLACK);
 
-        this.timer2 = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this.timer2.initWithCallback(this._friendChecker, FRIEND_CHECK_INTERVAL, Ci.nsITimer.TYPE_REPEATING_SLACK);
+        this._timer2 = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
+        this._timer2.initWithCallback(this._friendChecker, FRIEND_CHECK_INTERVAL, Ci.nsITimer.TYPE_REPEATING_SLACK);
 
         // fire off another thread to get things started
-        this.timer3 = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this.timer3.initWithCallback(this._initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
+        this._oneShotTimer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
+        this._oneShotTimer.initWithCallback(this._initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
     },
     sessionEnd: function() {
         debug('sessionEnd');
@@ -142,9 +161,9 @@ facebookService.prototype = {
         this._prefService.clearUserPref('extensions.facebook.sessionSecret');
         this._prefService.clearUserPref('extensions.facebook.uid');
 
-        this.timer.cancel();
-        this.timer2.cancel();
-        this.timer3.cancel();
+        this._timer.cancel();
+        this._timer2.cancel();
+        this._oneShotTimer.cancel();
 
         this._observerService.notifyObservers(null, 'facebook-session-end', null);
     },
@@ -170,6 +189,11 @@ facebookService.prototype = {
         var newMsgCount = data.unread;
         if (data.most_recent > this._lastMsgTime) {
             this._observerService.notifyObservers(null, 'facebook-new-msgs', newMsgCount);
+            if (newMsgCount > 1) {
+                this.showPopup('', 'You have new messages', 'http://www.facebook.com/mailbox.php');
+            } else {
+                this.showPopup('', 'You have a new message', 'http://www.facebook.com/mailbox.php');
+            }
             this._lastMsgTime = data.most_recent;
         }
         if (newMsgCount != this._numMsgs) {
@@ -187,6 +211,7 @@ facebookService.prototype = {
             // note that your unseen poke count could theoretically stay the same or even if you have new pokes.
             this._totalPokes = totalPokeCount;
             this._observerService.notifyObservers(null, 'facebook-new-poke', newPokeCount);
+            this.showPopup('', 'You have been poked', 'http://www.facebook.com/home.php');
         }
         if (newPokeCount != this._numPokes) {
             this._numPokes = newPokeCount;
@@ -207,6 +232,8 @@ facebookService.prototype = {
             this._reqsInfo = this.getUsersInfo(reqsToGet);
             for each (var reqInfo in this._reqsInfo) {
                 this._observerService.notifyObservers(reqInfo, 'facebook-new-req', reqInfo['id']);
+                this.showPopup(reqInfo.pic, reqInfo.name + ' wants to be your friend',
+                               'http://www.facebook.com/req.php');
             }
         }
         if (newReqCount != this._numReqs) {
@@ -232,9 +259,13 @@ facebookService.prototype = {
             if (!this._holdFriendNotifications) {
                 if (!this._friendsInfo[friend['id']]) {
                     this._observerService.notifyObservers(friend, 'facebook-new-friend', friend['id']);
+                    this.showPopup(friend.pic, friend.name + ' is now your friend',
+                                   'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + this._apiKey);
                     friendUpdate = true;
                 } else if (this._friendsInfo[friend['id']].status != friend['status']) {
                     this._observerService.notifyObservers(friend, 'facebook-friend-updated', friend['id']);
+                    this.showPopup(friend.pic, friend.name + ' is now ' + friend.status,
+                                   'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + this._apiKey);
                     friendUpdate = true;
                 }
             }
@@ -332,6 +363,36 @@ facebookService.prototype = {
             return null;
         }
     },
+
+    showPopup: function(pic, label, url) {
+        debug('showPopup', pic, label, url);
+        try {
+            var alerts = Cc["@mozilla.org/alerts-service;1"].getService(Ci.nsIAlertsService);
+            alerts.showAlertNotification(pic, 'Facebook Notification', label, true, url, this._alertObserver);
+        } catch(e) {
+            // we're on a mac, what do we do???
+            debug('could not send alert (on a mac?)', e);
+            var growlexec = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+            var process = Cc["@mozilla.org/process/util;1"].createInstance(Ci.nsIProcess);                       
+            // first we'll see if the person happens to have growl, just for the hell of it
+            growlexec.initWithPath('/usr/local/bin/growlnotify');
+            if (growlexec.exists()) {
+                process.init(growlexec);
+                var args = ['-n', 'Firefox', '-a', 'Firefox', '-t', 'Facebook Notification', '-m', label];
+                process.run(false, args, args.length);
+            } else {
+                // otherwise we'll just open a chrome window to display the msg
+                var window = this._winService.getMostRecentWindow(null);
+                var left = window.screen.width - 200;
+                var top = window.screen.height - 200;
+                debug('opening dialog', left, top);
+                var w = window.openDialog("chrome://facebook/content/notifier.xul", "Facebook Notification",
+                                          'toolbar=no,status=no,left=' + left + ',top=' + top + ',width=150,height=100',
+                                          pic, label, url);
+                window.setTimeout(function() { w.close(); }, 8000);
+            }
+        }
+    }
 };
 
 // boilerplate stuff

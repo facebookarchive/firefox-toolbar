@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<window id="facebook-notifier"
+        orient="vertical"
+        onload="NotifierLoad()"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="chrome://facebook/content/notifier.js"/>
+  <image id="pic"/>
+  <label id="label"/>
+</window>
