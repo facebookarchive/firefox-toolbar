@@ -325,9 +325,9 @@ facebookService.prototype = {
                 var name   = String(user.name),
                     id     = String(user.@id),
                     status = String(user.status.message),
-                    stime  = parseInt(user.status.time),
-                    notes  = parseInt(user.notes_count),
-                    wall   = parseInt(user.wall_count),
+                    stime  = parseInt('0' + user.status.time), // add '0' in front of these so parseInt never fails
+                    notes  = parseInt('0' + user.notes_count),
+                    wall   = parseInt('0' + user.wall_count),
                     pic    = String(decodeURI(user.pic));
                 usersInfo[id] = new facebookUser(id, name, pic, status, stime, notes, wall);
             }
@@ -354,12 +354,12 @@ facebookService.prototype = {
         params.push('method=' + method);
         params.push('session_key=' + this._sessionKey);
         params.push('api_key=' + this._apiKey);
-        params.push('call_id=' + (new Date()).getTime());
+        var call_id = (new Date()).getTime();
+        params.push('call_id=' + call_id);
         params.push('sig=' + this.generateSig(params));
         var message = params.join('&');
 
         try {
-            debug('about to call method', method);
             // Yuck...xmlhttprequest doesn't always work so we have to do this
             // the hard way.  Thanks to Manish from Flock for the tip!
             var channel = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService)
@@ -377,6 +377,7 @@ facebookService.prototype = {
                     this.resultTxt += sis.read(count);
                 },
                 onStartRequest: function(request, context) {
+                    debug('starting request', method, call_id);
                     this.resultTxt = '';
                 },
                 onStopRequest: function(request, context, statusCode) {
