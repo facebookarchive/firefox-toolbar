@@ -207,6 +207,14 @@ function FacebookLogin() {
   if (fbSvc.loggedIn) {
     dump('logging out\n');
     fbSvc.sessionEnd();
+    var req = new XMLHttpRequest();
+    req.open('post', 'http://www.facebook.com/logout.php')
+    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    req.onload = function() {
+        debug('loaded');
+        dump(req.responseText);
+    }
+    req.send('confirm=1');
   } else {
     // popup login page height is normally 436, but add 20 pixels for the
     // button we show at the bottom of the page
