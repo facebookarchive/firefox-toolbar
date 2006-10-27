@@ -164,6 +164,7 @@ facebookService.prototype = {
         this._friendsInfoArr = [];
         this._pendingRequest = false;
         this._pendingRequests = [];
+        this._lastCallId     = 0;
     },
 
     checkMessages: function() {
@@ -346,8 +347,12 @@ facebookService.prototype = {
         params.push('method=' + method);
         params.push('session_key=' + this._sessionKey);
         params.push('api_key=' + this._apiKey);
-        var call_id = (new Date()).getTime();
-        params.push('call_id=' + call_id);
+        var callId = (new Date()).getTime();
+        if (callId <= this._lastCallId) {
+            callId = this._lastCallId + 1;
+        }
+        this._lastCallId = callId;
+        params.push('call_id=' + callId);
         params.push('sig=' + this.generateSig(params));
         var message = params.join('&');
 
@@ -369,7 +374,7 @@ facebookService.prototype = {
                     this.resultTxt += sis.read(count);
                 },
                 onStartRequest: function(request, context) {
-                    debug('starting request', method, call_id);
+                    debug('starting request', method, callId);
                     this.resultTxt = '';
                     if (fbSvc._pendingRequests.length) {
                         (fbSvc._pendingRequests.shift())();
