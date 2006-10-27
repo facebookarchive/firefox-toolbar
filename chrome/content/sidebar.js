@@ -33,6 +33,7 @@ function ClearFriends() {
     while (list.firstChild) {
         list.removeChild(list.firstChild);
     }
+    CreateEmptyNode(list);
 }
 
 function SortFriends(f1, f2) {
@@ -52,13 +53,14 @@ function LoadFriends() {
     var friends = fbSvc.getFriends(count);
     debug('got friends', count.value);
     if (count.value==0) {
-      CreateEmptyNode(list);
+        CreateEmptyNode(list);
     } else {
-      friends.sort(SortFriends);
-      for each (var friend in friends) {
-         CreateFriendNode(list, friend, null);
-      }
-      SearchFriends(GetFBSearchBox().value);
+        RemoveEmptyNode(list);
+        friends.sort(SortFriends);
+        for each (var friend in friends) {
+            CreateFriendNode(list, friend, null);
+        }
+        SearchFriends(GetFBSearchBox().value);
     }
 }
 
@@ -66,7 +68,7 @@ var friendsToUpdate = [];
 function UpdateFriends() {
     debug('UpdateFriends');
     var list = document.getElementById('SidebarFriendsList');
-    if (!list.firstChild) {
+    if (!list.firstChild || list.firstChild.id == 'sidebar-empty') {
         LoadFriends();
         return;
     }
@@ -88,6 +90,11 @@ function CreateEmptyNode(list) {
     item.setAttribute('class', 'emptyBox');
     item.appendChild(document.createTextNode('Login from the toolbar to see your friends list.')); 
     list.insertBefore(item, null);
+}
+function RemoveEmptyNode(list) {
+    if (document.getElementById('sidebar-empty')) {
+        list.removeChild(document.getElementById('sidebar-empty'));
+    }
 }
 
 function CreateFriendNode(list, friend, insertBefore) {
