@@ -39,7 +39,7 @@ function ClearFriends() {
 function SortFriends(f1, f2) {
     if (f1.stime != f2.stime) {
         return f2.stime - f1.stime;
-    } else if (f2.name < f1.name) {
+    } else if (f2.name.toLowerCase() < f1.name.toLowerCase()) {
         return 1;
     } else {
         return -1;

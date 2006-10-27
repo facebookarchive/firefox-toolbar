@@ -85,8 +85,10 @@ var facebook = {
   },
 
   sortFriends: function(f1, f2) {
-    if (f1.name < f2.name) return -1;
-    else if (f1.name > f2.name) return 1;
+    var n1 = f1.name.toLowerCase();
+    var n2 = f2.name.toLowerCase();
+    if (n1 < n2) return -1;
+    else if (n1 > n2) return 1;
     else return 0;
   },
   loadFriends: function() {

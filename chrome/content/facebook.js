@@ -25,7 +25,6 @@ FacebookLoginClient.prototype = {
     callMethod: function (method, params, callback) {
         params.push('method=' + method);
         params.push('api_key=' + this.fbSvc.apiKey);
-        params.push('call_id=' + (new Date()).getTime());
         params.push('sig=' + this.generateSig(params));
 
         var req = new XMLHttpRequest();
