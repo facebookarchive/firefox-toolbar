@@ -94,15 +94,20 @@ var facebook = {
   loadFriends: function() {
     debug('loadFriends()');
     var list = document.getElementById('PopupFacebookFriendsList');
-    if (list.firstChild) {
+    if (list.firstChild && list.firstChild.id != 'loginNode') {
       return;
     }
     var count = {};
     var friends = fbSvc.getFriends(count);
     debug('got friends', count.value);
-    friends.sort(this.sortFriends);
-    for each (var friend in friends) {
-      this.createFriendNode(list, friend, null);
+    if (!friends || !fbSvc.loggedIn) {
+      CreateLoginNode(list);
+    } else {
+      RemoveLoginNode(list);
+      friends.sort(this.sortFriends);
+      for each (var friend in friends) {
+        this.createFriendNode(list, friend, null);
+      }
     }
   },
   updateFriend: function(friend) {
@@ -182,6 +187,7 @@ var facebook = {
     while (list.firstChild) {
       list.removeChild(list.firstChild);
     }
+    CreateLoginNode(list);
   }
 };
 window.addEventListener('load', facebook.load, false);

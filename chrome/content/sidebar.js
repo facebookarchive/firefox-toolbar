@@ -52,7 +52,7 @@ function LoadFriends() {
     var count = {};
     var friends = fbSvc.getFriends(count);
     debug('got friends', count.value);
-    if (!friends) {
+    if (!friends || !fbSvc.loggedIn) {
         CreateLoginNode(list);
     } else {
         RemoveLoginNode(list);
@@ -68,7 +68,7 @@ var friendsToUpdate = [];
 function UpdateFriends() {
     debug('UpdateFriends');
     var list = document.getElementById('SidebarFriendsList');
-    if (!list.firstChild || list.firstChild.id == 'sidebar-login') {
+    if (!list.firstChild || list.firstChild.id == 'loginNode') {
         LoadFriends();
         return;
     }
@@ -82,21 +82,6 @@ function UpdateFriends() {
         CreateFriendNode(list, friend, first);
     }
     friendsToUpdate = [];
-}
-
-function CreateLoginNode(list) {
-    var item = document.createElement('richlistitem');
-    item.setAttribute('id', 'sidebar-login');
-    item.setAttribute('class', 'emptyBox');
-    item.setAttribute('onclick', 'this.doCommand()');
-    item.setAttribute('oncommand', 'FacebookLogin()');
-    item.appendChild(document.createTextNode('Login from the toolbar to see your friends list.')); 
-    list.insertBefore(item, null);
-}
-function RemoveLoginNode(list) {
-    if (document.getElementById('sidebar-login')) {
-        list.removeChild(document.getElementById('sidebar-login'));
-    }
 }
 
 function CreateFriendNode(list, friend, insertBefore) {

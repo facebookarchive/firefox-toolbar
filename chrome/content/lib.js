@@ -73,6 +73,7 @@ function SearchFriends(origSearch) {
   */
   var sidebar = IsSidebarOpen();
   var list = GetFriendsListElement();
+  if (!list.firstChild || list.firstChild.id == 'loginNode') return;
   var numDisplayed = 0;
   var lastDisplayed = null;
   if (search) {
@@ -98,6 +99,7 @@ function SearchFriends(origSearch) {
     // simple version for empty searches
     for (var i = 0; i < list.childNodes.length; i++) {
       var node = list.childNodes[i];
+      if (!node.getAttribute('friendname')) continue;
       node.style.display = '';
       numDisplayed++;
       lastDisplayed = node;
@@ -125,8 +127,12 @@ function SearchFriends(origSearch) {
       searchHint = doc.createElement('richlistitem');
       searchHint.setAttribute('id', 'SearchHint');
       searchHint.setAttribute('oncommand', "openUILink('http://www.facebook.com/s.php?q=' + encodeURIComponent(GetFBSearchBox().value), event);");
-      searchHint.setAttribute('onmouseup', "this.doCommand();");
-      searchHint.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
+      if (sidebar) {
+        searchHint.setAttribute('onclick', 'this.doCommand()');
+      } else {
+        searchHint.setAttribute('onmouseup', "this.doCommand();");
+        searchHint.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
+      }
       searchHint.appendChild(document.createTextNode('Press enter to search for "' + origSearch + '" on Facebook'));
       list.appendChild(searchHint);
     } else {
@@ -226,6 +232,26 @@ function MoveInList(dir) {
   if (item) {
     SelectItemInList(item, list);
   }
+}
+
+function CreateLoginNode(list) {
+    var item = document.createElement('richlistitem');
+    item.setAttribute('id', 'loginNode');
+    item.setAttribute('class', 'emptyBox');
+    if (IsSidebarOpen()) {
+      item.setAttribute('onclick', 'this.doCommand()');
+    } else {
+      item.setAttribute('onmouseup', 'this.doCommand()');
+      item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
+    }
+    item.setAttribute('oncommand', 'FacebookLogin()');
+    item.appendChild(document.createTextNode('Login from the toolbar to see your friends list.')); 
+    list.insertBefore(item, null);
+}
+function RemoveLoginNode(list) {
+    if (document.getElementById('loginNode')) {
+        list.removeChild(document.getElementById('loginNode'));
+    }
 }
 
 function FacebookLogin() {
