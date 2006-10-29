@@ -55,4 +55,11 @@
       <xul:label xbl:inherits="value" class="facebook-link" />
     </content>
   </binding>
+  <binding id="searchHint" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
+    <content>
+      <xul:description>
+        <children/>
+      </xul:description>
+    </content>
+  </binding>
 </bindings>

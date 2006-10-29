@@ -59,8 +59,8 @@ function SelectItemInList(item, list) {
   }
 }
 
-function SearchFriends(search) {
-  search = search.toLowerCase();
+function SearchFriends(origSearch) {
+  var search = origSearch.toLowerCase();
   debug('searching for: ' + search);
   /* this would delay searching until a given time after the last key was
    * typed so that we don't burn cpu searching when the user's still typing.
@@ -113,6 +113,31 @@ function SearchFriends(search) {
       }
       list.ensureElementIsVisible(item);
     }
+  }
+  if (sidebar) {
+    var doc = top.document.getElementById('sidebar').contentDocument;
+  } else {
+    var doc = document;
+  }
+  var searchHint = doc.getElementById('SearchHint');
+  if (numDisplayed == 0) {
+    if (!searchHint) {
+      searchHint = doc.createElement('richlistitem');
+      searchHint.setAttribute('id', 'SearchHint');
+      searchHint.setAttribute('oncommand', "openUILink('http://www.facebook.com/s.php?q=' + encodeURIComponent(GetFBSearchBox().value), event);");
+      searchHint.setAttribute('onmouseup', "this.doCommand();");
+      searchHint.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
+      searchHint.appendChild(document.createTextNode('Press enter to search for "' + origSearch + '" on Facebook'));
+      list.appendChild(searchHint);
+    } else {
+      searchHint.firstChild.nodeValue = 'Press enter to search for "' + origSearch + '" on Facebook';
+    }
+  } else if (searchHint) {
+    if (list.selectedItem && list.selectedItem == searchHint) {
+      debug('unselecting');
+      list.selectedItem = null;
+    }
+    list.removeChild(searchHint);
   }
   if (!sidebar) {
     if (numDisplayed == 1) {

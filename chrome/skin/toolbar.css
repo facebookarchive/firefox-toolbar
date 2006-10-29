@@ -163,3 +163,9 @@
 .login_to_see_message {
   color: #808080;
 } 
+
+#SearchHint {
+  overflow: hidden;
+  -moz-binding: url('chrome://facebook/content/bindings.xml#searchHint');
+  color: #808080;
+} 

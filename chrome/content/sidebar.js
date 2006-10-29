@@ -49,12 +49,12 @@ function SortFriends(f1, f2) {
 function LoadFriends() {
     debug('LoadFriends()');
     var list = document.getElementById('SidebarFriendsList');
-    if (!fbSvc.loggedIn) {
+    var count = {};
+    var friends = fbSvc.getFriends(count);
+    debug('got friends', count.value);
+    if (!friends) {
         CreateLoginNode(list);
     } else {
-        var count = {};
-        var friends = fbSvc.getFriends(count);
-        debug('got friends', count.value);
         RemoveLoginNode(list);
         friends.sort(SortFriends);
         for each (var friend in friends) {
