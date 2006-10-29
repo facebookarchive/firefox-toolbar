@@ -154,6 +154,7 @@ var facebook = {
     }
   },
   share: function() {
+    var openCmd = "window.open('http://www.facebook.com/sharer.php?bm&v=1&u=' + encodeURIComponent(content.document.location.href) + '&t=' + encodeURIComponent(document.title), 'sharer','toolbar=no,status=yes,width=626,height=436');";
     try {
       // If we're not on a facebook page, just jump down to the catch block and open the popup...
       if (!/^(?:.*\.)?facebook\.[^.]*$/.test(content.document.location.host))
@@ -168,15 +169,12 @@ var facebook = {
       // ...and if the function is there then we have to do this lame <script> injection hack to
       // execute it.
       var script = content.document.createElement('script');
-      script.appendChild(content.document.createTextNode("share_internal_bookmarklet();"));
+      script.appendChild(content.document.createTextNode('try { share_internal_bookmarklet(); } catch (e) { setTimeout("' + openCmd + '", 0); }'));
       content.document.body.appendChild(script);
       content.document.body.removeChild(script);
     } catch(e) {
       debug('title is: ' + document.title, 'url: ' + content.document.location.href);
-      window.open('http://www.facebook.com/sharer.php?bm&v=1&u=' +
-                  encodeURIComponent(content.document.location.href) +
-                  '&t=' + encodeURIComponent(document.title),
-                  'sharer','toolbar=no,status=yes,width=626,height=436');
+      eval(openCmd);
     }
   },
   clearFriends: function() {
