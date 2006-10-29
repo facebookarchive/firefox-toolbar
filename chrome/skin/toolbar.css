@@ -119,7 +119,6 @@
 .emptyBox {
   -moz-binding: url('chrome://facebook/content/bindings.xml#emptyBox');
   padding: 5px;
-  width: 200px;
 }
 
 .popupFriendBox, .friendBox {
@@ -142,7 +141,6 @@
 
 .status {
    color: #808080;
-   width: 215px;
    padding: 0px 0px 3px 4px;
    margin: 1px 0px 3px 2px;
 }
@@ -163,6 +161,5 @@
 }
 
 .login_to_see_message {
-  width: 300px;
   color: #808080;
 } 

@@ -210,10 +210,6 @@ function FacebookLogin() {
     var req = new XMLHttpRequest();
     req.open('post', 'http://www.facebook.com/logout.php')
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    req.onload = function() {
-        debug('loaded');
-        dump(req.responseText);
-    }
     req.send('confirm=1');
   } else {
     // popup login page height is normally 436, but add 20 pixels for the

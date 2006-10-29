@@ -33,7 +33,7 @@ function ClearFriends() {
     while (list.firstChild) {
         list.removeChild(list.firstChild);
     }
-    CreateEmptyNode(list);
+    CreateLoginNode(list);
 }
 
 function SortFriends(f1, f2) {
@@ -49,13 +49,13 @@ function SortFriends(f1, f2) {
 function LoadFriends() {
     debug('LoadFriends()');
     var list = document.getElementById('SidebarFriendsList');
-    var count = {};
-    var friends = fbSvc.getFriends(count);
-    debug('got friends', count.value);
-    if (count.value==0) {
-        CreateEmptyNode(list);
+    if (!fbSvc.loggedIn) {
+        CreateLoginNode(list);
     } else {
-        RemoveEmptyNode(list);
+        var count = {};
+        var friends = fbSvc.getFriends(count);
+        debug('got friends', count.value);
+        RemoveLoginNode(list);
         friends.sort(SortFriends);
         for each (var friend in friends) {
             CreateFriendNode(list, friend, null);
@@ -68,7 +68,7 @@ var friendsToUpdate = [];
 function UpdateFriends() {
     debug('UpdateFriends');
     var list = document.getElementById('SidebarFriendsList');
-    if (!list.firstChild || list.firstChild.id == 'sidebar-empty') {
+    if (!list.firstChild || list.firstChild.id == 'sidebar-login') {
         LoadFriends();
         return;
     }
@@ -84,16 +84,18 @@ function UpdateFriends() {
     friendsToUpdate = [];
 }
 
-function CreateEmptyNode(list) {
+function CreateLoginNode(list) {
     var item = document.createElement('richlistitem');
-    item.setAttribute('id', 'sidebar-empty');
+    item.setAttribute('id', 'sidebar-login');
     item.setAttribute('class', 'emptyBox');
+    item.setAttribute('onclick', 'this.doCommand()');
+    item.setAttribute('oncommand', 'FacebookLogin()');
     item.appendChild(document.createTextNode('Login from the toolbar to see your friends list.')); 
     list.insertBefore(item, null);
 }
-function RemoveEmptyNode(list) {
-    if (document.getElementById('sidebar-empty')) {
-        list.removeChild(document.getElementById('sidebar-empty'));
+function RemoveLoginNode(list) {
+    if (document.getElementById('sidebar-login')) {
+        list.removeChild(document.getElementById('sidebar-login'));
     }
 }
 
@@ -142,6 +144,8 @@ function SidebarLoad() {
     } else {
         document.getElementById('facebook-search-sidebar').style.display = 'none';
     }
+    top.document.getElementById('sidebar-splitter').addEventListener('mouseup', SidebarResize, false);
+    SidebarResize();
 }
 function SidebarUnload() {
     debug('SidebarUnload');
@@ -150,6 +154,19 @@ function SidebarUnload() {
     obsSvc.removeObserver(observer, 'facebook-friend-updated');
     obsSvc.removeObserver(observer, 'facebook-friends-updated');
     obsSvc.removeObserver(observer, 'facebook-session-end');
+    top.document.getElementById('sidebar-splitter').removeEventListener('mouseup', SidebarResize, false);
+}
+var statusWidthStyleRule = false;
+function SidebarResize() {
+    debug('setting status width', window.innerWidth);
+    var sheet = document.styleSheets[0];
+    if (statusWidthStyleRule !== false) {
+        sheet.deleteRule(statusWidthStyleRule+1);
+        sheet.deleteRule(statusWidthStyleRule);
+    }
+    statusWidthStyleRule = sheet.cssRules.length;
+    sheet.insertRule(".status { width: " + (window.innerWidth-82) + "px; }", statusWidthStyleRule);
+    sheet.insertRule(".login_to_see_message { width: " + (window.innerWidth-32) + "px; }", statusWidthStyleRule+1);
 }
 var facebook=null; // for some reason lib.js can't seem to handle not having something named facebook defined
 
