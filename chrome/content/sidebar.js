@@ -103,7 +103,7 @@ function CreateFriendNode(list, friend, insertBefore) {
     item.setAttribute('wallCmd', "OpenFBUrl('wall.php', '" + friend.id + "', event)");
     item.setAttribute('notesCmd', "OpenFBUrl('notes.php', '" + friend.id + "', event)");
     if (!friend.pic) {
-      item.setAttribute('pic', 'http://static.ak.facebook.com/pics/t_default.jpg');
+      item.setAttribute('pic', 'chrome://facebook/content/t_default.jpg');
     } else {
       item.setAttribute('pic', friend.pic + '&size=thumb');
     }
@@ -150,7 +150,7 @@ function SidebarResize() {
         sheet.deleteRule(statusWidthStyleRule);
     }
     statusWidthStyleRule = sheet.cssRules.length;
-    sheet.insertRule(".status { width: " + (window.innerWidth-82) + "px; }", statusWidthStyleRule);
+    sheet.insertRule(".status { width: " + (window.innerWidth-82) + "px !important; }", statusWidthStyleRule);
     sheet.insertRule(".login_to_see_message { width: " + (window.innerWidth-32) + "px; }", statusWidthStyleRule+1);
 }
 var facebook=null; // for some reason lib.js can't seem to handle not having something named facebook defined
