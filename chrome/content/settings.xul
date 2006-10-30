@@ -22,18 +22,22 @@
     <checkbox id="facebook-notifications-friend-status" label="A friend updated his/her status"/>
     <checkbox id="facebook-notifications-friend-note" label="A friend wrote a note"/>
   </groupbox>
-  <groupbox id="facebook-growlbox">
-    <!-- note: this box gets hidden on non-macs -->
-    <caption label="Growl settings"/>
-    <checkbox id="facebook-notifications-growl" label="Use Growl"/>
-    <label value="Location of growlnotify:"/>
-    <textbox id="facebook-notifications-growlpath"/>
-  </groupbox>
+
   <groupbox id="facebook-customize-toolbar">
     <caption label="Customize Toolbar"/>
      <description style="width:240px">
      You can decided which parts of the Facebook Toolbar appear and how they are placed using Firefox's toolbar customizer. 
      </description>
      <button label="Customize toolbar" oncommand="opener.BrowserCustomizeToolbar()"/>
+  </groupbox>
+  <groupbox id="facebook-growlbox">
+    <!-- note: this box gets hidden on non-macs -->
+    <caption label="Growl settings"/>
+     <description style="width:240px">
+     If you use the application Growl, you can have your notifications show up in your Growl display.
+     </description>
+    <checkbox id="facebook-notifications-growl" label="Show Facebook notifications with Growl" checked="false"/>
+    <label value="Location of growlnotify:"/>
+    <textbox id="facebook-notifications-growlpath" value="/usr/local/bin/growlnotify"/>
   </groupbox>
 </dialog>

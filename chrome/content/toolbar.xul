@@ -68,14 +68,14 @@
           <menuitem label="My Events"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/eventhome.php', event)"/>
+          <menuseparator />
+          <menuitem image="chrome://google-toolbar/skin/search.png"
+                    class="menuitem-iconic"
+                    label="Toolbar Settings"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="window.openDialog('chrome://facebook/content/settings.xul', '_blank', 'centerscreen,chrome,resizable=yes,dependent=yes')"/>
         </menupopup>
       </toolbarbutton>
-
-      <toolbarbutton id="facebook-settings-button"
-                     label="Settings"
-                     class="button"
-                     oncommand="window.open('chrome://facebook/content/settings.xul', '', 'centerscreen,chrome,dialog=yes,modal=yes')"/>
-
 
       <toolbaritem id="facebook-login-info">
         <toolbarbutton id="facebook-name-info"
@@ -99,7 +99,7 @@
              context="toolbar-context-menu"
              toolbarname="Facebook Toolbar"
              crop="end"
-             defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,separator,facebook-share,spring,facebook-settings-button,facebook-login-info">
+             defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,separator,facebook-share,spring,facebook-login-info">
     </toolbar>
     <popup position="after_start"
            id="PopupFacebookFriends"
