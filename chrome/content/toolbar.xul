@@ -27,19 +27,19 @@
 
       <toolbarbutton id="facebook-notification-poke"
                      class="facebook-icon-poke facebook-notifications button"
-                     label="0"
+                     label="?"
                      tooltip="New Pokes"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="openUILink('http://www.facebook.com/home.php', event)"/>
       <toolbarbutton id="facebook-notification-reqs"
                      class="facebook-icon-reqs facebook-notifications button"
-                     label="0"
+                     label="?"
                      tooltip="New Friend Requests"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="openUILink('http://www.facebook.com/reqs.php', event)"/>
       <toolbarbutton id="facebook-notification-msgs"
                      class="facebook-icon-msgs facebook-notifications button"
-                     label="0"
+                     label="?"
                      tooltip="New Messages"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="openUILink('http://www.facebook.com/mailbox.php', event)"/>
@@ -111,8 +111,25 @@
     </toolbar>
     <popup position="after_start"
            id="PopupFacebookFriends"
-           style="width: 300px; max-height:300px;">
-      <richlistbox id="PopupFacebookFriendsList" flex="1"/>
+           style="width: 300px; max-height:450px;">
+      <richlistbox id="PopupFacebookFriendsList" flex="1">
+        <richlistitem id="FacebookHint"
+                      onmouseup="this.doCommand()"
+                      onmouseover="SelectItemInList(this, this.parentNode)">
+          <label id="FacebookHintText"/>
+        </richlistitem>
+        <richlistitem id="PopupMessager"
+                      class="facebook-friendlinks"
+                      style="display: none;"
+                      onmouseup="this.doCommand()"
+                      oncommand="OpenFBUrl('message.php', this.getAttribute('userid'), event)"/>
+        <richlistitem id="PopupPoker"
+                      class="facebook-friendlinks"
+                      style="display: none;"
+                      onmouseup="this.doCommand()"
+                      onmouseover="SelectItemInList(this, this.parentNode)"
+                      oncommand="OpenFBUrl('poke.php', this.getAttribute('userid'), event)"/>
+      </richlistbox>
     </popup>
   </toolbox>
   <broadcasterset id="mainBroadcasterSet">

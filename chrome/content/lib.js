@@ -17,7 +17,7 @@ function debug() {
 }
 
 function OpenFBUrl(page, uid, e) {
-  var url = 'http://www.dev005.facebook.com:4750/' + page + '?uid=' + uid + '&api_key=' + fbSvc.apiKey;
+  var url = 'http://www.facebook.com/' + page + '?uid=' + uid + '&api_key=' + fbSvc.apiKey;
   debug('Opening ' + url);
   openUILink(url, e);
   e.stopPropagation();
@@ -59,50 +59,85 @@ function SelectItemInList(item, list) {
   }
 }
 
+function SetHint(visible, text, oncommand) {
+  debug(visible, text, oncommand);
+  if (IsSidebarOpen()) {
+    var doc = top.document.getElementById('sidebar').contentDocument;
+  } else {
+    var doc = document;
+  }
+  var hint = doc.getElementById('FacebookHint');
+  if (hint) {
+    if (visible) {
+      hint.setAttribute('oncommand', oncommand);
+      doc.getElementById('FacebookHintText').setAttribute('value', text);
+      hint.style.display = '';
+    } else {
+      hint.style.display = 'none';
+    }
+  }
+}
+
 function SearchFriends(origSearch) {
   var search = origSearch.toLowerCase();
   debug('searching for: ' + search);
-  /* this would delay searching until a given time after the last key was
-   * typed so that we don't burn cpu searching when the user's still typing.
-  var now = (new Date()).getTime();
-  if (waitTil > now) {
-      debug('still waiting');
-      window.setTimeout("SearchFriends(GetFBSearchBox().value)", waitTil - now);
-      return;
-  }
-  */
   var sidebar = IsSidebarOpen();
   var list = GetFriendsListElement();
-  if (!list.firstChild || list.firstChild.id == 'loginNode') return;
-  var numDisplayed = 0;
+  var numMatched = 0;
   var lastDisplayed = null;
+  var searches = [];
   if (search) {
-    var searches = [];
     for each (var s in search.split(/\s+/)) {
       if (s) {
         searches.push(new RegExp('\\b' + s, 'i'));
       }
     }
-    for (var i = 0; i < list.childNodes.length; i++) {
-      var node = list.childNodes[i];
-      var sname = node.getAttribute('friendname');
-      if (!sname) continue;
-      if (searches.every(function(s) { return s.test(sname); })) {
+  }
+  for (var i = 0; i < list.childNodes.length; i++) {
+    var node = list.childNodes[i];
+    var sname = node.getAttribute('friendname');
+    if (!sname) continue;
+    if (!search || searches.every(function(s) { return s.test(sname); })) {
+      if (sidebar || numMatched < 4) {
         node.style.display = '';
-        numDisplayed++;
         lastDisplayed = node;
       } else {
         node.style.display = 'none';
       }
+      numMatched++;
+    } else {
+      node.style.display = 'none';
     }
+  }
+  debug('matched', numMatched);
+  if (search && numMatched == 0) {
+    SetHint(true, 'Press enter to search for "' + origSearch + '" on Facebook',
+            "openUILink('http://www.facebook.com/s.php?q=' + encodeURIComponent(GetFBSearchBox().value), event);");
+  } else if (!sidebar && numMatched > 4) {
+    var str = 'See all ' + numMatched + ' friends'
+      if (search) {
+        str += ' matching "' + origSearch + '"';
+      }
+    str += '...';
+    SetHint(true, str, "toggleSidebar('viewFacebookSidebar');");
   } else {
-    // simple version for empty searches
-    for (var i = 0; i < list.childNodes.length; i++) {
-      var node = list.childNodes[i];
-      if (!node.getAttribute('friendname')) continue;
-      node.style.display = '';
-      numDisplayed++;
-      lastDisplayed = node;
+    SetHint(false, '', '');
+  }
+  if (!sidebar) {
+    if (numMatched == 1) {
+      var msger = document.getElementById('PopupMessager');
+      msger.setAttribute('userid', lastDisplayed.getAttribute('userid'));
+      msger.setAttribute('value', 'Send ' + lastDisplayed.getAttribute('firstname') + ' a message');
+      msger.style.display = '';
+      var poker = document.getElementById('PopupPoker');
+      poker.setAttribute('userid', lastDisplayed.getAttribute('userid'));
+      poker.setAttribute('value', 'Poke ' + lastDisplayed.getAttribute('firstname'));
+      poker.style.display = '';
+    } else {
+      var msger = document.getElementById('PopupMessager');
+      var poker = document.getElementById('PopupPoker');
+      msger.style.display = 'none';
+      poker.style.display = 'none';
     }
   }
   var item = list.selectedItem;
@@ -110,73 +145,7 @@ function SearchFriends(origSearch) {
     if (item.style.display == 'none') {
       list.selectedIndex = -1;
     } else {
-      if (list.selectedItem != item) { // action link case again
-        SelectItemInList(item, list);
-      }
       list.ensureElementIsVisible(item);
-    }
-  }
-  if (sidebar) {
-    var doc = top.document.getElementById('sidebar').contentDocument;
-  } else {
-    var doc = document;
-  }
-  var searchHint = doc.getElementById('SearchHint');
-  if (numDisplayed == 0) {
-    if (!searchHint) {
-      searchHint = doc.createElement('richlistitem');
-      searchHint.setAttribute('id', 'SearchHint');
-      searchHint.setAttribute('oncommand', "openUILink('http://www.facebook.com/s.php?q=' + encodeURIComponent(GetFBSearchBox().value), event);");
-      if (sidebar) {
-        searchHint.setAttribute('onclick', 'this.doCommand()');
-      } else {
-        searchHint.setAttribute('onmouseup', "this.doCommand();");
-        searchHint.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
-      }
-      searchHint.appendChild(document.createTextNode('Press enter to search for "' + origSearch + '" on Facebook'));
-      list.appendChild(searchHint);
-    } else {
-      searchHint.firstChild.nodeValue = 'Press enter to search for "' + origSearch + '" on Facebook';
-    }
-  } else if (searchHint) {
-    if (list.selectedItem && list.selectedItem == searchHint) {
-      debug('unselecting');
-      list.selectedItem = null;
-    }
-    list.removeChild(searchHint);
-  }
-  if (!sidebar) {
-    if (numDisplayed == 1) {
-      if (!document.getElementById('PopupMessager')) {
-        debug('showing action links', lastDisplayed.id);
-        var item = document.createElement('richlistitem');
-        item.setAttribute('id', 'PopupMessager');
-        item.setAttribute('class', 'facebook-friendlinks');
-        item.setAttribute('value', 'Send ' + lastDisplayed.getAttribute('firstname') + ' a message');
-        item.setAttribute('onmouseup', "this.doCommand();");
-        item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
-        item.setAttribute('oncommand', "OpenFBUrl('message.php', '" + lastDisplayed.getAttribute('userid') + "', event)");
-        list.appendChild(item);
-        item = document.createElement('richlistitem');
-        item.setAttribute('id', 'PopupPoker');
-        item.setAttribute('class', 'facebook-friendlinks');
-        item.setAttribute('value', 'Poke ' + lastDisplayed.getAttribute('firstname'));
-        item.setAttribute('onmouseup', "this.doCommand();");
-        item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
-        item.setAttribute('oncommand', "OpenFBUrl('poke.php', '" + lastDisplayed.getAttribute('userid') + "', event)");
-        list.appendChild(item);
-      }
-    } else {
-      var messager = document.getElementById('PopupMessager');
-      if (messager) {
-        var poker = document.getElementById('PopupPoker');
-        if (list.selectedItem && (list.selectedItem == poker || list.selectedItem == messager)) {
-          debug('unselecting');
-          list.selectedItem = null;
-        }
-        list.removeChild(messager);
-        list.removeChild(poker);
-      }
     }
   }
 }
@@ -232,26 +201,6 @@ function MoveInList(dir) {
   if (item) {
     SelectItemInList(item, list);
   }
-}
-
-function CreateLoginNode(list) {
-    var item = document.createElement('richlistitem');
-    item.setAttribute('id', 'loginNode');
-    item.setAttribute('class', 'emptyBox');
-    if (IsSidebarOpen()) {
-      item.setAttribute('onclick', 'this.doCommand()');
-    } else {
-      item.setAttribute('onmouseup', 'this.doCommand()');
-      item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
-    }
-    item.setAttribute('oncommand', 'FacebookLogin()');
-    item.appendChild(document.createTextNode('Login from the toolbar to see your friends list.')); 
-    list.insertBefore(item, null);
-}
-function RemoveLoginNode(list) {
-    if (document.getElementById('loginNode')) {
-        list.removeChild(document.getElementById('loginNode'));
-    }
 }
 
 function FacebookLogin() {

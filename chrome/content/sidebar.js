@@ -17,7 +17,7 @@ var observer = {
                 break;
             case 'facebook-friend-updated':
                 if (data != 'status') {
-                    document.getElementById('sidebar-' + friend.id).setAttribute(data, friend[data]);
+                    //document.getElementById('sidebar-' + friend.id).setAttribute(data, friend[data]);
                     break;
                 }
                 // else fall-through...
@@ -30,10 +30,10 @@ var observer = {
 
 function ClearFriends() {
     var list = document.getElementById('SidebarFriendsList');
-    while (list.firstChild) {
+    while (list.firstChild && list.firstChild.id != 'FacebookHint') {
         list.removeChild(list.firstChild);
     }
-    CreateLoginNode(list);
+    SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
 }
 
 function SortFriends(f1, f2) {
@@ -52,15 +52,18 @@ function LoadFriends() {
     var count = {};
     var friends = fbSvc.getFriends(count);
     debug('got friends', count.value);
-    if (!friends || !fbSvc.loggedIn) {
-        CreateLoginNode(list);
+    if (!count.value || !fbSvc.loggedIn) {
+        SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
     } else {
-        RemoveLoginNode(list);
+        var hint = document.getElementById('FacebookHint');
         friends.sort(SortFriends);
         for each (var friend in friends) {
-            CreateFriendNode(list, friend, null);
+            CreateFriendNode(list, friend, hint);
         }
-        SearchFriends(GetFBSearchBox().value);
+        var searchBox = GetFBSearchBox();
+        if (searchBox.value != 'Search Facebook') {
+            SearchFriends(searchBox.value);
+        }
     }
 }
 
@@ -68,7 +71,7 @@ var friendsToUpdate = [];
 function UpdateFriends() {
     debug('UpdateFriends');
     var list = document.getElementById('SidebarFriendsList');
-    if (!list.firstChild || list.firstChild.id == 'loginNode') {
+    if (!list.firstChild || list.firstChild.id == 'FacebookHint') {
         LoadFriends();
         return;
     }
@@ -89,8 +92,8 @@ function CreateFriendNode(list, friend, insertBefore) {
     item.setAttribute('id', 'sidebar-' + friend.id);
     item.setAttribute('class', 'friendBox');
     item.setAttribute('friendname', friend.name);
-    item.setAttribute('wall', 'wall: ' + friend.wall);
-    item.setAttribute('notes', 'notes: ' + friend.notes);
+    //item.setAttribute('wall', 'wall: ' + friend.wall);
+    //item.setAttribute('notes', 'notes: ' + friend.notes);
     var firstName = friend.name.substr(0, friend.name.indexOf(' '));
     if (!firstName) firstName = friend.name;
     item.setAttribute('firstname', firstName);
@@ -100,8 +103,8 @@ function CreateFriendNode(list, friend, insertBefore) {
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
     item.setAttribute('msgCmd', "OpenFBUrl('message.php', '" + friend.id + "', event)");
     item.setAttribute('pokeCmd', "OpenFBUrl('poke.php', '" + friend.id + "', event)");
-    item.setAttribute('wallCmd', "OpenFBUrl('wall.php', '" + friend.id + "', event)");
-    item.setAttribute('notesCmd', "OpenFBUrl('notes.php', '" + friend.id + "', event)");
+    //item.setAttribute('wallCmd', "OpenFBUrl('wall.php', '" + friend.id + "', event)");
+    //item.setAttribute('notesCmd', "OpenFBUrl('notes.php', '" + friend.id + "', event)");
     if (!friend.pic) {
       item.setAttribute('pic', 'chrome://facebook/content/t_default.jpg');
     } else {
@@ -146,12 +149,11 @@ function SidebarResize() {
     debug('setting status width', window.innerWidth);
     var sheet = document.styleSheets[0];
     if (statusWidthStyleRule !== false) {
-        sheet.deleteRule(statusWidthStyleRule+1);
+        debug('deleting', statusWidthStyleRule, sheet.cssRules.length);
         sheet.deleteRule(statusWidthStyleRule);
     }
     statusWidthStyleRule = sheet.cssRules.length;
     sheet.insertRule(".status { width: " + (window.innerWidth-82) + "px !important; }", statusWidthStyleRule);
-    sheet.insertRule(".login_to_see_message { width: " + (window.innerWidth-32) + "px; }", statusWidthStyleRule+1);
 }
 var facebook=null; // for some reason lib.js can't seem to handle not having something named facebook defined
 

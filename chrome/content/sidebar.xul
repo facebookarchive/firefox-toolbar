@@ -16,5 +16,9 @@
              flex="1"
              style="display: none;"/>
   </hbox>
-  <richlistbox id="SidebarFriendsList" flex="1"/>
+  <richlistbox id="SidebarFriendsList" flex="1">
+    <richlistitem id="FacebookHint" onclick="this.doCommand()">
+      <label id="FacebookHintText"/>
+    </richlistitem>
+  </richlistbox>
 </page>

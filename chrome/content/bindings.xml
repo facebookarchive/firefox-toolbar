@@ -10,16 +10,9 @@
       <children />
     </content>
   </binding>
-  <binding id="emptyBox" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
-    <content>
-        <xul:description class="login_to_see_message" >
-	  <children />
-        </xul:description> 
-    </content>
-  </binding>
   <binding id="friendBox" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
     <content>
-      <xul:vbox>
+      <xul:vbox style="min-height: 50px">
         <xul:image xbl:inherits="src=pic,onclick=oncommand" class="facebook-link friend-image" />
       </xul:vbox>
       <xul:vbox>
@@ -47,13 +40,6 @@
     <content>
       <xul:toolbarbutton class="facebook-icon-poke facebook-link" />
       <xul:label xbl:inherits="value" class="facebook-link" />
-    </content>
-  </binding>
-  <binding id="searchHint" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
-    <content>
-      <xul:description>
-        <children/>
-      </xul:description>
     </content>
   </binding>
 </bindings>

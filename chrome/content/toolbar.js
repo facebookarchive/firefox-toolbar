@@ -22,10 +22,16 @@ var fbToolbarObserver = {
         document.getElementById('facebook-name-info').label = subject.name;
         document.getElementById('facebook-name-info').setAttribute('userid', subject.id);
         document.getElementById('facebook-login-status').label = 'Logout';
+        document.getElementById('facebook-notification-msgs').label = '0';
+        document.getElementById('facebook-notification-poke').label = '0';
+        document.getElementById('facebook-notification-reqs').label = '0';
         break;
       case 'facebook-session-end':
         document.getElementById('facebook-login-status').label = 'Login to Facebook';
         document.getElementById('facebook-name-info').label = '';
+        document.getElementById('facebook-notification-msgs').label = '?';
+        document.getElementById('facebook-notification-poke').label = '?';
+        document.getElementById('facebook-notification-reqs').label = '?';
         facebook.clearFriends();
         break;
       case 'facebook-friends-updated':
@@ -42,6 +48,7 @@ var fbToolbarObserver = {
 
 var facebook = {
   load: function() {
+    document.getElementById('facebook-search').addEventListener('keypress', HandleKeyPress, true);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-session-start', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-friends-updated', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-friend-updated', false);
@@ -50,19 +57,17 @@ var facebook = {
     obsSvc.addObserver(fbToolbarObserver, 'facebook-msgs-updated', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-pokes-updated', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-reqs-updated', false);
-    obsSvc.addObserver(fbToolbarObserver, 'facebook-wall-updated', false);
-    document.getElementById('facebook-notification-msgs').label = fbSvc.numMsgs;
-    document.getElementById('facebook-notification-poke').label = fbSvc.numPokes;
-    document.getElementById('facebook-notification-reqs').label = fbSvc.numReqs;
     var loggedInUser = fbSvc.loggedInUser;
     if (loggedInUser) {
       loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
       document.getElementById('facebook-name-info').label = loggedInUser.name;
       document.getElementById('facebook-name-info').setAttribute('userid', loggedInUser.id);
       document.getElementById('facebook-login-status').label = 'Logout';
+      document.getElementById('facebook-notification-msgs').label = fbSvc.numMsgs;
+      document.getElementById('facebook-notification-poke').label = fbSvc.numPokes;
+      document.getElementById('facebook-notification-reqs').label = fbSvc.numReqs;
     }
     facebook.loadFriends();
-    document.getElementById('facebook-search').addEventListener('keypress', HandleKeyPress, true);
     debug('facebook toolbar loaded.');
   },
 
@@ -75,7 +80,6 @@ var facebook = {
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-msgs-updated');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-pokes-updated');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-reqs-updated');
-    obsSvc.removeObserver(fbToolbarObserver, 'facebook-wall-updated');
     debug('facebook toolbar unloaded.');
   },
 
@@ -89,19 +93,22 @@ var facebook = {
   loadFriends: function() {
     debug('loadFriends()');
     var list = document.getElementById('PopupFacebookFriendsList');
-    if (list.firstChild && list.firstChild.id != 'loginNode') {
+    if (list.firstChild && list.firstChild.id != 'FacebookHint') {
       return;
     }
+    list.selectedIndex = -1;
     var count = {};
     var friends = fbSvc.getFriends(count);
     debug('got friends', count.value);
-    if (!friends || !fbSvc.loggedIn) {
-      CreateLoginNode(list);
+    if (!count.value || !fbSvc.loggedIn) {
+      SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
     } else {
-      RemoveLoginNode(list);
       friends.sort(this.sortFriends);
       for each (var friend in friends) {
         this.createFriendNode(list, friend, null);
+      }
+      if (!IsSidebarOpen()) {
+        SearchFriends(GetFBSearchBox().value);
       }
     }
   },
@@ -131,25 +138,27 @@ var facebook = {
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
     item.setAttribute('userid', friend.id);
     if (!friend.pic) {
-      item.setAttribute('pic', 'http://static.ak.facebook.com/pics/t_default.jpg');
+      item.setAttribute('pic', 'chrome://facebook/content/t_default.jpg');
     } else {
       item.setAttribute('pic', friend.pic + '&size=thumb');
     }
     if (!elem) {
       // Note that this will put new friends at the bottom instead of alphabetized, but I think that's ok.
       // It would get fixed in any new windows or when the browser restarts.
-      list.appendChild(item);
+      list.insertBefore(item, document.getElementById('FacebookHint'));
     }
   },
   searchBoxFocus: function(searchBox) {
-    if (searchBox.value == 'Search Facebook') { 
+    if (searchBox.value == 'Search Facebook') {
       searchBox.value=''; 
       searchBox.style.color='#000000';
     }
     if (!this.ignoreBlur && document.getElementById('viewFacebookSidebar').getAttribute('checked') != 'true') {
       document.getElementById('PopupFacebookFriends').showPopup(searchBox, -1, -1, 'tooltip', 'bottomleft', 'topleft');
       // if the sidebar was just open then we would be out of sync, so let's just filter the list to be safe
-      SearchFriends(searchBox.value);
+      if (fbSvc.loggedIn) {
+        SearchFriends(searchBox.value);
+      }
     }
   },
   searchBoxBlur: function(searchBox) {
@@ -187,10 +196,12 @@ var facebook = {
   },
   clearFriends: function() {
     var list = document.getElementById('PopupFacebookFriendsList');
-    while (list.firstChild) {
+    while (list.firstChild && list.firstChild.id != 'FacebookHint') {
       list.removeChild(list.firstChild);
     }
-    CreateLoginNode(list);
+    document.getElementById('PopupMessager').style.display = 'none';
+    document.getElementById('PopupPoker').style.display = 'none';
+    SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
   }
 };
 window.addEventListener('load', facebook.load, false);
