@@ -85,6 +85,12 @@
         </menupopup>
       </toolbarbutton>
 
+      <toolbarbutton id="facebook-settings-button"
+                     label="Settings"
+                     class="button"
+                     oncommand="window.openDialog('chrome://facebook/content/settings.xul', '_blank', 'centerscreen,chrome,resizable=yes,dependent=yes')"/>
+
+
       <toolbaritem id="facebook-login-info">
         <toolbarbutton id="facebook-name-info"
                        class="button"
@@ -107,7 +113,7 @@
              context="toolbar-context-menu"
              toolbarname="Facebook Toolbar"
              crop="end"
-             defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,separator,facebook-share,spring,facebook-login-info">
+             defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,separator,facebook-share,spring,facebook-settings-button,facebook-login-info">
     </toolbar>
     <popup position="after_start"
            id="PopupFacebookFriends"

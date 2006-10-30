@@ -173,10 +173,10 @@ facebookService.prototype = {
             if (data.most_recent > fbSvc._lastMsgTime && newMsgCount > 0) {
                 fbSvc._observerService.notifyObservers(null, 'facebook-new-msgs', newMsgCount);
                 if (newMsgCount > 1) {
-                    fbSvc.showPopup('http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif',
+                    fbSvc.showPopup('you.msg', 'http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif',
                                     'You have new messages', 'http://www.facebook.com/mailbox.php');
                 } else {
-                    fbSvc.showPopup('http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif',
+                    fbSvc.showPopup('you.msg', 'http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif',
                                     'You have a new message', 'http://www.facebook.com/mailbox.php');
                 }
                 fbSvc._lastMsgTime = data.most_recent;
@@ -197,7 +197,7 @@ facebookService.prototype = {
                 // note that your unseen poke count could theoretically stay the same or even if you have new pokes.
                 fbSvc._totalPokes = totalPokeCount;
                 fbSvc._observerService.notifyObservers(null, 'facebook-new-poke', newPokeCount);
-                fbSvc.showPopup('http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif',
+                fbSvc.showPopup('you.poke', 'http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif',
                                 'You have been poked', 'http://www.facebook.com/home.php');
             }
             if (newPokeCount != fbSvc._numPokes) {
@@ -221,7 +221,7 @@ facebookService.prototype = {
                     fbSvc._reqsInfo = users;
                     for each (var reqInfo in fbSvc._reqsInfo) {
                         fbSvc._observerService.notifyObservers(reqInfo, 'facebook-new-req', reqInfo['id']);
-                        fbSvc.showPopup(reqInfo.pic, reqInfo.name + ' wants to be your friend',
+                        fbSvc.showPopup('you.req', reqInfo.pic, reqInfo.name + ' wants to be your friend',
                                        'http://www.facebook.com/reqs.php');
                     }
                 });
@@ -250,24 +250,24 @@ facebookService.prototype = {
                     if (!holdFriendNotifications) {
                         if (!fbSvc._friendsInfo[friend['id']]) {
                             fbSvc._observerService.notifyObservers(friend, 'facebook-new-friend', friend['id']);
-                            fbSvc.showPopup(friend.pic, friend.name + ' is now your friend',
+                            fbSvc.showPopup('you.friend', friend.pic, friend.name + ' is now your friend',
                                             'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
                             friendUpdate = true;
                         } else {
                             if (fbSvc._friendsInfo[friend.id].status != friend.status) {
                                 fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'status');
-                                fbSvc.showPopup(friend.pic, friend.name + ' is now ' + friend.status,
+                                fbSvc.showPopup('friend.status', friend.pic, friend.name + ' is now ' + friend.status,
                                                 'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
                                 friendUpdate = true;
                             }
                             if (fbSvc._friendsInfo[friend.id].wall != friend.wall) {
                                 fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'wall');
-                                fbSvc.showPopup(friend.pic, 'Someone wrote on ' + friend.name + "'s wall",
+                                fbSvc.showPopup('friend.wall', friend.pic, 'Someone wrote on ' + friend.name + "'s wall",
                                                 'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
                             }
                             if (fbSvc._friendsInfo[friend.id].notes != friend.notes) {
                                 fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'notes');
-                                fbSvc.showPopup(friend.pic, friend.name + ' wrote a note.',
+                                fbSvc.showPopup('friend.note', friend.pic, friend.name + ' wrote a note.',
                                                 'http://www.facebook.com/notes.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
                             }
                         }
@@ -296,7 +296,7 @@ facebookService.prototype = {
                 if (fbSvc._loggedInUser.wall != user.wall) {
                     fbSvc._observerService.notifyObservers(null, 'facebook-wall-updated', user.wall);
                     if (fbSvc._loggedInUser.wall < user.wall) {
-                        fbSvc.showPopup('', 'Someone wrote on your wall',
+                        fbSvc.showPopup('you.wall', '', 'Someone wrote on your wall',
                                         'http://www.facebook.com/profile.php?uid=' + user.id + '&api_key=' + fbSvc._apiKey);
                     }
                 }
@@ -419,24 +419,32 @@ facebookService.prototype = {
         }
     },
 
-    showPopup: function(pic, label, url) {
-        debug('showPopup', pic, label, url);
+    showPopup: function(type, pic, label, url) {
+        if ((this._prefService.prefHasUserValue('extensions.facebook.notifications.toggle') &&
+             !this._prefService.getBoolPref('extensions.facebook.notifications.toggle')) ||
+            (this._prefService.prefHasUserValue('extensions.facebook.notifications.' + type) &&
+             !this._prefService.getBoolPref('extensions.facebook.notifications.' + type))) {
+            return;
+        }
+        debug('showPopup', type, pic, label, url);
         try {
             var alerts = Cc["@mozilla.org/alerts-service;1"].getService(Ci.nsIAlertsService);
             alerts.showAlertNotification(pic, 'Facebook Notification', label, true, url, this._alertObserver);
         } catch(e) {
-            // we're on a mac, what do we do???
-            debug('could not send alert (on a mac?)', e);
-            var growlexec = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-            var process = Cc["@mozilla.org/process/util;1"].createInstance(Ci.nsIProcess);                       
-            // first we'll see if the person happens to have growl, just for the hell of it
-            growlexec.initWithPath('/usr/local/bin/growlnotify');
-            if (growlexec.exists()) {
-                process.init(growlexec);
-                var args = ['-n', 'Firefox', '-a', 'Firefox', '-t', 'Facebook Notification', '-m', label];
-                process.run(false, args, args.length);
-            } else {
-                // otherwise we'll just open a chrome window to display the msg
+            try {
+                if (!this._prefService.getBoolPref('extensions.facebook.notifications.growl')) {
+                    throw null;
+                }
+                var growlexec = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+                var process = Cc["@mozilla.org/process/util;1"].createInstance(Ci.nsIProcess);                       
+                growlexec.initWithPath(this._prefService.getCharPref('extensions.facebook.notifications.growlpath'));
+                if (growlexec.exists()) {
+                    process.init(growlexec);
+                    var args = ['-n', 'Firefox', '-a', 'Firefox', '-t', 'Facebook Notification', '-m', label];
+                    process.run(false, args, args.length);
+                }
+            } catch (e2) {
+                debug('caught', e2);
                 var window = this._winService.getMostRecentWindow(null);
                 var left = window.screen.width - 350;
                 var top = window.screen.height - 200;
