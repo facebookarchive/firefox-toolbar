@@ -201,6 +201,7 @@ var facebook = {
     }
     document.getElementById('PopupMessager').style.display = 'none';
     document.getElementById('PopupPoker').style.display = 'none';
+    document.getElementById('PopupPoster').style.display = 'none';
     SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
   }
 };

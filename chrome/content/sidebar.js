@@ -103,6 +103,7 @@ function CreateFriendNode(list, friend, insertBefore) {
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
     item.setAttribute('msgCmd', "OpenFBUrl('message.php', '" + friend.id + "', event)");
     item.setAttribute('pokeCmd', "OpenFBUrl('poke.php', '" + friend.id + "', event)");
+    item.setAttribute('postCmd', "OpenFBUrl('wallpost.php', '" + friend.id + "', event)");
     //item.setAttribute('wallCmd', "OpenFBUrl('wall.php', '" + friend.id + "', event)");
     //item.setAttribute('notesCmd', "OpenFBUrl('notes.php', '" + friend.id + "', event)");
     if (!friend.pic) {

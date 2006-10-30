@@ -47,39 +47,25 @@
                      label="Quick Links"
                      type="menu">
         <menupopup id="facebook-link-popup">
-          <menuitem image="chrome://google-toolbar/skin/search.png"
-                    class="menuitem-iconic" 
-                    label="Home"
+          <menuitem label="Home"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/home.php', event)"/>
-          <menuitem image="chrome://google-toolbar/skin/search.png"
-                    class="menuitem-iconic" 
-                    label="My Friends"
+          <menuitem label="My Friends"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/friends.php?r', event)"/>
-          <menuitem image="chrome://google-toolbar/skin/search.png"
-                    class="menuitem-iconic" 
-                    label="My Photos"
+          <menuitem label="My Photos"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/photos.php', event)"/>
-          <menuitem image="chrome://google-toolbar/skin/search.png"
-                    class="menuitem-iconic" 
-                    label="My Shares"
+          <menuitem label="My Shares"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/shared.php', event)"/>
-          <menuitem image="chrome://google-toolbar/skin/search.png"
-                    class="menuitem-iconic" 
-                    label="My Notes"
+          <menuitem label="My Notes"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/notes.php', event)"/>
-          <menuitem image="chrome://google-toolbar/skin/search.png"
-                    class="menuitem-iconic" 
-                    label="My Groups"
+          <menuitem label="My Groups"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/grouphome.php', event)"/>
-          <menuitem image="chrome://google-toolbar/skin/search.png"
-                    class="menuitem-iconic" 
-                    label="My Events"
+          <menuitem label="My Events"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/eventhome.php', event)"/>
         </menupopup>
@@ -135,6 +121,12 @@
                       onmouseup="this.doCommand()"
                       onmouseover="SelectItemInList(this, this.parentNode)"
                       oncommand="OpenFBUrl('poke.php', this.getAttribute('userid'), event)"/>
+        <richlistitem id="PopupPoster"
+                      class="facebook-friendlinks"
+                      style="display: none;"
+                      onmouseup="this.doCommand()"
+                      onmouseover="SelectItemInList(this, this.parentNode)"
+                      oncommand="OpenFBUrl('wallpost.php', this.getAttribute('userid'), event)"/>
       </richlistbox>
     </popup>
   </toolbox>

@@ -126,18 +126,24 @@ function SearchFriends(origSearch) {
   if (!sidebar) {
     if (numMatched == 1) {
       var msger = document.getElementById('PopupMessager');
-      msger.setAttribute('userid', lastDisplayed.getAttribute('userid'));
-      msger.setAttribute('value', 'Send ' + lastDisplayed.getAttribute('firstname') + ' a message');
-      msger.style.display = '';
       var poker = document.getElementById('PopupPoker');
+      var poster = document.getElementById('PopupPoster');
+      msger.setAttribute('userid', lastDisplayed.getAttribute('userid'));
       poker.setAttribute('userid', lastDisplayed.getAttribute('userid'));
+      poster.setAttribute('userid', lastDisplayed.getAttribute('userid'));
+      msger.setAttribute('value', 'Send ' + lastDisplayed.getAttribute('firstname') + ' a message');
       poker.setAttribute('value', 'Poke ' + lastDisplayed.getAttribute('firstname'));
+      poster.setAttribute('value', 'Write on ' + lastDisplayed.getAttribute('firstname') + "'s wall");
+      msger.style.display = '';
       poker.style.display = '';
+      poster.style.display = '';
     } else {
       var msger = document.getElementById('PopupMessager');
       var poker = document.getElementById('PopupPoker');
+      var poster = document.getElementById('PopupPoster');
       msger.style.display = 'none';
       poker.style.display = 'none';
+      poster.style.display = 'none';
     }
   }
   var item = list.selectedItem;
