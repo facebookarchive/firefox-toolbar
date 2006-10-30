@@ -9,7 +9,7 @@ function TouchSettings(save) {
   for (var i = 0; i < checkboxes.length; i++) {
     var node = checkboxes[i];
     var pref = 'extensions.' + node.id.replace(/-/g, '.');
-    if (save || !prefSvc.prefHasUserValue(pref)) {
+    if (save) {
       prefSvc.setBoolPref(pref, node.checked);
     } else {
       node.checked = prefSvc.getBoolPref(pref);
@@ -19,7 +19,7 @@ function TouchSettings(save) {
   for (var i = 0; i < textboxes.length; i++) {
     var node = textboxes[i];
     var pref = 'extensions.' + node.id.replace(/-/g, '.');
-    if (save || !prefSvc.prefHasUserValue(pref)) {
+    if (save) {
       prefSvc.setCharPref(pref, node.value);
     } else {
       node.value = prefSvc.getCharPref(pref);

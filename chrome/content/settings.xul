@@ -7,27 +7,27 @@
         onload="TouchSettings(false)">
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/settings.js"/>
-  <checkbox id="facebook-notifications-toggle" label="Enable Notifications" checked="true"/>
+  <checkbox id="facebook-notifications-toggle" label="Enable Notifications"/>
   <groupbox id="facebook-notifications-youbox">
     <caption label="Notifications about you"/>
-    <checkbox id="facebook-notifications-you-req" label="New friend request" checked="true"/>
-    <checkbox id="facebook-notifications-you-msg" label="New message" checked="true"/>
-    <checkbox id="facebook-notifications-you-poke" label="New poke" checked="true"/>
-    <checkbox id="facebook-notifications-you-friend" label="New friend" checked="true"/>
-    <checkbox id="facebook-notifications-you-wall" label="Someone wrote on your wall" checked="true"/>
+    <checkbox id="facebook-notifications-you-req" label="New friend request"/>
+    <checkbox id="facebook-notifications-you-msg" label="New message"/>
+    <checkbox id="facebook-notifications-you-poke" label="New poke"/>
+    <checkbox id="facebook-notifications-you-friend" label="New friend"/>
+    <checkbox id="facebook-notifications-you-wall" label="Someone wrote on your wall"/>
   </groupbox>
   <groupbox id="facebook-notifications-friendbox">
     <caption label="Notifications about your friends"/>
-    <checkbox id="facebook-notifications-friend-wall" label="Someone wrote on a friend's wall" checked="false"/>
-    <checkbox id="facebook-notifications-friend-status" label="A friend updated his/her status" checked="true"/>
-    <checkbox id="facebook-notifications-friend-note" label="A friend wrote a note" checked="true"/>
+    <checkbox id="facebook-notifications-friend-wall" label="Someone wrote on a friend's wall"/>
+    <checkbox id="facebook-notifications-friend-status" label="A friend updated his/her status"/>
+    <checkbox id="facebook-notifications-friend-note" label="A friend wrote a note"/>
   </groupbox>
   <groupbox id="facebook-growlbox">
     <!-- note: this box gets hidden on non-macs -->
     <caption label="Growl settings"/>
-    <checkbox id="facebook-notifications-growl" label="Use Growl" checked="false"/>
+    <checkbox id="facebook-notifications-growl" label="Use Growl"/>
     <label value="Location of growlnotify:"/>
-    <textbox id="facebook-notifications-growlpath" value="/usr/local/bin/growlnotify"/>
+    <textbox id="facebook-notifications-growlpath"/>
   </groupbox>
   <groupbox id="facebook-customize-toolbar">
     <caption label="Customize Toolbar"/>

@@ -5,7 +5,7 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>firefox@facebook.com</em:id>
-    <em:version>0.1</em:version>
+    <em:version>0.9</em:version>
     <em:type>2</em:type>
    
     <!-- Target Application this extension can install into, 
@@ -14,14 +14,18 @@
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
         <em:minVersion>2.0</em:minVersion>
-        <em:maxVersion>2.0</em:maxVersion>
+        <em:maxVersion>2.0.0.*</em:maxVersion>
       </Description>
     </em:targetApplication>
    
     <!-- Front End MetaData -->
     <em:name>Facebook Firefox</em:name>
     <em:description>Integrate your Facebook life into your browser</em:description>
-    <em:creator>Ari Steinberg</em:creator>
+    <em:creator>Facebook Team</em:creator>
+    <em:developer>Ari Steinberg</em:developer>
+    <em:developer>Julie Zhou</em:developer>
+    <em:optionsURL>chrome://facebook/content/settings.xul</em:optionsURL>
+    <em:updateURL>http://developers.facebook.com/toolbar/updates.rdf</em:updateURL>
     <em:homepageURL>http://www.facebook.com/</em:homepageURL>
   </Description>      
 </RDF>

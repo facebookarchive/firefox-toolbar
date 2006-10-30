@@ -71,17 +71,9 @@ function facebookService()
         }
     };
 
-    this._winService = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
+    this._winService      = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
     this._observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
     this._prefService     = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
-
-    if (this._prefService.prefHasUserValue('extensions.facebook.sessionKey') &&
-        this._prefService.prefHasUserValue('extensions.facebook.sessionSecret') &&
-        this._prefService.prefHasUserValue('extensions.facebook.uid')) {
-        fbSvc.sessionStart(fbSvc._prefService.getCharPref('extensions.facebook.sessionKey'),
-                           fbSvc._prefService.getCharPref('extensions.facebook.sessionSecret'),
-                           fbSvc._prefService.getCharPref('extensions.facebook.uid'));
-    }
 }
 
 facebookService.prototype = {
@@ -122,10 +114,6 @@ facebookService.prototype = {
         this._loggedIn      = true;
         this._uid           = uid;
 
-        this._prefService.setCharPref('extensions.facebook.sessionKey',    sessionKey);
-        this._prefService.setCharPref('extensions.facebook.sessionSecret', sessionSecret);
-        this._prefService.setCharPref('extensions.facebook.uid',           uid);
-
         this._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
         this._timer.initWithCallback(this._checker, CHECK_INTERVAL, Ci.nsITimer.TYPE_REPEATING_SLACK);
 
@@ -137,10 +125,6 @@ facebookService.prototype = {
         debug('sessionEnd');
 
         this.initValues();
-
-        this._prefService.clearUserPref('extensions.facebook.sessionKey');
-        this._prefService.clearUserPref('extensions.facebook.sessionSecret');
-        this._prefService.clearUserPref('extensions.facebook.uid');
 
         this._timer.cancel();
         this._oneShotTimer.cancel();
@@ -425,10 +409,8 @@ facebookService.prototype = {
     },
 
     showPopup: function(type, pic, label, url) {
-        if ((this._prefService.prefHasUserValue('extensions.facebook.notifications.toggle') &&
-             !this._prefService.getBoolPref('extensions.facebook.notifications.toggle')) ||
-            (this._prefService.prefHasUserValue('extensions.facebook.notifications.' + type) &&
-             !this._prefService.getBoolPref('extensions.facebook.notifications.' + type))) {
+        if (!this._prefService.getBoolPref('extensions.facebook.notifications.toggle') ||
+            !this._prefService.getBoolPref('extensions.facebook.notifications.' + type)) {
             return;
         }
         debug('showPopup', type, pic, label, url);
