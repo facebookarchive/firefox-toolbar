@@ -29,5 +29,11 @@
     <label value="Location of growlnotify:"/>
     <textbox id="facebook-notifications-growlpath" value="/usr/local/bin/growlnotify"/>
   </groupbox>
-  <button label="Customize toolbar" oncommand="opener.BrowserCustomizeToolbar()"/>
+  <groupbox id="facebook-customize-toolbar">
+    <caption label="Customize Toolbar"/>
+     <description style="width:240px">
+     You can decided which parts of the Facebook Toolbar appear and how they are placed using Firefox's toolbar customizer. 
+     </description>
+     <button label="Customize toolbar" oncommand="opener.BrowserCustomizeToolbar()"/>
+  </groupbox>
 </dialog>
