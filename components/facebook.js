@@ -322,6 +322,11 @@ facebookService.prototype = {
                     notes  = Number(user.notes_count),
                     wall   = Number(user.wall_count),
                     pic    = String(decodeURI(user.pic));
+		    if (!pic) {
+                      pic = 'chrome://facebook/content/t_default.jpg';
+                    } else {
+                      pic += '&size=thumb'; 
+                    }
                 usersInfo[id] = new facebookUser(id, name, pic, status, stime, notes, wall);
             }
             callback(usersInfo);
@@ -450,7 +455,7 @@ facebookService.prototype = {
                 var top = window.screen.height - 200;
                 debug('opening dialog', left, top);
                 var w = window.openDialog("chrome://facebook/content/notifier.xul", "Facebook Notification",
-                                          'close=yes,toolbar=no,status=no,left=' + left + ',top=' + top + ',width=300,height=100',
+                                          'close=yes,toolbar=no,status=no,left=' + left + ',top=' + top + ',width=210,height=100',
                                           pic, label, url);
             }
         }

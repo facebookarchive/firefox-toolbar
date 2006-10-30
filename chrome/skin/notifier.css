@@ -1,5 +1,6 @@
 .notifier-image {
-  margin: 2px 5px 0px 5px
+  margin: 2px 5px 0px 5px;
+  min-width: 50px;
 }
 
 .notifier-title {
@@ -12,6 +13,6 @@
 
 .notifier-text {
    color: #333333;
-   width: 100px;
+   width: 145px;
    margin: 0px 5px 10px 5px;
 }

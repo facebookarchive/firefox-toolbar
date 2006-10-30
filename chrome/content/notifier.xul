@@ -12,7 +12,8 @@
       <vbox>
         <image id="pic" class="notifier-image"/>
       </vbox>
-      <label id="label" class="notifier-text"/>
+      <description id="label" class="notifier-text">
+      </description>
     </hbox>
   </vbox>
 </window>
