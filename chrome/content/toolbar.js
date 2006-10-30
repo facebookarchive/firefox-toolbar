@@ -8,9 +8,6 @@ var fbToolbarObserver = {
   observe: function(subject, topic, data) {
     debug('facebook toolbar observing something: ' + topic);
     switch (topic) {
-      case 'facebook-wall-updated':
-        document.getElementById('facebook-notification-wall').label = data;
-        break;
       case 'facebook-msgs-updated':
         document.getElementById('facebook-notification-msgs').label = data;
         break;
@@ -25,7 +22,6 @@ var fbToolbarObserver = {
         document.getElementById('facebook-name-info').label = subject.name;
         document.getElementById('facebook-name-info').setAttribute('userid', subject.id);
         document.getElementById('facebook-login-status').label = 'Logout';
-        document.getElementById('facebook-notification-wall').label = subject.wall;
         break;
       case 'facebook-session-end':
         document.getElementById('facebook-login-status').label = 'Login to Facebook';
@@ -64,7 +60,6 @@ var facebook = {
       document.getElementById('facebook-name-info').label = loggedInUser.name;
       document.getElementById('facebook-name-info').setAttribute('userid', loggedInUser.id);
       document.getElementById('facebook-login-status').label = 'Logout';
-      document.getElementById('facebook-notification-wall').label = loggedInUser.wall;
     }
     facebook.loadFriends();
     document.getElementById('facebook-search').addEventListener('keypress', HandleKeyPress, true);
@@ -147,6 +142,10 @@ var facebook = {
     }
   },
   searchBoxFocus: function(searchBox) {
+    if (searchBox.value == 'Search Facebook') { 
+      searchBox.value=''; 
+      searchBox.style.color='#000000';
+    }
     if (!this.ignoreBlur && document.getElementById('viewFacebookSidebar').getAttribute('checked') != 'true') {
       document.getElementById('PopupFacebookFriends').showPopup(searchBox, -1, -1, 'tooltip', 'bottomleft', 'topleft');
       // if the sidebar was just open then we would be out of sync, so let's just filter the list to be safe
@@ -156,6 +155,10 @@ var facebook = {
   searchBoxBlur: function(searchBox) {
     if (!this.ignoreBlur) {
       document.getElementById('PopupFacebookFriends').hidePopup();
+    }
+    if (searchBox.value=='') { 
+      searchBox.style.color='#808080'; 
+      searchBox.value = 'Search Facebook'; 
     }
   },
   share: function() {

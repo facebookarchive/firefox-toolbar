@@ -33,12 +33,6 @@
           <xul:label value="-" style="color:#808080; font-size:9px;" />
           <xul:label value="poke" xbl:inherits="onclick=pokeCmd"
                      class="facebook-link mini-link" />
-          <xul:label value="-" style="color:#808080; font-size:9px;" />
-          <xul:label xbl:inherits="value=wall,onclick=wallCmd"
-                     class="facebook-link mini-link" />
-          <xul:label value="-" style="color:#808080; font-size:9px;" />
-          <xul:label xbl:inherits="value=notes,onclick=notesCmd"
-                     class="facebook-link mini-link" />
         </xul:hbox>
       </xul:vbox>
     </content>

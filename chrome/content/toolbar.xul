@@ -7,12 +7,14 @@
   <toolbox id="navigator-toolbox" crop="end">
     <toolbarpalette id="BrowserToolbarPalette">
       <toolbarbutton id="facebook-sidebar-toggle" 
-                     tooltiptext="View Facebook Sidebar"
+                     tooltiptext="Facebook Friends Sidebar"
                      persist="checked"
                      oncommand="this.checked=!this.checked; toggleSidebar('viewFacebookSidebar');"/>
       <toolbaritem id="facebook-searchbox">
         <textbox id="facebook-search"
                  maxlength="50"
+                 value="Search Facebook"
+                 style="color: #808080"
                  onfocus="facebook.searchBoxFocus(this);"
                  onblur="facebook.searchBoxBlur(this);"
                  oninput="SearchFriends(this.value);"/>
@@ -20,7 +22,7 @@
 
       <toolbarbutton id="facebook-share"
                      class="facebook-icon-share facebook-share"
-                     tooltiptext="Share on Facebook"
+                     tooltiptext="Share current page on Facebook"
                      oncommand="facebook.share()"/>
 
       <toolbarbutton id="facebook-notification-poke"
@@ -41,14 +43,8 @@
                      tooltip="New Messages"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="openUILink('http://www.facebook.com/mailbox.php', event)"/>
-      <toolbarbutton id="facebook-notification-wall"
-                     class="facebook-icon-msgs facebook-notifications button"
-                     label="0"
-                     tooltip="Total Wall Posts"
-                     onclick="checkForMiddleClick(this, event);"
-                     oncommand="openUILink('http://www.facebook.com/wall.php', event)"/>
       <toolbarbutton id="facebook-link-menu"
-                     label="Facebook"
+                     label="Quick Links"
                      type="menu">
         <menupopup id="facebook-link-popup">
           <menuitem image="chrome://google-toolbar/skin/search.png"
@@ -89,7 +85,6 @@
         </menupopup>
       </toolbarbutton>
 
-
       <toolbaritem id="facebook-login-info">
         <toolbarbutton id="facebook-name-info"
                        class="button"
@@ -112,7 +107,7 @@
              context="toolbar-context-menu"
              toolbarname="Facebook Toolbar"
              crop="end"
-             defaultset="facebook-sidebar-toggle,facebook-searchbox,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-wall,separator,facebook-link-menu,facebook-share,spring,facebook-login-info">
+             defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,separator,facebook-share,spring,facebook-login-info">
     </toolbar>
     <popup position="after_start"
            id="PopupFacebookFriends"

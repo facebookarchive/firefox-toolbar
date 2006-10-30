@@ -1,4 +1,4 @@
-.facebook-notifications, .facebook-share, #facebook-searchbox image {
+.facebook-notifications, .facebook-share, #facebook-searchbox, .facebook-sidebar image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding: 0px;
 }
@@ -14,8 +14,9 @@
 }
 
 #facebook-sidebar-toggle {
-  padding-left: 12px;
-  list-style-image: url("chrome://global/skin/icons/autocomplete-dropmarker.png");
+  list-style-image: url('chrome://facebook/skin/toolbar.png');
+  -moz-image-region: rect(0px 281px 16px 268px);
+  padding: 0px 0px 0px 9px;
 }
 
 #facebook-search .textbox-input-box {
@@ -38,6 +39,10 @@
 
 .facebook-notifications > .toolbarbutton-text {
   padding: 0px;
+}
+
+.facebook-icon-sidebar {
+  -moz-image-region: rect(0px 281px 16px 268px);
 }
 
 .facebook-icon-poke {
@@ -141,7 +146,7 @@
 
 .status {
    color: #808080;
-   width: 215px;
+   width: auto;
    padding: 0px 0px 3px 4px;
    margin: 1px 0px 3px 2px;
 }
