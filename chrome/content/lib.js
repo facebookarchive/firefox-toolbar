@@ -78,11 +78,11 @@ function SetHint(visible, text, oncommand) {
   }
 }
 
-function SearchFriends(origSearch) {
-  var search = origSearch.toLowerCase();
+function SearchFriends(search) {
   debug('searching for: ' + search);
   var sidebar = IsSidebarOpen();
   var list = GetFriendsListElement();
+  if (list.firstChild.id == 'FacebookHint') return; // not logged in
   var numMatched = 0;
   var lastDisplayed = null;
   var searches = [];
@@ -111,12 +111,12 @@ function SearchFriends(origSearch) {
   }
   debug('matched', numMatched);
   if (search && numMatched == 0) {
-    SetHint(true, 'Press enter to search for "' + origSearch + '" on Facebook',
+    SetHint(true, 'Press enter to search for "' + search + '" on Facebook',
             "openUILink('http://www.facebook.com/s.php?q=' + encodeURIComponent(GetFBSearchBox().value), event);");
   } else if (!sidebar && numMatched > 4) {
     var str = 'See all ' + numMatched + ' friends'
       if (search) {
-        str += ' matching "' + origSearch + '"';
+        str += ' matching "' + search + '"';
       }
     str += '...';
     SetHint(true, str, "toggleSidebar('viewFacebookSidebar');");

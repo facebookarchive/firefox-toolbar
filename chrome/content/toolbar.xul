@@ -101,8 +101,11 @@
              crop="end"
              defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,separator,facebook-share,spring,facebook-login-info">
     </toolbar>
+    <popupset>
     <popup position="after_start"
            id="PopupFacebookFriends"
+           ignorekeys="true"
+           onpopuphidden="content.focus()"
            style="width: 300px; max-height:450px;">
       <richlistbox id="PopupFacebookFriendsList" flex="1">
         <richlistitem id="FacebookHint"
@@ -129,6 +132,7 @@
                       oncommand="OpenFBUrl('wallpost.php', this.getAttribute('userid'), event)"/>
       </richlistbox>
     </popup>
+    </popupset>
   </toolbox>
   <broadcasterset id="mainBroadcasterSet">
     <broadcaster id="viewFacebookSidebar" autoCheck="false" 

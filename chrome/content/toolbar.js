@@ -153,7 +153,7 @@ var facebook = {
       searchBox.style.color='#000000';
     }
     if (!this.ignoreBlur && document.getElementById('viewFacebookSidebar').getAttribute('checked') != 'true') {
-      document.getElementById('PopupFacebookFriends').showPopup(searchBox, -1, -1, 'context', 'bottomleft', 'topleft');
+      document.getElementById('PopupFacebookFriends').showPopup(searchBox, -1, -1, 'popup', 'bottomleft', 'topleft');
       // if the sidebar was just open then we would be out of sync, so let's just filter the list to be safe
       if (fbSvc.loggedIn) {
         SearchFriends(searchBox.value);
