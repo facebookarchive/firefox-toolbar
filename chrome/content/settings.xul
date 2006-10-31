@@ -7,7 +7,7 @@
         onload="TouchSettings(false)">
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/settings.js"/>
-  <checkbox id="facebook-notifications-toggle" label="Enable Notifications"/>
+  <checkbox id="facebook-notifications-toggle" label="Enable Pop-up Notifications"/>
   <groupbox id="facebook-notifications-youbox">
     <caption label="Notifications about you"/>
     <checkbox id="facebook-notifications-you-req" label="New friend request"/>
@@ -26,7 +26,7 @@
   <groupbox id="facebook-customize-toolbar">
     <caption label="Customize Toolbar"/>
      <description style="width:240px">
-     You can decided which parts of the Facebook Toolbar appear and how they are placed using Firefox's toolbar customizer. 
+     You can decide which parts of the Facebook Toolbar appear and how they are placed using Firefox's toolbar customizer. 
      </description>
      <button label="Customize toolbar" oncommand="opener.BrowserCustomizeToolbar()"/>
   </groupbox>

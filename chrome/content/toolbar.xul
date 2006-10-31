@@ -123,6 +123,7 @@
                       class="facebook-friendlinks"
                       style="display: none;"
                       onmousedown="this.doCommand()"
+                      onmouseover="SelectItemInList(this, this.parentNode)"
                       oncommand="OpenFBUrl('message.php', this.getAttribute('userid'), event)"/>
         <richlistitem id="PopupPoker"
                       class="facebook-friendlinks"
