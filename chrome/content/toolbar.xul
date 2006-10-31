@@ -106,25 +106,25 @@
            style="width: 300px; max-height:450px;">
       <richlistbox id="PopupFacebookFriendsList" flex="1">
         <richlistitem id="FacebookHint"
-                      onmouseup="this.doCommand()"
+                      onmousedown="this.doCommand()"
                       onmouseover="SelectItemInList(this, this.parentNode)">
           <label id="FacebookHintText"/>
         </richlistitem>
         <richlistitem id="PopupMessager"
                       class="facebook-friendlinks"
                       style="display: none;"
-                      onmouseup="this.doCommand()"
+                      onmousedown="this.doCommand()"
                       oncommand="OpenFBUrl('message.php', this.getAttribute('userid'), event)"/>
         <richlistitem id="PopupPoker"
                       class="facebook-friendlinks"
                       style="display: none;"
-                      onmouseup="this.doCommand()"
+                      onmousedown="this.doCommand()"
                       onmouseover="SelectItemInList(this, this.parentNode)"
                       oncommand="OpenFBUrl('poke.php', this.getAttribute('userid'), event)"/>
         <richlistitem id="PopupPoster"
                       class="facebook-friendlinks"
                       style="display: none;"
-                      onmouseup="this.doCommand()"
+                      onmousedown="this.doCommand()"
                       onmouseover="SelectItemInList(this, this.parentNode)"
                       oncommand="OpenFBUrl('wallpost.php', this.getAttribute('userid'), event)"/>
       </richlistbox>

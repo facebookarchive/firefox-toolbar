@@ -133,8 +133,7 @@ var facebook = {
       item.appendChild(document.createTextNode(firstName + ' is ' + friend.status));
     }
     item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
-    item.setAttribute('onmousedown', "this.doCommand();"); // in linux all we get is mousedown
-    item.setAttribute('onmouseup', "this.doCommand();");   // on mac all we get is mouseup
+    item.setAttribute('onmousedown', "this.doCommand();");
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
     item.setAttribute('userid', friend.id);
     if (!friend.pic) {
@@ -154,7 +153,7 @@ var facebook = {
       searchBox.style.color='#000000';
     }
     if (!this.ignoreBlur && document.getElementById('viewFacebookSidebar').getAttribute('checked') != 'true') {
-      document.getElementById('PopupFacebookFriends').showPopup(searchBox, -1, -1, 'tooltip', 'bottomleft', 'topleft');
+      document.getElementById('PopupFacebookFriends').showPopup(searchBox, -1, -1, 'context', 'bottomleft', 'topleft');
       // if the sidebar was just open then we would be out of sync, so let's just filter the list to be safe
       if (fbSvc.loggedIn) {
         SearchFriends(searchBox.value);
