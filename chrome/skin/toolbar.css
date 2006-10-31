@@ -14,9 +14,11 @@
   margin: 0px;
   border: 0px;
 }
+
 .facebook-friendlinks {
   margin-left: 6px;
 }
+
 
 #facebook-sidebar-toggle {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
@@ -126,6 +128,10 @@
   color: #3B5998;
 }
 
+.facebook-link:hover {
+  text-decoration: underline;
+}
+
 .emptyBox {
   -moz-binding: url('chrome://facebook/content/bindings.xml#emptyBox');
   padding: 5px;
@@ -155,10 +161,18 @@
 }
 
 .status {
-   color: #808080;
+   color: #333333;
    width: auto;
-   padding: 0px 0px 3px 4px;
-   margin: 1px 0px 3px 2px;
+   font-size: 11px;
+   padding: 0px 0px 0px 4px;
+   margin: 1px 0px 1px 2px;
+}
+
+.stime {
+   color: #999999;
+   font-size: 9px;
+   padding-bottom: 3px;
+   margin-bottom: 3px;
 }
 
 .user_name {

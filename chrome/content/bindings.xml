@@ -20,6 +20,7 @@
         <xul:description class="status" >
 	  <children />
         </xul:description>
+        <xul:label xbl:inherits="value=stime" class="stime" />
         <xul:hbox pack="start" class="facebook-friendlinks">
           <xul:label value="message" xbl:inherits="onclick=msgCmd"
                      class="facebook-link mini-link" />

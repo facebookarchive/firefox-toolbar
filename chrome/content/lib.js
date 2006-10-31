@@ -225,3 +225,35 @@ function FacebookLogin() {
   }
 }
 
+
+function getStatusTime(status_time) {
+   var currentTime = new Date();
+
+   var updateTime = new Date;
+   updateTime.setTime(status_time*1000);
+
+   var days = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+   var day;
+
+   // assumption that status messages are only shown if in the last 7 days
+   if (updateTime.getDate() == currentTime.getDate()) {
+     day = "Today";
+   } else if ((updateTime.getDay() + 1) % 7 == currentTime.getDay()) {
+     day = "Yesterday"; 
+   } else {
+     day = 'Last ' + days[updateTime.getDay()];
+   }
+
+   var hour = updateTime.getHours();
+   if (hour > 11) timeOfDay = 'pm';
+   else timeOfDay = 'am';
+
+   var minute = updateTime.getMinutes();
+   if (minute < 10) {
+     minute = '0' + minute;
+   }
+
+   if (hour > 12) hour -= 12;
+   stime = day + ' at ' + hour + ':' + minute + ' ' + timeOfDay;
+   return stime;
+}

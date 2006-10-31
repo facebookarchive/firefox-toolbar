@@ -21,6 +21,7 @@ var fbToolbarObserver = {
         subject = subject.QueryInterface(Ci.fbIFacebookUser);
         document.getElementById('facebook-name-info').label = subject.name;
         document.getElementById('facebook-name-info').setAttribute('userid', subject.id);
+        document.getElementById('facebook-menu-my-profile').setAttribute('userid', subject.id);
         document.getElementById('facebook-login-status').label = 'Logout';
         document.getElementById('facebook-notification-msgs').label = '0';
         document.getElementById('facebook-notification-poke').label = '0';
@@ -62,7 +63,8 @@ var facebook = {
       loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
       document.getElementById('facebook-name-info').label = loggedInUser.name;
       document.getElementById('facebook-name-info').setAttribute('userid', loggedInUser.id);
-      document.getElementById('facebook-login-status').label = 'Logout';
+      document.getElementById('facebook-login-status').label = 'Logout'
+;     document.getElementById('facebook-menu-my-profile').setAttribute('userid', subject.id);
       document.getElementById('facebook-notification-msgs').label = fbSvc.numMsgs;
       document.getElementById('facebook-notification-poke').label = fbSvc.numPokes;
       document.getElementById('facebook-notification-reqs').label = fbSvc.numReqs;
@@ -130,7 +132,9 @@ var facebook = {
     if (!firstName) firstName = friend.name;
     item.setAttribute('firstname', firstName);
     if (friend.status) {
+      stime = getStatusTime(friend.stime);
       item.appendChild(document.createTextNode(firstName + ' is ' + friend.status));
+      item.setAttribute('stime', stime);
     }
     item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
     item.setAttribute('onmousedown', "this.doCommand();");

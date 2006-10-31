@@ -1,3 +1,4 @@
+
 var Cc = Components.classes;
 var Ci = Components.interfaces;
 
@@ -129,7 +130,9 @@ function CreateFriendNode(list, friend, insertBefore) {
     if (!firstName) firstName = friend.name;
     item.setAttribute('firstname', firstName);
     if (friend.status) {
+        stime = getStatusTime(friend.stime);
 	item.appendChild(document.createTextNode(firstName + ' is ' + friend.status));
+        item.setAttribute('stime', stime);
     }
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
     item.setAttribute('msgCmd', "OpenFBUrl('message.php', '" + friend.id + "', event)");

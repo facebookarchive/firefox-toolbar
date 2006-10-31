@@ -51,6 +51,10 @@
           <menuitem label="Home"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/home.php', event)"/>
+          <menuitem id="facebook-menu-my-profile"
+                    label="My Profile"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="OpenFBUrl('profile.php', this.getAttribute('userid'), event)"/>
           <menuitem label="My Friends"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/friends.php?r', event)"/>
@@ -69,6 +73,9 @@
           <menuitem label="My Events"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/eventhome.php', event)"/>
+          <menuitem label="My Messages"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="openUILink('http://www.facebook.com/mailbox.php', event)"/>
           <menuseparator />
           <menuitem label="Toolbar Settings"
                     onclick="checkForMiddleClick(this, event);"
