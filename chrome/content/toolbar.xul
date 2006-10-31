@@ -23,28 +23,29 @@
       <toolbarbutton id="facebook-share"
                      class="facebook-icon-share facebook-share"
                      tooltiptext="Share current page on Facebook"
-                     oncommand="facebook.share()"/>
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); facebook.share()"/>
 
       <toolbarbutton id="facebook-notification-poke"
                      class="facebook-icon-poke facebook-notifications button"
                      label="?"
                      tooltip="New Pokes"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="openUILink('http://www.facebook.com/home.php', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/home.php', event)"/>
       <toolbarbutton id="facebook-notification-reqs"
                      class="facebook-icon-reqs facebook-notifications button"
                      label="?"
                      tooltip="New Friend Requests"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="openUILink('http://www.facebook.com/reqs.php', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/reqs.php', event)"/>
       <toolbarbutton id="facebook-notification-msgs"
                      class="facebook-icon-msgs facebook-notifications button"
                      label="?"
                      tooltip="New Messages"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="openUILink('http://www.facebook.com/mailbox.php', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/mailbox.php', event)"/>
       <toolbarbutton id="facebook-link-menu"
                      label="Quick Links"
+                     onclick="if (!fbSvc.loggedIn) FacebookLogin();"
                      type="menu">
         <menupopup id="facebook-link-popup">
           <menuitem label="Home"
@@ -71,7 +72,7 @@
           <menuseparator />
           <menuitem label="Toolbar Settings"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="window.openDialog('chrome://facebook/content/settings.xul', '_blank', 'centerscreen,chrome,resizable=yes,dependent=yes')"/>
+                    oncommand="window.open('chrome://facebook/content/settings.xul', '', 'centerscreen,chrome,modal=yes,dialog=yes')"/>
         </menupopup>
       </toolbarbutton>
 
