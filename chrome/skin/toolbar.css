@@ -1,3 +1,8 @@
+#facebook-toolbar[mode="icons"] .toolbarbutton-text {
+  /* don't let the customize toolbar settings blow away our labels */
+  display: -moz-box;
+}
+
 .facebook-notifications, .facebook-share, #facebook-searchbox, .facebook-sidebar image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding: 0px;

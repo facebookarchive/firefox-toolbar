@@ -69,9 +69,7 @@
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/eventhome.php', event)"/>
           <menuseparator />
-          <menuitem image="chrome://google-toolbar/skin/search.png"
-                    class="menuitem-iconic"
-                    label="Toolbar Settings"
+          <menuitem label="Toolbar Settings"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="window.openDialog('chrome://facebook/content/settings.xul', '_blank', 'centerscreen,chrome,resizable=yes,dependent=yes')"/>
         </menupopup>
