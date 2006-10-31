@@ -7,8 +7,10 @@
   <toolbox id="navigator-toolbox" crop="end">
     <toolbarpalette id="BrowserToolbarPalette">
       <toolbarbutton id="facebook-sidebar-toggle" 
+                     class="facebook-sidebar-icon"
                      tooltiptext="Facebook Friends Sidebar"
-                     persist="checked"
+                     dir = "reverse"
+                     persist = "checked"
                      oncommand="this.checked=!this.checked; toggleSidebar('viewFacebookSidebar');"/>
       <toolbaritem id="facebook-searchbox">
         <textbox id="facebook-search"

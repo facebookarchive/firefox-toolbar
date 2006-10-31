@@ -3,7 +3,7 @@
   display: -moz-box;
 }
 
-.facebook-notifications, .facebook-share, #facebook-searchbox, .facebook-sidebar image {
+.facebook-notifications, .facebook-share, #facebook-searchbox, .facebook-sidebar-icon image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding: 0px;
 }
@@ -20,10 +20,9 @@
 }
 
 
-#facebook-sidebar-toggle {
-  list-style-image: url('chrome://facebook/skin/toolbar.png');
-  -moz-image-region: rect(0px 281px 16px 268px);
-  padding: 0px 0px 0px 9px;
+.facebook-sidebar-icon {
+  -moz-image-region: rect(0px 287px 16px 268px);
+  padding: 0px 8px 0px 0px;
 }
 
 #facebook-search .textbox-input-box {
@@ -46,10 +45,6 @@
 
 .facebook-notifications > .toolbarbutton-text {
   padding: 0px;
-}
-
-.facebook-icon-sidebar {
-  -moz-image-region: rect(0px 281px 16px 268px);
 }
 
 .facebook-icon-poke {
@@ -191,7 +186,17 @@
 }
 
 #FacebookHint {
-  overflow: hidden;
+  overflow:hidden;
   color: #808080;
   padding: 5px;
 } 
+
+
+#SidebarFriendsList richlistitem[selected=true] .stime, 
+#SidebarFriendsList richlistitem[selected=true] .status, 
+#PopupFacebookFriendsList richlistitem[selected=true] .status, 
+#PopupFacebookFriendsList richlistitem[selected=true] .stime, 
+#FacebookHint[selected=true] {
+   background-color: Highlight;
+   color: HighlightText;
+}
