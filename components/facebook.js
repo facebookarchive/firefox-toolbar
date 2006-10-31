@@ -43,20 +43,20 @@ function facebookService()
     this._checker = {
         notify: function(timer) {
             debug('_checker.notify');
-            fbSvc.getMyInfo(); // to check for wall posts
-            fbSvc.checkMessages();
-            fbSvc.checkPokes();
-            fbSvc.checkReqs();
+            fbSvc.getMyInfo(false); // to check for wall posts
+            fbSvc.checkMessages(false);
+            fbSvc.checkPokes(false);
+            fbSvc.checkReqs(false);
             fbSvc.checkFriends(false);
         }
     };
     this._initialize = {
         notify: function(timer) {
             debug('_initialize.notify');
-            fbSvc.getMyInfo();
-            fbSvc.checkMessages();
-            fbSvc.checkPokes();
-            fbSvc.checkReqs();
+            fbSvc.getMyInfo(true);
+            fbSvc.checkMessages(true);
+            fbSvc.checkPokes(true);
+            fbSvc.checkReqs(true);
             fbSvc.checkFriends(true);
         }
     };
@@ -151,10 +151,10 @@ facebookService.prototype = {
         this._lastCallId     = 0;
     },
 
-    checkMessages: function() {
+    checkMessages: function(holdNotifications) {
         this.callMethod('facebook.messages.getCount', [], function(data) {
             var newMsgCount = data.unread;
-            if (data.most_recent > fbSvc._lastMsgTime && newMsgCount > 0) {
+            if (!holdNotifications && data.most_recent > fbSvc._lastMsgTime && newMsgCount > 0) {
                 fbSvc._observerService.notifyObservers(null, 'facebook-new-msgs', newMsgCount);
                 if (newMsgCount > 1) {
                     fbSvc.showPopup('you.msg', 'http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif',
@@ -172,11 +172,11 @@ facebookService.prototype = {
             debug('checkMessages: you have ' + fbSvc._numMsgs + ' unread messages');
         });
     },
-    checkPokes: function() {
+    checkPokes: function(holdNotifications) {
         this.callMethod('facebook.pokes.getCount', [], function(data) {
             var newPokeCount = data.unseen;
             var totalPokeCount = data.total;
-            if (totalPokeCount > fbSvc._totalPokes && newPokeCount > 0) {
+            if (!holdNotifications && totalPokeCount > fbSvc._totalPokes && newPokeCount > 0) {
                 // we send the notification if you have any unseen pokes and the total # of pokes has gone up.
                 // note that your unseen poke count could theoretically stay the same or even if you have new pokes.
                 fbSvc._totalPokes = totalPokeCount;
@@ -191,7 +191,7 @@ facebookService.prototype = {
             debug('checkPokes: you have ' + fbSvc._numPokes + ' unseen pokes');
         });
     },
-    checkReqs: function() {
+    checkReqs: function(holdNotifications) {
         this.callMethod('facebook.friends.getRequests', [], function(data) {
             var newReqCount = data.result_elt.length();
             var reqsToGet = [];
@@ -202,11 +202,13 @@ facebookService.prototype = {
             }
             if (reqsToGet.length > 0) {
                 fbSvc.getUsersInfo(reqsToGet, function(users) {
-                    fbSvc._reqsInfo = fbSvc._reqsInfo.concat(users);
                     for each (var reqInfo in users) {
-                        fbSvc._observerService.notifyObservers(reqInfo, 'facebook-new-req', reqInfo['id']);
-                        fbSvc.showPopup('you.req', reqInfo.pic, reqInfo.name + ' wants to be your friend',
-                                       'http://www.facebook.com/reqs.php');
+                        fbSvc._reqsInfo[reqInfo.id] = reqInfo;
+                        if (!holdNotifications) {
+                            fbSvc._observerService.notifyObservers(reqInfo, 'facebook-new-req', reqInfo.id);
+                            fbSvc.showPopup('you.req', reqInfo.pic, reqInfo.name + ' wants to be your friend',
+                                           'http://www.facebook.com/reqs.php');
+                        }
                     }
                 });
             }
@@ -217,8 +219,7 @@ facebookService.prototype = {
             debug('checkReqs: you have ' + fbSvc._numReqs + ' outstanding reqs');
         });
     },
-    checkFriends: function(holdFriendNotifications) {
-        debug('checkFriends');
+    checkFriends: function(holdNotifications) {
         var friendUpdate = false;
         this.callMethod('facebook.friends.get', [], function(data) {
             // make a new friends array every time so that we handle losing friends properly
@@ -231,7 +232,7 @@ facebookService.prototype = {
                 var friendsInfoArr = [];
 
                 for each (var friend in friendsInfo) {
-                    if (!holdFriendNotifications) {
+                    if (!holdNotifications) {
                         if (!fbSvc._friendsInfo[friend['id']]) {
                             fbSvc._observerService.notifyObservers(friend, 'facebook-new-friend', friend['id']);
                             fbSvc.showPopup('you.friend', friend.pic, friend.name + ' is now your friend',
@@ -265,7 +266,7 @@ facebookService.prototype = {
                 fbSvc._friendsInfo = friendsInfo;
                 fbSvc._friendsInfoArr = friendsInfoArr;
 
-                if (holdFriendNotifications || friendUpdate) {
+                if (holdNotifications || friendUpdate) {
                     debug('sending notification');
                     fbSvc._observerService.notifyObservers(null, 'facebook-friends-updated', null);
                 }
