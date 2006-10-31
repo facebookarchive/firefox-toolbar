@@ -202,8 +202,8 @@ facebookService.prototype = {
             }
             if (reqsToGet.length > 0) {
                 fbSvc.getUsersInfo(reqsToGet, function(users) {
-                    fbSvc._reqsInfo = users;
-                    for each (var reqInfo in fbSvc._reqsInfo) {
+                    fbSvc._reqsInfo = fbSvc._reqsInfo.concat(users);
+                    for each (var reqInfo in users) {
                         fbSvc._observerService.notifyObservers(reqInfo, 'facebook-new-req', reqInfo['id']);
                         fbSvc.showPopup('you.req', reqInfo.pic, reqInfo.name + ' wants to be your friend',
                                        'http://www.facebook.com/reqs.php');
