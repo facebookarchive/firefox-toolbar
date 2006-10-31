@@ -117,6 +117,7 @@ var facebook = {
   updateFriend: function(friend) {
     friend = friend.QueryInterface(Ci.fbIFacebookUser);
     var elem = document.getElementById('popup-' + friend.id);
+    var list = document.getElementById('PopupFacebookFriendsList');
     this.createFriendNode(list, friend, elem);
   },
   createFriendNode: function(list, friend, elem) {
@@ -132,9 +133,17 @@ var facebook = {
     if (!firstName) firstName = friend.name;
     item.setAttribute('firstname', firstName);
     if (friend.status) {
-      stime = getStatusTime(friend.stime);
-      item.appendChild(document.createTextNode(firstName + ' is ' + friend.status));
-      item.setAttribute('stime', stime);
+      if (item.firstChild) {
+        item.firstChild.nodeValue = firstName + ' is ' + friend.status;
+      } else {
+        item.appendChild(document.createTextNode(firstName + ' is ' + friend.status));
+      }
+      item.setAttribute('stime', getStatusTime(friend.stime));
+    } else {
+      if (item.firstChild) {
+        item.removeChild(item.firstChild);
+      }
+      item.removeAttribute('stime');
     }
     item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
     item.setAttribute('onmousedown', "this.doCommand();");

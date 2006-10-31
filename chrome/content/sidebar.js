@@ -19,21 +19,21 @@ var observer = {
             case 'facebook-friend-updated':
                 if (data != 'status') {
                     if (data == 'status-delete') {
-                        document.getElementById('sidebar-' + friend.id).setAttribute('status', '');
+                        subject = subject.QueryInterface(Ci.fbIFacebookUser);
+                        SetStatus(document.getElementById('sidebar-' + subject.id), null, 0);
                     }
                     // we don't care about wall or notes count updates anymore here
                     break;
                 }
                 if (document.getElementById('fbSidebarSorter').getAttribute('selectedsort') == 'name') {
                     // if sorting by name, just update the entry
-                    var f = document.getElementById('sidebar-' + friend.id);
                     subject = subject.QueryInterface(Ci.fbIFacebookUser);
-                    f.setAttribute('status', subject.status);
+                    SetStatus(document.getElementById('sidebar-' + subject.id), subject.status, subject.stime);
                     break;
                 }
                 // else fall-through...
             case 'facebook-new-friend':
-                friendsToUpdate.push(subject);
+                friendsToUpdate.push(subject.QueryInterface(Ci.fbIFacebookUser));
                 break;
         }
     }
@@ -110,7 +110,6 @@ function UpdateFriends() {
     friendsToUpdate.sort(SortFriendsStatus);
     var first = list.firstChild;
     for each (var friend in friendsToUpdate) {
-        friend = friend.QueryInterface(Ci.fbIFacebookUser);
         var toRemove = document.getElementById('sidebar-' + friend.id);
         debug('remove:', toRemove, friend.id, friend.name);
         list.removeChild(toRemove);
@@ -118,7 +117,23 @@ function UpdateFriends() {
     }
     friendsToUpdate = [];
 }
-
+function SetStatus(item, status, time) {
+    if (status) {
+        var firstName = item.getAttribute('firstname');
+        var msg = firstName + ' is ' + status;
+        if (item.firstChild) {
+            item.firstChild.nodeValue = msg;
+        } else {
+            item.appendChild(document.createTextNode(msg));
+        }
+        item.setAttribute('stime', getStatusTime(time));
+    } else {
+        if (item.firstChild) {
+            item.removeChild(item.firstChild);
+        }
+        item.removeAttribute('stime');
+    }
+}
 function CreateFriendNode(list, friend, insertBefore) {
     var item = document.createElement('richlistitem');
     item.setAttribute('id', 'sidebar-' + friend.id);
@@ -129,11 +144,7 @@ function CreateFriendNode(list, friend, insertBefore) {
     var firstName = friend.name.substr(0, friend.name.indexOf(' '));
     if (!firstName) firstName = friend.name;
     item.setAttribute('firstname', firstName);
-    if (friend.status) {
-        stime = getStatusTime(friend.stime);
-	item.appendChild(document.createTextNode(firstName + ' is ' + friend.status));
-        item.setAttribute('stime', stime);
-    }
+    SetStatus(item, friend.status, friend.stime);
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
     item.setAttribute('msgCmd', "OpenFBUrl('message.php', '" + friend.id + "', event)");
     item.setAttribute('pokeCmd', "OpenFBUrl('poke.php', '" + friend.id + "', event)");

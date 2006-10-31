@@ -337,7 +337,7 @@ facebookService.prototype = {
     // functions - ie things other than facebook.auth.*.  The login-related
     // calls are done in the chrome layer.
     // Also note that this is synchronous so you should not call it from the UI.
-    callMethod: function (method, params, callback) {
+    callMethod: function (method, params, callback, secondTry) {
         if (!this._loggedIn) return null;
 
         params.push('method=' + method);
@@ -390,10 +390,26 @@ facebookService.prototype = {
                             if (xmldata.fb_error.code == 102) {
                                 debug('session expired, logging out.');
                                 fbSvc.sessionEnd();
+                            } else if (xmldata.fb_error.code == 4) {
+                                // rate limit hit, let's try again in 1 minute...
+                                debug('RATE LIMIT ERROR');
+                                if (!secondTry) {
+                                    var timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
+                                    timer.init({
+                                        observe: function(subj, topic, data) {
+                                            debug('trying rate limitted call again');
+                                            timer.cancel();
+                                            fbSvc.callMethod(method, params, callback, true);
+                                        }
+                                    }, 60000, timer.TYPE_ONE_SHOT);
+                                }
                             } else {
-                                // XXX handle rate limit error
                                 debug('API error:');
                                 dump(xmldata.fb_error);
+                                if (!secondTry) {
+                                    debug('TRYING ONE MORE TIME');
+                                    fbSvc.callMethod(method, params, callback, true);
+                                }
                             }
                         } else {
                             callback(xmldata);
