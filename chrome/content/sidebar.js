@@ -10,14 +10,24 @@ var observer = {
         var panel = document.getElementById('facebook-panel');
         switch (topic) {
             case 'facebook-session-end':
-                ClearFriends();
+                ClearFriends(true);
                 break;
             case 'facebook-friends-updated':
                 UpdateFriends();
                 break;
             case 'facebook-friend-updated':
                 if (data != 'status') {
-                    //document.getElementById('sidebar-' + friend.id).setAttribute(data, friend[data]);
+                    if (data == 'status-delete') {
+                        document.getElementById('sidebar-' + friend.id).setAttribute('status', '');
+                    }
+                    // we don't care about wall or notes count updates anymore here
+                    break;
+                }
+                if (document.getElementById('fbSidebarSorter').getAttribute('selectedsort') == 'name') {
+                    // if sorting by name, just update the entry
+                    var f = document.getElementById('sidebar-' + friend.id);
+                    subject = subject.QueryInterface(Ci.fbIFacebookUser);
+                    f.setAttribute('status', subject.status);
                     break;
                 }
                 // else fall-through...
@@ -28,15 +38,25 @@ var observer = {
     }
 };
 
-function ClearFriends() {
+function SortBy(field) {
+    var sorter = document.getElementById('fbSidebarSorter');
+    sorter.setAttribute('selectedsort', field);
+    sorter.setAttribute('label', 'Sorting by ' + field);
+    ClearFriends(false);
+    LoadFriends();
+}
+
+function ClearFriends(sessionEnded) {
     var list = document.getElementById('SidebarFriendsList');
     while (list.firstChild && list.firstChild.id != 'FacebookHint') {
         list.removeChild(list.firstChild);
     }
-    SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
+    if (sessionEnded) {
+        SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
+    }
 }
 
-function SortFriends(f1, f2) {
+function SortFriendsStatus(f1, f2) {
     if (f1.stime != f2.stime) {
         return f2.stime - f1.stime;
     } else if (f2.name.toLowerCase() < f1.name.toLowerCase()) {
@@ -44,6 +64,13 @@ function SortFriends(f1, f2) {
     } else {
         return -1;
     }
+}
+function SortFriendsAlpha(f1, f2) {
+    var n1 = f1.name.toLowerCase();
+    var n2 = f2.name.toLowerCase();
+    if (n1 < n2) return -1;
+    else if (n1 > n2) return 1;
+    else return 0;
 }
 
 function LoadFriends() {
@@ -56,7 +83,11 @@ function LoadFriends() {
         SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
     } else {
         var hint = document.getElementById('FacebookHint');
-        friends.sort(SortFriends);
+        if (document.getElementById('fbSidebarSorter').getAttribute('selectedsort') == 'name') {
+            friends.sort(SortFriendsAlpha);
+        } else {
+            friends.sort(SortFriendsStatus);
+        }
         for each (var friend in friends) {
             CreateFriendNode(list, friend, hint);
         }
@@ -75,7 +106,7 @@ function UpdateFriends() {
         LoadFriends();
         return;
     }
-    friendsToUpdate.sort(SortFriends);
+    friendsToUpdate.sort(SortFriendsStatus);
     var first = list.firstChild;
     for each (var friend in friendsToUpdate) {
         friend = friend.QueryInterface(Ci.fbIFacebookUser);
@@ -118,6 +149,14 @@ function SidebarLoad() {
     debug('SidebarLoad');
     top.document.getElementById('facebook-sidebar-toggle').checked = true;
     top.document.getElementById('PopupFacebookFriends').hidePopup(); // just in case it was still showing
+    var sorter = document.getElementById('fbSidebarSorter');
+    if (sorter.getAttribute('selectedsort') == 'name') {
+        sorter.setAttribute('label', 'Sorting by name');
+        document.getElementById('fbSortName').setAttribute('checked', 'true');
+    } else {
+        sorter.setAttribute('label', 'Sorting by status');
+        document.getElementById('fbSortStatus').setAttribute('checked', 'true');
+    }
     LoadFriends();
     obsSvc.addObserver(observer, 'facebook-new-friend', false);
     obsSvc.addObserver(observer, 'facebook-friend-updated', false);

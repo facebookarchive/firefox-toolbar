@@ -239,9 +239,13 @@ facebookService.prototype = {
                             friendUpdate = true;
                         } else {
                             if (fbSvc._friendsInfo[friend.id].status != friend.status) {
-                                fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'status');
-                                fbSvc.showPopup('friend.status', friend.pic, friend.name + ' is now ' + friend.status,
-                                                'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
+                                if (friend.status) {
+                                    fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'status');
+                                    fbSvc.showPopup('friend.status', friend.pic, friend.name + ' is now ' + friend.status,
+                                                    'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
+                                } else {
+                                    fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'status-delete');
+                                }
                                 friendUpdate = true;
                             }
                             if (fbSvc._friendsInfo[friend.id].wall != friend.wall) {
@@ -306,11 +310,14 @@ facebookService.prototype = {
                     notes  = Number(user.notes_count),
                     wall   = Number(user.wall_count),
                     pic    = String(decodeURI(user.pic));
-		    if (!pic) {
-                      pic = 'chrome://facebook/content/t_default.jpg';
-                    } else {
-                      pic += '&size=thumb'; 
-                    }
+                if (!pic) {
+                    pic = 'chrome://facebook/content/t_default.jpg';
+                } else {
+                    pic += '&size=thumb'; 
+                }
+                if (!status) {
+                    stime = 0;
+                }
                 usersInfo[id] = new facebookUser(id, name, pic, status, stime, notes, wall);
             }
             callback(usersInfo);

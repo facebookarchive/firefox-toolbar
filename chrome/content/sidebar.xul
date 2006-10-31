@@ -21,4 +21,12 @@
       <label id="FacebookHintText"/>
     </richlistitem>
   </richlistbox>
+  <hbox align="right">
+    <toolbarbutton id="fbSidebarSorter" type="menu" selectedsort="status" persist="selectedsort">
+      <menupopup>
+        <menuitem id="fbSortStatus" label="Status update time" type="radio" oncommand="SortBy('status');"/>
+        <menuitem id="fbSortName" label="Name" type="radio" oncommand="SortBy('name');"/>
+      </menupopup>
+    </toolbarbutton>
+  </hbox>
 </page>
