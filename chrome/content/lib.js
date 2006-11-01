@@ -227,7 +227,6 @@ function FacebookLogin() {
   }
 }
 
-
 function getStatusTime(status_time) {
    var currentTime = new Date();
 
@@ -259,4 +258,8 @@ function getStatusTime(status_time) {
 
    stime = day + ' at ' + hour + ':' + minute + ' ' + timeOfDay;
    return stime;
+}
+
+function IsFacebookLocation(location) {
+  return /^(?:.*\.)?facebook\.[^.]*$/.test(location.host);
 }

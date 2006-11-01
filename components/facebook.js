@@ -1,4 +1,4 @@
-const CHECK_INTERVAL = 5*60*1000;
+const BASE_CHECK_INTERVAL = 5*60*1000;
 
 const VERBOSITY = 1; // 0: no dumping, 1: normal dumping, 2: massive dumping
 
@@ -42,17 +42,30 @@ function facebookService()
     fbSvc = this;
     this._checker = {
         notify: function(timer) {
-            debug('_checker.notify');
-            fbSvc.getMyInfo(false); // to check for wall posts
-            fbSvc.checkMessages(false);
-            fbSvc.checkPokes(false);
-            fbSvc.checkReqs(false);
-            fbSvc.checkFriends(false);
+            var now = (new Date()).getTime();
+            // only do a check if either: 
+            //   1. we loaded an fb page in the last minute
+            if ((fbSvc._lastFBLoad > fbSvc._lastChecked) ||
+            //   2. or we haven't checked in the last 5 minutes and any page has loaded
+                (fbSvc._lastPageLoad > fbSvc._lastChecked && now > fbSvc._lastChecked + BASE_CHECK_INTERVAL) ||
+            //   3. or we haven't checked in the last 10 minutes and no page has loaded
+                (now > fbSvc._lastChecked + BASE_CHECK_INTERVAL*2)) {
+                fbSvc._lastChecked = now;
+                debug('_checker.notify: checking', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
+                fbSvc.getMyInfo(false); // to check for wall posts
+                fbSvc.checkMessages(false);
+                fbSvc.checkPokes(false);
+                fbSvc.checkReqs(false);
+                fbSvc.checkFriends(false);
+            } else {
+                debug('_checker.notify: skipping', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
+            }
         }
     };
     this._initialize = {
         notify: function(timer) {
             debug('_initialize.notify');
+            fbSvc._lastChecked = (new Date()).getTime();
             fbSvc.getMyInfo(true);
             fbSvc.checkMessages(true);
             fbSvc.checkPokes(true);
@@ -115,7 +128,7 @@ facebookService.prototype = {
         this._uid           = uid;
 
         this._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this._timer.initWithCallback(this._checker, CHECK_INTERVAL, Ci.nsITimer.TYPE_REPEATING_SLACK);
+        this._timer.initWithCallback(this._checker, BASE_CHECK_INTERVAL/5, Ci.nsITimer.TYPE_REPEATING_SLACK);
 
         // fire off another thread to get things started
         this._oneShotTimer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
@@ -130,6 +143,14 @@ facebookService.prototype = {
         this._oneShotTimer.cancel();
 
         this._observerService.notifyObservers(null, 'facebook-session-end', null);
+    },
+    hintPageLoad: function(fbPage) {
+        var now = (new Date()).getTime();
+        if (fbPage) {
+            this._lastFBLoad = now;
+        } else {
+            this._lastPageLoad = now;
+        }
     },
     initValues: function() {
         this._sessionKey    = null;
@@ -149,6 +170,9 @@ facebookService.prototype = {
         this._pendingRequest = false;
         this._pendingRequests = [];
         this._lastCallId     = 0;
+        this._lastChecked    = 0;
+        this._lastFBLoad     = 0;
+        this._lastPageLoad   = 0;
     },
 
     checkMessages: function(holdNotifications) {

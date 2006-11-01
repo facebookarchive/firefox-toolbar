@@ -9,12 +9,14 @@ function NotifierLoad() {
     window.addEventListener('focus', NotifierFocus, false);
     window.addEventListener('click', NotifierClick, false);
 }
-function NotifierFocus() {
+function NotifierFocus(event) {
     // We might get a focus event right away if the window is on top or
     // something, which we want to ignore.  But if we get a focus event after
     // the first 250ms we can assume someone clicked on the notification
     // window and so we can treat it as a click.
     if (loaded) {
+        event.stopPropagation();
+        event.preventDefault();
         NotifierClick();
     }
 }

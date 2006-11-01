@@ -27,6 +27,12 @@ interface fbIFacebookService : nsISupports
     void sessionStart(in AString sessionKey, in AString sessionSecret, in AString uid);
     void sessionEnd();
 
+    // Use this function to help the service figure out how frequently it
+    // should poll facebook.  If we go a while without loading any pages, it
+    // will back off to only 1 check per 10 minutes.  If we are loading a
+    // bunch of facebook pages, be more aggressive and go every minute.
+    void hintPageLoad(in boolean facebookPage);
+
     // All other interaction comes by windows listing themselves as observers
     // and notifications that get triggered by the polling process.
     // Notifications that we fire:

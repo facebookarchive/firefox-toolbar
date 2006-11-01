@@ -48,6 +48,26 @@ var fbToolbarObserver = {
   }
 };
 
+var progListener = {
+  onLocationChange: function(webProgress, request, location) {
+    if (fbSvc.loggedIn) {
+      if (IsFacebookLocation(location)) {
+        fbSvc.hintPageLoad(true);
+      } else {
+        fbSvc.hintPageLoad(false);
+      }
+    }
+  },
+  onProgressChange: function(webProgress, request, curSelfProg, maxSelfProg, curTotalProg, maxTotalProg) {
+  },
+  onSecurityChange: function(webProgress, request, state) {
+  },
+  onStateChange: function(webProgress, request, stateFlags, status) {
+  },
+  onStatusChange: function(webProgress, request, status, message) {
+  },
+};
+
 var facebook = {
   load: function() {
     var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
@@ -76,6 +96,7 @@ var facebook = {
       document.getElementById('facebook-notification-reqs').label = fbSvc.numReqs;
     }
     facebook.loadFriends();
+    getBrowser().addProgressListener(progListener);
     debug('facebook toolbar loaded.');
   },
 
@@ -188,7 +209,7 @@ var facebook = {
     var openCmd = "window.open('http://www.facebook.com/sharer.php?bm&v=1&u=' + encodeURIComponent(content.document.location.href) + '&t=' + encodeURIComponent(document.title), 'sharer','toolbar=no,status=yes,width=626,height=436');";
     try {
       // If we're not on a facebook page, just jump down to the catch block and open the popup...
-      if (!/^(?:.*\.)?facebook\.[^.]*$/.test(content.document.location.host))
+      if (!IsFacebookLocation(content.document.location))
         throw null;
       // We're on a facebook page, so let's try using share_internal_bookmarklet...
 
