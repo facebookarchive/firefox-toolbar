@@ -60,6 +60,8 @@ function SelectItemInList(item, list) {
 }
 
 function SetHint(visible, text, oncommand) {
+    // XXX if you start up with the sidebar open and then hide it, the login
+    // hint won't get set in the toolbar
   debug(visible, text, oncommand);
   if (IsSidebarOpen()) {
     var doc = top.document.getElementById('sidebar').contentDocument;

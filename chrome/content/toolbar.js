@@ -49,6 +49,11 @@ var fbToolbarObserver = {
 
 var facebook = {
   load: function() {
+    var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+    if (!prefSvc.prefHasUserValue('extensions.facebook.not_first_run')) {
+      getBrowser().loadOneTab('chrome://facebook/content/welcome.html', null, null, null, false, false)
+      prefSvc.setBoolPref('extensions.facebook.not_first_run', 'true');
+    }
     document.getElementById('facebook-search').addEventListener('keypress', HandleKeyPress, true);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-session-start', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-friends-updated', false);
