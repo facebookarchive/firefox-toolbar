@@ -1,6 +1,6 @@
 const CHECK_INTERVAL = 5*60*1000;
 
-const VERBOSITY = 2; // 0: no dumping, 1: normal dumping, 2: massive dumping
+const VERBOSITY = 1; // 0: no dumping, 1: normal dumping, 2: massive dumping
 
 function debug() {
   if (VERBOSITY == 0) return;
@@ -459,10 +459,9 @@ facebookService.prototype = {
                 var window = this._winService.getMostRecentWindow(null);
                 var left = window.screen.width - 350;
                 var top = window.screen.height - 200;
-                debug('opening dialog', left, top);
-                var w = window.openDialog("chrome://facebook/content/notifier.xul", "Facebook Notification",
-                                          'close=yes,toolbar=no,status=no,left=' + left + ',top=' + top + ',width=210,height=100',
-                                          pic, label, url);
+                window.openDialog("chrome://facebook/content/notifier.xul", "_blank",
+                                  'chrome=yes,close=yes,dialog=no,left=' + left + ',top=' + top + ',width=210,height=100',
+                                  pic, label, url);
             }
         }
     }

@@ -69,7 +69,7 @@ var facebook = {
       document.getElementById('facebook-name-info').label = loggedInUser.name;
       document.getElementById('facebook-name-info').setAttribute('userid', loggedInUser.id);
       document.getElementById('facebook-login-status').label = 'Logout'
-;     document.getElementById('facebook-menu-my-profile').setAttribute('userid', subject.id);
+;     document.getElementById('facebook-menu-my-profile').setAttribute('userid', loggedInUser.id);
       document.getElementById('facebook-notification-msgs').label = fbSvc.numMsgs;
       document.getElementById('facebook-notification-poke').label = fbSvc.numPokes;
       document.getElementById('facebook-notification-reqs').label = fbSvc.numReqs;

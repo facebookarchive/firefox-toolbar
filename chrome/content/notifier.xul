@@ -3,8 +3,8 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <window id="facebook-notifier"
         orient="vertical"
-        onload="NotifierLoad()"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/notifier.js"/>
   <vbox>
     <label id="title" class="notifier-title" value="Facebook Notify"/>
