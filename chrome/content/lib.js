@@ -59,15 +59,7 @@ function SelectItemInList(item, list) {
   }
 }
 
-function SetHint(visible, text, oncommand) {
-    // XXX if you start up with the sidebar open and then hide it, the login
-    // hint won't get set in the toolbar
-  debug(visible, text, oncommand);
-  if (IsSidebarOpen()) {
-    var doc = top.document.getElementById('sidebar').contentDocument;
-  } else {
-    var doc = document;
-  }
+function SetSpecificHint(doc, visible, text, oncommand) {
   var hint = doc.getElementById('FacebookHint');
   if (hint) {
     if (visible) {
@@ -78,6 +70,14 @@ function SetHint(visible, text, oncommand) {
       hint.style.display = 'none';
     }
   }
+}
+
+function SetHint(visible, text, oncommand) {
+  if (IsSidebarOpen()) {
+    var doc = top.document.getElementById('sidebar').contentDocument;
+    SetSpecificHint(doc, visible, text, oncommand);
+  }
+  SetSpecificHint(document, visible, text, oncommand);
 }
 
 function SearchFriends(search) {
@@ -223,7 +223,7 @@ function FacebookLogin() {
     // popup login page height is normally 436, but add 20 pixels for the
     // button we show at the bottom of the page
     window.open('chrome://facebook/content/login.xul', '',
-                'chrome,centerscreen,width=626,height=456,modal=yes,dialog=yes,close=no');
+                'chrome,centerscreen,width=626,height=456,modal=yes,dialog=yes,close=yes');
   }
 }
 

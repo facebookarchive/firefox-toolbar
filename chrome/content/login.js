@@ -48,8 +48,10 @@ function done() {
             client.authToken  = null;
             debug('session: ' + sessionKey + ', uid: ' + uid + ', secret: ' + sessionSecret);
         }
-        window.setTimeout("window.close();",1); // for some reason calling window.close directly does not work
+        window.setTimeout('window.close()', 1);
     });
+    // in case the request fails, let's just force a 4 second timeout
+    window.setTimeout('window.close()', 4000);
 }
 
 debug('loaded login.js');

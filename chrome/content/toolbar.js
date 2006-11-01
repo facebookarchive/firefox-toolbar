@@ -26,6 +26,7 @@ var fbToolbarObserver = {
         document.getElementById('facebook-notification-msgs').label = '0';
         document.getElementById('facebook-notification-poke').label = '0';
         document.getElementById('facebook-notification-reqs').label = '0';
+        SetHint(true, 'Loading friends list...', '');
         break;
       case 'facebook-session-end':
         document.getElementById('facebook-login-status').label = 'Login to Facebook';
@@ -52,7 +53,7 @@ var facebook = {
     var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
     if (!prefSvc.prefHasUserValue('extensions.facebook.not_first_run')) {
       getBrowser().loadOneTab('chrome://facebook/content/welcome.html', null, null, null, false, false)
-      prefSvc.setBoolPref('extensions.facebook.not_first_run', 'true');
+      prefSvc.setBoolPref('extensions.facebook.not_first_run', true);
     }
     document.getElementById('facebook-search').addEventListener('keypress', HandleKeyPress, true);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-session-start', false);
@@ -154,11 +155,7 @@ var facebook = {
     item.setAttribute('onmousedown', "this.doCommand();");
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
     item.setAttribute('userid', friend.id);
-    if (!friend.pic) {
-      item.setAttribute('pic', 'chrome://facebook/content/t_default.jpg');
-    } else {
-      item.setAttribute('pic', friend.pic + '&size=thumb');
-    }
+    item.setAttribute('pic', friend.pic);
     if (!elem) {
       // Note that this will put new friends at the bottom instead of alphabetized, but I think that's ok.
       // It would get fixed in any new windows or when the browser restarts.
