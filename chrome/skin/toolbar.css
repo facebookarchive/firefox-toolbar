@@ -87,11 +87,20 @@
 
 .facebook-icon-share {
   padding: 0px;
-  -moz-image-region: rect(0px 118px 18px 64px);
+  -moz-image-region: rect(0px 109px 14px 64px);
 }
 
 .facebook-icon-share:hover {
-  -moz-image-region: rect(0px 172px 18px 118px);
+  -moz-image-region: rect(0px 154px 14px 109px);
+}
+
+
+.facebook-icon-wall {
+  -moz-image-region: rect(0px 302px 16px 287px);
+}
+
+.facebook-icon-wall:hover {
+  -moz-image-region: rect(0px 317px 16px 302px);
 }
 
 #facebook-login-info-name {

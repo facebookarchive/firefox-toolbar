@@ -1,6 +1,6 @@
 const CHECK_INTERVAL = 5*60*1000;
 
-const VERBOSITY = 1; // 0: no dumping, 1: normal dumping, 2: massive dumping
+const VERBOSITY = 2; // 0: no dumping, 1: normal dumping, 2: massive dumping
 
 function debug() {
   if (VERBOSITY == 0) return;

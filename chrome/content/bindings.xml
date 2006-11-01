@@ -48,7 +48,7 @@
   </binding>
   <binding id="popupPoster" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
     <content>
-      <xul:toolbarbutton class="facebook-icon-poke facebook-link" />
+      <xul:toolbarbutton class="facebook-icon-wall facebook-link" />
       <xul:label xbl:inherits="value" class="facebook-link" />
     </content>
   </binding>

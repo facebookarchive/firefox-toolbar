@@ -247,13 +247,14 @@ function getStatusTime(status_time) {
    var hour = updateTime.getHours();
    if (hour > 11) timeOfDay = 'pm';
    else timeOfDay = 'am';
+   if (hour >= 13) hour -= 12;
+   if (hour == 0) hour = 12;
 
    var minute = updateTime.getMinutes();
    if (minute < 10) {
      minute = '0' + minute;
    }
 
-   if (hour > 12) hour -= 12;
    stime = day + ' at ' + hour + ':' + minute + ' ' + timeOfDay;
    return stime;
 }
