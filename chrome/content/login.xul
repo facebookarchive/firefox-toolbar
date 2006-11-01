@@ -3,13 +3,13 @@
 <window id="facebook-login-window"
         title="Login to Facebook"
         orient="vertical"
+        onclose="return done();"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
     <script src="chrome://facebook/content/login.js"/>
     <browser id="facebook-login-body"
              src=""
              type="content"
-             flex="1"
-             onreadystatechange="ready()"/>
+             flex="1"/>
     <!--<toolbar>-->
         <!--
         <spacer flex="1"/>

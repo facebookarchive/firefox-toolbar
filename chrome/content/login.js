@@ -52,6 +52,7 @@ function done() {
     });
     // in case the request fails, let's just force a 4 second timeout
     window.setTimeout('window.close()', 4000);
+    return false;
 }
 
 debug('loaded login.js');
