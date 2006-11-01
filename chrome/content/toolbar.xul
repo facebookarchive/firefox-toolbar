@@ -47,7 +47,7 @@
                      oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/mailbox.php', event)"/>
       <toolbarbutton id="facebook-link-menu"
                      label="Quick Links"
-                     onclick="if (!fbSvc.loggedIn) FacebookLogin();"
+                     onmousedown="if (!fbSvc.loggedIn) FacebookLogin();"
                      type="menu">
         <menupopup id="facebook-link-popup">
           <menuitem label="Home"

@@ -28,7 +28,7 @@
      <description style="width:240px">
      You can decide which parts of the Facebook Toolbar appear and how they are placed using Firefox's toolbar customizer. 
      </description>
-     <button label="Customize toolbar" oncommand="opener.BrowserCustomizeToolbar()"/>
+     <button label="Customize toolbar" oncommand="acceptDialog(); opener.BrowserCustomizeToolbar()"/>
   </groupbox>
   <groupbox id="facebook-growlbox">
     <!-- note: this box gets hidden on non-macs -->

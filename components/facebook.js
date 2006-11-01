@@ -34,8 +34,8 @@ function facebookService()
 {
     debug('constructor');
 
-    this._apiKey = '64f19267b0e6177ea503046d801c00df';
-    this._secret = 'a8a5a57a9f9cd57473797c4612418908';
+    this._apiKey = '8d7be0a45c164647647602a27106cc65';
+    this._secret = 'c9646e8dccec4c2726c65f6f5eeca86a';
 
     this.initValues();
 

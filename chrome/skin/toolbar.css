@@ -201,10 +201,9 @@
 } 
 
 
-#SidebarFriendsList richlistitem[selected=true] .stime, 
-#SidebarFriendsList richlistitem[selected=true] .status, 
-#PopupFacebookFriendsList richlistitem[selected=true] .status, 
-#PopupFacebookFriendsList richlistitem[selected=true] .stime, 
+richlistitem[selected=true] .facebook-link,
+richlistitem[selected=true] .stime, 
+richlistitem[selected=true] .status, 
 #FacebookHint[selected=true] {
    background-color: Highlight;
    color: HighlightText;
