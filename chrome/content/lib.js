@@ -100,7 +100,7 @@ function SearchFriends(search) {
     var sname = node.getAttribute('friendname');
     if (!sname) continue;
     if (!search || searches.every(function(s) { return s.test(sname); })) {
-      if (sidebar || numMatched < 4) {
+      if (sidebar || (numMatched < 4 && search)) {
         node.style.display = '';
         lastDisplayed = node;
       } else {
