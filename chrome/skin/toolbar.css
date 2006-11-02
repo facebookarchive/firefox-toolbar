@@ -22,7 +22,11 @@
 
 .facebook-sidebar-icon {
   -moz-image-region: rect(0px 287px 16px 268px);
-  padding: 0px 8px 0px 0px;
+  margin-left: 5px;
+}
+.facebook-sidebar-icon .toolbarbutton-text {
+  margin: 0;
+  padding: 0;
 }
 
 #facebook-search .textbox-input-box {
@@ -86,7 +90,6 @@
 }
 
 .facebook-icon-share {
-  padding: 0px;
   -moz-image-region: rect(0px 109px 14px 64px);
 }
 
