@@ -16,6 +16,18 @@ function debug() {
   dump('\n');
 }
 
+// wrapper for document.getElementById(id).setAttribute(attrib, val) that
+// doesn't die if the elem doesn't exist.  useful for us since customize
+// toolbar lets you remove a lot of elements.
+function setAttributeById(id, attrib, val) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.setAttribute(attrib, val);
+      return true;
+    }
+    return false;
+}
+
 function OpenFBUrl(page, uid, e) {
   var url = 'http://www.facebook.com/' + page + '?uid=' + uid + '&api_key=' + fbSvc.apiKey;
   debug('Opening ' + url);

@@ -80,8 +80,10 @@ function LoadFriends() {
     var count = {};
     var friends = fbSvc.getFriends(count);
     debug('got friends', count.value);
-    if (!count.value || !fbSvc.loggedIn) {
+    if (!fbSvc.loggedIn) {
         SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
+    } else if (!count.value) {
+        SetHint(true, 'Loading friends list...', '');
     } else {
         var hint = document.getElementById('FacebookHint');
         if (document.getElementById('fbSidebarSorter').getAttribute('selectedsort') == 'name') {

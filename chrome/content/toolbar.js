@@ -9,23 +9,23 @@ var fbToolbarObserver = {
     debug('facebook toolbar observing something: ' + topic);
     switch (topic) {
       case 'facebook-msgs-updated':
-        document.getElementById('facebook-notification-msgs').label = data;
+        setAttributeById('facebook-notification-msgs', 'label', data);
         break;
       case 'facebook-pokes-updated':
-        document.getElementById('facebook-notification-poke').label = data;
+        setAttributeById('facebook-notification-poke', 'label', data);
         break;
       case 'facebook-reqs-updated':
-        document.getElementById('facebook-notification-reqs').label = data;
+        setAttributeById('facebook-notification-reqs', 'label', data);
         break;
       case 'facebook-session-start':
         subject = subject.QueryInterface(Ci.fbIFacebookUser);
-        document.getElementById('facebook-name-info').label = subject.name;
-        document.getElementById('facebook-name-info').setAttribute('userid', subject.id);
-        document.getElementById('facebook-menu-my-profile').setAttribute('userid', subject.id);
-        document.getElementById('facebook-login-status').label = 'Logout';
-        document.getElementById('facebook-notification-msgs').label = '0';
-        document.getElementById('facebook-notification-poke').label = '0';
-        document.getElementById('facebook-notification-reqs').label = '0';
+        setAttributeById('facebook-name-info', 'label', subject.name);
+        setAttributeById('facebook-name-info', 'userid', subject.id);
+        setAttributeById('facebook-menu-my-profile', 'userid', subject.id);
+        setAttributeById('facebook-login-status', 'label', 'Logout');
+        setAttributeById('facebook-notification-msgs', 'label', '0');
+        setAttributeById('facebook-notification-poke', 'label', '0');
+        setAttributeById('facebook-notification-reqs', 'label', '0');
         var sb = GetFBSearchBox();
         if (sb.value != 'Search Facebook' && sb.value != '') {
           sb.value = ''; 
@@ -34,11 +34,11 @@ var fbToolbarObserver = {
         SetHint(true, 'Loading friends list...', '');
         break;
       case 'facebook-session-end':
-        document.getElementById('facebook-login-status').label = 'Login to Facebook';
-        document.getElementById('facebook-name-info').label = '';
-        document.getElementById('facebook-notification-msgs').label = '?';
-        document.getElementById('facebook-notification-poke').label = '?';
-        document.getElementById('facebook-notification-reqs').label = '?';
+        setAttributeById('facebook-login-status', 'label', 'Login to Facebook');
+        setAttributeById('facebook-name-info', 'label', '');
+        setAttributeById('facebook-notification-msgs', 'label', '?');
+        setAttributeById('facebook-notification-poke', 'label', '?');
+        setAttributeById('facebook-notification-reqs', 'label', '?');
         facebook.clearFriends();
         break;
       case 'facebook-friends-updated':
@@ -92,13 +92,13 @@ var facebook = {
     var loggedInUser = fbSvc.loggedInUser;
     if (loggedInUser) {
       loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
-      document.getElementById('facebook-name-info').label = loggedInUser.name;
-      document.getElementById('facebook-name-info').setAttribute('userid', loggedInUser.id);
-      document.getElementById('facebook-login-status').label = 'Logout'
-;     document.getElementById('facebook-menu-my-profile').setAttribute('userid', loggedInUser.id);
-      document.getElementById('facebook-notification-msgs').label = fbSvc.numMsgs;
-      document.getElementById('facebook-notification-poke').label = fbSvc.numPokes;
-      document.getElementById('facebook-notification-reqs').label = fbSvc.numReqs;
+      setAttributeById('facebook-name-info', 'label', loggedInUser.name);
+      setAttributeById('facebook-name-info', 'userid', loggedInUser.id);
+      setAttributeById('facebook-login-status', 'label', 'Logout');
+      setAttributeById('facebook-menu-my-profile', 'userid', loggedInUser.id);
+      setAttributeById('facebook-notification-msgs', 'label', fbSvc.numMsgs);
+      setAttributeById('facebook-notification-poke', 'label', fbSvc.numPokes);
+      setAttributeById('facebook-notification-reqs', 'label', fbSvc.numReqs);
     }
     facebook.loadFriends();
     getBrowser().addProgressListener(progListener);
