@@ -134,8 +134,10 @@ var facebook = {
     var count = {};
     var friends = fbSvc.getFriends(count);
     debug('got friends', count.value);
-    if (!count.value || !fbSvc.loggedIn) {
+    if (!fbSvc.loggedIn) {
       SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
+    } else if (!count.value) {
+      SetHint(true, 'Loading friends list...', '');
     } else {
       friends.sort(this.sortFriends);
       for each (var friend in friends) {

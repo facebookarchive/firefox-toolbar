@@ -94,9 +94,9 @@ function LoadFriends() {
         for each (var friend in friends) {
             CreateFriendNode(list, friend, hint);
         }
-        var searchBox = GetFBSearchBox();
-        if (searchBox.value != 'Search Facebook') {
-            SearchFriends(searchBox.value);
+        var searchTerm = GetFBSearchBox().value;
+        if (searchTerm != 'Search Facebook') {
+            SearchFriends(searchTerm);
         }
     }
 }
@@ -122,7 +122,10 @@ function UpdateFriends() {
         CreateFriendNode(list, friend, first);
     }
     friendsToUpdate = [];
-    SearchFriends(GetFBSearchBox().value);
+    var searchTerm = GetFBSearchBox().value;
+    if (searchTerm != 'Search Facebook') {
+        SearchFriends(searchTerm);
+    }
 }
 function CreateFriendNode(list, friend, insertBefore) {
     if (!friend.name) return;
