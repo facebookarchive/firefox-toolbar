@@ -5,7 +5,7 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>firefox@facebook.com</em:id>
-    <em:version>0.9</em:version>
+    <em:version>0.97</em:version>
     <em:type>2</em:type>
    
     <!-- Target Application this extension can install into, 
@@ -23,9 +23,9 @@
     <em:description>Integrate your Facebook life into your browser</em:description>
     <em:creator>Facebook Team</em:creator>
     <em:developer>Ari Steinberg</em:developer>
-    <em:developer>Julie Zhou</em:developer>
+    <em:developer>Julie Zhuo</em:developer>
     <em:optionsURL>chrome://facebook/content/settings.xul</em:optionsURL>
-    <em:updateURL>http://developers.facebook.com/toolbar/updates.rdf</em:updateURL>
+    <em:updateURL>http://developers.dev.facebook.com/toolbar/updates.rdf</em:updateURL>
     <em:homepageURL>http://www.facebook.com/</em:homepageURL>
   </Description>      
 </RDF>
