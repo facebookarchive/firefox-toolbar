@@ -9,6 +9,7 @@ Cc['@mozilla.org/moz/jssubscript-loader;1']
     .loadSubScript('chrome://facebook/content/facebook.js');
 
 var client = new FacebookLoginClient();
+
 function startup() {
     if (client.fbSvc.loggedIn) {
         debug('already logged in!');
@@ -27,9 +28,11 @@ function startup() {
             debug('exception: ' + e);
         }
     } else {
-        document.getElementById('facebook-login-body').
-            setAttribute('src', 'http://api.facebook.com/login.php?popup&api_key=' +
-                                client.fbSvc.apiKey + '&auth_token=' + client.authToken);
+        var browser = document.getElementById('facebook-login-body');
+        browser.setAttribute('src', 'http://api.facebook.com/login.php?popup&api_key=' +
+                             client.fbSvc.apiKey + '&auth_token=' + client.authToken);
+        browser.style.display = '';
+        document.getElementById('throbber-box').style.display = 'none';
         debug('loading login page');
     }
 }
@@ -37,6 +40,10 @@ window.addEventListener('load', startup, false);
 
 function done() {
     debug('done()');
+    if (!client.authToken) {
+        window.close();
+        return false;
+    }
     client.callMethod('facebook.auth.getSession', ['auth_token='+client.authToken], function(req) {
         debug('received session response:');
         dump(req.responseText);

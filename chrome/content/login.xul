@@ -1,12 +1,21 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://browser/skin/" type="text/css"?> 
 <window id="facebook-login-window"
         title="Login to Facebook"
         orient="vertical"
         onclose="return done();"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
     <script src="chrome://facebook/content/login.js"/>
+    <vbox id="throbber-box" flex="1000">
+      <spacer flex="1"/>
+      <toolbaritem align="center" pack="center">
+        <button id="navigator-throbber" busy="true"/>
+        <label value="Please wait while we prepare to log you in..."/>
+      </toolbaritem>
+      <spacer flex="1"/>
+    </vbox>
     <browser id="facebook-login-body"
+             style="display: none;"
              src=""
              type="content"
              flex="1"/>
