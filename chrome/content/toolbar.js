@@ -26,6 +26,11 @@ var fbToolbarObserver = {
         document.getElementById('facebook-notification-msgs').label = '0';
         document.getElementById('facebook-notification-poke').label = '0';
         document.getElementById('facebook-notification-reqs').label = '0';
+        var sb = GetFBSearchBox();
+        if (sb.value != 'Search Facebook' && sb.value != '') {
+          sb.value = ''; 
+          this.searchBoxBlur(sb);
+        }
         SetHint(true, 'Loading friends list...', '');
         break;
       case 'facebook-session-end':
@@ -148,6 +153,7 @@ var facebook = {
     this.createFriendNode(list, friend, elem);
   },
   createFriendNode: function(list, friend, elem) {
+    if (!friend.name) return;
     if (!elem) {
       var item = document.createElement('richlistitem');
       item.setAttribute('id', 'popup-' + friend.id);

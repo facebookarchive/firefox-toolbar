@@ -120,6 +120,7 @@ function UpdateFriends() {
         CreateFriendNode(list, friend, first);
     }
     friendsToUpdate = [];
+    SearchFriends(GetFBSearchBox().value);
 }
 function SetStatus(item, status, time) {
     if (status) {
@@ -139,6 +140,7 @@ function SetStatus(item, status, time) {
     }
 }
 function CreateFriendNode(list, friend, insertBefore) {
+    if (!friend.name) return;
     var item = document.createElement('richlistitem');
     item.setAttribute('id', 'sidebar-' + friend.id);
     item.setAttribute('class', 'friendBox');
