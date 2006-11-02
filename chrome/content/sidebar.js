@@ -124,23 +124,6 @@ function UpdateFriends() {
     friendsToUpdate = [];
     SearchFriends(GetFBSearchBox().value);
 }
-function SetStatus(item, status, time) {
-    if (status) {
-        var firstName = item.getAttribute('firstname');
-        var msg = firstName + ' is ' + status;
-        if (item.firstChild) {
-            item.firstChild.nodeValue = msg;
-        } else {
-            item.appendChild(document.createTextNode(msg));
-        }
-        item.setAttribute('stime', getStatusTime(time));
-    } else {
-        if (item.firstChild) {
-            item.removeChild(item.firstChild);
-        }
-        item.removeAttribute('stime');
-    }
-}
 function CreateFriendNode(list, friend, insertBefore) {
     if (!friend.name) return;
     var item = document.createElement('richlistitem');

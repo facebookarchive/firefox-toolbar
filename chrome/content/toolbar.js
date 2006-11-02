@@ -165,19 +165,7 @@ var facebook = {
     var firstName = friend.name.substr(0, friend.name.indexOf(' '));
     if (!firstName) firstName = friend.name;
     item.setAttribute('firstname', firstName);
-    if (friend.status) {
-      if (item.firstChild) {
-        item.firstChild.nodeValue = firstName + ' is ' + friend.status;
-      } else {
-        item.appendChild(document.createTextNode(firstName + ' is ' + friend.status));
-      }
-      item.setAttribute('stime', getStatusTime(friend.stime));
-    } else {
-      if (item.firstChild) {
-        item.removeChild(item.firstChild);
-      }
-      item.removeAttribute('stime');
-    }
+    SetStatus(item, friend.status, friend.stime);
     item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
     item.setAttribute('onmousedown', "this.doCommand();");
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");

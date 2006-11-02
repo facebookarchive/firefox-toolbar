@@ -239,6 +239,31 @@ function FacebookLogin() {
   }
 }
 
+function RenderStatusMsg(msg) {
+    msg = msg.replace(/\s*$/g, '');
+    if (msg && '.?!\'"'.indexOf(msg[msg.length-1]) == -1) {
+        msg = msg.concat('.');
+    }
+    return msg;
+}
+function SetStatus(item, status, time) {
+    if (status) {
+        var firstName = item.getAttribute('firstname');
+        var msg = firstName + ' is ' + RenderStatusMsg(status);
+        if (item.firstChild) {
+            item.firstChild.nodeValue = msg;
+        } else {
+            item.appendChild(document.createTextNode(msg));
+        }
+        item.setAttribute('stime', getStatusTime(time));
+    } else {
+        if (item.firstChild) {
+            item.removeChild(item.firstChild);
+        }
+        item.removeAttribute('stime');
+    }
+}
+
 function getStatusTime(status_time) {
    var currentTime = new Date();
 
