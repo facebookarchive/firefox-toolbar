@@ -5,6 +5,7 @@
         buttons="accept,cancel"
         ondialogaccept="TouchSettings(true)"
         onload="TouchSettings(false)">
+  <script type="application/x-javascript" src="chrome://browser/content/utilityOverlay.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/settings.js"/>
   <checkbox id="facebook-notifications-toggle" label="Enable Pop-up Notifications"/>
@@ -36,6 +37,7 @@
      <description style="width:240px">
      If you use the application Growl, you can have your notifications show up in your Growl display.
      </description>
+    <label onclick="openUILink('http://growl.info', event)" value="(find out more)" style="color: blue; text-decoration: underline"/>
     <checkbox id="facebook-notifications-growl" label="Show Facebook notifications with Growl" checked="false"/>
     <label value="Location of growlnotify:"/>
     <textbox id="facebook-notifications-growlpath" value="/usr/local/bin/growlnotify"/>
