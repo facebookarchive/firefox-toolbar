@@ -3,16 +3,24 @@
   display: -moz-box;
 }
 
+.button:hover label {
+  color: #3b5998;
+}
+
+.button:active label {
+  color: #2f4778;
+}
+
 .facebook-notifications, .facebook-share, #facebook-searchbox, .facebook-sidebar-icon image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding: 0px;
 }
 
 .facebook-friendlinks toolbarbutton {
-  list-style-image: url('chrome://facebook/skin/toolbar.png');
-  padding: 0px;
-  margin: 0px;
   border: 0px;
+  list-style-image: url('chrome://facebook/skin/toolbar.png');
+  margin: 0px;
+  padding: 0px;
 }
 
 .facebook-friendlinks {
@@ -46,23 +54,17 @@
   color: #777;
 }
 
-#facebook-link-menu 
-{
-	padding-right: 6px;
-	margin-right: 0px;
+#facebook-link-menu {
+  padding-right: 6px;
+  margin-right: 0px;
 }
 
-.facebook-notifications 
-{
-	padding: 0px 4px;
+.facebook-notifications {
+  padding: 0px 4px;
 }
 
 .facebook-notifications > .toolbarbutton-text {
   padding: 0px;
-}
-
-.facebook-icon-poke {
-  -moz-image-region: rect(0px 16px 14px 0px);
 }
 
 .facebook-icon-poke:hover {
@@ -73,9 +75,8 @@
   -moz-image-region: rect(0px 236px 14px 220px);
 }
 
-.facebook-icon-reqs {
-  margin: 0px;
-  -moz-image-region: rect(0px 32px 14px 16px);
+.facebook-icon-poke, .facebook-icon-poke[label="0"], .facebook-icon-poke[label="?"] {
+  -moz-image-region: rect(0px 16px 14px 0px);
 }
 
 .facebook-icon-reqs:hover {
@@ -86,9 +87,9 @@
   -moz-image-region: rect(0px 252px 14px 236px);
 }
 
-.facebook-icon-msgs {
+.facebook-icon-reqs, .facebook-icon-reqs[label="0"], .facebook-icon-reqs[label="?"] {
   margin: 0px;
-  -moz-image-region: rect(0px 48px 14px 32px);
+  -moz-image-region: rect(0px 32px 14px 16px);
 }
 
 .facebook-icon-msgs:hover {
@@ -99,20 +100,34 @@
   -moz-image-region: rect(0px 268px 14px 252px);
 }
 
-.facebook-icon-share 
-{ 
+.facebook-icon-msgs, .facebook-icon-msgs[label="0"], .facebook-icon-msgs[label="?"] {
+  margin: 0px;
+  -moz-image-region: rect(0px 48px 14px 32px);
+}
+
+.facebook-icon-poke[label="0"],
+.facebook-icon-reqs[label="0"],
+.facebook-icon-msgs[label="0"] {
+  display: none;
+}
+
+.facebook-icon-poke[label="?"] label, 
+.facebook-icon-reqs[label="?"] label,
+.facebook-icon-msgs[label="?"] label {
+  color: #000!important;
+}
+
+.facebook-icon-share { 
   padding-left: 4px;
   margin-left: 0px;
   -moz-image-region: rect(0px 109px 14px 64px);
 }
 
-.facebook-icon-share:hover 
-{
+.facebook-icon-share:hover {
   padding-left: 4px;
   margin-left: 0px;
   -moz-image-region: rect(0px 154px 14px 109px);
 }
-
 
 .facebook-icon-wall {
   -moz-image-region: rect(0px 302px 16px 287px);
@@ -136,16 +151,6 @@
   margin: 0px;
   padding-right: 4px;
   margin-right: 4px;
-}
-
-.button:hover {
-  color: #3b5998;
-  text-decoration: underline;
-}
-
-.button:active {
-  color: #2f4778;
-  text-decoration: underline;
 }
 
 .facebook-link {
