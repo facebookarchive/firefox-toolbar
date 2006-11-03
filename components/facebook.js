@@ -267,7 +267,7 @@ facebookService.prototype = {
                             if (fbSvc._friendsInfo[friend.id].status != friend.status) {
                                 if (friend.status) {
                                     fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'status');
-                                    fbSvc.showPopup('friend.status', friend.pic, friend.name + ' is now ' + friend.status,
+                                    fbSvc.showPopup('friend.status', friend.pic, friend.name + ' is now ' + RenderStatusMsg(friend.status),
                                                     'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
                                 } else {
                                     fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'status-delete');
@@ -543,5 +543,15 @@ facebookUser.prototype = {
         return this;
     }
 };
+
+// just copied from lib.js, lame but i don't feel like including the whole
+// file in here for this one function.
+function RenderStatusMsg(msg) {
+    msg = msg.replace(/\s*$/g, '');
+    if (msg && '.?!\'"'.indexOf(msg[msg.length-1]) == -1) {
+        msg = msg.concat('.');
+    }
+    return msg;
+}
 
 debug('loaded facebook.js');
