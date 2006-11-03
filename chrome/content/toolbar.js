@@ -202,7 +202,8 @@ var facebook = {
     }
   },
   share: function() {
-    var openCmd = "window.open('http://www.facebook.com/sharer.php?bm&v=1&u=' + encodeURIComponent(content.document.location.href) + '&t=' + encodeURIComponent(document.title), 'sharer','toolbar=no,status=yes,width=626,height=436');";
+    var p = '.php?src=tb&v=4&u=' + encodeURIComponent(content.document.location.href) + '&t=' + encodeURIComponent(document.title);
+    var openCmd = "window.open('http://www.facebook.com/sharer" + p + "', 'sharer','toolbar=no,status=yes,width=626,height=436');";
     try {
       // If we're not on a facebook page, just jump down to the catch block and open the popup...
       if (!IsFacebookLocation(content.document.location))
@@ -214,12 +215,9 @@ var facebook = {
       // relative to our current chrome:// url and fail.  So instead we check for the function...
       if (!content.wrappedJSObject.share_internal_bookmarklet)
           throw null;
-      // ...and if the function is there then we have to do this lame <script> injection hack to
+      // ...and if the function is there then we have to do this lame javascript: url hack to
       // execute it.
-      var script = content.document.createElement('script');
-      script.appendChild(content.document.createTextNode('try { share_internal_bookmarklet(); } catch (e) { setTimeout("' + openCmd + '", 0); }'));
-      content.document.body.appendChild(script);
-      content.document.body.removeChild(script);
+      content.document.location = 'javascript:try { share_internal_bookmarklet("' + p + '"); } catch (e) { setTimeout("' + openCmd + '", 0); } void(0);'
     } catch(e) {
       debug('title is: ' + document.title, 'url: ' + content.document.location.href);
       eval(openCmd);

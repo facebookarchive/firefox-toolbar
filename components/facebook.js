@@ -365,6 +365,7 @@ facebookService.prototype = {
     callMethod: function (method, params, callback, secondTry) {
         if (!this._loggedIn) return null;
 
+        var origParamsLen = params.length;
         params.push('method=' + method);
         params.push('session_key=' + this._sessionKey);
         params.push('api_key=' + this._apiKey);
@@ -416,24 +417,14 @@ facebookService.prototype = {
                                 debug('session expired, logging out.');
                                 fbSvc.sessionEnd();
                             } else if (xmldata.fb_error.code == 4) {
-                                // rate limit hit, let's try again in 1 minute...
+                                // rate limit hit, let's just cancel this request, we'll try again soon enough.
                                 debug('RATE LIMIT ERROR');
-                                if (!secondTry) {
-                                    var timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-                                    timer.init({
-                                        observe: function(subj, topic, data) {
-                                            debug('trying rate limitted call again');
-                                            timer.cancel();
-                                            fbSvc.callMethod(method, params, callback, true);
-                                        }
-                                    }, 60000, timer.TYPE_ONE_SHOT);
-                                }
                             } else {
                                 debug('API error:');
                                 dump(xmldata.fb_error);
                                 if (!secondTry) {
                                     debug('TRYING ONE MORE TIME');
-                                    fbSvc.callMethod(method, params, callback, true);
+                                    fbSvc.callMethod(method, params.slice(0, origParamsLen), callback, true);
                                 }
                             }
                         } else {
@@ -481,8 +472,8 @@ facebookService.prototype = {
             } catch (e2) {
                 debug('caught', e2);
                 var window = this._winService.getMostRecentWindow(null);
-                var left = window.screen.width - 350;
-                var top = window.screen.height - 200;
+                var left = window.screen.width - 220;
+                var top = window.screen.height - 155;
                 window.openDialog("chrome://facebook/content/notifier.xul", "_blank",
                                   'chrome=yes,close=yes,dialog=no,left=' + left + ',top=' + top + ',width=210,height=100',
                                   pic, label, url);

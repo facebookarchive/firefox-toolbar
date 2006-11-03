@@ -114,11 +114,13 @@ function UpdateFriends() {
     for each (var friend in friendsToUpdate) {
         var toRemove = document.getElementById('sidebar-' + friend.id);
         debug('remove:', toRemove, friend.id, friend.name);
-        if (toRemove == first) {
-            // fixes the problem where the first person in your list updates their status
-            first = first.nextSibling;
+        if (toRemove) {
+            if (toRemove == first) {
+                // fixes the problem where the first person in your list updates their status
+                first = first.nextSibling;
+            }
+            list.removeChild(toRemove);
         }
-        list.removeChild(toRemove);
         CreateFriendNode(list, friend, first);
     }
     friendsToUpdate = [];
