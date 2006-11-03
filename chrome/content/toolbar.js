@@ -77,7 +77,10 @@ var facebook = {
   load: function() {
     var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
     if (!prefSvc.prefHasUserValue('extensions.facebook.not_first_run')) {
-      getBrowser().loadOneTab('chrome://facebook/content/welcome.html', null, null, null, false, false)
+      // unfortunately if we create any tabs here, session store overrides
+      // them, so instead we'll create a tab in 250 ms, hopefully after
+      // session store does its business.
+      window.setTimeout("getBrowser().loadOneTab('chrome://facebook/content/welcome.html', null, null, null, false, false)", 250);
       prefSvc.setBoolPref('extensions.facebook.not_first_run', true);
     }
     document.getElementById('facebook-search').addEventListener('keypress', HandleKeyPress, true);
