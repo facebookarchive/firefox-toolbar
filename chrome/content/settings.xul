@@ -33,11 +33,12 @@
   </groupbox>
   <groupbox id="facebook-growlbox">
     <!-- note: this box gets hidden on non-macs -->
-    <caption label="Growl settings"/>
+    <caption>
+      <label value="Growl Settings" />
+    </caption>
      <description style="width:240px">
-     If you use the application Growl, you can have your notifications show up in your Growl display.
+     If you use the application Growl, you can have your notifications show up in your Growl display. (<label onclick="openUILink('http://growl.info', event)" value="What is Growl?" class="small-margin text-link" style="color: blue; font-size: 9px; text-decoration: underline;"/>)
      </description>
-    <label onclick="openUILink('http://growl.info', event)" value="(find out more)" style="color: blue; text-decoration: underline"/>
     <checkbox id="facebook-notifications-growl" label="Show Facebook notifications with Growl" checked="false"/>
     <label value="Location of growlnotify:"/>
     <textbox id="facebook-notifications-growlpath" value="/usr/local/bin/growlnotify"/>

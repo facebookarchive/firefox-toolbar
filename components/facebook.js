@@ -182,10 +182,10 @@ facebookService.prototype = {
             if (!holdNotifications && data.most_recent > fbSvc._lastMsgTime && newMsgCount > 0) {
                 fbSvc._observerService.notifyObservers(null, 'facebook-new-msgs', newMsgCount);
                 if (newMsgCount > 1) {
-                    fbSvc.showPopup('you.msg', 'http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif',
+                    fbSvc.showPopup('you.msg', 'chrome://facebook/content/mail_request.gif',
                                     'You have new messages', 'http://www.facebook.com/mailbox.php');
                 } else {
-                    fbSvc.showPopup('you.msg', 'http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif',
+                    fbSvc.showPopup('you.msg', 'chrome://facebook/content/mail_request.gif',
                                     'You have a new message', 'http://www.facebook.com/mailbox.php');
                 }
                 fbSvc._lastMsgTime = data.most_recent;
@@ -206,7 +206,7 @@ facebookService.prototype = {
                 // note that your unseen poke count could theoretically stay the same or even if you have new pokes.
                 fbSvc._totalPokes = totalPokeCount;
                 fbSvc._observerService.notifyObservers(null, 'facebook-new-poke', newPokeCount);
-                fbSvc.showPopup('you.poke', 'http://static.ak.facebook.com/images/feed_icons/aaron_color/s/poke.gif',
+                fbSvc.showPopup('you.poke', 'chrome://facebook/content/poke.gif',
                                 'You have been poked', 'http://www.facebook.com/home.php');
             }
             if (newPokeCount != fbSvc._numPokes) {
@@ -310,7 +310,7 @@ facebookService.prototype = {
                 if (fbSvc._loggedInUser.wall != user.wall) {
                     fbSvc._observerService.notifyObservers(null, 'facebook-wall-updated', user.wall);
                     if (fbSvc._loggedInUser.wall < user.wall) {
-                        fbSvc.showPopup('you.wall', '', 'Someone wrote on your wall',
+                        fbSvc.showPopup('you.wall', 'chrome://facebook/content/wall_post.gif', 'Someone wrote on your wall',
                                         'http://www.facebook.com/profile.php?uid=' + user.id + '&api_key=' + fbSvc._apiKey);
                     }
                 }

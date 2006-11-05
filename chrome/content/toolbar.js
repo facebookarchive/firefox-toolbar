@@ -9,12 +9,15 @@ var fbToolbarObserver = {
     debug('facebook toolbar observing something: ' + topic);
     switch (topic) {
       case 'facebook-msgs-updated':
+        debug('msg: ' + document.getElementById('facebook-notification-msgs').nextSibling.id);
         setAttributeById('facebook-notification-msgs', 'label', data);
         break;
       case 'facebook-pokes-updated':
+        debug('pokes: ' + document.getElementById('facebook-notification-poke').nextSibling.id);
         setAttributeById('facebook-notification-poke', 'label', data);
         break;
       case 'facebook-reqs-updated':
+        debug('reqs: ' + document.getElementById('facebook-notification-reqs').nextSibling.id);
         setAttributeById('facebook-notification-reqs', 'label', data);
         break;
       case 'facebook-session-start':
@@ -23,9 +26,6 @@ var fbToolbarObserver = {
         setAttributeById('facebook-name-info', 'userid', subject.id);
         setAttributeById('facebook-menu-my-profile', 'userid', subject.id);
         setAttributeById('facebook-login-status', 'label', 'Logout');
-        setAttributeById('facebook-notification-msgs', 'label', '0');
-        setAttributeById('facebook-notification-poke', 'label', '0');
-        setAttributeById('facebook-notification-reqs', 'label', '0');
         var sb = GetFBSearchBox();
         if (sb.value != 'Search Facebook' && sb.value != '') {
           sb.value = ''; 
