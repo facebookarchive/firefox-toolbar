@@ -35,6 +35,10 @@ var observer = {
             case 'facebook-new-friend':
                 friendsToUpdate.push(subject.QueryInterface(Ci.fbIFacebookUser));
                 break;
+            case 'facebook-new-day':
+                ClearFriends(false);
+                LoadFriends();
+                break;
         }
     }
 };
@@ -168,6 +172,7 @@ function SidebarLoad() {
     obsSvc.addObserver(observer, 'facebook-friend-updated', false);
     obsSvc.addObserver(observer, 'facebook-friends-updated', false);
     obsSvc.addObserver(observer, 'facebook-session-end', false);
+    obsSvc.addObserver(observer, 'facebook-new-day', false);
     document.getElementById('SidebarFriendsList').addEventListener('keypress', HandleKeyPress, true);
     if (!top.document.getElementById('facebook-search')) {
         // XXX for some reason even if the toolbar is hidden we can still see
@@ -188,6 +193,7 @@ function SidebarUnload() {
     obsSvc.removeObserver(observer, 'facebook-friend-updated');
     obsSvc.removeObserver(observer, 'facebook-friends-updated');
     obsSvc.removeObserver(observer, 'facebook-session-end');
+    obsSvc.removeObserver(observer, 'facebook-new-day');
     top.document.getElementById('sidebar-splitter').removeEventListener('mouseup', SidebarResize, false);
 }
 var statusWidthStyleRule = false;

@@ -42,7 +42,7 @@ function facebookService()
     fbSvc = this;
     this._checker = {
         notify: function(timer) {
-            var now = (new Date()).getTime();
+            var now = Date.now();
             // only do a check if either: 
             //   1. we loaded an fb page in the last minute
             if ((fbSvc._lastFBLoad > fbSvc._lastChecked) ||
@@ -65,12 +65,32 @@ function facebookService()
     this._initialize = {
         notify: function(timer) {
             debug('_initialize.notify');
-            fbSvc._lastChecked = (new Date()).getTime();
+            fbSvc._lastChecked = Date.now();
             fbSvc.getMyInfo(true);
             fbSvc.checkMessages(true);
             fbSvc.checkPokes(true);
             fbSvc.checkReqs(true);
             fbSvc.checkFriends(true);
+            fbSvc._dailyNotifier.set(timer);
+        }
+    };
+    this._dailyNotifier = {
+        // this is our really lame way of making sure that the status update
+        // times properly get updated each day (so that "today" becomes
+        // "yesterday", etc.).
+        set: function(timer) {
+            // note that we could use a repeating timer instead of always
+            // firing one shot timers, but this is slightly less code since we
+            // have to do it this way the first time around anyway, and since
+            // this only gets run once a day it seems harmless
+            var now = new Date();
+            var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, 0, 0, 1);
+            timer.initWithCallback(this, midnight-now, Ci.nsITimer.TYPE_ONE_SHOT);
+        },
+        notify: function(timer) {
+            debug('_dailyNotifier.notify');
+            fbSvc._observerService.notifyObservers(null, 'facebook-new-day', null);
+            this.set(timer);
         }
     };
     this._alertObserver = {
@@ -146,7 +166,7 @@ facebookService.prototype = {
         this._observerService.notifyObservers(null, 'facebook-session-end', null);
     },
     hintPageLoad: function(fbPage) {
-        var now = (new Date()).getTime();
+        var now = Date.now();
         if (fbPage) {
             this._lastFBLoad = now;
         } else {
@@ -188,8 +208,8 @@ facebookService.prototype = {
                     fbSvc.showPopup('you.msg', 'chrome://facebook/content/mail_request.gif',
                                     'You have a new message', 'http://www.facebook.com/mailbox.php');
                 }
-                fbSvc._lastMsgTime = data.most_recent;
             }
+            fbSvc._lastMsgTime = data.most_recent;
             if (newMsgCount != fbSvc._numMsgs) {
                 fbSvc._observerService.notifyObservers(null, 'facebook-msgs-updated', newMsgCount);
                 fbSvc._numMsgs = newMsgCount;
@@ -204,11 +224,11 @@ facebookService.prototype = {
             if (!holdNotifications && totalPokeCount > fbSvc._totalPokes && newPokeCount > 0) {
                 // we send the notification if you have any unseen pokes and the total # of pokes has gone up.
                 // note that your unseen poke count could theoretically stay the same or even if you have new pokes.
-                fbSvc._totalPokes = totalPokeCount;
                 fbSvc._observerService.notifyObservers(null, 'facebook-new-poke', newPokeCount);
                 fbSvc.showPopup('you.poke', 'chrome://facebook/content/poke.gif',
                                 'You have been poked', 'http://www.facebook.com/home.php');
             }
+            fbSvc._totalPokes = totalPokeCount;
             if (newPokeCount != fbSvc._numPokes) {
                 fbSvc._numPokes = newPokeCount;
                 fbSvc._observerService.notifyObservers(null, 'facebook-pokes-updated', newPokeCount);
@@ -370,7 +390,7 @@ facebookService.prototype = {
         params.push('method=' + method);
         params.push('session_key=' + this._sessionKey);
         params.push('api_key=' + this._apiKey);
-        var callId = (new Date()).getTime();
+        var callId = Date.now();
         if (callId <= this._lastCallId) {
             callId = this._lastCallId + 1;
         }

@@ -39,7 +39,7 @@ var fbToolbarObserver = {
         setAttributeById('facebook-notification-msgs', 'label', '?');
         setAttributeById('facebook-notification-poke', 'label', '?');
         setAttributeById('facebook-notification-reqs', 'label', '?');
-        facebook.clearFriends();
+        facebook.clearFriends(true);
         break;
       case 'facebook-friends-updated':
         facebook.loadFriends();
@@ -48,6 +48,10 @@ var fbToolbarObserver = {
       case 'facebook-friend-updated':
         subject = subject.QueryInterface(Ci.fbIFacebookUser);
         facebook.updateFriend(subject);
+        break;
+      case 'facebook-new-day':
+        facebook.clearFriends(false);
+        facebook.loadFriends();
         break;
     }
   }
@@ -92,6 +96,7 @@ var facebook = {
     obsSvc.addObserver(fbToolbarObserver, 'facebook-msgs-updated', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-pokes-updated', false);
     obsSvc.addObserver(fbToolbarObserver, 'facebook-reqs-updated', false);
+    obsSvc.addObserver(fbToolbarObserver, 'facebook-new-day', false);
     var loggedInUser = fbSvc.loggedInUser;
     if (loggedInUser) {
       loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
@@ -117,6 +122,7 @@ var facebook = {
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-msgs-updated');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-pokes-updated');
     obsSvc.removeObserver(fbToolbarObserver, 'facebook-reqs-updated');
+    obsSvc.removeObserver(fbToolbarObserver, 'facebook-new-day');
     debug('facebook toolbar unloaded.');
   },
 
@@ -226,7 +232,7 @@ var facebook = {
       eval(openCmd);
     }
   },
-  clearFriends: function() {
+  clearFriends: function(sessionEnded) {
     var list = document.getElementById('PopupFacebookFriendsList');
     while (list.firstChild && list.firstChild.id != 'FacebookHint') {
       list.removeChild(list.firstChild);
@@ -234,7 +240,9 @@ var facebook = {
     document.getElementById('PopupMessager').style.display = 'none';
     document.getElementById('PopupPoker').style.display = 'none';
     document.getElementById('PopupPoster').style.display = 'none';
-    SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
+    if (sessionEnded) {
+      SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
+    }
   }
 };
 window.addEventListener('load', facebook.load, false);
