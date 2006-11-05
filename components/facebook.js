@@ -99,6 +99,10 @@ function facebookService()
             if (topic == 'alertclickcallback') {
                 debug('opening url', data);
                 var window = fbSvc._winService.getMostRecentWindow(null);
+                if (!window) {
+                    window = Cc["@mozilla.org/appshell/appShellService;1"].getService(Ci.nsIAppShellService)
+                                                                          .hiddenDOMWindow;
+                }
                 window.open(data);
             }
         }
@@ -494,10 +498,14 @@ facebookService.prototype = {
                 debug('caught', e2);
                 this._numAlertsObj.value++;
                 var window = this._winService.getMostRecentWindow(null);
-                var left = window.screen.width - 220;
-                var top = window.screen.height - 25 - 130*this._numAlertsObj.value;
+                if (!window) {
+                    window = Cc["@mozilla.org/appshell/appShellService;1"].getService(Ci.nsIAppShellService)
+                                                                          .hiddenDOMWindow;
+                }
+                var left = window.screen.width - 215;
+                var top = window.screen.height - 105*this._numAlertsObj.value;
                 window.openDialog("chrome://facebook/content/notifier.xul", "_blank",
-                                  'chrome=yes,close=yes,dialog=no,left=' + left + ',top=' + top + ',width=210,height=100',
+                                  'chrome,titlebar=no,popup=yes,left=' + left + ',top=' + top + ',width=210,height=100',
                                   pic, label, url, this._numAlertsObj);
             }
         }
