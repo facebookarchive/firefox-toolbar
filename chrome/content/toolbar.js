@@ -4,21 +4,32 @@ var Ci = Components.interfaces;
 var fbSvc = Cc['@facebook.com/facebook-service;1'].getService(Ci.fbIFacebookService);
 var obsSvc = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
 
+function checkSeparator(data) {
+   if (!(getAttributeById('facebook-notification-msgs', 'label') > 0 ||
+       getAttributeById('facebook-notification-poke', 'label') > 0 || 
+       getAttributeById('facebook-notification-reqs', 'label') > 0)) {
+   	 setAttributeById('facebook-notification-separator', 'hidden', 'true');
+       } else {
+   	 setAttributeById('facebook-notification-separator', 'hidden', 'false');
+    }
+}
+
+
 var fbToolbarObserver = {
   observe: function(subject, topic, data) {
     debug('facebook toolbar observing something: ' + topic);
     switch (topic) {
       case 'facebook-msgs-updated':
-        debug('msg: ' + document.getElementById('facebook-notification-msgs').nextSibling.id);
         setAttributeById('facebook-notification-msgs', 'label', data);
+        checkSeparator(data);
         break;
       case 'facebook-pokes-updated':
-        debug('pokes: ' + document.getElementById('facebook-notification-poke').nextSibling.id);
         setAttributeById('facebook-notification-poke', 'label', data);
+        checkSeparator(data);
         break;
       case 'facebook-reqs-updated':
-        debug('reqs: ' + document.getElementById('facebook-notification-reqs').nextSibling.id);
         setAttributeById('facebook-notification-reqs', 'label', data);
+        checkSeparator(data);
         break;
       case 'facebook-session-start':
         subject = subject.QueryInterface(Ci.fbIFacebookUser);

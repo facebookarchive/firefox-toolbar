@@ -28,6 +28,14 @@ function setAttributeById(id, attrib, val) {
     return false;
 }
 
+function getAttributeById(id, attrib) {
+    var el = document.getElementById(id);
+    if (el) {
+      return el.getAttribute(attrib);
+    }
+    return false;
+}
+
 function OpenFBUrl(page, uid, e) {
   var url = 'http://www.facebook.com/' + page + '?uid=' + uid + '&api_key=' + fbSvc.apiKey;
   debug('Opening ' + url);

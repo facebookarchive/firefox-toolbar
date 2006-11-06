@@ -214,10 +214,12 @@ facebookService.prototype = {
                 }
             }
             fbSvc._lastMsgTime = data.most_recent;
-            if (newMsgCount !== fbSvc._numMsgs) {
+// Don't do the check so notifications with question marks can be updated if the user has just
+// customized their toolbar
+//            if (newMsgCount != fbSvc._numMsgs) {
                 fbSvc._observerService.notifyObservers(null, 'facebook-msgs-updated', newMsgCount);
                 fbSvc._numMsgs = newMsgCount;
-            }
+//            }
             debug('checkMessages: you have ' + fbSvc._numMsgs + ' unread messages');
         });
     },
@@ -233,11 +235,13 @@ facebookService.prototype = {
                                 'You have been poked', 'http://www.facebook.com/home.php');
             }
             fbSvc._totalPokes = totalPokeCount;
-            if (newPokeCount !== fbSvc._numPokes) {
+// Don't do the check so notifications with question marks can be updated if the user has just
+// customized their toolbar
+//            if (newPokeCount != fbSvc._numPokes) {
                 fbSvc._numPokes = newPokeCount;
                 fbSvc._observerService.notifyObservers(null, 'facebook-pokes-updated', newPokeCount);
-            }
-            debug('checkPokes: you have ' + fbSvc._numPokes + ' unseen pokes');
+//            }
+//            debug('checkPokes: you have ' + fbSvc._numPokes + ' unseen pokes');
         });
     },
     checkReqs: function(holdNotifications) {
@@ -261,10 +265,13 @@ facebookService.prototype = {
                     }
                 });
             }
-            if (newReqCount !== fbSvc._numReqs) {
+
+// Don't do the check so notifications with question marks can be updated if the user has just
+// customized their toolbar
+//            if (newReqCount != fbSvc._numReqs) {
                 fbSvc._numReqs = newReqCount;
                 fbSvc._observerService.notifyObservers(null, 'facebook-reqs-updated', newReqCount);
-            }
+//            }
             debug('checkReqs: you have ' + fbSvc._numReqs + ' outstanding reqs');
         });
     },
