@@ -127,7 +127,7 @@ function SearchFriends(search) {
   if (search && numMatched == 0) {
     SetHint(true, 'Press enter to search for "' + search + '" on Facebook',
             "openUILink('http://www.facebook.com/s.php?q=' + encodeURIComponent(GetFBSearchBox().value), event);");
-  } else if (!sidebar && numMatched > 4) {
+  } else if (!sidebar && (numMatched > 4 || !search)) {
     var str = 'See all ' + numMatched + ' friends'
       if (search) {
         str += ' matching "' + search + '"';

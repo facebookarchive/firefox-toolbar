@@ -183,10 +183,10 @@ facebookService.prototype = {
         this._uid           = null;
         this._loggedIn      = false;
         this._loggedInUser  = null;
-        this._numMsgs       = 0;
+        this._numMsgs       = null;
         this._lastMsgTime   = 0;
-        this._numPokes      = 0;
-        this._numReqs       = 0;
+        this._numPokes      = null;
+        this._numReqs       = null;
         this._reqs          = [];
         this._reqsInfo      = {};
         this._totalPokes    = 0;
@@ -214,7 +214,7 @@ facebookService.prototype = {
                 }
             }
             fbSvc._lastMsgTime = data.most_recent;
-            if (newMsgCount != fbSvc._numMsgs) {
+            if (newMsgCount !== fbSvc._numMsgs) {
                 fbSvc._observerService.notifyObservers(null, 'facebook-msgs-updated', newMsgCount);
                 fbSvc._numMsgs = newMsgCount;
             }
@@ -233,7 +233,7 @@ facebookService.prototype = {
                                 'You have been poked', 'http://www.facebook.com/home.php');
             }
             fbSvc._totalPokes = totalPokeCount;
-            if (newPokeCount != fbSvc._numPokes) {
+            if (newPokeCount !== fbSvc._numPokes) {
                 fbSvc._numPokes = newPokeCount;
                 fbSvc._observerService.notifyObservers(null, 'facebook-pokes-updated', newPokeCount);
             }
@@ -261,7 +261,7 @@ facebookService.prototype = {
                     }
                 });
             }
-            if (newReqCount != fbSvc._numReqs) {
+            if (newReqCount !== fbSvc._numReqs) {
                 fbSvc._numReqs = newReqCount;
                 fbSvc._observerService.notifyObservers(null, 'facebook-reqs-updated', newReqCount);
             }

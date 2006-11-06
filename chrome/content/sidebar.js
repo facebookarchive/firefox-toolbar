@@ -101,6 +101,8 @@ function LoadFriends() {
         var searchTerm = GetFBSearchBox().value;
         if (searchTerm != 'Search Facebook') {
             SearchFriends(searchTerm);
+        } else {
+            SetHint(false, '', '');
         }
     }
 }
