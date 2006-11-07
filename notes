@@ -23,4 +23,4 @@ ari@Ari:platform/client/firefox$ cat `which FirefoxDev.sh`
 to persist data across multiple windows, try http://www.xulplanet.com/references/xpcomref/comps/c_hashpropertybag1.html
 
 to package:
-zip ../facebook-firefox.xpi -r chrome chrome.manifest components install.rdf notes -x "*.svn*" -x notes
+zip ../facebook-firefox.xpi -r * -x "*.svn*" -x notes
