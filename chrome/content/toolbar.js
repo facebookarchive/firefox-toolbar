@@ -256,7 +256,12 @@ var facebook = {
     }
   },
   share: function() {
-    var p = '.php?src=tb&v=4&u=' + encodeURIComponent(content.document.location.href) + '&t=' + encodeURIComponent(document.title);
+    // not only do we need to encodeURIComponent on the string, we also need to escape quotes since
+    // we are putting this into a string to evaluate (as opposed to evaluating it directly)
+    var enc = function(str) {
+      return encodeURIComponent(str).replace("'", "\\'", 'g');
+    }
+    var p = '.php?src=tb&v=4&u=' + enc(content.document.location.href) + '&t=' + enc(document.title);
     var openCmd = "window.open('http://www.facebook.com/sharer" + p + "', 'sharer','toolbar=no,status=yes,width=626,height=436');";
     try {
       // If we're not on a facebook page, just jump down to the catch block and open the popup...
@@ -273,7 +278,7 @@ var facebook = {
       // execute it.
       content.document.location = 'javascript:try { share_internal_bookmarklet("' + p + '"); } catch (e) { setTimeout("' + openCmd + '", 0); } void(0);'
     } catch(e) {
-      debug('title is: ' + document.title, 'url: ' + content.document.location.href);
+      debug('title is: ' + document.title, 'url: ' + content.document.location.href, openCmd);
       eval(openCmd);
     }
   },
