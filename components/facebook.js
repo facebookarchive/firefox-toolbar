@@ -90,7 +90,8 @@ function facebookService()
                 fbSvc.checkMessages(false);
                 fbSvc.checkPokes(false);
                 fbSvc.checkReqs(false);
-                fbSvc.checkFriends(false);
+                // note: suppress notifications if we haven't successfully checked for the last 30 minutes
+                fbSvc.checkFriends(now > fbSvc._lastCheckedFriends + BASE_CHECK_INTERVAL * 6);
             } else {
                 debug('_checker.notify: skipping', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
             }
@@ -232,6 +233,7 @@ facebookService.prototype = {
         this._lastChecked    = 0;
         this._lastFBLoad     = 0;
         this._lastPageLoad   = 0;
+        this._lastCheckedFriends = 0;
     },
 
     checkMessages: function(holdNotifications) {
@@ -319,6 +321,7 @@ facebookService.prototype = {
             }
 
             fbSvc.getUsersInfo(friends, function(friendsInfo) {
+                fbSvc._lastCheckedFriends = Date.now()
                 var friendsInfoArr = [];
 
                 for each (var friend in friendsInfo) {
