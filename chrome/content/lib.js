@@ -340,5 +340,8 @@ function getStatusTime(status_time) {
 }
 
 function IsFacebookLocation(location) {
-  return /^(?:.*\.)?facebook\.[^.]*$/.test(location.host);
+  if (location) {
+    return /^(?:.*\.)?facebook\.[^.]*$/.test(location.host);
+  }
+  return false;
 }
