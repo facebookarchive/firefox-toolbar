@@ -111,6 +111,13 @@
   display: none;
 }
 
+toolbarpaletteitem[place="toolbar"] .facebook-icon-poke[label="0"],
+toolbarpaletteitem[place="toolbar"] .facebook-icon-reqs[label="0"],
+toolbarpaletteitem[place="toolbar"] .facebook-icon-msgs[label="0"],
+toolbarpaletteitem[place="toolbar"] #facebook-notification-separator {
+  display: -moz-box;
+}
+
 .facebook-icon-poke[label="?"] label, 
 .facebook-icon-reqs[label="?"] label,
 .facebook-icon-msgs[label="?"] label {

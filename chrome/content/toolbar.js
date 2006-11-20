@@ -40,12 +40,12 @@ var obsSvc = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverServ
 
 function checkSeparator(data) {
    if (!(getAttributeById('facebook-notification-msgs', 'label') > 0 ||
-       getAttributeById('facebook-notification-poke', 'label') > 0 || 
-       getAttributeById('facebook-notification-reqs', 'label') > 0)) {
-   	 setAttributeById('facebook-notification-separator', 'hidden', 'true');
-       } else {
-   	 setAttributeById('facebook-notification-separator', 'hidden', 'false');
-    }
+         getAttributeById('facebook-notification-poke', 'label') > 0 || 
+         getAttributeById('facebook-notification-reqs', 'label') > 0)) {
+       setAttributeById('facebook-notification-separator', 'hidden', 'true');
+   } else {
+       setAttributeById('facebook-notification-separator', 'hidden', 'false');
+   }
 }
 
 
