@@ -342,15 +342,17 @@ facebookService.prototype = {
                                 }
                                 friendUpdate = true;
                             }
-                            if (fbSvc._friendsInfo[friend.id].wall != friend.wall) {
+                            if (fbSvc._friendsInfo[friend.id].wall < friend.wall) {
                                 fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'wall');
                                 fbSvc.showPopup('friend.wall', friend.pic, 'Someone wrote on ' + friend.name + "'s wall",
                                                 'http://www.facebook.com/profile.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
+                                debug('wall count updated', fbSvc._friendsInfo[friend.id].wall, friend.wall);
                             }
-                            if (fbSvc._friendsInfo[friend.id].notes != friend.notes) {
+                            if (fbSvc._friendsInfo[friend.id].notes < friend.notes) {
                                 fbSvc._observerService.notifyObservers(friend, 'facebook-friend-updated', 'notes');
                                 fbSvc.showPopup('friend.note', friend.pic, friend.name + ' wrote a note.',
                                                 'http://www.facebook.com/notes.php?uid=' + friend.id + '&api_key=' + fbSvc._apiKey);
+                                debug('note count updated', fbSvc._friendsInfo[friend.id].notes, friend.notes);
                             }
                         }
                     }
