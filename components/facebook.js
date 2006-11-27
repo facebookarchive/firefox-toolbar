@@ -290,16 +290,26 @@ facebookService.prototype = {
                 }
             }
             if (reqsToGet.length > 0) {
-                fbSvc.getUsersInfo(reqsToGet, function(users) {
-                    for each (var reqInfo in users) {
-                        fbSvc._reqsInfo[reqInfo.id] = reqInfo;
-                        if (!holdNotifications) {
-                            fbSvc._observerService.notifyObservers(reqInfo, 'facebook-new-req', reqInfo.id);
-                            fbSvc.showPopup('you.req', reqInfo.pic, reqInfo.name + ' wants to be your friend',
-                                           'http://www.facebook.com/reqs.php');
+                if (!holdNotifications) {
+                    fbSvc.getUsersInfo(reqsToGet, function(users) {
+                        for each (var reqInfo in users) {
+                            fbSvc._reqsInfo[reqInfo.id] = reqInfo;
+                            if (!holdNotifications) {
+                                fbSvc._observerService.notifyObservers(reqInfo, 'facebook-new-req', reqInfo.id);
+                                fbSvc.showPopup('you.req', reqInfo.pic, reqInfo.name + ' wants to be your friend',
+                                               'http://www.facebook.com/reqs.php');
+                            }
                         }
+                    });
+                } else {
+                    // we only show the info if we are not holding notifications, and if we're never
+                    // going to show the info we don't have to bother to request it.  but we should
+                    // still store the ids in the reqsInfo array so that we don't request their info
+                    // later.
+                    for each (var toGet in reqsToGet) {
+                        fbSvc._reqsInfo[toGet] = true; 
                     }
-                });
+                }
             }
 
 // Don't do the check so notifications with question marks can be updated if the user has just
