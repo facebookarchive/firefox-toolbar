@@ -399,9 +399,12 @@ facebookService.prototype = {
                         function(data) {
             var usersInfo = {};
             for each (var user in data.result_elt) {
-                var name   = String(user.name),
+                // note: for name and status, need to utf8 decode them using
+                // the decodeURIComponent(escape(s)) trick - thanks
+                // http://ecmanaut.blogspot.com/2006/07/encoding-decoding-utf8-in-javascript.html
+                var name   = decodeURIComponent(escape(String(user.name))),
                     id     = String(user.@id),
-                    status = String(user.status.message),
+                    status = decodeURIComponent(escape(String(user.status.message))),
                     stime  = Number(user.status.time),
                     notes  = Number(user.notes_count),
                     wall   = Number(user.wall_count),
