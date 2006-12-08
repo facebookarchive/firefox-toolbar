@@ -231,7 +231,7 @@ function HandleKeyPress(e) {
       if (item && item.style.display != 'none') {
         item.doCommand();
       } else {
-        openUILink('http://www.facebook.com/s.php?q=' +
+        openUILink('http://www.facebook.com/s.php?src=fftb&q=' +
                    encodeURIComponent(GetFBSearchBox().value), e);
       }
       // fall-through to hide the pop-up...
