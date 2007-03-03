@@ -39,9 +39,9 @@ var fbSvc = Cc['@facebook.com/facebook-service;1'].getService(Ci.fbIFacebookServ
 
 function debug() {
   if (debug.caller && debug.caller.name) {
-    dump(debug.caller.name + ':\t');
+    dump(debug.caller.name + ': ');
   } else {
-    dump('\t\t');
+    dump(' ');
   }
   for (var i = 0; i < arguments.length; i++) {
     if (i > 0) dump(', ');
@@ -70,8 +70,14 @@ function getAttributeById(id, attrib) {
     return false;
 }
 
-function OpenFBUrl(page, uid, e) {
-  var url = 'http://www.facebook.com/' + page + '?uid=' + uid + '&api_key=' + fbSvc.apiKey;
+function OpenFBUrl(page, uid, e, params) {
+  var url = 'http://www.facebook.com/' + page + '?id=' + uid + '&src=fftb';
+  if( params ) {
+    for ( var param in params ) {
+        url += '&' + param + '=';
+        if( null != params[params] ) url += params[param];
+    }
+  }
   debug('Opening ' + url);
   openUILink(url, e);
   e.stopPropagation();
@@ -180,27 +186,26 @@ function SearchFriends(search) {
     SetHint(false, '', '');
   }
   if (!sidebar) {
-    if (numMatched == 1) {
       var msger = document.getElementById('PopupMessager');
       var poker = document.getElementById('PopupPoker');
       var poster = document.getElementById('PopupPoster');
-      msger.setAttribute('userid', lastDisplayed.getAttribute('userid'));
-      poker.setAttribute('userid', lastDisplayed.getAttribute('userid'));
-      poster.setAttribute('userid', lastDisplayed.getAttribute('userid'));
-      msger.setAttribute('value', 'Send ' + lastDisplayed.getAttribute('firstname') + ' a message');
-      poker.setAttribute('value', 'Poke ' + lastDisplayed.getAttribute('firstname'));
-      poster.setAttribute('value', 'Write on ' + lastDisplayed.getAttribute('firstname') + "'s wall");
-      msger.style.display = '';
-      poker.style.display = '';
-      poster.style.display = '';
-    } else {
-      var msger = document.getElementById('PopupMessager');
-      var poker = document.getElementById('PopupPoker');
-      var poster = document.getElementById('PopupPoster');
-      msger.style.display = 'none';
-      poker.style.display = 'none';
-      poster.style.display = 'none';
-    }
+      if (numMatched == 1) {
+          msger.setAttribute('userid', lastDisplayed.getAttribute('userid'));
+          msger.setAttribute('value', 'Send ' + lastDisplayed.getAttribute('firstname') + ' a message');
+          msger.style.display = '';
+
+          poker.setAttribute('userid', lastDisplayed.getAttribute('userid'));
+          poker.setAttribute('value', 'Poke ' + lastDisplayed.getAttribute('firstname'));
+          poker.style.display = '';
+
+          poster.setAttribute('userid', lastDisplayed.getAttribute('userid'));
+          poster.setAttribute('value', 'Write on ' + lastDisplayed.getAttribute('firstname') + "'s wall");
+          poster.style.display = '';
+      } else {
+          msger.style.display = 'none';
+          poker.style.display = 'none';
+          poster.style.display = 'none';
+      }
   }
   var item = list.selectedItem;
   if (item) {
@@ -306,6 +311,57 @@ function SetStatus(item, status, time) {
     }
 }
 
+function DatesInSeconds() {
+  this.minute  = 60;
+  this.two_mins= 120;
+  this.hour    = 60*this.minute;
+  this.hour_and_half = 90*this.minute;
+  this.day     = 24*this.hour;
+  this.week    = 7*this.day;
+  this.month   = 30.5*this.day;
+  this.year    = 365*this.day;
+}
+var dates_in_seconds = new DatesInSeconds();
+
+/* 
+ * Render a short version of the date depending on how close it is to today's date
+ * @param time - time in seconds from epoch
+ */
+function getRelativeTime(time) {
+  var elapsed   = (new Date().getTime()/1000 - time);
+  if (elapsed <= 1)
+    return 'a moment ago';
+  if (elapsed < dates_in_seconds.minute)
+    return elapsed.toString() + ' seconds ago';
+  if (elapsed < 2*dates_in_seconds.two_mins)
+    return 'one minute ago';
+  if (elapsed < dates_in_seconds.hour)
+    return Math.floor(elapsed/dates_in_seconds.minute) + ' minutes ago';
+  if (elapsed < dates_in_seconds.hour_and_half)
+    return 'about an hour ago';
+  if (elapsed < dates_in_seconds.day )
+    return Math.round(elapsed/dates_in_seconds.hour) + ' hours ago';
+  if (elapsed < dates_in_seconds.week) {
+    var days    = new Array( "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" );
+    var d       = new Date;
+    d.setTime(time*1000);
+    return 'on ' + days[d.getDay()];
+  }
+  if (elapsed < dates_in_seconds.week*1.5)
+    return 'about a week ago';
+  if (elapsed < dates_in_seconds.week*3.5)
+    return 'about ' + Math.round(elapsed/dates_in_seconds.week) + ' weeks ago';
+  if (elapsed < dates_in_seconds.month*1.5)
+    return 'about a month ago';
+  if (elapsed < dates_in_seconds.year)
+    return 'about ' + Math.round(elapsed/dates_in_seconds.month) + ' months ago';
+  return 'over a year ago';
+}
+
+function getProfileTime(profile_time) {
+  return "Updated profile " + getRelativeTime(profile_time);
+  }
+
 function getStatusTime(status_time) {
    var currentTime = new Date();
 
@@ -339,9 +395,25 @@ function getStatusTime(status_time) {
    return stime;
 }
 
+/**
+ * This is called on _every_ page loaded in Firefox
+ * and tests whether it's a Facebook URL. So it better be as
+ * efficient as possible 
+ */
 function IsFacebookLocation(location) {
-  if (location) {
-    return /^(?:.*\.)?facebook\.[^.]*$/.test(location.host);
+  if( location && location.schemeIs // use to detect nsIURI 
+    && ( location.schemeIs("http") || location.schemeIs("https") ) ) {
+    var len = location.host.length;
+    return (len>=12) && ("facebook.com" == location.host.substring(len-12));
   }
   return false;
 }
+
+// Toggles the toolbar
+function facebook_toggleToolbar()
+{ /* modelled on webdeveloper toolbar behavior */
+    var toolbar = document.getElementById("facebook-toolbar");
+    toolbar.collapsed = !toolbar.collapsed;
+    document.persist("facebook-toolbar", "collapsed");
+}
+

@@ -32,7 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-function debug(s) { dump('** login.js: ' + s + '\n'); }
+function debug(s) { dump('** login.js: [' + s + ']\n'); }
 
 var Cc = Components.classes;
 var Ci = Components.interfaces;
@@ -53,8 +53,8 @@ function startup() {
         try {
         client.callMethod('facebook.auth.createToken', [], function(req) {
             debug('received token response:');
-            dump(req.responseText);
-            client.authToken = req.xmldata.token;
+            debug( req.responseText); 
+            client.authToken = req.xmldata;
             debug('token is: '+client.authToken);
             startup();
         });
@@ -63,7 +63,7 @@ function startup() {
         }
     } else {
         var browser = document.getElementById('facebook-login-body');
-        browser.setAttribute('src', 'http://api.facebook.com/login.php?popup&api_key=' +
+        browser.setAttribute('src', 'http://www.facebook.com/login.php?popup&v=1.0&api_key=' +
                              client.fbSvc.apiKey + '&auth_token=' + client.authToken);
         browser.style.display = '';
         document.getElementById('throbber-box').style.display = 'none';
@@ -78,12 +78,14 @@ function done() {
         window.close();
         return false;
     }
+    debug(client.authToken);
     client.callMethod('facebook.auth.getSession', ['auth_token='+client.authToken], function(req) {
         debug('received session response:');
-        dump(req.responseText);
-        var sessionKey    = req.xmldata.session_key;
-        var sessionSecret = req.xmldata.secret;
-        var uid           = req.xmldata.uid;
+        debug(req.xmldata);
+        var data = req.xmldata;
+        var sessionKey    = data.session_key;
+        var sessionSecret = data.secret;
+        var uid           = data.uid;
         if (sessionKey && sessionSecret && uid) {
             client.fbSvc.sessionStart(sessionKey, sessionSecret, uid);
             client.authToken  = null;
@@ -96,4 +98,4 @@ function done() {
     return false;
 }
 
-debug('loaded login.js');
+dump('loaded login.js');

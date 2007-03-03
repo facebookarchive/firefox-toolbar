@@ -6,6 +6,9 @@
   <script type="application/x-javascript" src="chrome://facebook/content/toolbar.js"/>
   <toolbox id="navigator-toolbox" crop="end">
     <toolbarpalette id="BrowserToolbarPalette">
+      <toolbarbutton label="Facebook Toolbar" 
+            class="chromeclass-toolbar-additional toolbarbutton-1" 
+            id="facebook-toolbar-toggle" tooltiptext="Facebook Toolbar" oncommand="facebook_toggleToolbar()" />
       <toolbarbutton id="facebook-sidebar-toggle" 
                      class="facebook-sidebar-icon"
                      tooltiptext="Facebook Friends Sidebar"
@@ -27,25 +30,43 @@
                      tooltiptext="Share current page on Facebook"
                      oncommand="if (!fbSvc.loggedIn) FacebookLogin(); facebook.share()"/>
 
-      <toolbarbutton id="facebook-notification-poke"
-                     class="facebook-icon-poke facebook-notifications button"
+      <toolbarbutton id="facebook-notif-poke"
+                     class="facebook-icon-poke facebook-notifs button"
                      label="?"
                      tooltip="New Pokes"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/home.php', event)"/>
-      <toolbarbutton id="facebook-notification-reqs"
-                     class="facebook-icon-reqs facebook-notifications button"
+      <toolbarbutton id="facebook-notif-reqs"
+                     class="facebook-icon-reqs facebook-notifs button"
                      label="?"
                      tooltip="New Friend Requests"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/reqs.php', event)"/>
-      <toolbarbutton id="facebook-notification-msgs"
-                     class="facebook-icon-msgs facebook-notifications button"
+      <toolbarbutton id="facebook-notif-msgs"
+                     class="facebook-icon-msgs facebook-notifs button"
                      label="?"
                      tooltip="New Messages"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/mailbox.php', event)"/>
-      <toolbaritem id = "facebook-notification-separator">
+      <toolbarbutton id="facebook-notif-shrs"
+                     class="facebook-icon-msgs facebook-notifs button"
+                     label="?"
+                     tooltip="New Shares"
+                     onclick="checkForMiddleClick(this, event);"
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/shared.php', event)"/>
+      <toolbarbutton id="facebook-notif-group-invs"
+                     class="facebook-icon-grps facebook-notifs button"
+                     label="?"
+                     tooltip="New Group Invites"
+                     onclick="checkForMiddleClick(this, event);"
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/groups.php', event)"/>
+      <toolbarbutton id="facebook-notif-event-invs"
+                     class="facebook-icon-evts facebook-notifs button"
+                     label="?"
+                     tooltip="New Event Invites"
+                     onclick="checkForMiddleClick(this, event);"
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/eventhome.php', event)"/>
+      <toolbaritem id = "facebook-notif-separator">
         <toolbarseparator />
       </toolbaritem>
       <toolbarbutton id="facebook-link-menu"
@@ -96,7 +117,7 @@
         <toolbarseparator/>
         <toolbarbutton id="facebook-login-status" 
                        class="button"
-		       label="Login to Facebook"
+                       label="Login to Facebook"
                        tooltip="Login to Facebook"
                        oncommand="FacebookLogin()" />
       </toolbaritem>
@@ -110,7 +131,7 @@
              context="toolbar-context-menu"
              toolbarname="Facebook Toolbar"
              crop="end"
-             defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-separator,facebook-share,spring,facebook-login-info">
+             defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-notif-poke,facebook-notif-reqs,facebook-notif-msgs,facebook-notif-shrs,facebook-notif-group-invs,facebook-notif-event-invs,facebook-notif-separator,facebook-share,spring,facebook-login-info">
     </toolbar>
     <popupset>
     <popup position="after_start"

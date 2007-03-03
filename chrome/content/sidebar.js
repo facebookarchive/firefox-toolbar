@@ -94,15 +94,6 @@ function ClearFriends(sessionEnded) {
     }
 }
 
-function SortFriendsStatus(f1, f2) {
-    if (f1.stime != f2.stime) {
-        return f2.stime - f1.stime;
-    } else if (f2.name.toLowerCase() < f1.name.toLowerCase()) {
-        return 1;
-    } else {
-        return -1;
-    }
-}
 function SortFriendsAlpha(f1, f2) {
     var n1 = f1.name.toLowerCase();
     var n2 = f2.name.toLowerCase();
@@ -111,8 +102,33 @@ function SortFriendsAlpha(f1, f2) {
     else return 0;
 }
 
+function SortFriendsStatus(f1, f2) {
+    if (f1.stime != f2.stime)
+        return f2.stime - f1.stime;
+    else 
+        return SortFriendsAlpha(f1,f2);
+}
+
+function SortFriendsProfile(f1,f2) {
+//  debug( f1.name );
+    if( f1.ptime != f2.ptime )
+        return f2.ptime - f1.ptime;
+    else
+        return SortFriendsAlpha(f1,f2);
+}
+
+function SortFriendsUpdate(f1,f2) {
+    var f1_time = Math.max( f1.ptime, f1.stime );
+//  dump( f1.id + ' ' + f1.name + ':' + f1.ptime + ' ' + f1.stime + ' ' + f1_time );
+    var f2_time = Math.max( f2.ptime, f2.stime );
+    if( f1_time != f2_time )
+        return f2_time - f1_time;
+    else
+        return SortFriendsAlpha(f1,f2);
+}
+
 function LoadFriends() {
-    debug('LoadFriends()');
+    debug('LoadFriends');
     var list = document.getElementById('SidebarFriendsList');
     var count = {};
     var friends = fbSvc.getFriends(count);
@@ -123,12 +139,25 @@ function LoadFriends() {
         SetHint(true, 'Loading friends list...', '');
     } else {
         var hint = document.getElementById('FacebookHint');
-        if (document.getElementById('fbSidebarSorter').getAttribute('selectedsort') == 'name') {
+        var selSort = document.getElementById('fbSidebarSorter').getAttribute('selectedsort');
+        if( selSort == 'name') {
+            debug( "Sorting by name" );
             friends.sort(SortFriendsAlpha);
-        } else {
+        } 
+        else if( selSort == 'profile') {
+            debug( "Sorting by profile update time" );
+            friends.sort(SortFriendsProfile);
+        } 
+        else if( selSort == 'last update') {
+            debug( "Sorting by combined update time" );
+            friends.sort(SortFriendsUpdate);
+        } 
+        else {
+            debug( "Sorting by status update time" );
             friends.sort(SortFriendsStatus);
         }
         for each (var friend in friends) {
+            debug( friend.name );
             CreateFriendNode(list, friend, hint);
         }
         var searchTerm = GetFBSearchBox().value;
@@ -180,14 +209,32 @@ function CreateFriendNode(list, friend, insertBefore) {
     if (!firstName) firstName = friend.name;
     item.setAttribute('firstname', firstName);
     SetStatus(item, friend.status, friend.stime);
-    item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
-    item.setAttribute('msgCmd', "OpenFBUrl('message.php', '" + friend.id + "', event)");
-    item.setAttribute('pokeCmd', "OpenFBUrl('poke.php', '" + friend.id + "', event)");
-    item.setAttribute('postCmd', "OpenFBUrl('wallpost.php', '" + friend.id + "', event)");
+    item.setAttribute('ptime', getProfileTime(friend.ptime) );
+    item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event, null )");
+    item.setAttribute('viewUpdCmd', "OpenFBUrl('profile.php', '" + friend.id + "', event, {highlight: null} )");
+    item.setAttribute('msgCmd', "OpenFBUrl('message.php', '" + friend.id + "', event, null )");
+    item.setAttribute('pokeCmd', "OpenFBUrl('poke.php', '" + friend.id + "', event, null )");
+    item.setAttribute('postCmd', "OpenFBUrl('wallpost.php', '" + friend.id + "', event, null )");
     //item.setAttribute('wallCmd', "OpenFBUrl('wall.php', '" + friend.id + "', event)");
     //item.setAttribute('notesCmd', "OpenFBUrl('notes.php', '" + friend.id + "', event)");
     item.setAttribute('pic', friend.pic);
     list.insertBefore(item, insertBefore);
+}
+
+function OpenSettings() { /* modified from optionsmenu extension */
+    debug("OpenSettings()");
+    var url = "chrome://facebook/content/settings.xul";
+    var features;
+    try {
+        var prefs = Components.classes["@mozilla.org/preferences-service;1"]
+                                 .getService(Components.interfaces.nsIPrefBranch);
+        var instantApply = prefs.getBoolPref("browser.preferences.instantApply");
+        features = "chrome,titlebar,toolbar,centerscreen" + (instantApply ? ",dialog=no" : ",modal");
+    }
+    catch (e) {
+        features = "chrome,titlebar,toolbar,centerscreen,modal";
+    }
+    openDialog( url, "", features);
 }
 
 function SidebarLoad() {
@@ -198,6 +245,12 @@ function SidebarLoad() {
     if (sorter.getAttribute('selectedsort') == 'name') {
         sorter.setAttribute('label', 'Sorting by name');
         document.getElementById('fbSortName').setAttribute('checked', 'true');
+    } else if (sorter.getAttribute('selectedsort') == 'profile') {
+        sorter.setAttribute('label', 'Sorting by profile');
+        document.getElementById('fbSortProfile').setAttribute('checked', 'true');
+    } else if (sorter.getAttribute('selectedsort') == 'last update') {
+        sorter.setAttribute('label', 'Sorting by last update');
+        document.getElementById('fbSortUpdate').setAttribute('checked', 'true');
     } else {
         sorter.setAttribute('label', 'Sorting by status');
         document.getElementById('fbSortStatus').setAttribute('checked', 'true');

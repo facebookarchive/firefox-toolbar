@@ -8,20 +8,23 @@
   <script type="application/x-javascript" src="chrome://browser/content/utilityOverlay.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/settings.js"/>
-  <checkbox id="facebook-notifications-toggle" label="Enable Pop-up Notifications"/>
-  <groupbox id="facebook-notifications-youbox">
+  <checkbox id="facebook-notifs-toggle" label="Enable Pop-up Notifications"/>
+  <groupbox id="facebook-notifs-youbox">
     <caption label="Notifications about you"/>
-    <checkbox id="facebook-notifications-you-req" label="New friend request"/>
-    <checkbox id="facebook-notifications-you-msg" label="New message"/>
-    <checkbox id="facebook-notifications-you-poke" label="New poke"/>
-    <checkbox id="facebook-notifications-you-friend" label="New friend"/>
-    <checkbox id="facebook-notifications-you-wall" label="Someone wrote on your wall"/>
+    <checkbox id="facebook-notifs-you-req" label="New friend request"/>
+    <checkbox id="facebook-notifs-you-msg" label="New message"/>
+    <checkbox id="facebook-notifs-you-poke" label="New poke"/>
+    <checkbox id="facebook-notifs-you-event-inv" label="New event invite"/>
+    <checkbox id="facebook-notifs-you-group-inv" label="New group invite"/>
+    <checkbox id="facebook-notifs-you-share" label="New share"/>
+    <checkbox id="facebook-notifs-you-friend" label="New friend"/>
+    <checkbox id="facebook-notifs-you-wall" label="Someone wrote on your wall"/>
   </groupbox>
-  <groupbox id="facebook-notifications-friendbox">
+  <groupbox id="facebook-notifs-friendbox">
     <caption label="Notifications about your friends"/>
-    <checkbox id="facebook-notifications-friend-wall" label="Someone wrote on a friend's wall"/>
-    <checkbox id="facebook-notifications-friend-status" label="A friend updated his/her status"/>
-    <checkbox id="facebook-notifications-friend-note" label="A friend wrote a note"/>
+    <checkbox id="facebook-notifs-friend-wall" label="Someone wrote on a friend's wall"/>
+    <checkbox id="facebook-notifs-friend-status" label="A friend updated his/her status"/>
+    <checkbox id="facebook-notifs-friend-note" label="A friend wrote a note"/>
   </groupbox>
 
   <groupbox id="facebook-customize-toolbar">
@@ -39,8 +42,8 @@
      <description style="width:240px">
      If you use the application Growl, you can have your notifications show up in your Growl display. (<label onclick="openUILink('http://growl.info', event)" value="What is Growl?" class="small-margin text-link" style="color: blue; font-size: 9px; text-decoration: underline;"/>)
      </description>
-    <checkbox id="facebook-notifications-growl" label="Show Facebook notifications with Growl" checked="false"/>
+    <checkbox id="facebook-notifs-growl" label="Show Facebook notifications with Growl" checked="false"/>
     <label value="Location of growlnotify:"/>
-    <textbox id="facebook-notifications-growlpath" value="/usr/local/bin/growlnotify"/>
+    <textbox id="facebook-notifs-growlpath" value="/usr/local/bin/growlnotify"/>
   </groupbox>
 </dialog>

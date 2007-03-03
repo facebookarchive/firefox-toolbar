@@ -38,146 +38,156 @@ var Ci = Components.interfaces;
 var fbSvc = Cc['@facebook.com/facebook-service;1'].getService(Ci.fbIFacebookService);
 var obsSvc = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
 
+debug( "toolbar.js" );
+
+var topicToXulId =  { 'facebook-msgs-updated':      'facebook-notif-msgs'
+                    , 'facebook-pokes-updated':     'facebook-notif-poke'
+                    , 'facebook-shares-updated':    'facebook-notif-shrs'
+                    , 'facebook-reqs-updated':      'facebook-notif-reqs'
+                    , 'facebook-event-invs-updated':'facebook-notif-event-invs'
+                    , 'facebook-group-invs-updated':'facebook-notif-group-invs'
+                    };
+
 function checkSeparator(data) {
-   if (!(getAttributeById('facebook-notification-msgs', 'label') > 0 ||
-         getAttributeById('facebook-notification-poke', 'label') > 0 || 
-         getAttributeById('facebook-notification-reqs', 'label') > 0)) {
-       setAttributeById('facebook-notification-separator', 'hidden', 'true');
-   } else {
-       setAttributeById('facebook-notification-separator', 'hidden', 'false');
-   }
+    var showSep = false;
+    for each( var topic in topicToXulId ) {
+        if( getAttributeById( topic, 'label') != 0 )
+            showSep = true; break;
+    }
+    debug( 'showSep', showSep );
+    setAttributeById( 'facebook-notif-separator', 'hidden'
+                    , showSep ? 'false': 'true' );
 }
 
-
 var fbToolbarObserver = {
-  observe: function(subject, topic, data) {
-    debug('facebook toolbar observing something: ' + topic);
-    switch (topic) {
-      case 'facebook-msgs-updated':
-        setAttributeById('facebook-notification-msgs', 'label', data);
-        checkSeparator(data);
-        break;
-      case 'facebook-pokes-updated':
-        setAttributeById('facebook-notification-poke', 'label', data);
-        checkSeparator(data);
-        break;
-      case 'facebook-reqs-updated':
-        setAttributeById('facebook-notification-reqs', 'label', data);
-        checkSeparator(data);
-        break;
-      case 'facebook-session-start':
-        subject = subject.QueryInterface(Ci.fbIFacebookUser);
-        setAttributeById('facebook-name-info', 'label', subject.name);
-        setAttributeById('facebook-name-info', 'userid', subject.id);
-        setAttributeById('facebook-menu-my-profile', 'userid', subject.id);
-        setAttributeById('facebook-login-status', 'label', 'Logout');
-        var sb = GetFBSearchBox();
-        if (sb.value != 'Search Facebook' && sb.value != '') {
-          sb.value = ''; 
-          this.searchBoxBlur(sb);
+    observe: function(subject, topic, data) {
+        debug('facebook toolbar observing something: ' + topic);
+        eltId = topicToXulId[topic];
+        if( eltId ) {
+            setAttributeById(eltId, 'label', data);
+            checkSeparator(data);
         }
-        SetHint(true, 'Loading friends list...', '');
-        break;
-      case 'facebook-session-end':
-        setAttributeById('facebook-login-status', 'label', 'Login to Facebook');
-        setAttributeById('facebook-name-info', 'label', '');
-        setAttributeById('facebook-notification-msgs', 'label', '?');
-        setAttributeById('facebook-notification-poke', 'label', '?');
-        setAttributeById('facebook-notification-reqs', 'label', '?');
-        facebook.clearFriends(true);
-        break;
-      case 'facebook-friends-updated':
-        facebook.loadFriends();
-        break;
-      case 'facebook-new-friend':
-      case 'facebook-friend-updated':
-        subject = subject.QueryInterface(Ci.fbIFacebookUser);
-        facebook.updateFriend(subject);
-        break;
-      case 'facebook-new-day':
-        facebook.clearFriends(false);
-        facebook.loadFriends();
-        break;
+        else     
+            switch (topic) {
+            case 'facebook-session-start':
+                subject = subject.QueryInterface(Ci.fbIFacebookUser);
+                setAttributeById('facebook-name-info', 'label', subject.name);
+                setAttributeById('facebook-name-info', 'userid', subject.id);
+                setAttributeById('facebook-menu-my-profile', 'userid', subject.id);
+                setAttributeById('facebook-login-status', 'label', 'Logout');
+                var sb = GetFBSearchBox();
+                if (sb.value != 'Search Facebook' && sb.value != '') {
+                    sb.value = ''; 
+                    this.searchBoxBlur(sb);
+                }
+                SetHint(true, 'Loading friends list...', '');
+                break;
+            case 'facebook-session-end':
+                setAttributeById('facebook-login-status', 'label', 'Login to Facebook');
+                setAttributeById('facebook-name-info', 'label', '');
+                for each( var top in topicToXulId )
+                    setAttributeById( top, 'label', '?');
+                facebook.clearFriends(true);
+                break;
+            case 'facebook-friends-updated':
+                facebook.loadFriends();
+                break;
+            case 'facebook-new-friend':
+            case 'facebook-friend-updated':
+                subject = subject.QueryInterface(Ci.fbIFacebookUser);
+                facebook.updateFriend(subject);
+                break;
+            case 'facebook-new-day':
+                facebook.clearFriends(false);
+                facebook.loadFriends();
+                break;
+            }
     }
-  }
 };
 
 var progListener = {
-  onLocationChange: function(webProgress, request, location) {
-    if (fbSvc.loggedIn) {
-      if (IsFacebookLocation(location)) {
-        fbSvc.hintPageLoad(true);
-      } else {
-        fbSvc.hintPageLoad(false);
-      }
-    }
-  },
-  onProgressChange: function(webProgress, request, curSelfProg, maxSelfProg, curTotalProg, maxTotalProg) {
-  },
-  onSecurityChange: function(webProgress, request, state) {
-  },
-  onStateChange: function(webProgress, request, stateFlags, status) {
-  },
-  onStatusChange: function(webProgress, request, status, message) {
-  },
+    onLocationChange: function(webProgress, request, location) {
+        if (fbSvc.loggedIn) {
+            fbSvc.hintPageLoad(IsFacebookLocation(location));
+        }
+    },
+    onProgressChange: function(webProgress, request, curSelfProg, maxSelfProg, curTotalProg, maxTotalProg) {  },
+    onSecurityChange: function(webProgress, request, state) {  },
+    onStateChange: function(webProgress, request, stateFlags, status) {  },
+    onStatusChange: function(webProgress, request, status, message) {  }
 };
 
+var topics_of_interest =    [ 'facebook-session-start'
+                            , 'facebook-friends-updated'
+                            , 'facebook-friend-updated'
+                            , 'facebook-new-friend'
+                            , 'facebook-session-end'
+                            , 'facebook-msgs-updated'
+                            , 'facebook-pokes-updated'
+                            , 'facebook-event-invs-updated'
+                            , 'facebook-group-invs-updated'
+                            , 'facebook-shares-updated'
+                            , 'facebook-reqs-updated'
+                            , 'facebook-new-day' 
+                            ];
+
 var facebook = {
-  load: function() {
-    var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
-    if (!prefSvc.prefHasUserValue('extensions.facebook.not_first_run')) {
-      // unfortunately if we create any tabs here, session store overrides
-      // them, so instead we'll create a tab in 250 ms, hopefully after
-      // session store does its business.
-      window.setTimeout("getBrowser().loadOneTab('chrome://facebook/content/welcome.html', null, null, null, false, false)", 250);
-      prefSvc.setBoolPref('extensions.facebook.not_first_run', true);
-    }
-    document.getElementById('facebook-search').addEventListener('keypress', HandleKeyPress, true);
-    obsSvc.addObserver(fbToolbarObserver, 'facebook-session-start', false);
-    obsSvc.addObserver(fbToolbarObserver, 'facebook-friends-updated', false);
-    obsSvc.addObserver(fbToolbarObserver, 'facebook-friend-updated', false);
-    obsSvc.addObserver(fbToolbarObserver, 'facebook-new-friend', false);
-    obsSvc.addObserver(fbToolbarObserver, 'facebook-session-end', false);
-    obsSvc.addObserver(fbToolbarObserver, 'facebook-msgs-updated', false);
-    obsSvc.addObserver(fbToolbarObserver, 'facebook-pokes-updated', false);
-    obsSvc.addObserver(fbToolbarObserver, 'facebook-reqs-updated', false);
-    obsSvc.addObserver(fbToolbarObserver, 'facebook-new-day', false);
-    var loggedInUser = fbSvc.loggedInUser;
-    if (loggedInUser) {
-      loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
-      setAttributeById('facebook-name-info', 'label', loggedInUser.name);
-      setAttributeById('facebook-name-info', 'userid', loggedInUser.id);
-      setAttributeById('facebook-login-status', 'label', 'Logout');
-      setAttributeById('facebook-menu-my-profile', 'userid', loggedInUser.id);
-      setAttributeById('facebook-notification-msgs', 'label', fbSvc.numMsgs);
-      setAttributeById('facebook-notification-poke', 'label', fbSvc.numPokes);
-      setAttributeById('facebook-notification-reqs', 'label', fbSvc.numReqs);
-    }
-    facebook.loadFriends();
-    getBrowser().addProgressListener(progListener);
-    debug('facebook toolbar loaded.');
-  },
-
-  unload: function() {
-    obsSvc.removeObserver(fbToolbarObserver, 'facebook-session-start');
-    obsSvc.removeObserver(fbToolbarObserver, 'facebook-friends-updated');
-    obsSvc.removeObserver(fbToolbarObserver, 'facebook-friend-updated');
-    obsSvc.removeObserver(fbToolbarObserver, 'facebook-new-friend');
-    obsSvc.removeObserver(fbToolbarObserver, 'facebook-session-end');
-    obsSvc.removeObserver(fbToolbarObserver, 'facebook-msgs-updated');
-    obsSvc.removeObserver(fbToolbarObserver, 'facebook-pokes-updated');
-    obsSvc.removeObserver(fbToolbarObserver, 'facebook-reqs-updated');
-    obsSvc.removeObserver(fbToolbarObserver, 'facebook-new-day');
-    debug('facebook toolbar unloaded.');
-  },
-
-  sortFriends: function(f1, f2) {
-    var n1 = f1.name.toLowerCase();
-    var n2 = f2.name.toLowerCase();
-    if (n1 < n2) return -1;
-    else if (n1 > n2) return 1;
-    else return 0;
-  },
+    load: function() {
+        debug( "loading toolbar..." );
+        var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+        if (!prefSvc.prefHasUserValue('extensions.facebook.not_first_run')) {
+          // unfortunately if we create any tabs here, session store overrides
+          // them, so instead we'll create a tab in 250 ms, hopefully after
+          // session store does its business.
+          window.setTimeout("getBrowser().loadOneTab('chrome://facebook/content/welcome.html', null, null, null, false, false)", 250);
+          prefSvc.setBoolPref('extensions.facebook.not_first_run', true);
+          prefSvc.lockPref('extensions.facebook.not_first_run');
+        }
+        document.getElementById('facebook-search').addEventListener('keypress', HandleKeyPress, true);
+        for each ( var topic in topics_of_interest ) {
+            debug( "observer added", topic );
+            obsSvc.addObserver(fbToolbarObserver, topic, false);
+        }
+        
+        var loggedInUser = fbSvc.loggedInUser;
+        if (loggedInUser) {
+            loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
+            setAttributeById('facebook-name-info', 'label', loggedInUser.name);
+            setAttributeById('facebook-name-info', 'userid', loggedInUser.id);
+            setAttributeById('facebook-login-status', 'label', 'Logout');
+            setAttributeById('facebook-menu-my-profile', 'userid', loggedInUser.id);
+            setAttributeById('facebook-notif-msgs', 'label', fbSvc.numMsgs);
+            setAttributeById('facebook-notif-poke', 'label', fbSvc.numPokes);
+            setAttributeById('facebook-notif-reqs', 'label', fbSvc.numReqs);
+            setAttributeById('facebook-notif-shrs', 'label', fbSvc.numShrs);
+            setAttributeById('facebook-notif-group-invs', 'label', fbSvc.numGroupInvs);
+            setAttributeById('facebook-notif-event-invs', 'label', fbSvc.numEventInvs);
+        }
+        else {
+          var session_key = prefSvc.getCharPref( 'extensions.facebook.session_key' );
+          var session_secret = prefSvc.getCharPref( 'extensions.facebook.session_secret' );
+          var uid = prefSvc.getCharPref( 'extensions.facebook.uid' );
+          fbSvc.sessionStart( session_key, session_secret, uid, true );
+          // fbSvc.savedSessionStart(); // once idl compiled
+        }
+        facebook.loadFriends();
+        getBrowser().addProgressListener(progListener);
+        debug('facebook toolbar loaded.');
+        },
+    unload: function() {
+        for each (var topic in topics_of_interest)
+            obsSvc.removeObserver(fbToolbarObserver, topic);
+        if( fbSvc.loggedInUser )
+            
+        debug('facebook toolbar unloaded.');
+    },
+    sortFriends: function(f1, f2) {
+        var n1 = f1.name.toLowerCase();
+        var n2 = f2.name.toLowerCase();
+        if (n1 < n2) return -1;
+        else if (n1 > n2) return 1;
+        else return 0;
+    },
   loadFriends: function() {
     debug('loadFriends()');
     var list = document.getElementById('PopupFacebookFriendsList');
@@ -208,7 +218,7 @@ var facebook = {
     var list = document.getElementById('PopupFacebookFriendsList');
     this.createFriendNode(list, friend, elem);
   },
-  createFriendNode: function(list, friend, elem) {
+  createFriendNode: function(list, friend, elem) { // this creates nodes in the search popup only
     if (!friend.name) return;
     if (!elem) {
       var item = document.createElement('richlistitem');
@@ -225,6 +235,7 @@ var facebook = {
     item.setAttribute('onmouseover', "SelectItemInList(this, this.parentNode)");
     item.setAttribute('onmousedown', "this.doCommand();");
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event)");
+    item.setAttribute('onclick', "checkForMiddleClick(this, event)" );
     item.setAttribute('userid', friend.id);
     item.setAttribute('pic', friend.pic);
     if (!elem) {

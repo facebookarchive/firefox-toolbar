@@ -6,7 +6,7 @@
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/notifier.js"/>
-  <vbox>
+  <vbox style="max-width: 300px">
     <label id="title" class="notifier-title" value="Facebook Notify"/>
     <hbox>
       <vbox>

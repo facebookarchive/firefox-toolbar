@@ -44,9 +44,11 @@ Cc['@mozilla.org/moz/jssubscript-loader;1']
 
 function FacebookLoginClient() {
     this.fbSvc = Cc['@facebook.com/facebook-service;1'].getService().QueryInterface(Ci.fbIFacebookService);
+    default xml namespace = new Namespace("http://api.facebook.com/1.0/");
 }
 
 FacebookLoginClient.prototype = {
+    findNamespace: /xmlns=(?:"[^"]*"|'[^']*')/,
     generateSig: function (params) {
         var str = '';
         params.sort();
@@ -59,9 +61,10 @@ FacebookLoginClient.prototype = {
     callMethod: function (method, params, callback) {
         params.push('method=' + method);
         params.push('api_key=' + this.fbSvc.apiKey);
+        params.push('v=1.0');
         params.push('sig=' + this.generateSig(params));
-
         var req = new XMLHttpRequest();
+        var namespace = this.findNamespace;
         req.onreadystatechange = function (event) {
             if (req.readyState == 4) {
                 var status;
@@ -72,8 +75,10 @@ FacebookLoginClient.prototype = {
                 }
 
                 if (status == 200) {
+                    dump( 'login:' + req.responseText.indexOf("\n") + "\n" );
+                    // default xml namespace='http://api.facebook.com/1.0/';
                     req.text = req.responseText.substr(req.responseText.indexOf("\n"));
-                    req.xmldata = new XML(req.text);
+                    req.xmldata = new XML(req.text.replace(namespace,""));
                     callback(req);
                 }
             }
@@ -82,10 +87,11 @@ FacebookLoginClient.prototype = {
             req.open('POST', 'https://api.facebook.com/restserver.php', true);
             req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             req.send(params.join('&'));
+            dump( params.join('&') + "\n" );
         } catch (e) {
             dump('Exception sending REST request: ' + e + '\n');
         }
-    },
+    }
 };
 
 dump('loaded facebook.js\n');

@@ -1,3 +1,17 @@
+#facebook-toolbar-toggle
+{
+/*  -moz-image-region: rect(0 24px 24px 0);
+    list-style-image: url("chrome://facebook/content/fbfavicon.png"); */
+    list-style-image: url("chrome://facebook/content/fbfavicon.png");
+}
+toolbar[iconsize="small"] #facebook-toolbar-toggle
+{
+    -moz-image-region: rect(0 16px 16px 0);
+/*  list-style-image: url("chrome://facebook/content/fbfavicon.png"); */
+    list-style-image: url("chrome://facebook/content/fbfavicon.png");
+}
+
+/* Toolbar buttons */
 #facebook-toolbar[mode="icons"] .toolbarbutton-text {
   /* don't let the customize toolbar settings blow away our labels */
   display: -moz-box;
@@ -11,7 +25,7 @@
   color: #2f4778;
 }
 
-.facebook-notifications, .facebook-share, #facebook-searchbox, .facebook-sidebar-icon image {
+.facebook-notifs, .facebook-share, #facebook-searchbox, .facebook-sidebar-icon image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding: 0px;
 }
@@ -59,21 +73,22 @@
   margin-right: 0px;
 }
 
-.facebook-notifications {
+.facebook-notifs {
   padding: 0px 5px;
   margin: 0px;
 }
 
-.facebook-notifications > .toolbarbutton-icon {
+.facebook-notifs > .toolbarbutton-icon {
   padding: 0px 5px 0px 0px;
   margin: 0px;
 }
 
-.facebook-notifications > .toolbarbutton-text {
+.facebook-notifs > .toolbarbutton-text {
   padding: 0px;
   margin: 0px;
 }
 
+/* -- Pokes -- */
 .facebook-icon-poke:hover {
   -moz-image-region: rect(0px 188px 14px 172px);
 }
@@ -86,6 +101,7 @@
   -moz-image-region: rect(0px 16px 14px 0px);
 }
 
+/* -- Friend Reqs -- */
 .facebook-icon-reqs:hover {
   -moz-image-region: rect(0px 204px 14px 188px);
 }
@@ -94,11 +110,12 @@
   -moz-image-region: rect(0px 252px 14px 236px);
 }
 
-.facebook-icon-reqs, .facebook-icon-reqs[label="0"], .facebook-icon-reqs[label="?"] {
+.facebook-icon-reqs {
   margin: 0px;
   -moz-image-region: rect(0px 32px 14px 16px);
 }
 
+/* -- Messages -- */
 .facebook-icon-msgs:hover {
   -moz-image-region: rect(0px 220px 14px 204px);
 }
@@ -107,21 +124,50 @@
   -moz-image-region: rect(0px 268px 14px 252px);
 }
 
-.facebook-icon-msgs, .facebook-icon-msgs[label="0"], .facebook-icon-msgs[label="?"] {
+.facebook-icon-msgs {
   margin: 0px;
   -moz-image-region: rect(0px 48px 14px 32px);
 }
 
+/* -- Events -- */
+.facebook-icon-evts:hover {
+  -moz-image-region: rect(0px 332px 16px 317px);
+}
+
+.facebook-icon-evts:active {
+  -moz-image-region: rect(0px 347px 16px 332px);
+}
+
+.facebook-icon-evts {
+  margin: 0px;
+  -moz-image-region: rect(0px 332px 16px 317px);
+}
+
+/* -- Groups -- */
+.facebook-icon-grps:hover {
+  -moz-image-region: rect(0px 363px 16px 347px);
+}
+
+.facebook-icon-grps:active {
+  -moz-image-region: rect(0px 379px 16px 363px);
+}
+
+.facebook-icon-grps {
+  margin: 0px;
+  -moz-image-region: rect(0px 363px 16px 347px);
+}
+
+/* Grrrrr ... these would override
 .facebook-icon-poke[label="0"],
 .facebook-icon-reqs[label="0"],
 .facebook-icon-msgs[label="0"] {
   display: none;
-}
+} */
 
 toolbarpaletteitem[place="toolbar"] .facebook-icon-poke[label="0"],
 toolbarpaletteitem[place="toolbar"] .facebook-icon-reqs[label="0"],
 toolbarpaletteitem[place="toolbar"] .facebook-icon-msgs[label="0"],
-toolbarpaletteitem[place="toolbar"] #facebook-notification-separator {
+toolbarpaletteitem[place="toolbar"] #facebook-notif-separator {
   display: -moz-box;
 }
 
@@ -214,7 +260,13 @@ toolbarpaletteitem[place="toolbar"] #facebook-notification-separator {
 
 .stime {
    color: #999999;
-   font-size: 9px;
+   font-size: 10px;
+   padding-bottom: 3px;
+   margin-bottom: 3px;
+}
+
+.ptime {
+   font-size: 10px;
    padding-bottom: 3px;
    margin-bottom: 3px;
 }
@@ -240,11 +292,15 @@ toolbarpaletteitem[place="toolbar"] #facebook-notification-separator {
   padding: 5px;
 } 
 
+/* Add separators between each friend box */
+richlistitem { border-bottom: 1px solid #b1bdd6; }
+richlistitem:last-child { border-bottom: none; }
 
 richlistitem[selected=true] .facebook-link,
 richlistitem[selected=true] .stime, 
 richlistitem[selected=true] .status, 
 #FacebookHint[selected=true] {
-   background-color: Highlight;
-   color: HighlightText;
+    background-color: Highlight;
+    color: HighlightText;
+    -moz-border-radius-bottomright: 10px;
 }
