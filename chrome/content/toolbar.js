@@ -1,6 +1,6 @@
 /**
  * Facebook Firefox Toolbar Software License 
- * Copyright (c) 2006 Facebook, Inc. 
+ * Copyright (c) 2007 Facebook, Inc. 
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -40,22 +40,24 @@ var obsSvc = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverServ
 
 debug( "toolbar.js" );
 
-var topicToXulId =  { 'facebook-msgs-updated':      'facebook-notif-msgs'
-                    , 'facebook-pokes-updated':     'facebook-notif-poke'
-                    , 'facebook-shares-updated':    'facebook-notif-shrs'
-                    , 'facebook-reqs-updated':      'facebook-notif-reqs'
-                    , 'facebook-event-invs-updated':'facebook-notif-event-invs'
-                    , 'facebook-group-invs-updated':'facebook-notif-group-invs'
+var topicToXulId =  { 'facebook-msgs-updated':      'facebook-notification-msgs'
+                    , 'facebook-pokes-updated':     'facebook-notification-poke'
+                    , 'facebook-shares-updated':    'facebook-notification-shrs'
+                    , 'facebook-reqs-updated':      'facebook-notification-reqs'
+                    , 'facebook-event-invs-updated':'facebook-notification-event-invs'
+                    , 'facebook-group-invs-updated':'facebook-notification-group-invs'
                     };
 
 function checkSeparator(data) {
     var showSep = false;
-    for each( var topic in topicToXulId ) {
-        if( getAttributeById( topic, 'label') != 0 )
-            showSep = true; break;
+    for each( var elt_id in topicToXulId ) {
+        if( getAttributeById( elt_id, 'label') != "0" ) {
+            showSep = true; 
+            break;
+        }
     }
     debug( 'showSep', showSep );
-    setAttributeById( 'facebook-notif-separator', 'hidden'
+    setAttributeById( 'facebook-notification-separator', 'hidden'
                     , showSep ? 'false': 'true' );
 }
 
@@ -156,12 +158,12 @@ var facebook = {
             setAttributeById('facebook-name-info', 'userid', loggedInUser.id);
             setAttributeById('facebook-login-status', 'label', 'Logout');
             setAttributeById('facebook-menu-my-profile', 'userid', loggedInUser.id);
-            setAttributeById('facebook-notif-msgs', 'label', fbSvc.numMsgs);
-            setAttributeById('facebook-notif-poke', 'label', fbSvc.numPokes);
-            setAttributeById('facebook-notif-reqs', 'label', fbSvc.numReqs);
-            setAttributeById('facebook-notif-shrs', 'label', fbSvc.numShrs);
-            setAttributeById('facebook-notif-group-invs', 'label', fbSvc.numGroupInvs);
-            setAttributeById('facebook-notif-event-invs', 'label', fbSvc.numEventInvs);
+            setAttributeById('facebook-notification-msgs', 'label', fbSvc.numMsgs);
+            setAttributeById('facebook-notification-poke', 'label', fbSvc.numPokes);
+            setAttributeById('facebook-notification-reqs', 'label', fbSvc.numReqs);
+            setAttributeById('facebook-notification-shrs', 'label', fbSvc.numShrs);
+            setAttributeById('facebook-notification-group-invs', 'label', fbSvc.numGroupInvs);
+            setAttributeById('facebook-notification-event-invs', 'label', fbSvc.numEventInvs);
         }
         else {
           var session_key = prefSvc.getCharPref( 'extensions.facebook.session_key' );

@@ -1,6 +1,6 @@
 /**
  * Facebook Firefox Toolbar Software License 
- * Copyright (c) 2006 Facebook, Inc. 
+ * Copyright (c) 2007 Facebook, Inc. 
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -44,7 +44,6 @@ Cc['@mozilla.org/moz/jssubscript-loader;1']
 
 function FacebookLoginClient() {
     this.fbSvc = Cc['@facebook.com/facebook-service;1'].getService().QueryInterface(Ci.fbIFacebookService);
-    default xml namespace = new Namespace("http://api.facebook.com/1.0/");
 }
 
 FacebookLoginClient.prototype = {
@@ -64,7 +63,7 @@ FacebookLoginClient.prototype = {
         params.push('v=1.0');
         params.push('sig=' + this.generateSig(params));
         var req = new XMLHttpRequest();
-        var namespace = this.findNamespace;
+        var ns_re = this.findNamespace;
         req.onreadystatechange = function (event) {
             if (req.readyState == 4) {
                 var status;
@@ -76,15 +75,18 @@ FacebookLoginClient.prototype = {
 
                 if (status == 200) {
                     dump( 'login:' + req.responseText.indexOf("\n") + "\n" );
-                    // default xml namespace='http://api.facebook.com/1.0/';
                     req.text = req.responseText.substr(req.responseText.indexOf("\n"));
-                    req.xmldata = new XML(req.text.replace(namespace,""));
+                    var ns = req.text.match(ns_re);
+                    if( ns )
+                      default xml namespace = ns;
+                    req.xmldata = new XML(req.text);
                     callback(req);
                 }
             }
         };
         try {
-            req.open('POST', 'https://api.facebook.com/restserver.php', true);
+            var restserver = 'https://api.facebook.com/restserver.php';
+            req.open('POST', restserver, true);
             req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             req.send(params.join('&'));
             dump( params.join('&') + "\n" );

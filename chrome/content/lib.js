@@ -1,6 +1,6 @@
 /**
  * Facebook Firefox Toolbar Software License 
- * Copyright (c) 2006 Facebook, Inc. 
+ * Copyright (c) 2007 Facebook, Inc. 
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -88,12 +88,11 @@ function IsSidebarOpen() {
 }
 
 function GetFriendsListElement() {
-  if (IsSidebarOpen()) {
-    var list = top.document.getElementById('sidebar').contentDocument.getElementById('SidebarFriendsList');
-  }
-  if (!list) {
-    var list = top.document.getElementById('PopupFacebookFriendsList');
-  }
+  var list = IsSidebarOpen() 
+      ? top.document.getElementById('sidebar').contentDocument.getElementById('SidebarFriendsList') 
+      : null;
+  if( !list )
+    list = top.document.getElementById('PopupFacebookFriendsList');
   return list;
 }
 
@@ -176,35 +175,33 @@ function SearchFriends(search) {
     SetHint(true, 'Press enter to search for "' + search + '" on Facebook',
             "openUILink('http://www.facebook.com/s.php?src=fftb&q=' + encodeURIComponent(GetFBSearchBox().value), event);");
   } else if (!sidebar && (numMatched > 4 || !search)) {
-    var str = 'See all ' + numMatched + ' friends'
-      if (search) {
-        str += ' matching "' + search + '"';
-      }
+    var str = 'See all ' + numMatched + ' friends';
+    if (search)
+      str += ' matching "' + search + '"';
     str += '...';
     SetHint(true, str, "toggleSidebar('viewFacebookSidebar');");
   } else {
     SetHint(false, '', '');
   }
   if (!sidebar) {
-      var msger = document.getElementById('PopupMessager');
-      var poker = document.getElementById('PopupPoker');
-      var poster = document.getElementById('PopupPoster');
-      if (numMatched == 1) {
-          msger.setAttribute('userid', lastDisplayed.getAttribute('userid'));
-          msger.setAttribute('value', 'Send ' + lastDisplayed.getAttribute('firstname') + ' a message');
-          msger.style.display = '';
+      var msger = document.getElementById('PopupMessager'),
+          poker = document.getElementById('PopupPoker'),
+          poster = document.getElementById('PopupPoster');
+      if (1 == numMatched) {
+          var uid = lastDisplayed.getAttribute('userid'),
+              firstname = lastDisplayed.getAttribute('firstname');
+          msger.setAttribute('userid', uid );
+          msger.setAttribute('value', 'Send ' + firstname + ' a message');
 
-          poker.setAttribute('userid', lastDisplayed.getAttribute('userid'));
-          poker.setAttribute('value', 'Poke ' + lastDisplayed.getAttribute('firstname'));
-          poker.style.display = '';
+          poker.setAttribute('userid', uid );
+          poker.setAttribute('value', 'Poke ' + firstname );
 
-          poster.setAttribute('userid', lastDisplayed.getAttribute('userid'));
-          poster.setAttribute('value', 'Write on ' + lastDisplayed.getAttribute('firstname') + "'s wall");
-          poster.style.display = '';
+          poster.setAttribute('userid', uid);
+          poster.setAttribute('value', 'Write on ' + firstname + "'s wall");
+
+          msger.style.display = poker.style.display = poster.style.display = '';
       } else {
-          msger.style.display = 'none';
-          poker.style.display = 'none';
-          poster.style.display = 'none';
+          msger.style.display = poker.style.display = poster.style.display = 'none';
       }
   }
   var item = list.selectedItem;
@@ -282,7 +279,7 @@ function FacebookLogin() {
     // popup login page height is normally 436, but add 20 pixels for the
     // button we show at the bottom of the page
     window.open('chrome://facebook/content/login.xul', '',
-                'chrome,centerscreen,width=626,height=456,modal=yes,dialog=yes,close=yes');
+                'chrome,centerscreen,width=626,height=476,modal=yes,dialog=yes,close=yes');
   }
 }
 
@@ -293,6 +290,11 @@ function RenderStatusMsg(msg) {
     }
     return msg;
 }
+
+function SetProfileTime(item, time){
+  item.setAttribute('ptime',getProfileTime(time));
+}
+
 function SetStatus(item, status, time) {
     if (status) {
         var firstName = item.getAttribute('firstname');
@@ -328,7 +330,7 @@ var dates_in_seconds = new DatesInSeconds();
  * @param time - time in seconds from epoch
  */
 function getRelativeTime(time) {
-  var elapsed   = (new Date().getTime()/1000 - time);
+  var elapsed   = Math.floor(new Date().getTime()/1000) - time;
   if (elapsed <= 1)
     return 'a moment ago';
   if (elapsed < dates_in_seconds.minute)
@@ -342,7 +344,8 @@ function getRelativeTime(time) {
   if (elapsed < dates_in_seconds.day )
     return Math.round(elapsed/dates_in_seconds.hour) + ' hours ago';
   if (elapsed < dates_in_seconds.week) {
-    var days    = new Array( "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" );
+    var days    = new Array( "Sunday", "Monday", "Tuesday", "Wednesday", 
+                             "Thursday", "Friday", "Saturday" );
     var d       = new Date;
     d.setTime(time*1000);
     return 'on ' + days[d.getDay()];
@@ -358,41 +361,61 @@ function getRelativeTime(time) {
   return 'over a year ago';
 }
 
+function getRelTime(time) {
+  var elapsed   = Math.floor(new Date().getTime()/1000) - time;
+  if( elapsed < dates_in_seconds.week )
+    return getRelTimeWithinWeek(time, false);
+  if (elapsed < dates_in_seconds.week*1.5)
+    return 'about a week ago';
+  if (elapsed < dates_in_seconds.week*3.5)
+    return 'about ' + Math.round(elapsed/dates_in_seconds.week) + ' weeks ago';
+  if (elapsed < dates_in_seconds.month*1.5)
+    return 'about a month ago';
+  if (elapsed < dates_in_seconds.year)
+    return 'about ' + Math.round(elapsed/dates_in_seconds.month) + ' months ago';
+  return 'over a year ago';
+}
+
 function getProfileTime(profile_time) {
-  return "Updated profile " + getRelativeTime(profile_time);
+  return "Updated profile " + getRelTime(profile_time);
   }
 
+function getRelTimeWithinWeek(time, initialCap ) {
+  var currentTime = new Date;
+
+  var updateTime = new Date;
+  updateTime.setTime(time*1000);
+
+  var days = new Array("Sunday", "Monday", "Tuesday", "Wednesday", 
+                       "Thursday", "Friday", "Saturday");
+  var day;
+
+  // assumption that status messages are only shown if in the last 7 days
+  if (updateTime.getDate() == currentTime.getDate()) {
+    day = initialCap ? "Today" : "today";
+  } else if ((updateTime.getDay() + 1) % 7 == currentTime.getDay()) {
+    day = initialCap ? "Yesterday" : "yesterday"; 
+  } else {
+    day = ( initialCap ? 'Last ' : 'last ' ) + days[updateTime.getDay()];
+  }
+
+  var hour = updateTime.getHours();
+  if (hour > 11) timeOfDay = 'pm';
+  else timeOfDay = 'am';
+  if (hour >= 13) hour -= 12;
+  if (hour == 0) hour = 12;
+
+  var minute = updateTime.getMinutes();
+  if (minute < 10) {
+    minute = '0' + minute;
+  }
+
+  var tstr = day + ' at ' + hour + ':' + minute + ' ' + timeOfDay;
+  return tstr;
+}
+
 function getStatusTime(status_time) {
-   var currentTime = new Date();
-
-   var updateTime = new Date;
-   updateTime.setTime(status_time*1000);
-
-   var days = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-   var day;
-
-   // assumption that status messages are only shown if in the last 7 days
-   if (updateTime.getDate() == currentTime.getDate()) {
-     day = "Today";
-   } else if ((updateTime.getDay() + 1) % 7 == currentTime.getDay()) {
-     day = "Yesterday"; 
-   } else {
-     day = 'Last ' + days[updateTime.getDay()];
-   }
-
-   var hour = updateTime.getHours();
-   if (hour > 11) timeOfDay = 'pm';
-   else timeOfDay = 'am';
-   if (hour >= 13) hour -= 12;
-   if (hour == 0) hour = 12;
-
-   var minute = updateTime.getMinutes();
-   if (minute < 10) {
-     minute = '0' + minute;
-   }
-
-   stime = day + ' at ' + hour + ':' + minute + ' ' + timeOfDay;
-   return stime;
+  return getRelTimeWithinWeek(status_time, true);
 }
 
 /**

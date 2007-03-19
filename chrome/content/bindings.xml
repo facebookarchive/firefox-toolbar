@@ -10,15 +10,16 @@
       <children />
     </content>
   </binding>
-  <binding id="friendBox" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
+  <binding id="friendBox" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem" flex="1">
     <content>
       <xul:vbox style="min-height: 50px;">
-        <xul:image xbl:inherits="src=pic,onclick=oncommand" class="facebook-link friend-image" />
+        <xul:image xbl:inherits="src=pic,onclick=oncommand" class="facebook-link friend-image" 
+	                 style="border: 1px solid black;" />
       </xul:vbox>
-      <xul:vbox>
+      <xul:vbox flex="1" style="padding: 3px;">
         <xul:label xbl:inherits="value=friendname,onclick=oncommand" class="facebook-link user_name" />
         <xul:label xbl:inherits="value=ptime,onclick=viewUpdCmd" class="facebook-link ptime" />
-        <xul:description class="status" >
+        <xul:description class="status">
           <children />
         </xul:description>
         <xul:label xbl:inherits="value=stime" class="stime" />
@@ -32,6 +33,7 @@
           <xul:label value="wall post" xbl:inherits="onclick=postCmd"
                      class="facebook-link mini-link" />
         </xul:hbox>
+        <xul:spacer flex="1" />
       </xul:vbox>
     </content>
   </binding>

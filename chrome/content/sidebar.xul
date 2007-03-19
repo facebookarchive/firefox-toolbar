@@ -24,7 +24,7 @@
   <hbox>
     <toolbarbutton label="Settings" oncommand="OpenSettings();" />
     <spacer flex="1" />
-    <toolbarbutton id="fbSidebarSorter" type="menu" selectedsort="status" persist="selectedsort" >
+    <toolbarbutton id="fbSidebarSorter" type="menu" selectedsort="last update" persist="selectedsort" >
       <menupopup>
         <menuitem id="fbSortUpdate" label="Last update time" type="radio" oncommand="SortBy('last update');"/>
         <menuitem id="fbSortStatus" label="Status update time" type="radio" oncommand="SortBy('status');"/>

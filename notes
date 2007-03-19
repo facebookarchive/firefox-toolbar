@@ -7,6 +7,9 @@ download xpidl: http://dietrich.ganx4.com/mozilla/gecko_sdk_osx.tar.gz
 install prereqs (from http://developer.mozilla.org/en/docs/Mac_OS_X_Build_Prerequisites):
   $ sudo apt-get install orbit orbit-dev glib
 
+unfortunately, you'll get errors from glib when building on an x86 mac complaining about the architecture.
+ 
+
 compile idl file:
   ../gecko-sdk/bin/xpidl -m typelib -w -v -I ../gecko-sdk/idl/ facebook.idl
   ../gecko-sdk/bin/xpidl -m typelib -w -v -I ../gecko-sdk/idl/ -I ~/firefox-full/mozilla/rdf/base/idl/ -I ~/firefox-full/mozilla/xpcom/ds/ facebook.idl

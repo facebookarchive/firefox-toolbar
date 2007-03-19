@@ -25,7 +25,7 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   color: #2f4778;
 }
 
-.facebook-notifs, .facebook-share, #facebook-searchbox, .facebook-sidebar-icon image {
+.facebook-notification, .facebook-share, #facebook-searchbox, .facebook-sidebar-icon image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding: 0px;
 }
@@ -73,17 +73,17 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   margin-right: 0px;
 }
 
-.facebook-notifs {
+.facebook-notification {
   padding: 0px 5px;
   margin: 0px;
 }
 
-.facebook-notifs > .toolbarbutton-icon {
+.facebook-notification > .toolbarbutton-icon {
   padding: 0px 5px 0px 0px;
   margin: 0px;
 }
 
-.facebook-notifs > .toolbarbutton-text {
+.facebook-notification > .toolbarbutton-text {
   padding: 0px;
   margin: 0px;
 }
@@ -157,23 +157,30 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   -moz-image-region: rect(0px 363px 16px 347px);
 }
 
-/* Grrrrr ... these would override
-.facebook-icon-poke[label="0"],
-.facebook-icon-reqs[label="0"],
-.facebook-icon-msgs[label="0"] {
+/* -- Shares -- */
+.facebook-icon-shrs:hover {
+  -moz-image-region: rect(0px 394px 16px 379px);
+}
+
+.facebook-icon-shrs:active {
+  -moz-image-region: rect(0px 409px 16px 394px);
+}
+
+.facebook-icon-shrs {
+  margin: 0px;
+  -moz-image-region: rect(0px 394px 16px 379px);
+}
+
+/* TEST
+.facebook-notification[label="0"]{
   display: none;
 } */
 
-toolbarpaletteitem[place="toolbar"] .facebook-icon-poke[label="0"],
-toolbarpaletteitem[place="toolbar"] .facebook-icon-reqs[label="0"],
-toolbarpaletteitem[place="toolbar"] .facebook-icon-msgs[label="0"],
-toolbarpaletteitem[place="toolbar"] #facebook-notif-separator {
+toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
   display: -moz-box;
 }
 
-.facebook-icon-poke[label="?"] label, 
-.facebook-icon-reqs[label="?"] label,
-.facebook-icon-msgs[label="?"] label {
+.facebook-notification[label="?"] label {
   color: #000!important;
 }
 
@@ -302,5 +309,4 @@ richlistitem[selected=true] .status,
 #FacebookHint[selected=true] {
     background-color: Highlight;
     color: HighlightText;
-    -moz-border-radius-bottomright: 10px;
 }

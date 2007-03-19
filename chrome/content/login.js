@@ -1,6 +1,6 @@
 /**
  * Facebook Firefox Toolbar Software License 
- * Copyright (c) 2006 Facebook, Inc. 
+ * Copyright (c) 2007 Facebook, Inc. 
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -43,7 +43,7 @@ Cc['@mozilla.org/moz/jssubscript-loader;1']
     .loadSubScript('chrome://facebook/content/facebook.js');
 
 var client = new FacebookLoginClient();
-
+var fbns   = new Namespace( "http://api.facebook.com/1.0/" );
 function startup() {
     if (client.fbSvc.loggedIn) {
         debug('already logged in!');
@@ -63,7 +63,8 @@ function startup() {
         }
     } else {
         var browser = document.getElementById('facebook-login-body');
-        browser.setAttribute('src', 'http://www.facebook.com/login.php?popup&v=1.0&api_key=' +
+        var login_base = 'http://www.facebook.com/login.php?popup&v=1.0&api_key=';
+        browser.setAttribute('src', login_base +
                              client.fbSvc.apiKey + '&auth_token=' + client.authToken);
         browser.style.display = '';
         document.getElementById('throbber-box').style.display = 'none';
@@ -83,9 +84,9 @@ function done() {
         debug('received session response:');
         debug(req.xmldata);
         var data = req.xmldata;
-        var sessionKey    = data.session_key;
-        var sessionSecret = data.secret;
-        var uid           = data.uid;
+        var sessionKey    = data.fbns::session_key;
+        var sessionSecret = data.fbns::secret;
+        var uid           = data.fbns::uid;
         if (sessionKey && sessionSecret && uid) {
             client.fbSvc.sessionStart(sessionKey, sessionSecret, uid);
             client.authToken  = null;

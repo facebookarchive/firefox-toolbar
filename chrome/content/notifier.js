@@ -1,6 +1,6 @@
 /**
  * Facebook Firefox Toolbar Software License 
- * Copyright (c) 2006 Facebook, Inc. 
+ * Copyright (c) 2007 Facebook, Inc. 
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -32,23 +32,46 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+var _src   = window.arguments[0],
+    _label = window.arguments[1],
+    _url   = window.arguments[2],
+    _count = window.arguments[3];
+var _winService = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator),
+    _prefService = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+
 function NotifierLoad() {
-    debug('NotifierLoad', window.arguments[1]);
-    document.getElementById('pic').setAttribute('src', window.arguments[0]);
-    document.getElementById('label').appendChild(document.createTextNode(window.arguments[1]));
+    debug( 'NotifierLoad', _label, _url );
+    document.getElementById('pic').setAttribute('src', _src );
+    document.getElementById('label').appendChild(document.createTextNode(_label));
     window.setTimeout('window.close();', 10000);
     window.addEventListener('mouseup', NotifierClick, false);
 }
 function NotifierClick() {
-    debug('click', window.arguments[1]);
+    debug('click', _label, _url );
     window.close();
-    if (window.arguments[2]) {
-        window.open(window.arguments[2]);
+
+    if (_url) {
+        var win = _winService.getMostRecentWindow( "navigator:browser" );
+        var browser = win ? win.getBrowser() : null;
+        if( browser 
+          && 2 != _prefService.getIntPref('browser.link.open_newwindow') ) 
+          // 1 => current Firefox window; 
+          // 2 => new window; 
+          // 3 => a new tab in the current window;
+        { // open in a focused tab
+          var tab = browser.addTab(_url);
+          browser.selectedTab = tab;
+          win.content.focus();
+        }
+        else {
+          window.open(_url);
+        }
     }
 }
 function NotifierUnload() {
-    debug('unload', window.arguments[1]);
-    window.arguments[3].value--;
+    debug('unload', _label);
+    if( _count ) 
+      _count.value--;
 }
 // For some reason window.onload doesn't seem to get triggered if we are
 // opening mulitple windows at a time.  Need to use DOMContentLoaded instead.

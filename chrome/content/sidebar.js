@@ -1,6 +1,6 @@
 /**
  * Facebook Firefox Toolbar Software License 
- * Copyright (c) 2006 Facebook, Inc. 
+ * Copyright (c) 2007 Facebook, Inc. 
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -42,6 +42,7 @@ var observer = {
     observe: function(subject, topic, data) {
         debug('OBSERVING SOMETHING: ' + topic);
         var panel = document.getElementById('facebook-panel');
+        topicSwitch:
         switch (topic) {
             case 'facebook-session-end':
                 ClearFriends(true);
@@ -50,21 +51,30 @@ var observer = {
                 UpdateFriends();
                 break;
             case 'facebook-friend-updated':
-                if (data != 'status') {
-                    if (data == 'status-delete') {
-                        subject = subject.QueryInterface(Ci.fbIFacebookUser);
-                        SetStatus(document.getElementById('sidebar-' + subject.id), null, 0);
-                    }
-                    // we don't care about wall or notes count updates anymore here
-                    break;
+                if( data == 'status-delete' ) {
+                  subject = subject.QueryInterface(Ci.fbIFacebookUser);
+                  SetStatus(document.getElementById('sidebar-' + subject.id), null, 0);
                 }
-                if (document.getElementById('fbSidebarSorter').getAttribute('selectedsort') == 'name') {
-                    // if sorting by name, just update the entry
-                    subject = subject.QueryInterface(Ci.fbIFacebookUser);
-                    SetStatus(document.getElementById('sidebar-' + subject.id), subject.status, subject.stime);
-                    break;
+                else if(  data == 'status'
+                       || data == 'profile' ) {
+                  subject = subject.QueryInterface(Ci.fbIFacebookUser);
+                  var elt = document.getElementById('sidebar-' + subject.id);
+                  var selSort = document.getElementById('fbSidebarSorter').getAttribute('selectedsort');
+                  if( data == 'status' ) {
+                    SetStatus( elt, subject.status, subject.stime);
+                    if( selSort == 'name' || selSort == 'profile' )
+                      break;
+                  }
+                  else {
+                    SetProfileTime(elt, subject.ptime);
+                    if( selSort == 'name' || selSort == 'status' )
+                      break;
+                  }
+                  friendsToUpdate.push(subject);
                 }
-                // else fall-through...
+                else
+                  debug( 'ignoring', topic, data );
+                break;
             case 'facebook-new-friend':
                 friendsToUpdate.push(subject.QueryInterface(Ci.fbIFacebookUser));
                 break;
@@ -76,15 +86,75 @@ var observer = {
     }
 };
 
-function SortBy(field) {
+function NameCmp(friend1,friend2) {
+  debug("DefaultSortFunc called");
+  var n1 = friend1.name.toLowerCase();
+  var n2 = friend2.name.toLowerCase();
+  if (n1 < n2) return -1;
+  else if (n1 > n2) return 1;
+  else return 0;
+};
+
+/* 
+ * Class FriendSort 
+ * Encapsulates a sort order for a list of facebook friends.
+ */
+function FriendSort( field, eltId, func){
+  debug("Constructor", typeof func);
+  this.field = field;
+  this.eltId = eltId;
+  if( 'function' == typeof func ) {
+    var fallback = this.defaultSortFunc;
+    this.sortFunc = function(friend1,friend2) {
+      var res = func(friend1,friend2);
+      return ( 0 != res ) ? res : fallback(friend1,friend2);
+    };
+  }
+  else
+    this.sortFunc = this.defaultSortFunc;
+}
+FriendSort.prototype.__defineGetter__( "label", function() {
+  return 'Sorting by ' + this.field;
+});
+FriendSort.prototype.callbackSortFunc = 
+FriendSort.prototype.defaultSortFunc = NameCmp;
+
+var _friend_sorts = {
+  'name':   new FriendSort( 'name', 'fbSortName', null ),
+  'status': new FriendSort( 'status', 'fbSortStatus', 
+    function(friend1, friend2) { // compare status update times 
+      return friend2.stime - friend1.stime; 
+    }),
+  'profile': new FriendSort( 'profile', 'fbSortProfile', 
+    function(friend1, friend2) { // compare profile update times
+      return friend2.ptime - friend1.ptime;
+    }),
+  'last update': new FriendSort( 'last update', 'fbSortUpdate', 
+    function(friend1, friend2) { // compare more recent of status,profile update time
+      return Math.max( friend2.ptime, friend2.stime ) 
+           - Math.max( friend1.ptime, friend1.stime );
+    }),
+};
+
+function GetFriendSort() {
+  var selSort = document.getElementById('fbSidebarSorter').getAttribute('selectedsort');
+  var friendSorter  = _friend_sorts[selSort];
+  debug( "FriendSort", selSort, friendSorter );
+  return friendSorter;
+}
+
+function SortBy(selSort) {
+    debug( "Sorting by...", selSort)
     var sorter = document.getElementById('fbSidebarSorter');
-    sorter.setAttribute('selectedsort', field);
-    sorter.setAttribute('label', 'Sorting by ' + field);
+    sorter.setAttribute('selectedsort', selSort);
+    sorter.setAttribute('label', _friend_sorts[selSort].label );
     ClearFriends(false);
+    debug( "Sort call to LoadFriends" );
     LoadFriends();
 }
 
 function ClearFriends(sessionEnded) {
+    debug( "ClearFriends" );
     var list = document.getElementById('SidebarFriendsList');
     while (list.firstChild && list.firstChild.id != 'FacebookHint') {
         list.removeChild(list.firstChild);
@@ -94,70 +164,25 @@ function ClearFriends(sessionEnded) {
     }
 }
 
-function SortFriendsAlpha(f1, f2) {
-    var n1 = f1.name.toLowerCase();
-    var n2 = f2.name.toLowerCase();
-    if (n1 < n2) return -1;
-    else if (n1 > n2) return 1;
-    else return 0;
-}
-
-function SortFriendsStatus(f1, f2) {
-    if (f1.stime != f2.stime)
-        return f2.stime - f1.stime;
-    else 
-        return SortFriendsAlpha(f1,f2);
-}
-
-function SortFriendsProfile(f1,f2) {
-//  debug( f1.name );
-    if( f1.ptime != f2.ptime )
-        return f2.ptime - f1.ptime;
-    else
-        return SortFriendsAlpha(f1,f2);
-}
-
-function SortFriendsUpdate(f1,f2) {
-    var f1_time = Math.max( f1.ptime, f1.stime );
-//  dump( f1.id + ' ' + f1.name + ':' + f1.ptime + ' ' + f1.stime + ' ' + f1_time );
-    var f2_time = Math.max( f2.ptime, f2.stime );
-    if( f1_time != f2_time )
-        return f2_time - f1_time;
-    else
-        return SortFriendsAlpha(f1,f2);
-}
-
 function LoadFriends() {
-    debug('LoadFriends');
     var list = document.getElementById('SidebarFriendsList');
     var count = {};
     var friends = fbSvc.getFriends(count);
-    debug('got friends', count.value);
+    debug('Loading friends', count.value);
     if (!fbSvc.loggedIn) {
         SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
     } else if (!count.value) {
         SetHint(true, 'Loading friends list...', '');
     } else {
+        var friendSort = GetFriendSort();
+        debug( "Sorting friends", friendSort.field );
+        debug( NameCmp == friendSort.defaultSortFunc );
+        friends.sort( friendSort.sortFunc );
+        // friends.sort(NameCmp);
+        
         var hint = document.getElementById('FacebookHint');
-        var selSort = document.getElementById('fbSidebarSorter').getAttribute('selectedsort');
-        if( selSort == 'name') {
-            debug( "Sorting by name" );
-            friends.sort(SortFriendsAlpha);
-        } 
-        else if( selSort == 'profile') {
-            debug( "Sorting by profile update time" );
-            friends.sort(SortFriendsProfile);
-        } 
-        else if( selSort == 'last update') {
-            debug( "Sorting by combined update time" );
-            friends.sort(SortFriendsUpdate);
-        } 
-        else {
-            debug( "Sorting by status update time" );
-            friends.sort(SortFriendsStatus);
-        }
         for each (var friend in friends) {
-            debug( friend.name );
+            debug( friend.name, friend.stime, friend.ptime );
             CreateFriendNode(list, friend, hint);
         }
         var searchTerm = GetFBSearchBox().value;
@@ -174,10 +199,10 @@ function UpdateFriends() {
     debug('UpdateFriends');
     var list = document.getElementById('SidebarFriendsList');
     if (!list.firstChild || list.firstChild.id == 'FacebookHint') {
-        LoadFriends();
-        return;
+        return LoadFriends();
     }
-    friendsToUpdate.sort(SortFriendsStatus);
+    var sorter = GetFriendSort();
+    friendsToUpdate.sort(sorter.sortFunc);
     var first = list.firstChild;
     for each (var friend in friendsToUpdate) {
         var toRemove = document.getElementById('sidebar-' + friend.id);
@@ -197,6 +222,7 @@ function UpdateFriends() {
         SearchFriends(searchTerm);
     }
 }
+
 function CreateFriendNode(list, friend, insertBefore) {
     if (!friend.name) return;
     var item = document.createElement('richlistitem');
@@ -224,43 +250,38 @@ function CreateFriendNode(list, friend, insertBefore) {
 function OpenSettings() { /* modified from optionsmenu extension */
     debug("OpenSettings()");
     var url = "chrome://facebook/content/settings.xul";
-    var features;
+    var features = "chrome,titlebar,toolbar,centerscreen";
     try {
-        var prefs = Components.classes["@mozilla.org/preferences-service;1"]
-                                 .getService(Components.interfaces.nsIPrefBranch);
+        var prefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefBranch);
         var instantApply = prefs.getBoolPref("browser.preferences.instantApply");
-        features = "chrome,titlebar,toolbar,centerscreen" + (instantApply ? ",dialog=no" : ",modal");
+        features += instantApply ? ",dialog=no" : ",modal";
     }
     catch (e) {
-        features = "chrome,titlebar,toolbar,centerscreen,modal";
+        features += ",modal";
     }
     openDialog( url, "", features);
 }
 
+var _sidebar_topics = ['facebook-new-friend', 
+                       'facebook-friend-updated', 
+                       'facebook-friends-updated', 
+                       'facebook-session-end', 
+                       'facebook-new-day' ];
 function SidebarLoad() {
     debug('SidebarLoad');
     top.document.getElementById('facebook-sidebar-toggle').checked = true;
     top.document.getElementById('PopupFacebookFriends').hidePopup(); // just in case it was still showing
+    
     var sorter = document.getElementById('fbSidebarSorter');
-    if (sorter.getAttribute('selectedsort') == 'name') {
-        sorter.setAttribute('label', 'Sorting by name');
-        document.getElementById('fbSortName').setAttribute('checked', 'true');
-    } else if (sorter.getAttribute('selectedsort') == 'profile') {
-        sorter.setAttribute('label', 'Sorting by profile');
-        document.getElementById('fbSortProfile').setAttribute('checked', 'true');
-    } else if (sorter.getAttribute('selectedsort') == 'last update') {
-        sorter.setAttribute('label', 'Sorting by last update');
-        document.getElementById('fbSortUpdate').setAttribute('checked', 'true');
-    } else {
-        sorter.setAttribute('label', 'Sorting by status');
-        document.getElementById('fbSortStatus').setAttribute('checked', 'true');
-    }
+    var selSort = sorter.getAttribute('selectedsort');
+    var friendSort = _friend_sorts[selSort];
+    debug( "selSort", selSort, friendSort.label, friendSort.eltId );
+    sorter.setAttribute('label', friendSort.label );
+    document.getElementById(friendSort.eltId).setAttribute('checked', 'true');
+    
     LoadFriends();
-    obsSvc.addObserver(observer, 'facebook-new-friend', false);
-    obsSvc.addObserver(observer, 'facebook-friend-updated', false);
-    obsSvc.addObserver(observer, 'facebook-friends-updated', false);
-    obsSvc.addObserver(observer, 'facebook-session-end', false);
-    obsSvc.addObserver(observer, 'facebook-new-day', false);
+    for each( var topic in _sidebar_topics )
+      obsSvc.addObserver(observer, topic, false);
     document.getElementById('SidebarFriendsList').addEventListener('keypress', HandleKeyPress, true);
     if (!top.document.getElementById('facebook-search')) {
         // XXX for some reason even if the toolbar is hidden we can still see
@@ -277,23 +298,20 @@ function SidebarLoad() {
 function SidebarUnload() {
     debug('SidebarUnload');
     top.document.getElementById('facebook-sidebar-toggle').checked = false;
-    obsSvc.removeObserver(observer, 'facebook-new-friend');
-    obsSvc.removeObserver(observer, 'facebook-friend-updated');
-    obsSvc.removeObserver(observer, 'facebook-friends-updated');
-    obsSvc.removeObserver(observer, 'facebook-session-end');
-    obsSvc.removeObserver(observer, 'facebook-new-day');
+    for each( var topic in _sidebar_topics )
+      obsSvc.removeObserver(observer, topic);
     top.document.getElementById('sidebar-splitter').removeEventListener('mouseup', SidebarResize, false);
 }
 var statusWidthStyleRule = false;
 function SidebarResize() {
     debug('setting status width', window.innerWidth);
     var sheet = document.styleSheets[0];
-    if (statusWidthStyleRule !== false) {
+    if (false !== statusWidthStyleRule) {
         debug('deleting', statusWidthStyleRule, sheet.cssRules.length);
         sheet.deleteRule(statusWidthStyleRule);
     }
     statusWidthStyleRule = sheet.cssRules.length;
-    sheet.insertRule(".status { width: " + (window.innerWidth-82) + "px !important; }", statusWidthStyleRule);
+    sheet.insertRule(".status { width: " + (window.innerWidth-80) + "px !important; }", statusWidthStyleRule);
 }
 var facebook=null; // for some reason lib.js can't seem to handle not having something named facebook defined
 
