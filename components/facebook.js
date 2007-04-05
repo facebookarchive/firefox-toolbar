@@ -96,7 +96,7 @@ SetNotif.prototype.__defineGetter__( "count", function() {
   return this.size;
 });
 SetNotif.prototype.update = function( asXmlList ) {
-    debug( "SetNotif.update", this.topic, asXmlList );
+    debug( "SetNotif.update", this.topic, asXmlList.toXMLString() );
     var itemSet = {};
     var diff  = [];
     this.size = asXmlList.length();
@@ -111,7 +111,7 @@ SetNotif.prototype.update = function( asXmlList ) {
     this.items = itemSet;
 }
 SetNotif.prototype.init = function( asXmlList ) {
-    debug( "SetNotif.init", asXmlList );
+    debug( "SetNotif.init", asXmlList.toXMLString() );
     this.size  = asXmlList.length();
     var itemSet = {};
     if( this.size > 0 )
@@ -142,7 +142,7 @@ CountedNotif.prototype.__defineGetter__( "count", function() {
 });
 CountedNotif.prototype.setTime = function( new_time ) {
     debug( 'setTime', this.time, new_time );
-    if( this.on_new_unread && new_time > this.time && this.count > 0 ) {
+    if( this.on_new_unread && (new_time > this.time) && (this.count > 0) ) {
         this.on_new_unread( this.count );
     }
     if( new_time != this.time )
@@ -258,7 +258,7 @@ function facebookService()
 
     this._winService      = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
     this._observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
-    this._prefService     = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+    this._prefService     = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch2);
 }
 
 facebookService.prototype = {
@@ -358,9 +358,7 @@ facebookService.prototype = {
         this._reqs          = null; // SetNotif
 
         this._friendDict   = {};
-        this._friendArr = [];
-
-	this._albumDict = {};
+    	this._albumDict = {};
 
         this._pendingRequest = false;
         this._pendingRequests = [];
@@ -458,7 +456,7 @@ facebookService.prototype = {
             fbSvc._albumDict[ aid ] = { 'modified': modified,
                                         'size': size,
                                         'owner': owner };
-            debug( "An album", aid, owner, modified );
+            vdebug( "An album", aid, owner, modified );
           }
         });
       }
@@ -510,9 +508,12 @@ facebookService.prototype = {
         query = query.replace( /:user/g, fbSvc._uid );
         this.callMethod('facebook.fql.query', ['query='+query], function(data) {
             fbSvc._lastCheckedFriends = Date.now();
+
+            // update the friends in place for non-onInit cases
+            // because we don't care about removing the defriended ... otherwise we'd
             // make a new friends array every time so that we handle losing friends properly
-            var friendArr = [];
             friendDict = fbSvc.parseUsers(data);
+
             var loggedInUser = friendDict[fbSvc._uid];
             debug( "loggedInUser", loggedInUser.name );
             delete friendDict[fbSvc._uid];
@@ -530,55 +531,55 @@ facebookService.prototype = {
             } else {
                 fbSvc._loggedInUser = loggedInUser;
                 fbSvc.notify(fbSvc._loggedInUser, 'facebook-session-start', fbSvc._loggedInUser.id);
-                debug('logged in: howdy, ', fbSvc._loggedInUser.name);
+                debug('logged in: howdy', fbSvc._loggedInUser.name);
             }
             debug('check done with logged in user');
 
             // Check for user's friends' info changes
             for each (var friend in friendDict) {
-                friendArr.push(friend);
                 if (!onInit) {
                     if (!fbSvc._friendDict[friend.id]) {
                         fbSvc.notify(friend, 'facebook-new-friend', friend['id']);
                         fbSvc.showPopup('you.friend', friend.pic, friend.name + ' is now your friend',
                         'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb');
+                        fbSvc._friendCount++; // increment the count
                         friendUpdate = true;
                     } else {
+                        checkProf = true; // only check if not displaying another notification
                         if (fbSvc._friendDict[friend.id].status != friend.status) {
                             if (friend.status) {
                                 fbSvc.notify(friend, 'facebook-friend-updated', 'status');
-                                fbSvc.showPopup('friend.status', friend.pic, friend.name + ' is now ' + RenderStatusMsg(friend.status),
+                                checkProf = !fbSvc.showPopup('friend.status', friend.pic, friend.name + ' is now ' + RenderStatusMsg(friend.status),
                                 'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#status');
                             } else {
                                 fbSvc.notify(friend, 'facebook-friend-updated', 'status-delete');
                             }
                             friendUpdate = true;
                         }
-                        if (fbSvc._friendDict[friend.id].ptime != friend.ptime) {
+                        if (fbSvc._friendDict[friend.id].wall < friend.wall) {
+                            fbSvc.notify(friend, 'facebook-friend-updated', 'wall');
+                            checkProf = checkProf && !fbSvc.showPopup('friend.wall', friend.pic, 'Someone wrote on ' + friend.name + "'s wall",
+                            'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#wall');
+                            vdebug('wall count updated', fbSvc._friendDict[friend.id].wall, friend.wall);
+                        }
+                        if (fbSvc._friendDict[friend.id].notes < friend.notes) {
+                            fbSvc.notify(friend, 'facebook-friend-updated', 'notes');
+                            checkProf = checkProf && !fbSvc.showPopup('friend.note', friend.pic, friend.name + ' wrote a note.',
+                              'http://www.facebook.com/notes.php?id=' + friend.id + '&src=fftb');
+                            vdebug('note count updated', fbSvc._friendDict[friend.id].notes, friend.notes);
+                        }
+                        if (checkProf && fbSvc._friendDict[friend.id].ptime != friend.ptime) {
                             fbSvc.notify(friend, 'facebook-friend-updated', 'profile');
                             fbSvc.showPopup('friend.profile', friend.pic, friend.name + ' made a profile update',
                             'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb&highlight');
                             friendUpdate = true;
                         }
-                        if (fbSvc._friendDict[friend.id].wall < friend.wall) {
-                            fbSvc.notify(friend, 'facebook-friend-updated', 'wall');
-                            fbSvc.showPopup('friend.wall', friend.pic, 'Someone wrote on ' + friend.name + "'s wall",
-                            'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#wall');
-                            debug('wall count updated', fbSvc._friendDict[friend.id].wall, friend.wall);
-                        }
-                        if (fbSvc._friendDict[friend.id].notes < friend.notes) {
-                            fbSvc.notify(friend, 'facebook-friend-updated', 'notes');
-                            fbSvc.showPopup('friend.note', friend.pic, friend.name + ' wrote a note.',
-                            'http://www.facebook.com/notes.php?id=' + friend.id + '&src=fftb');
-                            debug('note count updated', fbSvc._friendDict[friend.id].notes, friend.notes);
-                        }
                     }
+                    fbSvc._friendDict[friend.id] = friend;
                 }
             }
-            fbSvc._friendDict = friendDict;
-            fbSvc._friendArr  = friendArr;
-            debug('friendArr', fbSvc._friendArr.length);
-
+            if( onInit )
+              fbSvc._friendDict = friendDict;
             if (onInit || friendUpdate) {
                 debug('sending notification');
                 fbSvc.notify(null, 'facebook-friends-updated', null);
@@ -588,8 +589,11 @@ facebookService.prototype = {
     },
     getFriends: function(count) {
         debug( "getFriends called!");
-        count.value = this._friendArr.length;
-        return this._friendArr;
+        var friend_arr = [];
+        for each( var f in fbSvc._friendDict )
+          friend_arr.push( f );
+        count.value = friend_arr.length;
+        return friend_arr;
     },
     notify: function( observer, what, arg ){
         debug( "notify", what, arg );
@@ -702,13 +706,13 @@ facebookService.prototype = {
     showPopup: function(type, pic, label, url) {
         if (!this._prefService.getBoolPref('extensions.facebook.notifications.toggle') ||
             !this._prefService.getBoolPref('extensions.facebook.notifications.' + type)) {
-            return;
+            return false;
         }
         debug('showPopup', type, pic, label, url);
-        try { // try the firefox alerter
-            var alerts = Cc["@mozilla.org/alerts-service;1"].getService(Ci.nsIAlertsService);
-            alerts.showAlertNotification(pic, 'Facebook Notification', label, true, url, this._alertObserver);
-        } catch(e) {
+//        try { // try the firefox alerter
+//            var alerts = Cc["@mozilla.org/alerts-service;1"].getService(Ci.nsIAlertsService);
+//            alerts.showAlertNotification(pic, 'Facebook Notification', label, true, url, this._alertObserver);
+//        } catch(e) {
             try { // use growl if it is built in
                 if (!this._prefService.getBoolPref('extensions.facebook.notifications.growl')) {
                     throw null;
@@ -735,7 +739,8 @@ facebookService.prototype = {
                                   'chrome,titlebar=no,popup=yes,left=' + left + ',top=' + top + ',width=210,height=100',
                                   pic, label, url, this._numAlertsObj);
             }
-        }
+//        }
+        return true;
     }
 };
 

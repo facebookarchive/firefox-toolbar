@@ -10,7 +10,7 @@
   <script type="application/x-javascript" src="chrome://facebook/content/settings.js"/>
   <checkbox id="facebook-notifications-toggle" label="Enable Pop-up Notifications"/>
   <groupbox id="facebook-notifications-youbox">
-    <caption label="Notifications about you"/>
+    <caption label="Notifications about me"/>
     <checkbox id="facebook-notifications-you-req" label="New friend request"/>
     <checkbox id="facebook-notifications-you-msg" label="New message"/>
     <checkbox id="facebook-notifications-you-poke" label="New poke"/>
@@ -21,9 +21,10 @@
     <checkbox id="facebook-notifications-you-wall" label="Someone wrote on your wall"/>
   </groupbox>
   <groupbox id="facebook-notifications-friendbox">
-    <caption label="Notifications about your friends"/>
+    <caption label="Notifications about my friends"/>
     <checkbox id="facebook-notifications-friend-profile" label="A friend updated his/her profile"/>
     <checkbox id="facebook-notifications-friend-status" label="A friend updated his/her status"/>
+    <checkbox id="facebook-notifications-friend-album" label="A friend updated his/her albums"/>
     <checkbox id="facebook-notifications-friend-wall" label="Someone wrote on a friend's wall"/>
     <checkbox id="facebook-notifications-friend-note" label="A friend wrote a note"/>
   </groupbox>
@@ -31,7 +32,7 @@
   <groupbox id="facebook-customize-toolbar">
     <caption label="Customize Toolbar"/>
      <description style="width:240px">
-     You can decide which parts of the Facebook Toolbar appear and how they are placed using Firefox's toolbar customizer. 
+     You can decide which parts of the Facebook Toolbar appear and how they are placed using Firefox's toolbar customizer.
      </description>
      <button label="Customize toolbar" oncommand="acceptDialog(); opener.BrowserCustomizeToolbar()"/>
   </groupbox>

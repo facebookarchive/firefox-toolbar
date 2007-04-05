@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://browser/skin/" type="text/css"?> 
+<?xml-stylesheet href="chrome://browser/skin/" type="text/css"?>
 <window id="facebook-login-window"
         title="Login to Facebook"
         orient="vertical"
@@ -19,21 +19,12 @@
              src=""
              type="content"
              flex="1"/>
-    <!--<toolbar>-->
-        <!--
-        <spacer flex="1"/>
-        <button id="facebook-login-cancel"
-                class="dialog"
-                label="Cancel"
-                oncommand="window.close()"/>
-                -->
 	 <hbox>
-				<spacer flex="1" /> -->
+		<spacer flex="1" />
         <button id="facebook-login-done"
                 class="dialog"
                 label="Close login window"
                 oncommand="done()"/>
-				<spacer flex="1" />
+		<spacer flex="1" />
     </hbox>
-    <!-- </toolbar> -->
 </window>
