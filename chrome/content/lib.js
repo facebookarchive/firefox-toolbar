@@ -400,7 +400,7 @@ function getRelTimeWithinWeek(time, initialCap ) {
   } else if ((updateTime.getDay() + 1) % 7 == currentTime.getDay()) {
     day = initialCap ? "Yesterday" : "yesterday";
   } else {
-    day = ( initialCap ? 'Last ' : 'last ' ) + days[updateTime.getDay()];
+    day = days[updateTime.getDay()];
   }
 
   var hour = updateTime.getHours();

@@ -10,32 +10,48 @@
       <children />
     </content>
   </binding>
-  <binding id="friendBox" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem" flex="1">
+  <binding id="friendBox" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
     <content>
-      <xul:vbox style="min-height: 50px;">
-        <xul:image xbl:inherits="src=pic,onclick=oncommand" class="facebook-link friend-image" 
-	                 style="border: 1px solid black;" />
-      </xul:vbox>
-      <xul:vbox flex="1" style="padding: 3px;">
-        <xul:label xbl:inherits="value=friendname,onclick=oncommand" class="facebook-link user_name" />
-        <xul:label xbl:inherits="value=ptime,onclick=viewUpdCmd" class="facebook-link ptime" />
-        <xul:description class="status">
-          <children />
-        </xul:description>
-        <xul:label xbl:inherits="value=stime" class="stime" />
-        <xul:hbox pack="start" class="facebook-friendlinks">
-          <xul:label value="message" xbl:inherits="onclick=msgCmd"
-                     class="facebook-link mini-link" />
-          <xul:label value="-" style="color:#808080; font-size:9px;" />
-          <xul:label value="poke" xbl:inherits="onclick=pokeCmd"
-                     class="facebook-link mini-link" />
-          <xul:label value="-" style="color:#808080; font-size:9px;" />
-          <xul:label value="wall post" xbl:inherits="onclick=postCmd"
-                     class="facebook-link mini-link" />
-        </xul:hbox>
-        <xul:spacer flex="1" />
-      </xul:vbox>
+      <xul:hbox flex="5" style="/*background-color:blue;*/">
+        <xul:vbox flex="0" style="width: 56px !important; /*background-color: cyan;*/" pack="center">
+          <xul:image xbl:inherits="src=pic,onclick=oncommand" class="facebook-link friend-image"
+                       style="border: 1px solid black;" />
+        </xul:vbox>
+        <xul:vbox flex="1" style="padding: 0px; /*background-color: red;*/" pack="start" align="start">
+          <xul:label xbl:inherits="value=friendname,onclick=oncommand" class="facebook-link user_name" />
+          <xul:label xbl:inherits="onclick=viewUpdCmd" class="facebook-link ptime" value="overwritten"/>
+          <xul:label class="status">
+            <children />
+          </xul:label>
+          <xul:label xbl:inherits="value=stime" class="stime" />
+          <xul:hbox pack="start" class="facebook-friendlinks" >
+            <xul:label value="message" xbl:inherits="onclick=msgCmd"
+                       class="facebook-link mini-link" />
+            <xul:label value="-" style="color:#808080; font-size:9px;" />
+            <xul:label value="poke" xbl:inherits="onclick=pokeCmd"
+                       class="facebook-link mini-link" />
+            <xul:label value="-" style="color:#808080; font-size:9px;" />
+            <xul:label value="wall post" xbl:inherits="onclick=postCmd"
+                       class="facebook-link mini-link" />
+          </xul:hbox>
+        </xul:vbox>
+      </xul:hbox>
     </content>
+    <implementation>
+      <constructor>
+        var hbox_elt  = document.getAnonymousNodes(this)[0];
+        var ptime_elt = hbox_elt.childNodes[1].childNodes[1];
+        /* var stime_elt = hbox_elt.childNodes[1].childNodes[3]; */
+        ptime_elt.removeAttribute( "value" );
+        var ptime = this.getAttribute( "ptime" );
+        if (ptime) {
+          var txt = document.createTextNode(ptime);
+          ptime_elt.appendChild( txt );
+        }
+        else // collapse ...
+          ptime_elt.parentNode.removeChild( ptime_elt );
+      </constructor>
+    </implementation>
   </binding>
   <binding id="popupMessager" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
     <content>

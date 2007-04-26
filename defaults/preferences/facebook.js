@@ -10,7 +10,7 @@ pref("extensions.facebook.notifications.you.wall", true);
 pref("extensions.facebook.notifications.friend.wall", false);
 pref("extensions.facebook.notifications.friend.status", true);
 pref("extensions.facebook.notifications.friend.note", true);
-pref("extensions.facebook.notifications.friend.profile", true);
+pref("extensions.facebook.notifications.friend.profile", false);
 pref("extensions.facebook.notifications.friend.album", true);
 pref("extensions.facebook.notifications.growl", false);
 pref("extensions.facebook.notifications.growlpath", "/usr/local/bin/growlnotify");

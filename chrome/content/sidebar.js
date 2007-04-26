@@ -40,7 +40,7 @@ var obsSvc = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverServ
 
 var observer = {
     observe: function(subject, topic, data) {
-        debug('OBSERVING SOMETHING: ' + topic);
+        debug('OBSERVING SOMETHING: ', topic);
         var panel = document.getElementById('facebook-panel');
         topicSwitch:
         switch (topic) {
@@ -160,7 +160,7 @@ function ClearFriends(sessionEnded) {
         list.removeChild(list.firstChild);
     }
     if (sessionEnded) {
-        SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
+        SetHint(true, 'Login from the toolbar to see your friend list.', 'FacebookLogin()');
     }
 }
 
@@ -170,9 +170,9 @@ function LoadFriends() {
     var friends = fbSvc.getFriends(count);
     debug('Loading friends', count.value);
     if (!fbSvc.loggedIn) {
-        SetHint(true, 'Login from the toolbar to see your friends list.', 'FacebookLogin()');
+        SetHint(true, 'Log in from the toolbar to see your friend list.', 'FacebookLogin()');
     } else if (!count.value) {
-        SetHint(true, 'Loading friends list...', '');
+        SetHint(true, 'Loading friend list...', '');
     } else {
         var friendSort = GetFriendSort();
         debug( "Sorting friends", friendSort.field );
@@ -282,7 +282,7 @@ function SidebarLoad() {
     LoadFriends();
     for each( var topic in _sidebar_topics )
       obsSvc.addObserver(observer, topic, false);
-    document.getElementById('SidebarFriendsList').addEventListener('keypress', HandleKeyPress, true);
+    // document.getElementById('SidebarFriendsList').addEventListener('keypress', HandleKeyPress, true);
     if (!top.document.getElementById('facebook-search')) {
         // XXX for some reason even if the toolbar is hidden we can still see
         // the search-box, so this never happens...we'll keep the code in case
@@ -292,7 +292,7 @@ function SidebarLoad() {
     } else {
         document.getElementById('facebook-search-sidebar').style.display = 'none';
     }
-    top.document.getElementById('sidebar-splitter').addEventListener('mouseup', SidebarResize, false);
+    // top.document.getElementById('sidebar-splitter').addEventListener('mouseup', SidebarResize, false);
     SidebarResize();
 }
 function SidebarUnload() {
@@ -300,8 +300,10 @@ function SidebarUnload() {
     top.document.getElementById('facebook-sidebar-toggle').checked = false;
     for each( var topic in _sidebar_topics )
       obsSvc.removeObserver(observer, topic);
-    top.document.getElementById('sidebar-splitter').removeEventListener('mouseup', SidebarResize, false);
+    // top.document.getElementById('sidebar-splitter').removeEventListener('mouseup', SidebarResize, false);
 }
+
+/*
 var statusWidthStyleRule = false;
 function SidebarResize() {
     debug('setting status width', window.innerWidth);
@@ -313,6 +315,7 @@ function SidebarResize() {
     statusWidthStyleRule = sheet.cssRules.length;
     sheet.insertRule(".status { width: " + (window.innerWidth-90) + "px !important; }", statusWidthStyleRule);
 }
+*/
 var facebook=null; // for some reason lib.js can't seem to handle not having something named facebook defined
 
 debug('loaded sidebar.js');

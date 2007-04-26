@@ -6,10 +6,10 @@
   <script type="application/x-javascript" src="chrome://facebook/content/toolbar.js"/>
   <toolbox id="navigator-toolbox" crop="end">
     <toolbarpalette id="BrowserToolbarPalette">
-      <toolbarbutton label="Facebook" 
-            class="chromeclass-toolbar-additional toolbarbutton-1" 
+      <toolbarbutton label="Facebook"
+            class="chromeclass-toolbar-additional toolbarbutton-1"
             id="facebook-toolbar-toggle" tooltiptext="Facebook Toolbar" oncommand="facebook_toggleToolbar()" />
-      <toolbarbutton id="facebook-sidebar-toggle" 
+      <toolbarbutton id="facebook-sidebar-toggle"
                      class="facebook-sidebar-icon"
                      tooltiptext="Facebook Friends Sidebar"
                      dir = "reverse"
@@ -25,6 +25,13 @@
                  oninput="SearchFriends(this.value);"/>
       </toolbaritem>
 
+      <toolbarbutton id="facebook-home"
+                     class="button"
+                     tooltiptext="Go to Facebook"
+                     onclick="checkForMiddleClick(this, event);"
+                     oncommand="openUILink('http://www.facebook.com/home.php?src=fftb', event)"
+                     />
+
       <toolbarbutton id="facebook-share"
                      class="facebook-icon-share facebook-share"
                      tooltiptext="Share current page on Facebook"
@@ -33,39 +40,33 @@
       <toolbarbutton id="facebook-notification-poke"
                      class="facebook-icon-poke facebook-notification button"
                      label="?"
-                     tooltip="New Pokes"
+                     tooltiptext="New Pokes"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/home.php', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/home.php?src=fftb', event)"/>
       <toolbarbutton id="facebook-notification-reqs"
                      class="facebook-icon-reqs facebook-notification button"
                      label="?"
-                     tooltip="New Friend Requests"
+                     tooltiptext="New Friend Requests"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/reqs.php', event)"/>
-      <toolbarbutton id="facebook-notification-msgs"
-                     class="facebook-icon-msgs facebook-notification button"
-                     label="?"
-                     tooltip="New Messages"
-                     onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/mailbox.php', event)"/>
-      <toolbarbutton id="facebook-notification-shrs"
-                     class="facebook-icon-shrs facebook-notification button"
-                     label="?"
-                     tooltip="New Shares"
-                     onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/shared.php', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/reqs.php?src=fftb#friend', event)"/>
       <toolbarbutton id="facebook-notification-group-invs"
                      class="facebook-icon-grps facebook-notification button"
                      label="?"
-                     tooltip="New Group Invites"
+                     tooltiptext="New Group Invites"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/groups.php', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/reqs.php?src=fftb#group', event)"/>
       <toolbarbutton id="facebook-notification-event-invs"
                      class="facebook-icon-evts facebook-notification button"
                      label="?"
-                     tooltip="New Event Invites"
+                     tooltiptext="New Event Invites"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/eventhome.php', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/reqs.php?src=fftb#event', event)"/>
+      <toolbarbutton id="facebook-notification-msgs"
+                     class="facebook-icon-msgs facebook-notification button"
+                     label="?"
+                     tooltiptext="New Messages"
+                     onclick="checkForMiddleClick(this, event);"
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/inbox/?src=fftb', event)"/>
       <toolbaritem id = "facebook-notification-separator">
         <toolbarseparator />
       </toolbaritem>
@@ -74,35 +75,64 @@
                      onmousedown="if (!fbSvc.loggedIn) FacebookLogin();"
                      type="menu">
         <menupopup id="facebook-link-popup">
-          <menuitem label="Home"
+
+          <!-- The Top Nav -->
+          <menuitem label="Profile"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/home.php', event)"/>
-          <menuitem id="facebook-menu-my-profile"
-                    label="My Profile"
+                    oncommand="OpenFBUrl('profile.php', this.getAttribute('userid'), event)"
+                    id="facebook-menu-my-profile"
+                    />
+          <menuitem label="Friends"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="OpenFBUrl('profile.php', this.getAttribute('userid'), event)"/>
-          <menuitem label="My Friends"
+                    oncommand="openUILink('http://www.facebook.com/friends.php?r&amp;src=fftb', event);"
+                    id="facebook-menu-my-profile"
+                    />
+          <menuitem label="Networks"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/friends.php?r', event)"/>
-          <menuitem label="My Photos"
+                    oncommand="openUILink('http://www.facebook.com/networks/?src=fftb', event)"
+                    />
+          <menuitem label="Inbox"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/photos.php', event)"/>
-          <menuitem label="My Shares"
-                    onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/shared.php', event)"/>
-          <menuitem label="My Notes"
-                    onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/notes.php', event)"/>
-          <menuitem label="My Groups"
-                    onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/grouphome.php', event)"/>
-          <menuitem label="My Events"
-                    onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/eventhome.php', event)"/>
-          <menuitem label="My Messages"
-                    onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/mailbox.php', event)"/>
+                    oncommand="openUILink('http://www.facebook.com/inbox/?src=fftb', event)"
+                    />
+
           <menuseparator />
+
+          <!-- The Side Nav -->
+          <menuitem label="Photos"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="openUILink('http://www.facebook.com/photos.php?src=fftb', event)"
+                    />
+          <menuitem label="Notes"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="openUILink('http://www.facebook.com/notes.php?src=fftb', event)"
+                    />
+          <menuitem label="Groups"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="openUILink('http://www.facebook.com/groups.php?src=fftb', event)"
+                    />
+          <menuitem label="Events"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="openUILink('http://www.facebook.com/events.php?src=fftb', event)"
+                    />
+          <menuitem label="Posted Items"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="openUILink('http://www.facebook.com/posted.php?src=fftb', event)"
+                    />
+
+          <menuseparator />
+
+          <menuitem label="Account"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="openUILink('http://www.facebook.com/editaccount.php?src=fftb', event)"
+                    />
+          <menuitem label="Privacy"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="openUILink('http://www.facebook.com/privacy.php?src=fftb', event)"
+                    />
+
+          <menuseparator />
+
           <menuitem label="Toolbar Settings"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="window.open('chrome://facebook/content/settings.xul', '', 'centerscreen,chrome,modal=yes,dialog=yes')"/>
@@ -115,15 +145,15 @@
                        onclick="checkForMiddleClick(this, event);"
                        oncommand="if (this.label!='') OpenFBUrl('profile.php', this.getAttribute('userid'), event)" />
         <toolbarseparator/>
-        <toolbarbutton id="facebook-login-status" 
+        <toolbarbutton id="facebook-login-status"
                        class="button"
                        label="Login to Facebook"
-                       tooltip="Login to Facebook"
+                       tooltiptext="Login to Facebook"
                        oncommand="FacebookLogin()" />
       </toolbaritem>
     </toolbarpalette>
     <toolbar id="facebook-toolbar"
-             class="chromeclass-toolbar-additional" 
+             class="chromeclass-toolbar-additional"
              oldclass="chromeclass-toolbar"
              mode="full"
              iconsize="small"
@@ -131,7 +161,7 @@
              context="toolbar-context-menu"
              toolbarname="Facebook Toolbar"
              crop="end"
-            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-shrs,facebook-notification-group-invs,facebook-notification-event-invs,facebook-notification-separator,facebook-share,spring,facebook-login-info">
+            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-group-invs,facebook-notification-event-invs,facebook-notification-separator,facebook-share,spring,facebook-login-info">
     </toolbar>
     <popupset>
     <popup position="after_start"
@@ -139,7 +169,7 @@
            ignorekeys="true"
            onpopuphidden="content.focus()"
            style="width: 300px;" >
-      <richlistbox id="PopupFacebookFriendsList" flex="1" style="max-height:450px;">
+      <richlistbox id="PopupFacebookFriendsList">
         <richlistitem id="FacebookHint"
                       onmousedown="this.doCommand()"
                       onmouseover="SelectItemInList(this, this.parentNode)">
@@ -168,7 +198,7 @@
     </popupset>
   </toolbox>
   <broadcasterset id="mainBroadcasterSet">
-    <broadcaster id="viewFacebookSidebar" autoCheck="false" 
+    <broadcaster id="viewFacebookSidebar" autoCheck="false"
                  label="Facebook Sidebar"
                  type="checkbox" group="sidebar"
                  sidebarurl="chrome://facebook/content/sidebar.xul"

@@ -1,13 +1,12 @@
 #facebook-toolbar-toggle
 {
-/*  -moz-image-region: rect(0 24px 24px 0);
-    list-style-image: url("chrome://facebook/content/fbfavicon.png"); */
+    -moz-image-region: rect(0 16px 16px 0);
     list-style-image: url("chrome://facebook/content/fbfavicon.png");
 }
+
 toolbar[iconsize="small"] #facebook-toolbar-toggle
 {
     -moz-image-region: rect(0 16px 16px 0);
-/*  list-style-image: url("chrome://facebook/content/fbfavicon.png"); */
     list-style-image: url("chrome://facebook/content/fbfavicon.png");
 }
 
@@ -25,6 +24,18 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   color: #2f4778;
 }
 
+#facebook-home {
+  list-style-image: url('chrome://facebook/skin/home.gif');
+  padding: 0px;
+  padding-left: 4px;
+  border: none;
+  margin: 0;
+}
+#facebook-home .toolbarbutton-text {
+  margin: 0;
+  padding: 0;
+}
+
 .facebook-notification, .facebook-share, #facebook-searchbox, .facebook-sidebar-icon image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding: 0px;
@@ -38,7 +49,7 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
 }
 
 .facebook-friendlinks {
-  margin-left: 6px;
+  padding-left: 6px;
 }
 
 .facebook-sidebar-icon {
@@ -157,21 +168,7 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   -moz-image-region: rect(0px 363px 16px 347px);
 }
 
-/* -- Shares -- */
-.facebook-icon-shrs:hover {
-  -moz-image-region: rect(0px 394px 16px 379px);
-}
-
-.facebook-icon-shrs:active {
-  -moz-image-region: rect(0px 409px 16px 394px);
-}
-
-.facebook-icon-shrs {
-  margin: 0px;
-  -moz-image-region: rect(0px 394px 16px 379px);
-}
-
-/* somewhat annoying because these guys can be used as quick links */
+/* somewhat annoying because these guys could be used as quick links */
 .facebook-notification[label="0"]{
   display: none;
 }
@@ -236,7 +233,11 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
 
 .popupFriendBox, .friendBox {
   -moz-binding: url('chrome://facebook/content/bindings.xml#friendBox');
-  padding: 5px 5px 8px 5px;
+  -moz-box-align: start;
+  -moz-box-pack: start;
+  padding: 6px;
+  margin: 0px;
+  /* background-color: magenta; TEST */
 }
 .popupFriendBox .facebook-friendlinks {
   display: none;
@@ -259,23 +260,21 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
 
 .status {
    color: #333333;
-   width: 215px;
    font-size: 11px;
-   padding: 0px 0px 0px 4px;
-   margin: 1px 0px 1px 2px;
+/* background-color: #999; TEST */
 }
 
 .stime {
    color: #999999;
    font-size: 10px;
-   padding-bottom: 3px;
    margin-bottom: 3px;
+/* background-color: #333; TEST */
 }
 
 .ptime {
    font-size: 10px;
-   padding-bottom: 3px;
    margin-bottom: 3px;
+/* background-color: yellow; TEST */
 }
 
 .user_name {
@@ -300,7 +299,11 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
 }
 
 /* Add separators between each friend box */
-richlistitem { border-bottom: 1px solid #b1bdd6; }
+richlistitem {
+    padding: 0px;
+    margin: 0px;
+    border-bottom: 1px solid #b1bdd6;
+}
 richlistitem:last-child { border-bottom: none; }
 
 richlistitem[selected=true] .facebook-link,

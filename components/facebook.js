@@ -42,13 +42,13 @@ var debug = ( VERBOSITY < 1 )
   : function() {
   dump('FacebookService: ');
   if (debug.caller && debug.caller.name)
-    dump(debug.caller.name + ': ');
+    dump(debug.caller.name + ': ')
   for( var i=0; i < arguments.length; i++ ) {
     if( i ) dump( ', ' );
     switch( typeof arguments[i] ) {
       case 'xml':
         dump( arguments[i].toXMLString() );
-        break;
+        break;s
       case 'object':
         dump( '[obj]\n' );
         for( prop in arguments[i] )
@@ -132,7 +132,7 @@ function CountedNotif( asXml, topic, dispatcher, on_new_unread ) {
     this.count = Number(asXml.unread);
 }
 CountedNotif.prototype.__defineSetter__( "count", function( count ) {
-  debug( 'setCount', this.topic, count );
+  debug( this.topic, 'setCount', count );
   this.dispatcher.notify(null, this.topic, count);
   this._count = count;
 });
@@ -141,8 +141,10 @@ CountedNotif.prototype.__defineGetter__( "count", function() {
   return this._count;
 });
 CountedNotif.prototype.setTime = function( new_time ) {
-    debug( 'setTime', this.time, new_time );
-    if( this.on_new_unread && (new_time > this.time) && (this.count > 0) ) {
+    debug( this.topic, 'setTime', this.time, new_time );
+    if( ('function' == typeof this.on_new_unread)
+        && (new_time > this.time)
+        && (this.count > 0) ) {
         this.on_new_unread( this.count );
     }
     if( new_time != this.time )
@@ -273,7 +275,6 @@ facebookService.prototype = {
     // ----------- Start Notifications -----------------//
     get numMsgs()       { return this._messages.count; },
     get numPokes()      { return this._pokes.count; },
-    get numShrs()       { return this._shares.count; },
     get numReqs()       { return this._reqs.count; },
     get numEventInvs()  { return this._eventInvs.count; },
     get numGroupInvs()  { return this._groupInvs.count; },
@@ -322,6 +323,7 @@ facebookService.prototype = {
         this._oneShotTimer.initWithCallback(this._initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
     },
     savePref: function( pref_name, pref_val ) {
+        this._prefService.unlockPref( pref_name, this._sessionSecret );
         this._prefService.setCharPref( pref_name, pref_val );
         this._prefService.lockPref( pref_name, this._sessionSecret );
     },
@@ -351,7 +353,6 @@ facebookService.prototype = {
         this._loggedInUser  = null;
 
         this._messages      = null; // CountedNotif
-        this._shares        = null; // CountedNotif
         this._pokes         = null; // CountedNotif
         this._groupInvs     = null; // SetNotif
         this._eventInvs     = null; // SetNotif
@@ -381,17 +382,18 @@ facebookService.prototype = {
                 fbSvc._pokes = new CountedNotif( data.pokes, 'facebook-pokes-updated', fbSvc
                     , function( pokeCount ) {
                         vdebug( "pokeCount", pokeCount );
-                        var text = 'You have been ' + ( pokeCount==1 ? 'poked' : 'poked many times.' );
-                        fbSvc.showPopup('you.poke', 'chrome://facebook/content/poke.gif',
-                                        text, 'http://www.facebook.com/home.php');
-                    } );
-                fbSvc._shares = new CountedNotif( data.shares, 'facebook-shares-updated', fbSvc
-                    , function( shareCount ) {
-                        vdebug( "shareCount", shareCount );
-                        var text = ( shareCount==1 ? 'A new item has' : 'New items have' ) + ' been shared with you';
-                        fbSvc.showPopup('you.share', 'chrome://facebook/content/share.gif',
-                                        text, 'http://www.facebook.com/shared.php');
+                        if( pokeCount > 0 ) {
+                          var text = 'You have been ';
+                          if( 1 == pokeCount )
+                            text += 'poked.';
+                          else if( 4 >= pokeCount )
+                            text += 'poked ' + pokeCount + ' times.';
+                          else
+                            text += 'poked many times.';
 
+                          fbSvc.showPopup('you.poke', 'chrome://facebook/content/poke.gif',
+                                          text, 'http://www.facebook.com/home.php');
+                        }
                     } );
                 fbSvc._groupInvs = new SetNotif( data.group_invites..gid, 'facebook-group-invs-updated', fbSvc, null );
                 fbSvc._eventInvs = new SetNotif( data.event_invites..eid, 'facebook-event-invs-updated', fbSvc, null );
@@ -402,7 +404,7 @@ facebookService.prototype = {
                             for each (var user in users) {
                                 self.items[user.id] = user;
                                 fbSvc.notify(user, 'facebook-new-req', user.id);
-                                fbSvc.showPopup('you.req', user.pic, user.name + ' wants to be your friend',
+                                fbSvc.showPopup('you.req', user.pic_sq, user.name + ' wants to be your friend',
                                                'http://www.facebook.com/reqs.php');
                             }
                         });
@@ -411,7 +413,6 @@ facebookService.prototype = {
             else {
                 fbSvc._messages.update( data.messages );
                 fbSvc._pokes.update( data.pokes );
-                fbSvc._shares.update( data.shares );
                 fbSvc._groupInvs.update( data.group_invites..gid );
                 fbSvc._eventInvs.update( data.event_invites..eid );
                 fbSvc._reqs.update( data.friend_requests..uid );
@@ -432,11 +433,12 @@ facebookService.prototype = {
                 ptime  = Number(user.profile_update_time),
                 notes  = Number(user.notes_count),
                 wall   = Number(user.wall_count),
-                pic    = String(decodeURI(user.pic_small));
+                pic    = String(decodeURI(user.pic_small)),
+                pic_sq = String(decodeURI(user.pic_square));
             if (!pic) {
-                pic = 'chrome://facebook/content/t_default.jpg';
+                pic = pic_sq = 'chrome://facebook/content/t_default.jpg';
             }
-            users[id] = new facebookUser(id, name, pic, status, stime, ptime, notes, wall);
+            users[id] = new facebookUser(id, name, pic, pic_sq, status, stime, ptime, notes, wall);
             vdebug( id, name, pic );
         }
         return users;
@@ -449,10 +451,10 @@ facebookService.prototype = {
         query = query.replace( /:user/g, fbSvc._uid );
         this.callMethod('facebook.fql.query', ['query='+query], function(data) {
           for each( var album in data..album ) {
-            var aid = Number(album.aid),
-                size = Number(album.size),
+            var aid      = Number(album.aid),
+                size     = Number(album.size),
                 modified = Number(album.modified),
-                owner = Number(album.owner);
+                owner    = Number(album.owner);
             fbSvc._albumDict[ aid ] = { 'modified': modified,
                                         'size': size,
                                         'owner': owner };
@@ -460,7 +462,9 @@ facebookService.prototype = {
           }
         });
       }
-      else {
+      // don't check for album changes if not going to show notifications
+      else if( this._prefService.getBoolPref('extensions.facebook.notifications.toggle') &&
+               this._prefService.getBoolPref('extensions.facebook.notifications.friend.album') ) {
         debug("Album check...", window);
         var query = " SELECT aid, owner, name, modified, size, link FROM album "
           + " WHERE owner IN (SELECT uid2 FROM friend WHERE uid1 = :user )"
@@ -470,12 +474,12 @@ facebookService.prototype = {
         debug(query);
         this.callMethod('facebook.fql.query', ['query='+query], function(data) {
           for each( var album in data..album ) {
-            var aid = Number(album.aid),
-                size = Number(album.size),
+            var aid      = Number(album.aid),
+                size     = Number(album.size),
                 modified = Number(album.modified),
-                name = String(album.name),
-                link = decodeURIComponent(escape(String(album.link))),
-                owner = Number(album.owner);
+                name     = String(album.name),
+                link     = decodeURIComponent(escape(String(album.link))),
+                owner    = Number(album.owner);
             debug( "Modified album!", owner, name, modified, link );
             var album_owner = fbSvc._friendDict[owner];
             var pvs_album = fbSvc._albumDict[aid];
@@ -502,7 +506,7 @@ facebookService.prototype = {
     },
     checkUsers: function(onInit) {
         var friendUpdate = false;
-        var query = ' SELECT uid, name, status, pic_small, wall_count, notes_count, profile_update_time'
+        var query = ' SELECT uid, name, status, pic_small, pic_square, wall_count, notes_count, profile_update_time'
                   + ' FROM user WHERE uid = :user '
                   + ' OR uid IN (SELECT uid2 FROM friend WHERE uid1 = :user );';
         query = query.replace( /:user/g, fbSvc._uid );
@@ -540,7 +544,7 @@ facebookService.prototype = {
                 if (!onInit) {
                     if (!fbSvc._friendDict[friend.id]) {
                         fbSvc.notify(friend, 'facebook-new-friend', friend['id']);
-                        fbSvc.showPopup('you.friend', friend.pic, friend.name + ' is now your friend',
+                        fbSvc.showPopup('you.friend', friend.pic_sq, friend.name + ' is now your friend',
                         'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb');
                         fbSvc._friendCount++; // increment the count
                         friendUpdate = true;
@@ -549,7 +553,7 @@ facebookService.prototype = {
                         if (fbSvc._friendDict[friend.id].status != friend.status) {
                             if (friend.status) {
                                 fbSvc.notify(friend, 'facebook-friend-updated', 'status');
-                                checkProf = !fbSvc.showPopup('friend.status', friend.pic, friend.name + ' is now ' + RenderStatusMsg(friend.status),
+                                checkProf = !fbSvc.showPopup('friend.status', friend.pic_sq, friend.name + ' is now ' + RenderStatusMsg(friend.status),
                                 'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#status');
                             } else {
                                 fbSvc.notify(friend, 'facebook-friend-updated', 'status-delete');
@@ -558,19 +562,19 @@ facebookService.prototype = {
                         }
                         if (fbSvc._friendDict[friend.id].wall < friend.wall) {
                             fbSvc.notify(friend, 'facebook-friend-updated', 'wall');
-                            checkProf = checkProf && !fbSvc.showPopup('friend.wall', friend.pic, 'Someone wrote on ' + friend.name + "'s wall",
+                            checkProf = checkProf && !fbSvc.showPopup('friend.wall', friend.pic_sq, 'Someone wrote on ' + friend.name + "'s wall",
                             'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#wall');
                             vdebug('wall count updated', fbSvc._friendDict[friend.id].wall, friend.wall);
                         }
                         if (fbSvc._friendDict[friend.id].notes < friend.notes) {
                             fbSvc.notify(friend, 'facebook-friend-updated', 'notes');
-                            checkProf = checkProf && !fbSvc.showPopup('friend.note', friend.pic, friend.name + ' wrote a note.',
+                            checkProf = checkProf && !fbSvc.showPopup('friend.note', friend.pic_sq, friend.name + ' wrote a note.',
                               'http://www.facebook.com/notes.php?id=' + friend.id + '&src=fftb');
                             vdebug('note count updated', fbSvc._friendDict[friend.id].notes, friend.notes);
                         }
                         if (checkProf && fbSvc._friendDict[friend.id].ptime != friend.ptime) {
                             fbSvc.notify(friend, 'facebook-friend-updated', 'profile');
-                            fbSvc.showPopup('friend.profile', friend.pic, friend.name + ' made a profile update',
+                            fbSvc.showPopup('friend.profile', friend.pic_sq, friend.name + ' updated his/her profile',
                             'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb&highlight');
                             friendUpdate = true;
                         }
@@ -602,7 +606,7 @@ facebookService.prototype = {
     // deprecated: replaced by fql query in checkUsers
     getUsersInfo: function(users, callback) {
         this.callMethod('facebook.users.getInfo', ['users='+users.join(','),
-                        'fields=name,status,pic,wall_count,notes_count,profile_update_time'],
+                        'fields=name,status,pic_small,pic_square,wall_count,notes_count,profile_update_time'],
                         function(data) {
             callback(fbSvc.parseUsers(data));
         });
@@ -667,7 +671,7 @@ facebookService.prototype = {
                 onStopRequest: function(request, context, statusCode) {
                     if (statusCode == Components.results.NS_OK) {
                         this.resultTxt = this.resultTxt.substr(this.resultTxt.indexOf("\n") + 1);
-                        vdebug('received text:' + this.resultTxt);
+                        vdebug('received text:', this.resultTxt);
                         var xmldata = new XML(this.resultTxt.replace(findNamespace,""));
                         if ((String)(xmldata.error_code)) { // need to cast to string or check will never fail
                             if (xmldata.error_code == 102) {
@@ -713,32 +717,32 @@ facebookService.prototype = {
 //            var alerts = Cc["@mozilla.org/alerts-service;1"].getService(Ci.nsIAlertsService);
 //            alerts.showAlertNotification(pic, 'Facebook Notification', label, true, url, this._alertObserver);
 //        } catch(e) {
-            try { // use growl if it is built in
-                if (!this._prefService.getBoolPref('extensions.facebook.notifications.growl')) {
-                    throw null;
-                }
-                var growlexec = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-                var process = Cc["@mozilla.org/process/util;1"].createInstance(Ci.nsIProcess);
-                growlexec.initWithPath(this._prefService.getCharPref('extensions.facebook.notifications.growlpath'));
-                if (growlexec.exists()) {
-                    process.init(growlexec);
-                    var args = ['-n', 'Firefox', '-a', 'Firefox', '-t', 'Facebook Notification', '-m', label];
-                    process.run(false, args, args.length);
-                }
-            } catch (e2) { // failing that, open up a window with the notification
-                debug('caught', e2);
-                this._numAlertsObj.value++;
-                var window = this._winService.getMostRecentWindow(null);
-                if (!window) {
-                    window = Cc["@mozilla.org/appshell/appShellService;1"].getService(Ci.nsIAppShellService)
-                                                                          .hiddenDOMWindow;
-                }
-                var left = window.screen.width - 215;
-                var top = window.screen.height - 105*this._numAlertsObj.value;
-                window.openDialog("chrome://facebook/content/notifier.xul", "_blank",
-                                  'chrome,titlebar=no,popup=yes,left=' + left + ',top=' + top + ',width=210,height=100',
-                                  pic, label, url, this._numAlertsObj);
+
+        try {
+          var use_growl = this._prefService.getBoolPref('extensions.facebook.notifications.growl');
+          if (use_growl) { // use growl if it is built in
+            var growlexec = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+            var process = Cc["@mozilla.org/process/util;1"].createInstance(Ci.nsIProcess);
+            growlexec.initWithPath(this._prefService.getCharPref('extensions.facebook.notifications.growlpath'));
+            if (growlexec.exists()) {
+                process.init(growlexec);
+                var args = ['-n', 'Firefox', '-a', 'Firefox', '-t', 'Facebook Notification', '-m', label];
+                process.run(false, args, args.length);
             }
+          }
+          else
+            throw null;
+        } catch (e2) { // failing that, open up a window with the notification
+            if (e2) debug('caught', e2);
+            this._numAlertsObj.value++;
+            var win = Cc["@mozilla.org/appshell/appShellService;1"].getService(Ci.nsIAppShellService)
+                                                                  .hiddenDOMWindow;
+            var left = win.screen.width - 215;
+            var top  = win.screen.height - 105*this._numAlertsObj.value;
+            win.openDialog('chrome://facebook/content/notifier.xul', '_blank',
+                           'chrome,titlebar=no,popup=yes,left=' + left + ',top=' + top + ',width=210,height=100',
+                           pic, label, url, this._numAlertsObj);
+        }
 //        }
         return true;
     }
@@ -785,10 +789,11 @@ function NSGetModule(compMgr, fileSpec) {
     return facebookModule;
 }
 
-function facebookUser(id, name, pic, status, stime, ptime, notes, wall) {
+function facebookUser(id, name, pic, pic_sq, status, stime, ptime, notes, wall) {
     this.id     = id;
     this.name   = name;
     this.pic    = pic;
+    this.pic_sq = pic_sq;
     this.status = status;
     this.stime  = stime;
     this.ptime  = ptime;
