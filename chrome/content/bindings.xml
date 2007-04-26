@@ -18,8 +18,8 @@
                        style="border: 1px solid black;" />
         </xul:vbox>
         <xul:vbox flex="1" style="padding: 0px; /*background-color: red;*/" pack="start" align="start">
-          <xul:label xbl:inherits="value=friendname,onclick=oncommand" class="facebook-link user_name" />
-          <xul:label xbl:inherits="onclick=viewUpdCmd" class="facebook-link ptime" value="overwritten"/>
+          <xul:label xbl:inherits="onclick=oncommand" class="facebook-link user_name" value="John Doe" />
+          <xul:label xbl:inherits="onclick=viewUpdCmd" class="facebook-link ptime" value="overwritten" />
           <xul:label class="status">
             <children />
           </xul:label>
@@ -39,14 +39,18 @@
     </content>
     <implementation>
       <constructor>
-        var hbox_elt  = document.getAnonymousNodes(this)[0];
-        var ptime_elt = hbox_elt.childNodes[1].childNodes[1];
+        var text_box_elt  = document.getAnonymousNodes(this)[0].childNodes[1]; // second child of hbox
+        var name_elt  = text_box_elt.childNodes[0];
+        var ptime_elt = text_box_elt.childNodes[1];
         /* var stime_elt = hbox_elt.childNodes[1].childNodes[3]; */
+        name_elt.removeAttribute( "value" );
+        var name = this.getAttribute( "friendname" );
+        name_elt.appendChild(document.createTextNode(name));
+
         ptime_elt.removeAttribute( "value" );
         var ptime = this.getAttribute( "ptime" );
         if (ptime) {
-          var txt = document.createTextNode(ptime);
-          ptime_elt.appendChild( txt );
+          ptime_elt.appendChild(document.createTextNode(ptime));
         }
         else // collapse ...
           ptime_elt.parentNode.removeChild( ptime_elt );
