@@ -627,7 +627,7 @@ facebookService.prototype = {
     callMethod: function (method, params, callback, secondTry) {
         if (!this._loggedIn) return null;
 
-        var origParamsLen = params.length;
+        var origParams = params.slice(0); // easy way to make a deep copy of the array
         params.push('method=' + method);
         params.push('session_key=' + this._sessionKey);
         params.push('api_key=' + this._apiKey);
@@ -685,7 +685,7 @@ facebookService.prototype = {
                                 debug(xmldata);
                                 if (!secondTry) {
                                     debug('TRYING ONE MORE TIME');
-                                    fbSvc.callMethod(method, params.slice(0, origParamsLen), callback, true);
+                                    fbSvc.callMethod(method, origParams, callback, true);
                                 }
                             }
                         } else {
