@@ -28,6 +28,7 @@
       <toolbarbutton id="facebook-home"
                      class="button"
                      tooltiptext="Go to Facebook"
+                     text="Facebook"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="openUILink('http://www.facebook.com/home.php?src=fftb', event)"
                      />
@@ -52,13 +53,13 @@
       <toolbarbutton id="facebook-notification-group-invs"
                      class="facebook-icon-grps facebook-notification button"
                      label="?"
-                     tooltiptext="New Group Invites"
+                     tooltiptext="New Group Invitations"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/reqs.php?src=fftb#group', event)"/>
       <toolbarbutton id="facebook-notification-event-invs"
                      class="facebook-icon-evts facebook-notification button"
                      label="?"
-                     tooltiptext="New Event Invites"
+                     tooltiptext="New Event Invitations"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/reqs.php?src=fftb#event', event)"/>
       <toolbarbutton id="facebook-notification-msgs"
@@ -161,7 +162,7 @@
              context="toolbar-context-menu"
              toolbarname="Facebook Toolbar"
              crop="end"
-            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-group-invs,facebook-notification-event-invs,facebook-notification-separator,facebook-share,spring,facebook-login-info">
+            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-event-invs,facebook-notification-group-invs,facebook-notification-separator,facebook-share,spring,facebook-login-info">
     </toolbar>
     <popupset>
     <popup position="after_start"

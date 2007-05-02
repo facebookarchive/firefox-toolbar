@@ -24,18 +24,6 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   color: #2f4778;
 }
 
-#facebook-home {
-  list-style-image: url('chrome://facebook/skin/home.gif');
-  padding: 0px;
-  padding-left: 4px;
-  border: none;
-  margin: 0;
-}
-#facebook-home .toolbarbutton-text {
-  margin: 0;
-  padding: 0;
-}
-
 .facebook-notification, .facebook-share, #facebook-searchbox, .facebook-sidebar-icon image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding: 0px;
@@ -141,10 +129,7 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
 }
 
 /* -- Events -- */
-.facebook-icon-evts:hover {
-  -moz-image-region: rect(0px 332px 16px 317px);
-}
-
+.facebook-icon-evts:hover,
 .facebook-icon-evts:active {
   -moz-image-region: rect(0px 347px 16px 332px);
 }
@@ -155,10 +140,7 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
 }
 
 /* -- Groups -- */
-.facebook-icon-grps:hover {
-  -moz-image-region: rect(0px 363px 16px 347px);
-}
-
+.facebook-icon-grps:hover,
 .facebook-icon-grps:active {
   -moz-image-region: rect(0px 379px 16px 363px);
 }
@@ -166,6 +148,29 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
 .facebook-icon-grps {
   margin: 0px;
   -moz-image-region: rect(0px 363px 16px 347px);
+}
+
+/* -- Home -- */
+#facebook-home {
+  list-style-image: url('chrome://facebook/skin/toolbar.png');
+  padding: 0px;
+  padding-left: 4px;
+  border: 0;
+  margin: 0;
+  -moz-image-region: rect(0px 425px 16px 409px);
+}
+#facebook-home:active,
+#facebook-home:hover
+{
+  -moz-image-region: rect(0px 441px 16px 425px);
+}
+
+#facebook-home .toolbarbutton-text,
+#facebook-home label
+{
+  margin: 0;
+  padding: 0;
+  display: none;
 }
 
 /* somewhat annoying because these guys could be used as quick links */

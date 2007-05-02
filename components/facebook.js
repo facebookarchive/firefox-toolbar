@@ -33,10 +33,9 @@
  */
 
 const BASE_CHECK_INTERVAL = 5*60*1000; // 5 minutes
-const DEBUG = true;
-const VERBOSITY = 1; // 0: no dumping, 1: normal dumping, 2: massive dumping
+const DEBUG     = false;
+const VERBOSITY = 0; // 0: no dumping, 1: normal dumping, 2: massive dumping
 
-// tasty: test VERBOSITY only once
 var debug = ( VERBOSITY < 1 )
   ? function() {}
   : function() {
@@ -179,14 +178,16 @@ function facebookService()
             //   3. or we haven't checked in the last 10 minutes and no page has loaded
                 || ( now > fbSvc._lastChecked + BASE_CHECK_INTERVAL*2))
             {
-                fbSvc._lastChecked = now;
-                debug('_checker.notify: checking', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad);
-                // note: suppress notifications if we haven't successfully checked for the last 30 minutes
-                fbSvc.checkUsers(now > fbSvc._lastCheckedFriends + BASE_CHECK_INTERVAL * 6);
-                fbSvc.checkNotifications(false);
-                fbSvc.checkAlbums(now - fbSvc._lastChecked);
+              var now = Date.now();
+              var interval = now - fbSvc._lastChecked;
+              fbSvc._lastChecked = now;
+              debug('_checker.notify: checking', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
+              // note: suppress notifications if we haven't successfully checked for the last 30 minutes
+              fbSvc.checkUsers(now > fbSvc._lastCheckedFriends + BASE_CHECK_INTERVAL * 6);
+              fbSvc.checkNotifications(false);
+              fbSvc.checkAlbums(interval);
             } else {
-                debug('_checker.notify: skipping', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
+              debug('_checker.notify: skipping', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
             }
         }
       };

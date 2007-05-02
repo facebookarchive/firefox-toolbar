@@ -182,7 +182,6 @@ function LoadFriends() {
 
         var hint = document.getElementById('FacebookHint');
         for each (var friend in friends) {
-            debug( friend.name, friend.stime, friend.ptime );
             CreateFriendNode(list, friend, hint);
         }
         var searchTerm = GetFBSearchBox().value;
@@ -293,7 +292,7 @@ function SidebarLoad() {
         document.getElementById('facebook-search-sidebar').style.display = 'none';
     }
     // top.document.getElementById('sidebar-splitter').addEventListener('mouseup', SidebarResize, false);
-    SidebarResize();
+    // SidebarResize();
 }
 function SidebarUnload() {
     debug('SidebarUnload');
