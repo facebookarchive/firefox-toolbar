@@ -61,6 +61,7 @@ interface fbIFacebookService : nsISupports
     // sessionStart is called again.  Aside from the facebook.auth methods,
     // all other Facebook API calls should be done inside this service.
     void sessionStart(in AString sessionKey, in AString sessionSecret, in AString uid);
+    void savedSessionStart(); // attempt to start a saved session
     void sessionEnd();
 
     // Use this function to help the service figure out how frequently it

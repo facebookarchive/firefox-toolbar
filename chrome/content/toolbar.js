@@ -166,11 +166,7 @@ var facebook = {
             setAttributeById('facebook-notification-event-invs', 'label', fbSvc.numEventInvs);
         }
         else {
-          var session_key = prefSvc.getCharPref( 'extensions.facebook.session_key' );
-          var session_secret = prefSvc.getCharPref( 'extensions.facebook.session_secret' );
-          var uid = prefSvc.getCharPref( 'extensions.facebook.uid' );
-          fbSvc.sessionStart( session_key, session_secret, uid, true );
-          // fbSvc.savedSessionStart(); // once idl compiled
+          fbSvc.savedSessionStart();
         }
         facebook.loadFriends();
         getBrowser().addProgressListener(progListener);

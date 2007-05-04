@@ -68,6 +68,7 @@ const CLASS_NAME   = 'Facebook API Connector';
 
 var Cc = Components.classes;
 var Ci = Components.interfaces;
+const PASSWORD_URL = 'chrome://facebook';
 
 // Load MD5 code...
 Cc['@mozilla.org/moz/jssubscript-loader;1']
@@ -262,6 +263,8 @@ function facebookService()
     this._winService      = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
     this._observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
     this._prefService     = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch2);
+    this._pwdService     = Cc['@mozilla.org/passwordmanager;1'].getService(Ci.nsIPasswordManager);
+    this._pwdServiceInt  = Cc['@mozilla.org/passwordmanager;1'].getService(Ci.nsIPasswordManagerInternal);
 }
 
 facebookService.prototype = {
@@ -294,12 +297,15 @@ facebookService.prototype = {
         return this._loggedInUser;
     },
     savedSessionStart: function() {
-        this.sessionStart(
-          this._prefService.getCharPref( 'extensions.facebook.session_key' ),
-          this._prefService.getCharPref( 'extensions.facebook.session_secret' ),
-          this._prefService.getCharPref( 'extensions.facebook.uid' ),
-          true
-        );
+      var uid         = this._prefService.getCharPref( 'extensions.facebook.uid' );
+
+      var session_secret = { value: "" },
+          session_key    = { value: "" },
+          throwaway      = { value: "" };
+
+      this._pwdServiceInt.findPasswordEntry( PASSWORD_URL, null /* username */, null /* password */
+          , throwaway /* hostURIFound */, session_key /* usernameFound */, session_secret /*pwdFound*/ );
+      this.sessionStart( session_key.value, session_secret.value, uid, true );
     },
     sessionStart: function(sessionKey, sessionSecret, uid, saved) {
         debug( 'sessionStart', sessionKey, sessionSecret, uid );
@@ -311,9 +317,10 @@ facebookService.prototype = {
 
         if( !saved ) {
           // persist API sessions across the Firefox shutdown
-          this.savePref( 'extensions.facebook.session_key', this._sessionKey );
-          this.savePref( 'extensions.facebook.session_secret', this._sessionSecret );
+          // by saving them in the password store
           this.savePref( 'extensions.facebook.uid', this._uid );
+          this._pwdServiceInt.addUserFull( PASSWORD_URL, this._sessionKey, this._sessionSecret,
+                                           'key', 'secret' ); // last two values don't matter
         }
 
         this._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
@@ -324,16 +331,16 @@ facebookService.prototype = {
         this._oneShotTimer.initWithCallback(this._initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
     },
     savePref: function( pref_name, pref_val ) {
-        this._prefService.unlockPref( pref_name, this._sessionSecret );
+        this._prefService.unlockPref( pref_name );
         this._prefService.setCharPref( pref_name, pref_val );
-        this._prefService.lockPref( pref_name, this._sessionSecret );
+        this._prefService.lockPref( pref_name );
     },
     sessionEnd: function() {
         debug('sessionEnd');
-        // remove session info from prefs because of explicit login
-        this.savePref( 'extensions.facebook.session_key', "" );
-        this.savePref( 'extensions.facebook.session_secret', "" );
+        // remove session info from prefs because of explicit logout
         this.savePref( 'extensions.facebook.uid', "" );
+        try { this._pwdService.removeUser( PASSWORD_URL ); }
+        catch( e ) { debug( 'removeUser exception' ); }
 
         this.initValues();
         this._timer.cancel();
@@ -573,7 +580,7 @@ facebookService.prototype = {
                               'http://www.facebook.com/notes.php?id=' + friend.id + '&src=fftb');
                             vdebug('note count updated', fbSvc._friendDict[friend.id].notes, friend.notes);
                         }
-                        if (checkProf && fbSvc._friendDict[friend.id].ptime != friend.ptime) {
+                        if (checkProf && fbSvc._friendDict[friend.id].ptime != friend.ptime && 0 != friend.ptime ) {
                             fbSvc.notify(friend, 'facebook-friend-updated', 'profile');
                             fbSvc.showPopup('friend.profile', friend.pic_sq, friend.name + ' updated his/her profile',
                             'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb&highlight');

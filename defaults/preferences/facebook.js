@@ -15,6 +15,4 @@ pref("extensions.facebook.notifications.friend.album", true);
 pref("extensions.facebook.notifications.growl", false);
 pref("extensions.facebook.notifications.growlpath", "/usr/local/bin/growlnotify");
 // populated on login
-pref("extensions.facebook.session_key", "" );
-pref("extensions.facebook.session_secret", "" );
 pref("extensions.facebook.uid", "" );
