@@ -17,8 +17,8 @@
     <browser id="facebook-login-body"
              style="display: none;"
              src=""
-             type="content"
-             flex="1"/>
+             type="content-primary"
+             flex="1" />
 	 <hbox>
 		<spacer flex="1" />
         <button id="facebook-login-done"

@@ -87,7 +87,6 @@ var observer = {
 };
 
 function NameCmp(friend1,friend2) {
-  debug("DefaultSortFunc called");
   var n1 = friend1.name.toLowerCase();
   var n2 = friend2.name.toLowerCase();
   if (n1 < n2) return -1;

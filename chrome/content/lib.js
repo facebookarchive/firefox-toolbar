@@ -276,11 +276,10 @@ function FacebookLogin() {
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     req.send('confirm=1');
   } else {
-    // popup login page height is normally 456, but add 20 pixels for the
-    // button we show at the bottom of the page, and 20 pixels for the infinite
-    // sessions checkbox.
+    // popup login page height is at most 500, but add 20 pixels for the
+    // button we show at the bottom of the page
     window.open('chrome://facebook/content/login.xul', '',
-                'chrome,centerscreen,width=626,height=520,modal=yes,dialog=yes,close=yes');
+                'chrome,centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes');
   }
 }
 

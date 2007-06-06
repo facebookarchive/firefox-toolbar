@@ -184,7 +184,7 @@ function facebookService()
               fbSvc._lastChecked = now;
               debug('_checker.notify: checking', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
               // note: suppress notifications if we haven't successfully checked for the last 30 minutes
-              fbSvc.checkUsers(now > fbSvc._lastCheckedFriends + BASE_CHECK_INTERVAL * 6);
+              fbSvc.checkUsers(now > (fbSvc._lastCheckedFriends + BASE_CHECK_INTERVAL * 6));
               fbSvc.checkNotifications(false);
               fbSvc.checkAlbums(interval);
             } else {
@@ -298,6 +298,8 @@ facebookService.prototype = {
     },
     savedSessionStart: function() {
       var uid         = this._prefService.getCharPref( 'extensions.facebook.uid' );
+      debug( 'SAVED SESSION', uid );
+      if( !uid ) return;
 
       var session_secret = { value: "" },
           session_key    = { value: "" },
@@ -456,7 +458,7 @@ facebookService.prototype = {
         debug("Initial album check...");
         var query = " SELECT aid, owner, modified, size FROM album "
           + " WHERE owner IN (SELECT uid2 FROM friend WHERE uid1 = :user) and size > 0;";
-        query = query.replace( /:user/g, fbSvc._uid );
+        query = query.replace( /:user/g, this._uid );
         this.callMethod('facebook.fql.query', ['query='+query], function(data) {
           for each( var album in data..album ) {
             var aid      = Number(album.aid),
@@ -477,7 +479,7 @@ facebookService.prototype = {
         var query = " SELECT aid, owner, name, modified, size, link FROM album "
           + " WHERE owner IN (SELECT uid2 FROM friend WHERE uid1 = :user )"
          + " AND modified > (now() - :window) AND size > 0;";
-        query = query.replace( /:user/g, fbSvc._uid )
+        query = query.replace( /:user/g, this._uid )
                      .replace( /:window/g, Math.floor(window/1000) + 30 ); // 30 sec of wiggle room
         debug(query);
         this.callMethod('facebook.fql.query', ['query='+query], function(data) {
@@ -517,7 +519,7 @@ facebookService.prototype = {
         var query = ' SELECT uid, name, status, pic_small, pic_square, wall_count, notes_count, profile_update_time'
                   + ' FROM user WHERE uid = :user '
                   + ' OR uid IN (SELECT uid2 FROM friend WHERE uid1 = :user );';
-        query = query.replace( /:user/g, fbSvc._uid );
+        query = query.replace( /:user/g, this._uid );
         this.callMethod('facebook.fql.query', ['query='+query], function(data) {
             fbSvc._lastCheckedFriends = Date.now();
 
@@ -557,11 +559,11 @@ facebookService.prototype = {
                         fbSvc._friendCount++; // increment the count
                         friendUpdate = true;
                     } else {
-                        checkProf = true; // only check if not displaying another notification
+                        notifyProf = true; // only notify if not displaying another notification
                         if (fbSvc._friendDict[friend.id].status != friend.status) {
                             if (friend.status) {
                                 fbSvc.notify(friend, 'facebook-friend-updated', 'status');
-                                checkProf = !fbSvc.showPopup('friend.status', friend.pic_sq, friend.name + ' is now ' + RenderStatusMsg(friend.status),
+                                notifyProf = !fbSvc.showPopup('friend.status', friend.pic_sq, friend.name + ' is now ' + RenderStatusMsg(friend.status),
                                 'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#status');
                             } else {
                                 fbSvc.notify(friend, 'facebook-friend-updated', 'status-delete');
@@ -570,20 +572,22 @@ facebookService.prototype = {
                         }
                         if (fbSvc._friendDict[friend.id].wall < friend.wall) {
                             fbSvc.notify(friend, 'facebook-friend-updated', 'wall');
-                            checkProf = checkProf && !fbSvc.showPopup('friend.wall', friend.pic_sq, 'Someone wrote on ' + friend.name + "'s wall",
+                            notifyProf = notifyProf && !fbSvc.showPopup('friend.wall', friend.pic_sq, 'Someone wrote on ' + friend.name + "'s wall",
                             'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#wall');
                             vdebug('wall count updated', fbSvc._friendDict[friend.id].wall, friend.wall);
                         }
                         if (fbSvc._friendDict[friend.id].notes < friend.notes) {
                             fbSvc.notify(friend, 'facebook-friend-updated', 'notes');
-                            checkProf = checkProf && !fbSvc.showPopup('friend.note', friend.pic_sq, friend.name + ' wrote a note.',
+                            notifyProf = notifyProf && !fbSvc.showPopup('friend.note', friend.pic_sq, friend.name + ' wrote a note.',
                               'http://www.facebook.com/notes.php?id=' + friend.id + '&src=fftb');
                             vdebug('note count updated', fbSvc._friendDict[friend.id].notes, friend.notes);
                         }
-                        if (checkProf && fbSvc._friendDict[friend.id].ptime != friend.ptime && 0 != friend.ptime ) {
+                        if (fbSvc._friendDict[friend.id].ptime != friend.ptime && 0 != friend.ptime ) {
                             fbSvc.notify(friend, 'facebook-friend-updated', 'profile');
-                            fbSvc.showPopup('friend.profile', friend.pic_sq, friend.name + ' updated his/her profile',
-                            'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb&highlight');
+                            if (notifyProf) {
+                              fbSvc.showPopup('friend.profile', friend.pic_sq, friend.name + ' updated his/her profile',
+                              'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb&highlight');
+                            }
                             friendUpdate = true;
                         }
                     }
