@@ -563,7 +563,7 @@ facebookService.prototype = {
                         if (fbSvc._friendDict[friend.id].status != friend.status) {
                             if (friend.status) {
                                 fbSvc.notify(friend, 'facebook-friend-updated', 'status');
-                                notifyProf = !fbSvc.showPopup('friend.status', friend.pic_sq, friend.name + ' is now ' + RenderStatusMsg(friend.status),
+                                notifyProf = !fbSvc.showPopup('friend.status', friend.pic_sq, friend.name + ' ' + RenderStatusMsg(friend.status),
                                 'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#status');
                             } else {
                                 fbSvc.notify(friend, 'facebook-friend-updated', 'status-delete');

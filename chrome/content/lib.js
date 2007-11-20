@@ -298,7 +298,7 @@ function SetProfileTime(item, time){
 function SetStatus(item, status, time) {
     if (status) {
         var firstName = item.getAttribute('firstname');
-        var msg = firstName + ' is ' + RenderStatusMsg(status);
+        var msg = firstName + ' ' + RenderStatusMsg(status);
         if (item.firstChild) {
             item.firstChild.nodeValue = msg;
         } else {

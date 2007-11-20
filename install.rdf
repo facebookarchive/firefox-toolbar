@@ -5,7 +5,7 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>firefox@facebook.com</em:id>
-    <em:version>1.1</em:version>
+    <em:version>1.1.1</em:version>
     <em:type>2</em:type>
    
     <!-- Target Application this extension can install into, 
@@ -22,7 +22,7 @@
       <Description>
         <em:id>{a463f10c-3994-11da-9945-000d60ca027b}</em:id>
         <em:minVersion>0.4</em:minVersion>
-        <em:maxVersion>0.8</em:maxVersion>
+        <em:maxVersion>1.0</em:maxVersion>
       </Description>
     </em:targetApplication>
    
@@ -35,7 +35,6 @@
     <em:developer>Eugene Letuchy</em:developer>
     <em:iconURL>chrome://facebook/content/fbfavicon.png</em:iconURL>
     <em:optionsURL>chrome://facebook/content/settings.xul</em:optionsURL>
-    <em:updateURL>http://developers.facebook.com/toolbar/updates.rdf</em:updateURL>
     <em:homepageURL>http://developers.facebook.com/toolbar/</em:homepageURL>
   </Description>      
 </RDF>
