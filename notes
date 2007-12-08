@@ -11,9 +11,13 @@ unfortunately, you'll get errors from glib when building on an x86 mac complaini
  
 
 compile idl file:
-  ../gecko-sdk/bin/xpidl -m typelib -w -v -I ../gecko-sdk/idl/ facebook.idl
-  ../gecko-sdk/bin/xpidl -m typelib -w -v -I ../gecko-sdk/idl/ -I ~/firefox-full/mozilla/rdf/base/idl/ -I ~/firefox-full/mozilla/xpcom/ds/ facebook.idl
+Makefile
+GECKO_SDK   = /Users/eletuchy/gecko-sdk-mac-intel-1.8.1.3
+MOZILLA_SRC = /Users/eletuchy/firefox-source/mozilla
 
+all: xpt
+xpt:
+	${GECKO_SDK}/bin/xpidl -m typelib -w -v -I ${GECKO_SDK}/idl/ -I ${MOZILLA_SRC}/rdf/base/idl -I ${MOZILLA_SRC}/xpcom/ds/ facebook.idl
 
 
 useful script to start FF using my dev profile alongside a normal copy of FF:
@@ -26,4 +30,4 @@ ari@Ari:platform/client/firefox$ cat `which FirefoxDev.sh`
 to persist data across multiple windows, try http://www.xulplanet.com/references/xpcomref/comps/c_hashpropertybag1.html
 
 to package:
-zip ../facebook-firefox.xpi -r * -x "*.svn*" -x notes
+. build.bat // works in bash ... zomg! 

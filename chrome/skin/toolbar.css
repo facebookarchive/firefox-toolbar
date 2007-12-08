@@ -49,6 +49,11 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   padding: 0;
 }
 
+#facebook-toolbar-status {
+  max-width: 400px;
+  min-width: 100px;
+}
+
 #facebook-search .textbox-input-box {
   -moz-binding: url('chrome://facebook/content/bindings.xml#facebook-search-hbox');
   padding: 0px;

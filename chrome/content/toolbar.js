@@ -73,13 +73,17 @@ var fbToolbarObserver = {
             case 'facebook-session-start':
                 subject = subject.QueryInterface(Ci.fbIFacebookUser);
                 setAttributeById('facebook-name-info', 'label', subject.name);
+                setAttributeById('facebook-toolbar-status', 'value', subject.status);
+                var statusBox = document.getElementById('facebook-toolbar-status');
+                facebook.onStatusBoxBlur(statusBox); // cleared status autotext
+                statusBox.style.display="block";
                 setAttributeById('facebook-name-info', 'userid', subject.id);
                 setAttributeById('facebook-menu-my-profile', 'userid', subject.id);
                 setAttributeById('facebook-login-status', 'label', 'Logout');
                 var sb = GetFBSearchBox();
                 if (sb.value != 'Search Facebook' && sb.value != '') {
                     sb.value = '';
-                    this.searchBoxBlur(sb);
+                    facebook.searchBoxBlur(sb);
                 }
                 SetHint(true, 'Loading friend list...', '');
                 break;
@@ -87,6 +91,8 @@ var fbToolbarObserver = {
                 debug('ending session...');
                 setAttributeById('facebook-login-status', 'label', 'Login to Facebook');
                 setAttributeById('facebook-name-info', 'label', '');
+                var statusBox = document.getElementById('facebook-toolbar-status');
+                statusBox.style.display="none";
                 for each( var top in topicToXulId )
                     setAttributeById( top, 'label', '?');
                 facebook.clearFriends(true);
@@ -99,6 +105,23 @@ var fbToolbarObserver = {
                 debug( 'friend update...' )
                 subject = subject.QueryInterface(Ci.fbIFacebookUser);
                 facebook.updateFriend(subject);
+                break;
+            case 'facebook-status-set-result':
+                debug('status-set-result', data);
+                switch (data) {
+                    case 'set': alert('Status was set successfully.');
+                    break;
+                    case 'clear': alert('Your status was cleared successfully.');
+                    break;
+                    case 'fail': 
+                    case 'perm':
+                        alert('Your status could not be set.');
+                    break;
+                }
+                break;
+            case 'facebook-status-updated':
+                setAttributeById('facebook-toolbar-status', 'value', subject);
+                facebook.onStatusBoxBlur(document.getElementById('facebook-toolbar-status'));
                 break;
             case 'facebook-new-day':
                 facebook.clearFriends(false);
@@ -132,6 +155,8 @@ var topics_of_interest =    [ 'facebook-session-start'
                             , 'facebook-group-invs-updated'
                             , 'facebook-reqs-updated'
                             , 'facebook-new-day'
+                            , 'facebook-status-set-result'
+                            , 'facebook-status-updated'
                             ];
 
 var facebook = {
@@ -157,6 +182,7 @@ var facebook = {
             loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
             setAttributeById('facebook-name-info', 'label', loggedInUser.name);
             setAttributeById('facebook-name-info', 'userid', loggedInUser.id);
+            setAttributeById('facebook-toolbar-status', 'value', loggedInUser.status);
             setAttributeById('facebook-login-status', 'label', 'Logout');
             setAttributeById('facebook-menu-my-profile', 'userid', loggedInUser.id);
             setAttributeById('facebook-notification-msgs', 'label', fbSvc.numMsgs);
@@ -265,6 +291,22 @@ var facebook = {
       searchBox.style.color='#808080';
       searchBox.value = 'Search Facebook';
     }
+  },
+  isEmptyStatusText: function (text) {
+      return ('' == text || 'is ' == text || 'set your status...' == text);
+  },
+  onStatusBoxFocus: function(statusBox) {
+      if (this.isEmptyStatusText(statusBox.value)) {
+        statusBox.value = 'is ';
+        statusBox.color = '#000000';
+      }  
+      statusBox.setSelectionRange(3, statusBox.value.length);
+  },
+  onStatusBoxBlur: function(statusBox) {
+      if (this.isEmptyStatusText(statusBox.value)) {
+        statusBox.color = '#808080';
+        statusBox.value = 'set your status...';
+      }
   },
   share: function() {
     // not only do we need to encodeURIComponent on the string, we also need to escape quotes since

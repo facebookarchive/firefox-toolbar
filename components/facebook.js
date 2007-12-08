@@ -263,8 +263,8 @@ function facebookService()
     this._winService      = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
     this._observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
     this._prefService     = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch2);
-    this._pwdService     = Cc['@mozilla.org/passwordmanager;1'].getService(Ci.nsIPasswordManager);
-    this._pwdServiceInt  = Cc['@mozilla.org/passwordmanager;1'].getService(Ci.nsIPasswordManagerInternal);
+    this._pwdService      = Cc['@mozilla.org/passwordmanager;1'].getService(Ci.nsIPasswordManager);
+    this._pwdServiceInt   = Cc['@mozilla.org/passwordmanager;1'].getService(Ci.nsIPasswordManagerInternal);
 }
 
 facebookService.prototype = {
@@ -296,27 +296,34 @@ facebookService.prototype = {
     get loggedInUser() {
         return this._loggedInUser;
     },
+    get canSetStatus() {
+        debug("Can Set Status", this._canSetStatus);
+        return Boolean(this._canSetStatus);
+    },
     savedSessionStart: function() {
-      var uid         = this._prefService.getCharPref( 'extensions.facebook.uid' );
-      debug( 'SAVED SESSION', uid );
-      if( !uid ) return;
+        var uid = this._prefService.getCharPref('extensions.facebook.uid');
+        if (!uid) { return; }
+        debug( 'SAVED SESSION', uid );
 
-      var session_secret = { value: "" },
-          session_key    = { value: "" },
-          throwaway      = { value: "" };
+        var session_secret = { value: "" },
+            session_key    = { value: "" },
+            throwaway      = { value: "" };
 
-      this._pwdServiceInt.findPasswordEntry( PASSWORD_URL, null /* username */, null /* password */
-          , throwaway /* hostURIFound */, session_key /* usernameFound */, session_secret /*pwdFound*/ );
-      this.sessionStart( session_key.value, session_secret.value, uid, true );
+        this._pwdServiceInt.findPasswordEntry( PASSWORD_URL, null /* username */, null /* password */,
+            throwaway /* hostURIFound */, session_key /* usernameFound */, session_secret /*pwdFound*/ );
+        this.sessionStart( session_key.value, session_secret.value, uid, true );
     },
     sessionStart: function(sessionKey, sessionSecret, uid, saved) {
         debug( 'sessionStart', sessionKey, sessionSecret, uid );
-        if (!sessionKey || !sessionSecret || !uid) return;
+        if (!sessionKey || !sessionSecret || !uid) {
+          if (saved) {this.sessionEnd();}
+          return;
+        }
         this._sessionKey    = sessionKey;
         this._sessionSecret = sessionSecret;
         this._loggedIn      = true;
         this._uid           = uid;
-
+        
         if( !saved ) {
           // persist API sessions across the Firefox shutdown
           // by saving them in the password store
@@ -331,6 +338,8 @@ facebookService.prototype = {
         // fire off another thread to get things started
         this._oneShotTimer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
         this._oneShotTimer.initWithCallback(this._initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
+
+        this.checkCanSetStatus();
     },
     savePref: function( pref_name, pref_val ) {
         this._prefService.unlockPref( pref_name );
@@ -340,7 +349,7 @@ facebookService.prototype = {
     sessionEnd: function() {
         debug('sessionEnd');
         // remove session info from prefs because of explicit logout
-        this.savePref( 'extensions.facebook.uid', "" );
+        this.savePref( 'extensions.facebook.uid', '' );
         try { this._pwdService.removeUser( PASSWORD_URL ); }
         catch( e ) { debug( 'removeUser exception' ); }
 
@@ -360,6 +369,7 @@ facebookService.prototype = {
         this._sessionSecret = null;
         this._uid           = null;
         this._loggedIn      = false;
+        this._canSetStatus  = false;
         this._loggedInUser  = null;
 
         this._messages      = null; // CountedNotif
@@ -369,7 +379,7 @@ facebookService.prototype = {
         this._reqs          = null; // SetNotif
 
         this._friendDict   = {};
-    	this._albumDict = {};
+        this._albumDict    = {};
 
         this._pendingRequest = false;
         this._pendingRequests = [];
@@ -379,9 +389,45 @@ facebookService.prototype = {
         this._lastPageLoad   = 0;
         this._lastCheckedFriends = 0;
     },
+    setStatus: function(status) {
+        if (status == "is " || status == "set your status...") {
+            status = "";
+        }
+        
+        if (status == this._loggedInUser.status) {
+            return;
+        }
+        
+        if (this.canSetStatus) {
+            var is_clear = status=="";
+            var params   = is_clear ? ['clear=1'] : ['status='+status, 'status_includes_verb=1'];
+            fbSvc.callMethod('facebook.users.setStatus', params, function(data) {
+                var result;
+                debug('users.setStatus:', params);
+                if ('1' == data.toString()) {
+                    result = is_clear ? 'clear' : 'set';
+                } else {
+                    result = 'fail';
+                }
+                fbSvc.notify(null, 'facebook-status-set-result', result);
+            });
+        } else {
+            debug("Facebook Toolbar doesn't have status_update perm?");
+            fbSvc.notify(null, 'facebook-status-set-result', 'perm' );
+        }
+    },
+    checkCanSetStatus: function() {
+        this.callMethod('facebook.users.hasAppPermission', ['ext_perm=status_update'], function(data){
+            fbSvc._canSetStatus = ('1' == data.toString());
+            debug('Can Set Status?', fbSvc._canSetStatus);
+        });
+    },
+    clearCanSetStatus: function() {
+        this._canSetStatus = null;
+    },
     checkNotifications: function(onInit){
         this.callMethod('facebook.notifications.get', [], function(data) {
-            if( onInit ){
+            if (onInit){
                 fbSvc._messages = new CountedNotif( data.messages,'facebook-msgs-updated', fbSvc
                     , function( msgCount ) {
                         vdebug( "msgCount", msgCount );
@@ -419,8 +465,7 @@ facebookService.prototype = {
                             }
                         });
                     });
-            }
-            else {
+            } else {
                 fbSvc._messages.update( data.messages );
                 fbSvc._pokes.update( data.pokes );
                 fbSvc._groupInvs.update( data.group_invites..gid );
@@ -529,8 +574,10 @@ facebookService.prototype = {
             friendDict = fbSvc.parseUsers(data);
 
             var loggedInUser = friendDict[fbSvc._uid];
-            debug( "loggedInUser", loggedInUser.name );
-            delete friendDict[fbSvc._uid];
+            if (loggedInUser) {
+              debug("loggedInUser", loggedInUser.name );
+              delete friendDict[fbSvc._uid];
+            }
 
             // Check for user's info changes
             if (fbSvc._loggedInUser) {
@@ -541,13 +588,18 @@ facebookService.prototype = {
                                          'http://www.facebook.com/profile.php?id=' + fbSvc._uid + '&src=fftb#wall');
                     }
                 }
+                if (fbSvc._loggedInUser.status != loggedInUser.status) {
+                    fbSvc.notify(null, 'facebook-status-updated', loggedInUser.status);
+                }
                 fbSvc._loggedInUser = loggedInUser;
-            } else {
+            } else if (loggedInUser){
                 fbSvc._loggedInUser = loggedInUser;
                 fbSvc.notify(fbSvc._loggedInUser, 'facebook-session-start', fbSvc._loggedInUser.id);
                 debug('logged in: howdy', fbSvc._loggedInUser.name);
+            } else {
+                debug("no info for logged-in user", fbSvc._uid);
             }
-            debug('check done with logged in user');
+            debug('check done with logged-in user');
 
             // Check for user's friends' info changes
             for each (var friend in friendDict) {
@@ -634,7 +686,7 @@ facebookService.prototype = {
     },
     // Note that this is intended to call non-login related Facebook API
     // functions - ie things other than facebook.auth.*.  The login-related
-    // calls are done in the chrome layer because
+    // calls are done in the chrome layer because they are in direct response to user actions.
     // Also note that this is synchronous so you should not call it from the UI.
     callMethod: function (method, params, callback, secondTry) {
         if (!this._loggedIn) return null;

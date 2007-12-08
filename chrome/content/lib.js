@@ -70,6 +70,19 @@ function getAttributeById(id, attrib) {
     return false;
 }
 
+function SetFacebookStatus(status) {
+    if (fbSvc.canSetStatus) {
+        fbSvc.setStatus(status.value);
+        status.blur();
+    } else {
+        var authorizeUrl = "http://www.facebook.com/authorize.php?api_key="+fbSvc.apiKey
+            +"&v=1.0&ext_perm=status_update";
+        fbSvc.clearCanSetStatus();
+        openUILink(authorizeUrl);
+    }
+    return false;
+}
+
 function OpenFBUrl(page, uid, e, params) {
   var url = 'http://www.facebook.com/' + page + '?id=' + uid + '&src=fftb';
   if( params ) {
@@ -81,6 +94,7 @@ function OpenFBUrl(page, uid, e, params) {
   debug('Opening ' + url);
   openUILink(url, e);
   e.stopPropagation();
+  return false;
 }
 
 function IsSidebarOpen() {

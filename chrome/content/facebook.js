@@ -77,7 +77,7 @@ FacebookLoginClient.prototype = {
                     dump( 'login:' + req.responseText.indexOf("\n") + "\n" );
                     req.text = req.responseText.substr(req.responseText.indexOf("\n"));
                     var ns = req.text.match(ns_re);
-                    if( ns )
+                    if (ns)
                       default xml namespace = ns;
                     req.xmldata = new XML(req.text);
                     callback(req);

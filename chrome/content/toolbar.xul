@@ -145,6 +145,14 @@
                        class="button"
                        onclick="checkForMiddleClick(this, event);"
                        oncommand="if (this.label!='') OpenFBUrl('profile.php', this.getAttribute('userid'), event)" />
+        <textbox id="facebook-toolbar-status"
+                 type="timed" timeout="5000" flex="10"
+                 onfocus="facebook.onStatusBoxFocus(this);"
+                 onblur="facebook.onStatusBoxBlur(this);"
+                 oncommand="return SetFacebookStatus(this);"
+                 style="display:none;"
+                 tooltiptext="Change your Facebook status"
+        />
         <toolbarseparator/>
         <toolbarbutton id="facebook-login-status"
                        class="button"

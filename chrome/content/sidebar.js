@@ -235,7 +235,7 @@ function CreateFriendNode(list, friend, insertBefore) {
     SetStatus(item, friend.status, friend.stime);
     item.setAttribute('ptime', getProfileTime(friend.ptime) );
     item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event, null )");
-    item.setAttribute('viewUpdCmd', "OpenFBUrl('profile.php', '" + friend.id + "', event, {highlight: null} )");
+    item.setAttribute('viewUpdCmd', "OpenFBUrl('profile.php', '" + friend.id + "', event, {highlight: null} ); return false;");
     item.setAttribute('msgCmd', "OpenFBUrl('message.php', '" + friend.id + "', event, null )");
     item.setAttribute('pokeCmd', "OpenFBUrl('poke.php', '" + friend.id + "', event, null )");
     item.setAttribute('postCmd', "OpenFBUrl('wallpost.php', '" + friend.id + "', event, null )");
