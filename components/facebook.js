@@ -402,14 +402,19 @@ facebookService.prototype = {
             var is_clear = status=="";
             var params   = is_clear ? ['clear=1'] : ['status='+status, 'status_includes_verb=1'];
             fbSvc.callMethod('facebook.users.setStatus', params, function(data) {
-                var result;
+                var result; var msg;
                 debug('users.setStatus:', params);
                 if ('1' == data.toString()) {
+                    msg = is_clear ? 'Your status was cleared successfully.'
+                     : 'Your status was set successfully.';
                     result = is_clear ? 'clear' : 'set';
                 } else {
                     result = 'fail';
+                    msg = 'Your status could not be set.';
                 }
                 fbSvc.notify(null, 'facebook-status-set-result', result);
+                fbSvc._showPopup('you.status', fbSvc._loggedInUser.pic_sq, msg,
+                   'http://www.facebook.com/profile.php?id=' + fbSvc._uid + '&src=fftb#status');
             });
         } else {
             debug("Facebook Toolbar doesn't have status_update perm?");
@@ -776,12 +781,11 @@ facebookService.prototype = {
             !this._prefService.getBoolPref('extensions.facebook.notifications.' + type)) {
             return false;
         }
+        return this._showPopup(type, pic, label, url);
+    },
+    _showPopup: function(type, pic, label, url) {
         debug('showPopup', type, pic, label, url);
-//        try { // try the firefox alerter
-//            var alerts = Cc["@mozilla.org/alerts-service;1"].getService(Ci.nsIAlertsService);
-//            alerts.showAlertNotification(pic, 'Facebook Notification', label, true, url, this._alertObserver);
-//        } catch(e) {
-
+        // we use growl or notifier.xul instead of built-in firefox notifications
         try {
           var use_growl = this._prefService.getBoolPref('extensions.facebook.notifications.growl');
           if (use_growl) { // use growl if it is built in
@@ -807,7 +811,6 @@ facebookService.prototype = {
                            'chrome,titlebar=no,popup=yes,left=' + left + ',top=' + top + ',width=210,height=100',
                            pic, label, url, this._numAlertsObj);
         }
-//        }
         return true;
     }
 };

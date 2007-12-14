@@ -106,19 +106,19 @@ var fbToolbarObserver = {
                 subject = subject.QueryInterface(Ci.fbIFacebookUser);
                 facebook.updateFriend(subject);
                 break;
-            case 'facebook-status-set-result':
-                debug('status-set-result', data);
-                switch (data) {
-                    case 'set': alert('Status was set successfully.');
-                    break;
-                    case 'clear': alert('Your status was cleared successfully.');
-                    break;
-                    case 'fail': 
-                    case 'perm':
-                        alert('Your status could not be set.');
-                    break;
-                }
-                break;
+//          case 'facebook-status-set-result':
+//              debug('status-set-result', data);
+//              switch (data) {
+//                  case 'set': alert('Status was set successfully.');
+//                  break;
+//                  case 'clear': alert('Your status was cleared successfully.');
+//                  break;
+//                  case 'fail': 
+//                  case 'perm':
+//                      alert('Your status could not be set.');
+//                  break;
+//              }
+//              break;
             case 'facebook-status-updated':
                 setAttributeById('facebook-toolbar-status', 'value', subject);
                 facebook.onStatusBoxBlur(document.getElementById('facebook-toolbar-status'));
@@ -155,7 +155,7 @@ var topics_of_interest =    [ 'facebook-session-start'
                             , 'facebook-group-invs-updated'
                             , 'facebook-reqs-updated'
                             , 'facebook-new-day'
-                            , 'facebook-status-set-result'
+//                            , 'facebook-status-set-result'
                             , 'facebook-status-updated'
                             ];
 
@@ -293,20 +293,24 @@ var facebook = {
     }
   },
   isEmptyStatusText: function (text) {
-      return ('' == text || 'is ' == text || 'set your status...' == text);
+    return ('' == text || 'is ' == text || 'set your status...' == text);
   },
   onStatusBoxFocus: function(statusBox) {
-      if (this.isEmptyStatusText(statusBox.value)) {
-        statusBox.value = 'is ';
-        statusBox.color = '#000000';
-      }  
+    if (this.isEmptyStatusText(statusBox.value)) {
+      statusBox.value = 'is ';
+      statusBox.style.color = '#000000';
+    }
+    if (statusBox.value.substring(0,3) == 'is ') {
       statusBox.setSelectionRange(3, statusBox.value.length);
+    } else {
+      statusBox.select();
+    }
   },
   onStatusBoxBlur: function(statusBox) {
-      if (this.isEmptyStatusText(statusBox.value)) {
-        statusBox.color = '#808080';
-        statusBox.value = 'set your status...';
-      }
+    if (this.isEmptyStatusText(statusBox.value)) {
+      statusBox.style.color = '#808080';
+      statusBox.value = 'set your status...';
+    }
   },
   share: function() {
     // not only do we need to encodeURIComponent on the string, we also need to escape quotes since
