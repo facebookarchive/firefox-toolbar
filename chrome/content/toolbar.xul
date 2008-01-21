@@ -150,8 +150,8 @@
                  onfocus="facebook.onStatusBoxFocus(this);"
                  onblur="facebook.onStatusBoxBlur(this);"
                  oncommand="return SetFacebookStatus(this);"
-                 style="display:none;"
                  tooltiptext="Change your Facebook status"
+                 style="display:none;"
         />
         <toolbarseparator/>
         <toolbarbutton id="facebook-login-status"

@@ -68,7 +68,7 @@ const CLASS_NAME   = 'Facebook API Connector';
 
 var Cc = Components.classes;
 var Ci = Components.interfaces;
-const PASSWORD_URL = 'chrome://facebook';
+const PASSWORD_URL = 'chrome://facebook/';
 
 // Load MD5 code...
 Cc['@mozilla.org/moz/jssubscript-loader;1']
@@ -169,27 +169,28 @@ function facebookService()
     if( !DEBUG )
       this._checker = {
         notify: function(timer) {
+          var now = Date.now();
+          // only do a check if either:
+          //   1. we loaded an fb page in the last minute
+          if ((fbSvc._lastFBLoad > fbSvc._lastChecked)
+          //   2. or we haven't checked in the last 5 minutes and any page has loaded
+              || ( fbSvc._lastPageLoad > fbSvc._lastChecked
+                  && now > fbSvc._lastChecked + BASE_CHECK_INTERVAL)
+          //   3. or we haven't checked in the last 10 minutes and no page has loaded
+              || ( now > fbSvc._lastChecked + BASE_CHECK_INTERVAL*2))
+          {
             var now = Date.now();
-            // only do a check if either:
-            //   1. we loaded an fb page in the last minute
-            if ((fbSvc._lastFBLoad > fbSvc._lastChecked)
-            //   2. or we haven't checked in the last 5 minutes and any page has loaded
-                || ( fbSvc._lastPageLoad > fbSvc._lastChecked
-                    && now > fbSvc._lastChecked + BASE_CHECK_INTERVAL)
-            //   3. or we haven't checked in the last 10 minutes and no page has loaded
-                || ( now > fbSvc._lastChecked + BASE_CHECK_INTERVAL*2))
-            {
-              var now = Date.now();
-              var interval = now - fbSvc._lastChecked;
-              fbSvc._lastChecked = now;
-              debug('_checker.notify: checking', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
-              // note: suppress notifications if we haven't successfully checked for the last 30 minutes
-              fbSvc.checkUsers(now > (fbSvc._lastCheckedFriends + BASE_CHECK_INTERVAL * 6));
-              fbSvc.checkNotifications(false);
-              fbSvc.checkAlbums(interval);
-            } else {
-              debug('_checker.notify: skipping', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
-            }
+            var interval = now - fbSvc._lastChecked;
+            fbSvc._lastChecked = now;
+            debug('_checker.notify: checking', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
+            // note: suppress notifications if we haven't successfully checked for the last 30 minutes
+            fbSvc.checkUsers(now > (fbSvc._lastCheckedFriends + BASE_CHECK_INTERVAL * 6));
+            fbSvc.checkNotifications(false);
+            fbSvc.checkAlbums(interval);
+            fbSvc.checkCanSetStatus();
+          } else {
+            debug('_checker.notify: skipping', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
+          }
         }
       };
     else
@@ -203,6 +204,7 @@ function facebookService()
           fbSvc.checkUsers(now > fbSvc._lastCheckedFriends + BASE_CHECK_INTERVAL * 6);
           fbSvc.checkNotifications(false);
           fbSvc.checkAlbums(interval);
+          fbSvc.checkCanSetStatus();
         }
       };
     this._initialize = {
@@ -212,6 +214,7 @@ function facebookService()
             fbSvc.checkUsers(true);
             fbSvc.checkNotifications(true);
             fbSvc.checkAlbums(0);
+            fbSvc.checkCanSetStatus();
             fbSvc._dailyNotifier.set(timer);
         }
     };
@@ -263,8 +266,17 @@ function facebookService()
     this._winService      = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
     this._observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
     this._prefService     = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch2);
-    this._pwdService      = Cc['@mozilla.org/passwordmanager;1'].getService(Ci.nsIPasswordManager);
-    this._pwdServiceInt   = Cc['@mozilla.org/passwordmanager;1'].getService(Ci.nsIPasswordManagerInternal);
+    
+    this._ff3Login = false;
+    if ("@mozilla.org/passwordmanager;1" in Cc) {
+      // Password Manager exists so this is not Firefox 3 (could be Firefox 2, Netscape, SeaMonkey, etc).
+      this._pwdService      = Cc['@mozilla.org/passwordmanager;1'].getService(Ci.nsIPasswordManager);
+      this._pwdServiceInt   = Cc['@mozilla.org/passwordmanager;1'].getService(Ci.nsIPasswordManagerInternal);
+    } else if ("@mozilla.org/login-manager;1" in Cc) {
+      // Login Manager exists so this is Firefox 3
+      this._ff3Login = true;
+      this._loginManager = Cc["@mozilla.org/login-manager;1"].getService(Ci.nsILoginManager);
+    }
 }
 
 facebookService.prototype = {
@@ -301,17 +313,35 @@ facebookService.prototype = {
         return Boolean(this._canSetStatus);
     },
     savedSessionStart: function() {
-        var uid = this._prefService.getCharPref('extensions.facebook.uid');
-        if (!uid) { return; }
+        var uid = this._prefService.getCharPref('extensions.facebook.uid');        
+        if (!uid) {return;}
         debug( 'SAVED SESSION', uid );
 
-        var session_secret = { value: "" },
-            session_key    = { value: "" },
-            throwaway      = { value: "" };
+        if (this._ff3Login) {
+          var hostname = PASSWORD_URL;
+          var formSubmitURL = PASSWORD_URL;
+          var session_secret = null, 
+              session_key = null;
 
-        this._pwdServiceInt.findPasswordEntry( PASSWORD_URL, null /* username */, null /* password */,
-            throwaway /* hostURIFound */, session_key /* usernameFound */, session_secret /*pwdFound*/ );
-        this.sessionStart( session_key.value, session_secret.value, uid, true );
+          // Find users for the given parameters
+          var logins = this._loginManager.findLogins({}, hostname, formSubmitURL, null);
+
+          // Find user from returned array of nsILoginInfo objects
+          for (var i = 0; i < logins.length; i++) {
+              session_key    = logins[i].username;
+              session_secret = logins[i].password;
+              break;
+          }
+          this.sessionStart(session_key, session_secret, uid, true);
+        } else {
+          var session_secret = { value: "" },
+              session_key    = { value: "" },
+              throwaway      = { value: "" };
+
+          this._pwdServiceInt.findPasswordEntry( PASSWORD_URL, null /* username */, null /* password */,
+              throwaway /* hostURIFound */, session_key /* usernameFound */, session_secret /*pwdFound*/ );
+          this.sessionStart( session_key.value, session_secret.value, uid, true );
+        }
     },
     sessionStart: function(sessionKey, sessionSecret, uid, saved) {
         debug( 'sessionStart', sessionKey, sessionSecret, uid );
@@ -328,8 +358,27 @@ facebookService.prototype = {
           // persist API sessions across the Firefox shutdown
           // by saving them in the password store
           this.savePref( 'extensions.facebook.uid', this._uid );
-          this._pwdServiceInt.addUserFull( PASSWORD_URL, this._sessionKey, this._sessionSecret,
-                                           'key', 'secret' ); // last two values don't matter
+          if (this._ff3Login) {
+            var hostname = PASSWORD_URL;
+            var formSubmitURL = PASSWORD_URL;
+
+            // Clear out saved information for this extension 
+            var logins = this._loginManager.findLogins({}, hostname, formSubmitURL, null);
+            for (var i = 0; i < logins.length; i++) {
+              this._loginManager.removeLogin(logins[i]);
+            }
+
+            var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",
+                                                         Components.interfaces.nsILoginInfo,
+                                                         "init");
+            var extLoginInfo = new nsLoginInfo(hostname, formSubmitURL, null,
+                                               this._sessionKey, this._sessionSecret, 
+                                               null /*usernameField*/, null /*passwordField*/);
+            this._loginManager.addLogin(extLoginInfo);
+          } else {
+            this._pwdServiceInt.addUserFull(PASSWORD_URL, this._sessionKey, this._sessionSecret,
+                                           'key', 'secret'); // last two values don't matter
+          }
         }
 
         this._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
@@ -349,13 +398,26 @@ facebookService.prototype = {
     sessionEnd: function() {
         debug('sessionEnd');
         // remove session info from prefs because of explicit logout
+        // or because they didn't work
         this.savePref( 'extensions.facebook.uid', '' );
-        try { this._pwdService.removeUser( PASSWORD_URL ); }
-        catch( e ) { debug( 'removeUser exception' ); }
+        if (this._ff3Login) { // Clear out saved information for this extension 
+          var hostname = PASSWORD_URL;
+          var formSubmitURL = PASSWORD_URL;
+
+          var logins = this._loginManager.findLogins({}, hostname, formSubmitURL, null);
+          for (var i = 0; i < logins.length; i++) {
+            this._loginManager.removeLogin(logins[i]);
+          }
+        } else if (this._sessionKey && this._sessionSecret) {
+          debug('Removing sessionKey from passwords', this._sessionKey);
+          this._pwdService.removeUser(PASSWORD_URL, this._sessionKey); 
+        }
 
         this.initValues();
-        this._timer.cancel();
-        this._oneShotTimer.cancel();
+        if (this._timer) {
+          this._timer.cancel();
+          this._oneShotTimer.cancel();
+        }
         this.notify(null, 'facebook-session-end', null);
     },
     hintPageLoad: function(fbPage) {
@@ -369,7 +431,7 @@ facebookService.prototype = {
         this._sessionSecret = null;
         this._uid           = null;
         this._loggedIn      = false;
-        this._canSetStatus  = false;
+        this._canSetStatus  = null;
         this._loggedInUser  = null;
 
         this._messages      = null; // CountedNotif
@@ -422,10 +484,12 @@ facebookService.prototype = {
         }
     },
     checkCanSetStatus: function() {
-        this.callMethod('facebook.users.hasAppPermission', ['ext_perm=status_update'], function(data){
-            fbSvc._canSetStatus = ('1' == data.toString());
-            debug('Can Set Status?', fbSvc._canSetStatus);
-        });
+      if (null != this._canSetStatus) {return;}
+      
+      this.callMethod('facebook.users.hasAppPermission', ['ext_perm=status_update'], function(data){
+          fbSvc._canSetStatus = ('1' == data.toString());
+          debug('Can Set Status?', fbSvc._canSetStatus);
+      });
     },
     clearCanSetStatus: function() {
         this._canSetStatus = null;

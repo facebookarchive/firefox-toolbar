@@ -252,6 +252,7 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
 .popupFriendBox .facebook-friendlinks {
   display: none;
 }
+
 #PopupMessager {
   -moz-binding: url('chrome://facebook/content/bindings.xml#popupMessager');
   padding: 5px;
@@ -310,9 +311,9 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
 
 /* Add separators between each friend box */
 richlistitem {
-    padding: 0px;
-    margin: 0px;
-    border-bottom: 1px solid #b1bdd6;
+  padding: 0px;
+  margin: 0px;
+  border-bottom: 1px solid #b1bdd6;
 }
 richlistitem:last-child { border-bottom: none; }
 

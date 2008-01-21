@@ -190,8 +190,11 @@ var facebook = {
             setAttributeById('facebook-notification-reqs', 'label', fbSvc.numReqs);
             setAttributeById('facebook-notification-group-invs', 'label', fbSvc.numGroupInvs);
             setAttributeById('facebook-notification-event-invs', 'label', fbSvc.numEventInvs);
-        }
-        else {
+
+            var statusBox = document.getElementById('facebook-toolbar-status');
+            statusBox.style.display="block";
+            facebook.onStatusBoxBlur(statusBox); // cleared status autotext
+        } else {
           fbSvc.savedSessionStart();
         }
         facebook.loadFriends();
@@ -276,7 +279,12 @@ var facebook = {
       searchBox.style.color='#000000';
     }
     if (!this.ignoreBlur && document.getElementById('viewFacebookSidebar').getAttribute('checked') != 'true') {
-      document.getElementById('PopupFacebookFriends').showPopup(searchBox, -1, -1, 'popup', 'bottomleft', 'topleft');
+      var popupElt = document.getElementById('PopupFacebookFriends');
+      if (popupElt.openPopup) {
+        popupElt.openPopup(searchBox, 'after_start', 0, 0, false, true);
+      } else {
+        popupElt.showPopup(searchBox, -1, -1, 'popup', 'bottomleft', 'topleft');
+      }
       // if the sidebar was just open then we would be out of sync, so let's just filter the list to be safe
       if (fbSvc.loggedIn) {
         SearchFriends(searchBox.value);
