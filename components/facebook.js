@@ -266,7 +266,7 @@ function facebookService()
     this._winService      = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
     this._observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
     this._prefService     = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch2);
-    
+
     this._ff3Login = false;
     if ("@mozilla.org/passwordmanager;1" in Cc) {
       // Password Manager exists so this is not Firefox 3 (could be Firefox 2, Netscape, SeaMonkey, etc).
@@ -313,14 +313,14 @@ facebookService.prototype = {
         return Boolean(this._canSetStatus);
     },
     savedSessionStart: function() {
-        var uid = this._prefService.getCharPref('extensions.facebook.uid');        
+        var uid = this._prefService.getCharPref('extensions.facebook.uid');
         if (!uid) {return;}
         debug( 'SAVED SESSION', uid );
 
         if (this._ff3Login) {
           var hostname = PASSWORD_URL;
           var formSubmitURL = PASSWORD_URL;
-          var session_secret = null, 
+          var session_secret = null,
               session_key = null;
 
           // Find users for the given parameters
@@ -353,7 +353,7 @@ facebookService.prototype = {
         this._sessionSecret = sessionSecret;
         this._loggedIn      = true;
         this._uid           = uid;
-        
+
         if( !saved ) {
           // persist API sessions across the Firefox shutdown
           // by saving them in the password store
@@ -362,7 +362,7 @@ facebookService.prototype = {
             var hostname = PASSWORD_URL;
             var formSubmitURL = PASSWORD_URL;
 
-            // Clear out saved information for this extension 
+            // Clear out saved information for this extension
             var logins = this._loginManager.findLogins({}, hostname, formSubmitURL, null);
             for (var i = 0; i < logins.length; i++) {
               this._loginManager.removeLogin(logins[i]);
@@ -372,7 +372,7 @@ facebookService.prototype = {
                                                          Components.interfaces.nsILoginInfo,
                                                          "init");
             var extLoginInfo = new nsLoginInfo(hostname, formSubmitURL, null,
-                                               this._sessionKey, this._sessionSecret, 
+                                               this._sessionKey, this._sessionSecret,
                                                null /*usernameField*/, null /*passwordField*/);
             this._loginManager.addLogin(extLoginInfo);
           } else {
@@ -400,7 +400,7 @@ facebookService.prototype = {
         // remove session info from prefs because of explicit logout
         // or because they didn't work
         this.savePref( 'extensions.facebook.uid', '' );
-        if (this._ff3Login) { // Clear out saved information for this extension 
+        if (this._ff3Login) { // Clear out saved information for this extension
           var hostname = PASSWORD_URL;
           var formSubmitURL = PASSWORD_URL;
 
@@ -410,7 +410,7 @@ facebookService.prototype = {
           }
         } else if (this._sessionKey && this._sessionSecret) {
           debug('Removing sessionKey from passwords', this._sessionKey);
-          this._pwdService.removeUser(PASSWORD_URL, this._sessionKey); 
+          this._pwdService.removeUser(PASSWORD_URL, this._sessionKey);
         }
 
         this.initValues();
@@ -455,11 +455,11 @@ facebookService.prototype = {
         if (status == "is " || status == "set your status...") {
             status = "";
         }
-        
+
         if (status == this._loggedInUser.status) {
             return;
         }
-        
+
         if (this.canSetStatus) {
             var is_clear = status=="";
             var params   = is_clear ? ['clear=1'] : ['status='+status, 'status_includes_verb=1'];
@@ -485,7 +485,7 @@ facebookService.prototype = {
     },
     checkCanSetStatus: function() {
       if (null != this._canSetStatus) {return;}
-      
+
       this.callMethod('facebook.users.hasAppPermission', ['ext_perm=status_update'], function(data){
           fbSvc._canSetStatus = ('1' == data.toString());
           debug('Can Set Status?', fbSvc._canSetStatus);
@@ -502,7 +502,7 @@ facebookService.prototype = {
                         vdebug( "msgCount", msgCount );
                         var text = 'You have ' + ( msgCount==1 ? 'a new message' : 'new messages.' );
                         fbSvc.showPopup('you.msg', 'chrome://facebook/content/mail_request.gif',
-                                         text, 'http://www.facebook.com/mailbox.php');
+                                         text, 'http://www.facebook.com/inbox/');
                     } );
                 fbSvc._pokes = new CountedNotif( data.pokes, 'facebook-pokes-updated', fbSvc
                     , function( pokeCount ) {

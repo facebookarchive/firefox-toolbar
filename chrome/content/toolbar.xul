@@ -85,7 +85,7 @@
                     />
           <menuitem label="Friends"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/friends.php?r&amp;src=fftb', event);"
+                    oncommand="openUILink('http://www.facebook.com/friends/?src=fftb', event);"
                     id="facebook-menu-my-profile"
                     />
           <menuitem label="Networks"
