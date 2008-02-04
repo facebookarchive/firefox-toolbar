@@ -52,6 +52,11 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
 #facebook-toolbar-status {
   max-width: 400px;
   min-width: 100px;
+  border: 0;
+}
+
+#facebook-toolbar-status .textbox-input {
+  margin: 2px !important;
 }
 
 #facebook-search .textbox-input-box {
