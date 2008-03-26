@@ -346,6 +346,7 @@ facebookService.prototype = {
     sessionStart: function(sessionKey, sessionSecret, uid, saved) {
         debug( 'sessionStart', sessionKey, sessionSecret, uid );
         if (!sessionKey || !sessionSecret || !uid) {
+          debug('sessionStart called with invalid values, aborting');
           if (saved) {this.sessionEnd();}
           return;
         }
@@ -373,7 +374,7 @@ facebookService.prototype = {
                                                          "init");
             var extLoginInfo = new nsLoginInfo(hostname, formSubmitURL, null,
                                                this._sessionKey, this._sessionSecret,
-                                               null /*usernameField*/, null /*passwordField*/);
+                                               '' /*usernameField*/, '' /*passwordField*/);
             this._loginManager.addLogin(extLoginInfo);
           } else {
             this._pwdServiceInt.addUserFull(PASSWORD_URL, this._sessionKey, this._sessionSecret,
