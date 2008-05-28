@@ -88,10 +88,6 @@
                     oncommand="openUILink('http://www.facebook.com/friends/?src=fftb', event);"
                     id="facebook-menu-my-profile"
                     />
-          <menuitem label="Networks"
-                    onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/networks/?src=fftb', event)"
-                    />
           <menuitem label="Inbox"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/inbox/?src=fftb', event)"
