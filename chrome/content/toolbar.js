@@ -327,7 +327,7 @@ var facebook = {
       return encodeURIComponent(str).replace("'", "\\'", 'g');
     }
     var p = '.php?src=tb&v=4&u=' + enc(content.document.location.href) + '&t=' + enc(document.title);
-    var openCmd = "window.open('http://www.facebook.com/sharer" + p + "', 'sharer','toolbar=no,status=yes,width=626,height=436');";
+    var openCmd = "window.open('http://www.facebook.com/sharer" + p + "', 'sharer','toolbar=no,status=yes,resizable=yes,width=626,height=436');";
     try {
       // If we're not on a facebook page, just jump down to the catch block and open the popup...
       if (!IsFacebookLocation(content.document.location))
