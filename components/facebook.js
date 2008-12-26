@@ -792,8 +792,7 @@ facebookService.prototype = {
         params.push('call_id=' + callId);
 	params.push('format=json');
         params.push('sig=' + this.generateSig(params));
-        var message = params.join('&');
-        var findNamespace = /xmlns=(?:"[^"]*"|'[^']*')/;
+        var message = encodeURI(params.join('&'));
         try {
             // Yuck...xmlhttprequest doesn't always work so we have to do this
             // the hard way.  Thanks to Manish from Flock for the tip!
