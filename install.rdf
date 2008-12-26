@@ -14,7 +14,7 @@
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
         <em:minVersion>1.5</em:minVersion>
-        <em:maxVersion>3.0.*</em:maxVersion>
+        <em:maxVersion>3.1.*</em:maxVersion>
       </Description>
     </em:targetApplication>
     <em:targetApplication>
@@ -30,9 +30,9 @@
     <em:name>Facebook Toolbar</em:name>
     <em:description>Integrate your Facebook life into your browser</em:description>
     <em:creator>Facebook Team</em:creator>
+    <em:developer>Eugene Letuchy</em:developer>
     <em:developer>Ari Steinberg</em:developer>
     <em:developer>Julie Zhuo</em:developer>
-    <em:developer>Eugene Letuchy</em:developer>
     <em:iconURL>chrome://facebook/content/fbfavicon.png</em:iconURL>
     <em:optionsURL>chrome://facebook/content/settings.xul</em:optionsURL>
     <em:homepageURL>http://developers.facebook.com/toolbar/</em:homepageURL>
