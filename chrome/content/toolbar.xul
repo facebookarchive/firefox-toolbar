@@ -119,13 +119,18 @@
 
           <menuseparator />
 
-          <menuitem label="Account"
+	  <!-- Settings Menu -->
+          <menuitem label="Account Settings"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/editaccount.php?src=fftb', event)"
                     />
-          <menuitem label="Privacy"
+          <menuitem label="Privacy Settings"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/privacy.php?src=fftb', event)"
+                    />
+          <menuitem label="Application Settings"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="openUILink('http://www.facebook.com/editapps.php?src=fftb', event)"
                     />
 
           <menuseparator />
