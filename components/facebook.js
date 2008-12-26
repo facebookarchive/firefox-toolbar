@@ -860,15 +860,13 @@ facebookService.prototype = {
                                 debug('RATE LIMIT ERROR');
                             } else {
                                 debug('API error:' + data.error_code);
-                                debug(data);
+                                debug(JSON.stringify(data));
                                 if (!secondTry) {
                                     debug('TRYING ONE MORE TIME');
                                     fbSvc.callMethod(method, origParams, callback, true);
                                 }
                             }
-			} else if (typeof data == "undefined") {
-			    debug("WTF: " + this.resultTxt);
-                        } else {
+			} else {
                             callback(data);
                         }
                     }
