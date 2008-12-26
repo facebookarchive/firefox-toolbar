@@ -76,11 +76,11 @@ Cc['@mozilla.org/moz/jssubscript-loader;1']
     .loadSubScript('chrome://facebook/content/md5.js');
 
 /** class SetNotif:
- * Encapsulates notifs for a set of ids delivered as an xml list.
+ * Encapsulates notifs for a set of ids delivered as a JSON array.
  * Watcher for "size" property notifies the observer when the size value
  * changes.
  */
-function SetNotif( asXmlList, topic, dispatcher, on_new_item ) {
+function SetNotif( idArr, topic, dispatcher, on_new_item ) {
     this.topic = topic;
     this.dispatcher  = dispatcher;
     this.on_new_item = on_new_item;
@@ -89,19 +89,19 @@ function SetNotif( asXmlList, topic, dispatcher, on_new_item ) {
             dispatcher.notify( null, topic, newVal );
         return newVal;
     });
-    this.init( asXmlList );
+    this.init( idArr );
 }
 SetNotif.prototype.__defineGetter__( "count", function() {
   debug( this.topic, "count accessed", this.size );
   return this.size;
 });
-SetNotif.prototype.update = function( asXmlList ) {
-    debug( "SetNotif.update", this.topic, asXmlList.toXMLString() );
+SetNotif.prototype.update = function( idArr ) {
+    debug( "SetNotif.update", this.topic, JSON.stringify(idArr) );
     var itemSet = {};
     var diff  = [];
-    this.size = asXmlList.length();
+    this.size = idArr.length !== undefined ? idArr.length : 0;
     for( var i=0; i<this.size; i++ ){
-        it = Number(asXmlList[i]);
+        it = Number(idArr[i]);
         itemSet[it] = true;
         if( !this.items[it] )
             diff.push(it);
@@ -110,26 +110,26 @@ SetNotif.prototype.update = function( asXmlList ) {
         this.on_new_item( this, diff );
     this.items = itemSet;
 }
-SetNotif.prototype.init = function( asXmlList ) {
-    debug( "SetNotif.init", asXmlList.toXMLString() );
-    this.size  = asXmlList.length();
+SetNotif.prototype.init = function( idArr ) {
+    debug( "SetNotif.init", JSON.stringify(idArr) );
+    this.size   = idArr.length !== undefined ? idArr.length : 0;
     var itemSet = {};
     if( this.size > 0 )
-        for each( var it in asXmlList )
-            itemSet[it.text()] = true;
+        for each( var it in idArr )
+            itemSet[it] = true;
     this.items = itemSet;
 }
 
 /* class CountedNotif:
-   Encapsulates notifs for which an xml object
-   containing an unread and most recent element is present.
-*/
-function CountedNotif( asXml, topic, dispatcher, on_new_unread ) {
+ * Encapsulates notifs for which a JS object
+ * containing an unread and most recent element is present.
+ */
+function CountedNotif( notif, topic, dispatcher, on_new_unread ) {
     this.topic = topic;
     this.on_new_unread = on_new_unread;
     this.dispatcher = dispatcher;
-    this.time  = Number(asXml.most_recent);
-    this.count = Number(asXml.unread);
+    this.time  = Number(notif.most_recent);
+    this.count = Number(notif.unread);
 }
 CountedNotif.prototype.__defineSetter__( "count", function( count ) {
   debug( this.topic, 'setCount', count );
@@ -150,9 +150,9 @@ CountedNotif.prototype.setTime = function( new_time ) {
     if( new_time != this.time )
         this.time = new_time;
 };
-CountedNotif.prototype.update = function(asXml) {
-    this.count = Number(asXml.unread);
-    this.setTime( Number(asXml.most_recent) );
+CountedNotif.prototype.update = function(notif) {
+    this.count = Number(notif.unread);
+    this.setTime( Number(notif.most_recent) );
 };
 
 var fbSvc; // so that all our callback functions objects can access "this"
@@ -466,8 +466,8 @@ facebookService.prototype = {
             var params   = is_clear ? ['clear=1'] : ['status='+status, 'status_includes_verb=1'];
             fbSvc.callMethod('facebook.users.setStatus', params, function(data) {
                 var result; var msg;
-                debug('users.setStatus:', params);
-                if ('1' == data.toString()) {
+                debug('users.setStatus:', params, data);
+                if (data) {
                     msg = is_clear ? 'Your status was cleared successfully.'
                      : 'Your status was set successfully.';
                     result = is_clear ? 'clear' : 'set';
@@ -488,6 +488,8 @@ facebookService.prototype = {
       if (null != this._canSetStatus) {return;}
 
       this.callMethod('facebook.users.hasAppPermission', ['ext_perm=status_update'], function(data){
+	  vdebug('data:', data);
+
           fbSvc._canSetStatus = ('1' == data.toString());
           debug('Can Set Status?', fbSvc._canSetStatus);
       });
@@ -497,6 +499,7 @@ facebookService.prototype = {
     },
     checkNotifications: function(onInit){
         this.callMethod('facebook.notifications.get', [], function(data) {
+	    vdebug('notification data:', JSON.stringify(data));
             if (onInit){
                 fbSvc._messages = new CountedNotif( data.messages,'facebook-msgs-updated', fbSvc
                     , function( msgCount ) {
@@ -521,9 +524,9 @@ facebookService.prototype = {
                                           text, 'http://www.facebook.com/home.php');
                         }
                     } );
-                fbSvc._groupInvs = new SetNotif( data.group_invites..gid, 'facebook-group-invs-updated', fbSvc, null );
-                fbSvc._eventInvs = new SetNotif( data.event_invites..eid, 'facebook-event-invs-updated', fbSvc, null );
-                fbSvc._reqs      = new SetNotif( data.friend_requests..uid, 'facebook-reqs-updated', fbSvc
+                fbSvc._groupInvs = new SetNotif( data.group_invites, 'facebook-group-invs-updated', fbSvc, null );
+                fbSvc._eventInvs = new SetNotif( data.event_invites, 'facebook-event-invs-updated', fbSvc, null );
+                fbSvc._reqs      = new SetNotif( data.friend_requests, 'facebook-reqs-updated', fbSvc
                     , function( self, delta ) {
                         fbSvc.getUsersInfo(delta, function(users) {
                             debug( "Got friend reqs", users.length )
@@ -538,28 +541,31 @@ facebookService.prototype = {
             } else {
                 fbSvc._messages.update( data.messages );
                 fbSvc._pokes.update( data.pokes );
-                fbSvc._groupInvs.update( data.group_invites..gid );
-                fbSvc._eventInvs.update( data.event_invites..eid );
-                fbSvc._reqs.update( data.friend_requests..uid );
+                fbSvc._groupInvs.update( data.group_invites );
+                fbSvc._eventInvs.update( data.event_invites );
+                fbSvc._reqs.update( data.friend_requests );
             }
         })
     },
     parseUsers: function(user_data) {
-        user_elts = user_data..user;
         users = {};
-        for each ( var user in user_elts ){
+        for each (var user in user_data) {
+	    vdebug(JSON.stringify(user));
+
             // note: for name and status, need to utf8 decode them using
             // the decodeURIComponent(escape(s)) trick - thanks
             // http://ecmanaut.blogspot.com/2006/07/encoding-decoding-utf8-in-javascript.html
-            var name   = decodeURIComponent(escape(String(user.name))),
+	    var name   = user.name, // decodeURIComponent(escape(user.name)),
                 id     = String(user.uid),
-                status = decodeURIComponent(escape(String(user.status.message))),
-                stime  = !status ? 0 : Number(user.status.time),
+                status = user.status ? user.status.message // decodeURIComponent(escape(user.status.message))
+                                     : null,
+                stime  = user.status && user.status.time ? user.status.time : 0,
                 ptime  = Number(user.profile_update_time),
                 notes  = Number(user.notes_count),
                 wall   = Number(user.wall_count),
-                pic    = String(decodeURI(user.pic_small)),
-                pic_sq = String(decodeURI(user.pic_square));
+                pic    = user.pic_small  ? String(decodeURI(user.pic_small)) : null,
+                pic_sq = user.pic_square ? String(decodeURI(user.pic_square)) : null
+                ;
             if (!pic) {
                 pic = pic_sq = 'chrome://facebook/content/t_default.jpg';
             }
@@ -575,7 +581,7 @@ facebookService.prototype = {
           + " WHERE owner IN (SELECT uid2 FROM friend WHERE uid1 = :user) and size > 0;";
         query = query.replace( /:user/g, this._uid );
         this.callMethod('facebook.fql.query', ['query='+query], function(data) {
-          for each( var album in data..album ) {
+          for each( var album in data ) {
             var aid      = Number(album.aid),
                 size     = Number(album.size),
                 modified = Number(album.modified),
@@ -583,7 +589,6 @@ facebookService.prototype = {
             fbSvc._albumDict[ aid ] = { 'modified': modified,
                                         'size': size,
                                         'owner': owner };
-            vdebug( "An album", aid, owner, modified );
           }
         });
       }
@@ -598,7 +603,7 @@ facebookService.prototype = {
                      .replace( /:window/g, Math.floor(window/1000) + 30 ); // 30 sec of wiggle room
         debug(query);
         this.callMethod('facebook.fql.query', ['query='+query], function(data) {
-          for each( var album in data..album ) {
+          for each( var album in data ) {
             var aid      = Number(album.aid),
                 size     = Number(album.size),
                 modified = Number(album.modified),
@@ -662,7 +667,7 @@ facebookService.prototype = {
                     fbSvc.notify(null, 'facebook-status-updated', loggedInUser.status);
                 }
                 fbSvc._loggedInUser = loggedInUser;
-            } else if (loggedInUser){
+            } else if (loggedInUser) {
                 fbSvc._loggedInUser = loggedInUser;
                 fbSvc.notify(fbSvc._loggedInUser, 'facebook-session-start', fbSvc._loggedInUser.id);
                 debug('logged in: howdy', fbSvc._loggedInUser.name);
@@ -746,9 +751,9 @@ facebookService.prototype = {
         count.value = friend_arr.length;
         return friend_arr;
     },
-    notify: function( observer, what, arg ){
-        debug( "notify", what, arg );
-        this._observerService.notifyObservers( observer, what, arg );
+    notify: function( subject, topic, data ){
+        debug( "notify", topic, data );
+        this._observerService.notifyObservers( subject, topic, data );
     },
     // deprecated: replaced by fql query in checkUsers
     getUsersInfo: function(users, callback) {
@@ -785,6 +790,7 @@ facebookService.prototype = {
         }
         this._lastCallId = callId;
         params.push('call_id=' + callId);
+	params.push('format=json');
         params.push('sig=' + this.generateSig(params));
         var message = params.join('&');
         var findNamespace = /xmlns=(?:"[^"]*"|'[^']*')/;
@@ -817,26 +823,53 @@ facebookService.prototype = {
                 },
                 onStopRequest: function(request, context, statusCode) {
                     if (statusCode == Components.results.NS_OK) {
-                        this.resultTxt = this.resultTxt.substr(this.resultTxt.indexOf("\n") + 1);
-                        vdebug('received text:', this.resultTxt);
-                        var xmldata = new XML(this.resultTxt.replace(findNamespace,""));
-                        if ((String)(xmldata.error_code)) { // need to cast to string or check will never fail
-                            if (xmldata.error_code == 102) {
+		        var data = null;
+                        // native JSON seems to have problems parsing
+                        // primitives like "true", "1", etc. as of FF3.1b2
+			try {
+                            data = JSON.parse(this.resultTxt);
+                        } catch (e) {
+			    try {
+                                this.resultTxt = this.resultTxt.trim()
+				data = JSON.parse(this.resultTxt);
+		            } catch (e) {
+				vdebug("failed to parse: '" + this.resultTxt + "'");
+                                if (this.resultTxt == "true") {
+                                   data = true;
+                                } else if (this.resultTxt == "false") {
+                                   data = false;
+                                } else {
+				   data = Number(this.resultTxt);
+				   if (NaN == data) {
+				       if (!secondTry) {
+				           debug('TRYING ONE MORE TIME');
+				           fbSvc.callMethod(method, origParams, callback, true);
+				       }
+				       return;
+				   }
+                                }
+			    }
+                        }
+
+                        if (typeof data.error_code != "undefined") {
+                            if (data.error_code == 102) {
                                 debug('session expired, logging out.');
                                 fbSvc.sessionEnd();
-                            } else if (xmldata.error_code == 4) {
+                            } else if (data.error_code == 4) {
                                 // rate limit hit, let's just cancel this request, we'll try again soon enough.
                                 debug('RATE LIMIT ERROR');
                             } else {
-                                debug('API error:');
-                                debug(xmldata);
+                                debug('API error:' + data.error_code);
+                                debug(data);
                                 if (!secondTry) {
                                     debug('TRYING ONE MORE TIME');
                                     fbSvc.callMethod(method, origParams, callback, true);
                                 }
                             }
+			} else if (typeof data == "undefined") {
+			    debug("WTF: " + this.resultTxt);
                         } else {
-                            callback(xmldata);
+                            callback(data);
                         }
                     }
                 }

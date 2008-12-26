@@ -73,10 +73,10 @@ var fbToolbarObserver = {
             case 'facebook-session-start':
                 subject = subject.QueryInterface(Ci.fbIFacebookUser);
                 setAttributeById('facebook-name-info', 'label', subject.name);
-                setAttributeById('facebook-toolbar-status', 'value', subject.status);
                 var statusBox = document.getElementById('facebook-toolbar-status');
-                facebook.onStatusBoxBlur(statusBox); // cleared status autotext
                 statusBox.style.display="block";
+                statusBox.value = subject.status;
+                facebook.onStatusBoxBlur(statusBox); // change color for emptyText
                 setAttributeById('facebook-name-info', 'userid', subject.id);
                 setAttributeById('facebook-menu-my-profile', 'userid', subject.id);
                 setAttributeById('facebook-login-status', 'label', 'Logout');
@@ -106,22 +106,10 @@ var fbToolbarObserver = {
                 subject = subject.QueryInterface(Ci.fbIFacebookUser);
                 facebook.updateFriend(subject);
                 break;
-//          case 'facebook-status-set-result':
-//              debug('status-set-result', data);
-//              switch (data) {
-//                  case 'set': alert('Status was set successfully.');
-//                  break;
-//                  case 'clear': alert('Your status was cleared successfully.');
-//                  break;
-//                  case 'fail': 
-//                  case 'perm':
-//                      alert('Your status could not be set.');
-//                  break;
-//              }
-//              break;
             case 'facebook-status-updated':
-                setAttributeById('facebook-toolbar-status', 'value', subject);
-                facebook.onStatusBoxBlur(document.getElementById('facebook-toolbar-status'));
+                var statusBox = document.getElementById('facebook-toolbar-status');
+                statusBox.value = data;
+                facebook.onStatusBoxBlur(statusBox);
                 break;
             case 'facebook-new-day':
                 facebook.clearFriends(false);
@@ -193,7 +181,7 @@ var facebook = {
 
             var statusBox = document.getElementById('facebook-toolbar-status');
             statusBox.style.display="block";
-            facebook.onStatusBoxBlur(statusBox); // clear status autotext, if any
+            facebook.onStatusBoxBlur(statusBox); // change color for emptyText
         } else {
           fbSvc.savedSessionStart();
         }
@@ -327,7 +315,7 @@ var facebook = {
       return encodeURIComponent(str).replace("'", "\\'", 'g');
     }
     var p = '.php?src=tb&v=4&u=' + enc(content.document.location.href) + '&t=' + enc(document.title);
-    var openCmd = "window.open('http://www.facebook.com/sharer" + p 
+    var openCmd = "window.open('http://www.facebook.com/sharer" + p
       + "', 'sharer','toolbar=no,status=yes,resizable=yes,width=626,height=436');";
     try {
       // If we're not on a facebook page, just jump down to the catch block and open the popup...
