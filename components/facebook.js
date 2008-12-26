@@ -49,10 +49,15 @@ var debug = ( VERBOSITY < 1 )
         dump( arguments[i].toXMLString() );
         break;s
       case 'object':
-        dump( '[obj]\n' );
-        for( prop in arguments[i] )
-          dump( ' ' + prop + ': ' + arguments[i][prop] + '\n' );
-        dump( '[/obj]\n' );
+	try { // won't work if object has methods :(
+	    var out = JSON.stringify(arguments[i]);
+	    dump(out);
+	} catch (e) {
+	    dump( '[obj]\n' );
+	    for( prop in arguments[i] )
+		dump( ' ' + prop + ': ' + arguments[i][prop] + '\n' );
+	    dump( '[/obj]\n' );
+	}
         break;
       default:
         dump( arguments[i] );
@@ -96,7 +101,7 @@ SetNotif.prototype.__defineGetter__( "count", function() {
   return this.size;
 });
 SetNotif.prototype.update = function( idArr ) {
-    debug( "SetNotif.update", this.topic, JSON.stringify(idArr) );
+    debug( "SetNotif.update", this.topic, idArr );
     var itemSet = {};
     var diff  = [];
     this.size = idArr.length !== undefined ? idArr.length : 0;
@@ -111,7 +116,7 @@ SetNotif.prototype.update = function( idArr ) {
     this.items = itemSet;
 }
 SetNotif.prototype.init = function( idArr ) {
-    debug( "SetNotif.init", JSON.stringify(idArr) );
+    debug( "SetNotif.init", idArr );
     this.size   = idArr.length !== undefined ? idArr.length : 0;
     var itemSet = {};
     if( this.size > 0 )
@@ -499,7 +504,7 @@ facebookService.prototype = {
     },
     checkNotifications: function(onInit){
         this.callMethod('facebook.notifications.get', [], function(data) {
-	    vdebug('notification data:', JSON.stringify(data));
+	    vdebug('notification data:', data);
             if (onInit){
                 fbSvc._messages = new CountedNotif( data.messages,'facebook-msgs-updated', fbSvc
                     , function( msgCount ) {
@@ -550,7 +555,7 @@ facebookService.prototype = {
     parseUsers: function(user_data) {
         users = {};
         for each (var user in user_data) {
-	    vdebug(JSON.stringify(user));
+	    vdebug("user: " + user.uid, user);
 
             // note: for name and status, need to utf8 decode them using
             // the decodeURIComponent(escape(s)) trick - thanks
@@ -570,7 +575,6 @@ facebookService.prototype = {
                 pic = pic_sq = 'chrome://facebook/content/t_default.jpg';
             }
             users[id] = new facebookUser(id, name, pic, pic_sq, status, stime, ptime, notes, wall);
-            vdebug( id, name, pic );
         }
         return users;
     },
