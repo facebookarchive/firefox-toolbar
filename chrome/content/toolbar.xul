@@ -146,7 +146,9 @@
                  onfocus="facebook.onStatusBoxFocus(this);"
                  onblur="facebook.onStatusBoxBlur(this);"
                  oncommand="return SetFacebookStatus(this);"
+                 emptytext="set your status..."
                  tooltiptext="Change your Facebook status"
+                 spellcheck="true"
                  style="display:none;"
         />
         <toolbarseparator/>

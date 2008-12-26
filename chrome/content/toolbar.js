@@ -193,7 +193,7 @@ var facebook = {
 
             var statusBox = document.getElementById('facebook-toolbar-status');
             statusBox.style.display="block";
-            facebook.onStatusBoxBlur(statusBox); // cleared status autotext
+            facebook.onStatusBoxBlur(statusBox); // clear status autotext, if any
         } else {
           fbSvc.savedSessionStart();
         }
@@ -301,7 +301,7 @@ var facebook = {
     }
   },
   isEmptyStatusText: function (text) {
-    return ('' == text || 'is ' == text || 'set your status...' == text);
+    return ('' == text || 'is ' == text || 'is' == text);
   },
   onStatusBoxFocus: function(statusBox) {
     if (this.isEmptyStatusText(statusBox.value)) {
@@ -316,9 +316,9 @@ var facebook = {
   },
   onStatusBoxBlur: function(statusBox) {
     if (this.isEmptyStatusText(statusBox.value)) {
-      statusBox.style.color = '#808080';
-      statusBox.value = 'set your status...';
-    }
+        statusBox.style.color = '#808080';
+        statusBox.value = ''; // rely on the emptyText attribute
+     }
   },
   share: function() {
     // not only do we need to encodeURIComponent on the string, we also need to escape quotes since
@@ -327,7 +327,8 @@ var facebook = {
       return encodeURIComponent(str).replace("'", "\\'", 'g');
     }
     var p = '.php?src=tb&v=4&u=' + enc(content.document.location.href) + '&t=' + enc(document.title);
-    var openCmd = "window.open('http://www.facebook.com/sharer" + p + "', 'sharer','toolbar=no,status=yes,resizable=yes,width=626,height=436');";
+    var openCmd = "window.open('http://www.facebook.com/sharer" + p 
+      + "', 'sharer','toolbar=no,status=yes,resizable=yes,width=626,height=436');";
     try {
       // If we're not on a facebook page, just jump down to the catch block and open the popup...
       if (!IsFacebookLocation(content.document.location))
