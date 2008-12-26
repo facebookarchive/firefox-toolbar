@@ -684,18 +684,21 @@ facebookService.prototype = {
                         notifyProf = true; // only notify if not displaying another notification
                         if (fbSvc._friendDict[friend.id].status != friend.status) {
                             if (friend.status) {
-                                // try to weed out inconsistent results using timestamp comparisons
                                 if (fbSvc._friendDict[friend.id].stime &&
                                     friend.stime < fbSvc._friendDict[friend.id].stime) {
+				    // weed out bad data using timestamp comparisons ...
                                     debug("stale status update?"
                                           + " NEW: " + friend.stime + ": " + friend.status + " ;"
                                           + " PVS: " + fbSvc._friendDict[friend.id].stime + ": "
                                           + fbSvc._friendDict[friend.id].status );
+				    // ... overwrite the bad data with previous known good data
+				    friend.stime  = fbSvc._friendDict[friend.id].stime;
+				    friend.status = fbSvc._friendDict[friend.id].status;
                                 } else {
                                     fbSvc.notify(friend, 'facebook-friend-updated', 'status');
                                     notifyProf = !fbSvc.showPopup('friend.status', friend.pic_sq,
-                                                                  friend.name + ' ' + RenderStatusMsg(friend.status),
-                                'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#status');
+                                        friend.name + ' ' + RenderStatusMsg(friend.status),
+				        'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#status');
                                 }
                             } else {
                                 fbSvc.notify(friend, 'facebook-friend-updated', 'status-delete');
