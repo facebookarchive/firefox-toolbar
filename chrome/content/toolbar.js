@@ -294,8 +294,8 @@ var facebook = {
   onStatusBoxFocus: function(statusBox) {
     if (this.isEmptyStatusText(statusBox.value)) {
       statusBox.value = 'is ';
-      statusBox.style.color = '#000000';
     }
+    statusBox.style.color = '#000000';
     if (statusBox.value.substring(0,3) == 'is ') {
       statusBox.setSelectionRange(3, statusBox.value.length);
     } else {
@@ -304,9 +304,11 @@ var facebook = {
   },
   onStatusBoxBlur: function(statusBox) {
     if (this.isEmptyStatusText(statusBox.value)) {
-        statusBox.style.color = '#808080';
-        statusBox.value = ''; // rely on the emptyText attribute
-     }
+      statusBox.style.color = '#808080';
+      statusBox.value = ''; // rely on the emptyText attribute
+    } else {
+      statusBox.style.color = '#000000';
+    }
   },
   share: function() {
     // not only do we need to encodeURIComponent on the string, we also need to escape quotes since
