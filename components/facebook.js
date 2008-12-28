@@ -49,15 +49,15 @@ var debug = ( VERBOSITY < 1 )
         dump( arguments[i].toXMLString() );
         break;s
       case 'object':
-	try { // won't work if object has methods :(
-	    var out = JSON.stringify(arguments[i]);
-	    dump(out);
-	} catch (e) {
-	    dump( '[obj]\n' );
-	    for( prop in arguments[i] )
-		dump( ' ' + prop + ': ' + arguments[i][prop] + '\n' );
-	    dump( '[/obj]\n' );
-	}
+        try { // won't work if object has methods :(
+            var out = JSON.stringify(arguments[i]);
+            dump(out);
+        } catch (e) {
+            dump( '[obj]\n' );
+            for( prop in arguments[i] )
+                dump( ' ' + prop + ': ' + arguments[i][prop] + '\n' );
+            dump( '[/obj]\n' );
+        }
         break;
       default:
         dump( arguments[i] );
@@ -71,8 +71,8 @@ const CONTRACT_ID  = '@facebook.com/facebook-service;1';
 const CLASS_ID     = Components.ID('{e983db0e-05fc-46e7-9fba-a22041c894ac}');
 const CLASS_NAME   = 'Facebook API Connector';
 
-var Cc = Components.classes;
-var Ci = Components.interfaces;
+const Cc = Components.classes;
+const Ci = Components.interfaces;
 const PASSWORD_URL = 'chrome://facebook/';
 
 // Load MD5 code...
@@ -161,8 +161,7 @@ CountedNotif.prototype.update = function(notif) {
 };
 
 var fbSvc; // so that all our callback functions objects can access "this"
-function facebookService()
-{
+function facebookService() {
     debug('constructor');
 
     this._apiKey = '8d7be0a45c164647647602a27106cc65';
@@ -242,40 +241,16 @@ function facebookService()
             this.set(timer);
         }
     };
-    this._alertObserver = {
-        observe: function(subject, topic, data) {
-            debug('observed', subject, topic, data);
-            if (topic == 'alertclickcallback') {
-                debug('opening alert url', data);
-                var win = fbSvc._winService.getMostRecentWindow( "navigator:browser" );
-                var browser = win ? win.getBrowser() : null;
-                if( browser
-                  && 2 != fbSvc._prefService.getIntPref('browser.link.open_newwindow') )
-                  // 1 => current Firefox window;
-                  // 2 => new window;
-                  // 3 => a new tab in the current window;
-                { // open in a focused tab
-                  var tab = browser.addTab( data );
-                  browser.selectedTab = tab;
-                  win.content.focus();
-                }
-                else {
-                  win = Cc["@mozilla.org/appshell/appShellService;1"].getService(Ci.nsIAppShellService).hiddenDOMWindow;
-                  win.open( data );
-                }
-            }
-        }
-    };
     this._numAlertsObj = { value: 0 };
 
     this._winService      = Cc["@mozilla.org/appshell/window-mediator;1"]
-	.getService(Ci.nsIWindowMediator);
+        .getService(Ci.nsIWindowMediator);
     this._observerService = Cc["@mozilla.org/observer-service;1"]
-	.getService(Ci.nsIObserverService);
+        .getService(Ci.nsIObserverService);
     this._prefService     = Cc['@mozilla.org/preferences-service;1']
-	.getService(Ci.nsIPrefBranch2);
-    this._alertsService   = Cc["@mozilla.org/alerts-service;1"]
-	.getService(Components.interfaces.nsIAlertsService);
+        .getService(Ci.nsIPrefBranch2);
+    this._alertService    = Cc["@mozilla.org/alerts-service;1"]
+        .getService(Components.interfaces.nsIAlertsService);
 
     this._ff3Login = false;
     if ("@mozilla.org/passwordmanager;1" in Cc) {
@@ -289,12 +264,64 @@ function facebookService()
     }
 }
 
+function AlertObserver() { }
+AlertObserver.prototype = { // see https://developer.mozilla.org/en/nsIAlertsService
+    // Components.interfaces.nsIObserver
+    observe: function(subject, topic, data) {
+        vdebug("alert observed:", subject, "topic: " + topic, "data: " + data);
+        if (topic == 'alertclickcallback') {
+            debug('opening alert url', data);
+            var win = fbSvc._winService.getMostRecentWindow( "navigator:browser" );
+            var browser = win ? win.getBrowser() : null;
+            if( browser
+                && 2 != fbSvc._prefService.getIntPref('browser.link.open_newwindow') )
+                // 1 => current Firefox window;
+                // 2 => new window;
+                // 3 => a new tab in the current window;
+                { // open in a focused tab
+                    var tab = browser.addTab( data );
+                    browser.selectedTab = tab;
+                    win.content.focus();
+                }
+            else {
+                win = Cc["@mozilla.org/appshell/appShellService;1"]
+                    .getService(Ci.nsIAppShellService).hiddenDOMWindow;
+                win.open( data );
+            }
+        }
+    },
+
+    // Components.interfaces.nsISupports
+    QueryInterface : function(iid) {
+        if ( iid.equals(Components.interfaces.nsIObserver)
+             || iid.equals(Components.interfaces.nsISupportsWeakReference)
+             || iid.equals(Components.interfaces.nsISupports)
+             )
+            return this;
+        throw Components.results.NS_NOINTERFACE;
+    }
+};
+
 facebookService.prototype = {
     // nsISupports implementation
     QueryInterface: function (iid) {
-        if (!iid.equals(Ci.fbIFacebookService) &&
-            !iid.equals(Ci.nsISupports))
-            throw Components.results.NS_ERROR_NO_INTERFACE;
+        if (iid.equals(Ci.fbIFacebookService) ||
+            iid.equals(Ci.nsISupports) ||
+            iid.equals(Ci.nsISupportsWeakReference) ||
+            iid.equals(Ci.nsIWeakReference)
+            ) {
+            return this;
+        }
+        throw Components.results.NS_ERROR_NO_INTERFACE;
+    },
+
+    // nsIWeakReference
+    QueryReferent: function(iid) {
+        return this.QueryInterface(iid);
+    },
+
+    // nsISupportsWeakReference
+    GetWeakReference: function() {
         return this;
     },
 
@@ -498,7 +525,7 @@ facebookService.prototype = {
       if (null != this._canSetStatus) {return;}
 
       this.callMethod('facebook.users.hasAppPermission', ['ext_perm=status_update'], function(data){
-	  vdebug('data:', data);
+          vdebug('data:', data);
 
           fbSvc._canSetStatus = ('1' == data.toString());
           debug('Can Set Status?', fbSvc._canSetStatus);
@@ -509,7 +536,7 @@ facebookService.prototype = {
     },
     checkNotifications: function(onInit){
         this.callMethod('facebook.notifications.get', [], function(data) {
-	    vdebug('notification data:', data);
+            vdebug('notification data:', data);
             if (onInit){
                 fbSvc._messages = new CountedNotif( data.messages,'facebook-msgs-updated', fbSvc
                     , function( msgCount ) {
@@ -560,12 +587,12 @@ facebookService.prototype = {
     parseUsers: function(user_data) {
         users = {};
         for each (var user in user_data) {
-	    vdebug("user: " + user.uid, user);
+            vdebug("user: " + user.uid, user);
 
             // note: for name and status, need to utf8 decode them using
             // the decodeURIComponent(escape(s)) trick - thanks
             // http://ecmanaut.blogspot.com/2006/07/encoding-decoding-utf8-in-javascript.html
-	    var name   = user.name, // decodeURIComponent(escape(user.name)),
+            var name   = user.name, // decodeURIComponent(escape(user.name)),
                 id     = String(user.uid),
                 status = user.status ? user.status.message // decodeURIComponent(escape(user.status.message))
                                      : null,
@@ -700,19 +727,19 @@ facebookService.prototype = {
                             if (friend.status) {
                                 if (fbSvc._friendDict[friend.id].stime &&
                                     friend.stime < fbSvc._friendDict[friend.id].stime) {
-				    // weed out bad data using timestamp comparisons ...
+                                    // weed out bad data using timestamp comparisons ...
                                     debug("stale status update?"
                                           + " NEW: " + friend.stime + ": " + friend.status + " ;"
                                           + " PVS: " + fbSvc._friendDict[friend.id].stime + ": "
                                           + fbSvc._friendDict[friend.id].status );
-				    // ... overwrite the bad data with previous known good data
-				    friend.stime  = fbSvc._friendDict[friend.id].stime;
-				    friend.status = fbSvc._friendDict[friend.id].status;
+                                    // ... overwrite the bad data with previous known good data
+                                    friend.stime  = fbSvc._friendDict[friend.id].stime;
+                                    friend.status = fbSvc._friendDict[friend.id].status;
                                 } else {
                                     fbSvc.notify(friend, 'facebook-friend-updated', 'status');
                                     notifyProf = !fbSvc.showPopup('friend.status', friend.pic_sq,
                                         friend.name + ' ' + RenderStatusMsg(friend.status),
-				        'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#status');
+                                        'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#status');
                                 }
                             } else {
                                 fbSvc.notify(friend, 'facebook-friend-updated', 'status-delete');
@@ -799,7 +826,7 @@ facebookService.prototype = {
         }
         this._lastCallId = callId;
         params.push('call_id=' + callId);
-	params.push('format=json');
+        params.push('format=json');
         params.push('sig=' + this.generateSig(params));
         var message = encodeURI(params.join('&'));
         try {
@@ -831,32 +858,32 @@ facebookService.prototype = {
                 },
                 onStopRequest: function(request, context, statusCode) {
                     if (statusCode == Components.results.NS_OK) {
-		        var data = null;
+                        var data = null;
                         // native JSON seems to have problems parsing
                         // primitives like "true", "1", etc. as of FF3.1b2
-			try {
+                        try {
                             data = JSON.parse(this.resultTxt);
                         } catch (e) {
-			    try {
+                            try {
                                 this.resultTxt = this.resultTxt.trim()
-				data = JSON.parse(this.resultTxt);
-		            } catch (e) {
-				vdebug("failed to parse: '" + this.resultTxt + "'");
+                                data = JSON.parse(this.resultTxt);
+                            } catch (e) {
+                                vdebug("failed to parse: '" + this.resultTxt + "'");
                                 if (this.resultTxt == "true") {
                                    data = true;
                                 } else if (this.resultTxt == "false") {
                                    data = false;
                                 } else {
-				   data = Number(this.resultTxt);
-				   if (NaN == data) {
-				       if (!secondTry) {
-				           debug('TRYING ONE MORE TIME');
-				           fbSvc.callMethod(method, origParams, callback, true);
-				       }
-				       return;
-				   }
+                                   data = Number(this.resultTxt);
+                                   if (NaN == data) {
+                                       if (!secondTry) {
+                                           debug('TRYING ONE MORE TIME');
+                                           fbSvc.callMethod(method, origParams, callback, true);
+                                       }
+                                       return;
+                                   }
                                 }
-			    }
+                            }
                         }
 
                         if (typeof data.error_code != "undefined") {
@@ -874,7 +901,7 @@ facebookService.prototype = {
                                     fbSvc.callMethod(method, origParams, callback, true);
                                 }
                             }
-			} else {
+                        } else {
                             callback(data);
                         }
                     }
@@ -903,12 +930,17 @@ facebookService.prototype = {
     _showPopup: function(type, pic, label, url) {
         debug('showPopup', type, pic, label, url);
         try {
-            this._alertsService.showAlertNotification(pic, "Facebook Notification", label);
+            if (url) {
+                this._alertService.showAlertNotification(pic, "Facebook Notification", label,
+                                                         true, url, new AlertObserver() );
+            } else {
+                this._alertService.showAlertNotification(pic, "Facebook Notification", label);
+            }
         } catch (e) {
             if (e) debug('caught', e);
             this._numAlertsObj.value++;
-            var win = Cc["@mozilla.org/appshell/appShellService;1"].getService(Ci.nsIAppShellService)
-                                                                  .hiddenDOMWindow;
+            var win = Cc["@mozilla.org/appshell/appShellService;1"]
+                .getService(Ci.nsIAppShellService).hiddenDOMWindow;
             var left = win.screen.width - 215;
             var top  = win.screen.height - 105*this._numAlertsObj.value;
             win.openDialog('chrome://facebook/content/notifier.xul', '_blank',
