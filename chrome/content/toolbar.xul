@@ -137,7 +137,7 @@
 
           <menuitem label="Toolbar Settings"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="window.open('chrome://facebook/content/settings.xul', '', 'centerscreen,chrome,modal=yes,dialog=yes')"/>
+                    oncommand="openDialog('chrome://facebook/content/settings.xul', '', 'chrome,titlebar,toolbar,centerscreen,dialog=yes');" />
         </menupopup>
       </toolbarbutton>
 

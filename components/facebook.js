@@ -930,23 +930,28 @@ facebookService.prototype = {
     _showPopup: function(type, pic, label, url) {
         debug('showPopup', type, pic, label, url);
         try {
-            if (url) {
-                this._alertService.showAlertNotification(pic, "Facebook Notification", label,
-                                                         true, url, new AlertObserver() );
-            } else {
-                this._alertService.showAlertNotification(pic, "Facebook Notification", label);
+            if (this._prefService.getBoolPref('extensions.facebook.notifications.growl')) {
+                if (url) {
+                    this._alertService.showAlertNotification(pic, "Facebook Notification", label,
+                                                             true, url, new AlertObserver() );
+                } else {
+                    this._alertService.showAlertNotification(pic, "Facebook Notification", label);
+                }
+                return true;
             }
         } catch (e) {
-            if (e) debug('caught', e);
-            this._numAlertsObj.value++;
-            var win = Cc["@mozilla.org/appshell/appShellService;1"]
-                .getService(Ci.nsIAppShellService).hiddenDOMWindow;
-            var left = win.screen.width - 215;
-            var top  = win.screen.height - 105*this._numAlertsObj.value;
-            win.openDialog('chrome://facebook/content/notifier.xul', '_blank',
-                           'chrome,titlebar=no,popup=yes,left=' + left + ',top=' + top + ',width=210,height=100',
-                           pic, label, url, this._numAlertsObj);
+            debug('caught', e);
         }
+
+        // either native FF alerts are not available or they aren't being used
+        this._numAlertsObj.value++;
+        var win = Cc["@mozilla.org/appshell/appShellService;1"]
+        .getService(Ci.nsIAppShellService).hiddenDOMWindow;
+        var left = win.screen.width - 215;
+        var top  = win.screen.height - 105*this._numAlertsObj.value;
+        win.openDialog('chrome://facebook/content/notifier.xul', '_blank',
+                       'chrome,titlebar=no,popup=yes,left=' + left + ',top=' + top + ',width=210,height=100',
+                       pic, label, url, this._numAlertsObj);
         return true;
     }
 };

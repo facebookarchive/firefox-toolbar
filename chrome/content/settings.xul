@@ -1,51 +1,146 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<dialog id="facebook-settings" title="Configure the Facebook Toolbar"
-        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        buttons="accept,cancel"
-        ondialogaccept="TouchSettings(true)"
-        onload="TouchSettings(false)">
-  <script type="application/x-javascript" src="chrome://browser/content/utilityOverlay.js"/>
-  <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
-  <script type="application/x-javascript" src="chrome://facebook/content/settings.js"/>
-  <checkbox id="facebook-notifications-toggle" label="Enable Pop-up Notifications"/>
-  <groupbox id="facebook-notifications-youbox">
-    <caption label="Notifications about me"/>
-    <checkbox id="facebook-notifications-you-req" label="New friend request"/>
-    <checkbox id="facebook-notifications-you-msg" label="New message"/>
-    <checkbox id="facebook-notifications-you-poke" label="New poke"/>
-    <checkbox id="facebook-notifications-you-friend" label="New friend"/>
-    <checkbox id="facebook-notifications-you-event-inv" label="New event invite"/>
-    <checkbox id="facebook-notifications-you-group-inv" label="New group invite"/>
-    <checkbox id="facebook-notifications-you-share" label="New share"/>
-    <checkbox id="facebook-notifications-you-wall" label="Someone wrote on your wall"/>
-  </groupbox>
-  <groupbox id="facebook-notifications-friendbox">
-    <caption label="Notifications about my friends"/>
-    <checkbox id="facebook-notifications-friend-profile" label="A friend updated his/her profile"/>
-    <checkbox id="facebook-notifications-friend-status" label="A friend updated his/her status"/>
-    <checkbox id="facebook-notifications-friend-album" label="A friend updated his/her albums"/>
-    <checkbox id="facebook-notifications-friend-wall" label="Someone wrote on a friend's wall"/>
-    <checkbox id="facebook-notifications-friend-note" label="A friend wrote a note"/>
-  </groupbox>
 
-  <groupbox id="facebook-customize-toolbar">
-    <caption label="Customize Toolbar"/>
-     <description style="width:240px">
-     You can decide which parts of the Facebook Toolbar appear and how they are placed using Firefox's toolbar customizer.
-     </description>
-     <button label="Customize toolbar" oncommand="acceptDialog(); opener.BrowserCustomizeToolbar()"/>
-  </groupbox>
-  <groupbox id="facebook-growlbox">
-    <!-- note: this box gets hidden on non-macs -->
-    <caption>
-      <label value="Growl Settings" />
-    </caption>
-     <description style="width:240px">
-     If you use the application Growl, you can have your notifications show up in your Growl display. (<label onclick="openUILink('http://growl.info', event)" value="What is Growl?" class="small-margin text-link" style="color: blue; font-size: 9px; text-decoration: underline;"/>)
-     </description>
-    <checkbox id="facebook-notifications-growl" label="Show Facebook notifications with Growl" checked="false"/>
-    <label value="Location of growlnotify:"/>
-    <textbox id="facebook-notifications-growlpath" value="/usr/local/bin/growlnotify"/>
-  </groupbox>
-</dialog>
+<prefwindow id="facebook-settings"
+	    title="Configure the Facebook Toolbar"
+	    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+            type="prefwindow"
+            windowtype="facebookToolbar:Preferences"
+            >
+  <prefpane id="facebook-you-pane" label="Configure Facebook Toolbar Notifications"
+            selected="true">
+    <preferences>
+      <!-- General Notifications Preferences -->
+      <preference name="extensions.facebook.notifications.toggle"
+                  type="bool"
+                  id="toggle"
+                  />
+      <preference name="extensions.facebook.notifications.growl"
+                  type="bool"
+                  id="growl"
+                  />
+
+      <!-- Notifications About Me -->
+      <preference name="extensions.facebook.notifications.you.req"
+                  type="bool"
+                  id="you-req"
+                  />
+      <preference name="extensions.facebook.notifications.you.msg"
+                  type="bool"
+                  id="you-msg"
+                  />
+      <preference name="extensions.facebook.notifications.you.poke"
+                  type="bool"
+                  id="you-poke"
+                  />
+      <preference name="extensions.facebook.notifications.you.friend"
+                  type="bool"
+                  id="you-friend"
+                  />
+      <preference name="extensions.facebook.notifications.you.event.inv"
+                  type="bool"
+                  id="you-event-inv"
+                  />
+      <preference name="extensions.facebook.notifications.you.group.inv"
+                  type="bool"
+                  id="you-group-inv"
+                  />
+      <preference name="extensions.facebook.notifications.you.share"
+                  type="bool"
+                  id="you-share"
+                  />
+      <preference name="extensions.facebook.notifications.you.wall"
+                  type="bool"
+                  id="you-wall"
+                  />
+
+      <!-- Notifications About My Friends -->
+      <preference name="extensions.facebook.notifications.friend.profile"
+                  type="bool"
+                  id="friend-profile"
+                  />
+      <preference name="extensions.facebook.notifications.friend.status"
+                  type="bool"
+                  id="friend-status"
+                  />
+      <preference name="extensions.facebook.notifications.friend.album"
+                  type="bool"
+                  id="friend-album"
+                  />
+      <preference name="extensions.facebook.notifications.friend.wall"
+                  type="bool"
+                  id="friend-wall"
+                  />
+      <preference name="extensions.facebook.notifications.friend.note"
+                  type="bool"
+                  id="friend-note"
+                  />
+
+    </preferences>
+
+    <vbox>
+      <checkbox preference="toggle" label="Enable Pop-up Notifications"/>
+      <groupbox>
+        <label class="header" value="What Facebook happenings prompt a notification?" />
+        <hbox>
+          <groupbox id="facebook-notifications-youbox">
+            <caption label="Notifications about me"/>
+            <checkbox preference="you-req"       label="New friend request"/>
+            <checkbox preference="you-msg"       label="New message"/>
+            <checkbox preference="you-poke"      label="New poke"/>
+            <checkbox preference="you-friend"    label="New friend"/>
+            <checkbox preference="you-event-inv" label="New event invite"/>
+            <checkbox preference="you-group-inv" label="New group invite"/>
+            <checkbox preference="you-share"     label="New share"/>
+            <checkbox preference="you-wall"      label="Someone writes on your wall"/>
+          </groupbox>
+
+          <groupbox id="facebook-notifications-friendbox">
+            <caption label="Notifications about my friends"/>
+            <checkbox preference="friend-profile" label="A friend updates his/her profile"/>
+            <checkbox preference="friend-status"  label="A friend updates his/her status"/>
+            <checkbox preference="friend-album"   label="A friend updates his/her albums"/>
+            <checkbox preference="friend-wall"    label="Someone writes on a friend's wall"/>
+            <checkbox preference="friend-note"    label="A friend writes a note"/>
+          </groupbox>
+        </hbox>
+      </groupbox>
+
+      <groupbox id="facebook-notifications-method">
+        <label class="header" value="What do notifications look like?" />
+        <radiogroup preference="growl">
+          <radio label="Use Facebook Toolbar notification windows"
+                 value="false" />
+          <radio label="Use built-in Firefox notifications (on Mac OS X, Growl is used)"
+                 value="true" />
+        </radiogroup>
+
+        <!-- Help Text can't be included because Mac firefox doesn't
+             account for text overflow when sizing the dialog, so
+             the bottom of the prefs dialog gets cut off!
+             <description flex="10">
+               The appearance of Firefox's built-in notification windows
+               varies from platform to platform.
+               On Windows, a small window slides up from taskbar,
+               pauses for a few seconds, then slides down.
+               On Mac OS X, built-in Firefox alerts are delivered via the
+               Growl application, which allows customization of appearance and
+               on-screen duration.
+               (<label href="http://growl.info/about.php"
+                       class="text-link small-margin"
+                       style="font-size: 9px;">What is Growl</label>).
+             </description>
+             -->
+      </groupbox>
+
+      <hbox>
+        <spacer flex="1"/>
+        <button id="ok-button" label="OK" oncommand="acceptDialog()" />
+        <button id="cancel-button" label="Cancel" oncommand="cancelDialog()" />
+        <spacer flex="1"/>
+      </hbox>
+
+    </vbox>
+  </prefpane>
+
+</prefwindow>
