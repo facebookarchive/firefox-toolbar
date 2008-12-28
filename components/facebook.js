@@ -268,9 +268,14 @@ function facebookService()
     };
     this._numAlertsObj = { value: 0 };
 
-    this._winService      = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
-    this._observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
-    this._prefService     = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch2);
+    this._winService      = Cc["@mozilla.org/appshell/window-mediator;1"]
+	.getService(Ci.nsIWindowMediator);
+    this._observerService = Cc["@mozilla.org/observer-service;1"]
+	.getService(Ci.nsIObserverService);
+    this._prefService     = Cc['@mozilla.org/preferences-service;1']
+	.getService(Ci.nsIPrefBranch2);
+    this._alertsService   = Cc["@mozilla.org/alerts-service;1"]
+	.getService(Components.interfaces.nsIAlertsService);
 
     this._ff3Login = false;
     if ("@mozilla.org/passwordmanager;1" in Cc) {
@@ -897,23 +902,10 @@ facebookService.prototype = {
     },
     _showPopup: function(type, pic, label, url) {
         debug('showPopup', type, pic, label, url);
-        // we use growl or notifier.xul instead of built-in firefox notifications
         try {
-          var use_growl = this._prefService.getBoolPref('extensions.facebook.notifications.growl');
-          if (use_growl) { // use growl if it is built in
-            var growlexec = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-            var process = Cc["@mozilla.org/process/util;1"].createInstance(Ci.nsIProcess);
-            growlexec.initWithPath(this._prefService.getCharPref('extensions.facebook.notifications.growlpath'));
-            if (growlexec.exists()) {
-                process.init(growlexec);
-                var args = ['-n', 'Firefox', '-a', 'Firefox', '-t', 'Facebook Notification', '-m', label];
-                process.run(false, args, args.length);
-            }
-          }
-          else
-            throw null;
-        } catch (e2) { // failing that, open up a window with the notification
-            if (e2) debug('caught', e2);
+            this._alertsService.showAlertNotification(pic, "Facebook Notification", label);
+        } catch (e) {
+            if (e) debug('caught', e);
             this._numAlertsObj.value++;
             var win = Cc["@mozilla.org/appshell/appShellService;1"].getService(Ci.nsIAppShellService)
                                                                   .hiddenDOMWindow;
