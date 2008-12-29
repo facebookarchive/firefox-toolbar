@@ -66,6 +66,8 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
 
 #facebook-search image {
   -moz-image-region: rect(0px 64px 14px 48px);
+  height: 17px !important;
+  width: 16px !important;
 }
 
 #facebook-search .textbox-input {
