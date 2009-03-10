@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://facebook/content/photoupload/photoupload.css" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://facebook/locale/photoupload.dtd">
+
+<window id="facebook-photoupload"
+        title="&window.title;"
+        windowtype="facebook:photoupload"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        width="800"
+        height="800"
+        onload="PhotoUpload.init()"
+        onunload="PhotoUpload.uninit()"
+        persist="screenX screenY width height">
+  <script type="application/x-javascript" src="chrome://facebook/content/photoupload/photoupload.js"/>
+
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="facebookStringBundle"
+                  src="chrome://facebook/locale/photoupload.properties"/>
+  </stringbundleset>
+
+  <deck id="uploadDeck" flex="1">
+    <!-- Image selection and editing box -->
+    <vbox>
+      <!-- TODO: album selection -->
+      <groupbox hidden="true">
+        <caption label="Select Album"/>
+        <hbox>
+          <radiogroup>
+            <radio label="Existing"/>
+            <radio label="New"/>
+          </radiogroup>
+          <deck>
+            <!-- Album drop down here -->
+            <!-- New Album fields here -->
+          </deck>
+        </hbox>
+      </groupbox>
+
+      <hbox>
+        <button label="Add…" icon="add" oncommand="PhotoUpload.addPhotos();"/>
+        <button label="Remove" icon="remove" oncommand="PhotoUpload.removeSelectedPhotos();"/>
+        <button label="Remove All" icon="clear" oncommand="PhotoUpload.removeAllPhotos();"/>
+      </hbox>
+
+      <browser flex="1" src="photopanel.html" id="photopanel"/>
+
+      <hbox align="center">
+        <button label="Upload" oncommand="PhotoUpload.upload();"/>
+        <label class="upload-status" id="uploadStatus"/>
+      </hbox>
+    </vbox>
+
+    <!-- upload box -->
+    <vbox>
+      <spacer flex="1"/>
+      <label value="Uploading, please wait…"/>
+      <progressmeter id="uploadProgress" mode="determined" value="0" />
+      <checkbox id="closeAfterUpload" checked="true"
+                label="Close this window and open Album page when done"/>
+      <spacer flex="1"/>
+      <hbox>
+        <button label="Cancel Upload" oncommand="PhotoUpload.cancelUpload()"/>
+      </hbox>
+    </vbox>
+
+  </deck>
+</window>

@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <style type="text/css">
+    body {
+      background-color: white;
+    }
+    .photobox {
+      display: inline-block;
+      position: relative;
+      width: 200px;
+      height: 200px;
+      -moz-box-shadow: gray 10px 10px 10px;
+      margin: 10px;
+      overflow: hidden;
+      border: 1px solid #CCCCCC;
+      background-color: white;
+    }
+    .photobox > * {
+      position: absolute;
+    }
+    /*
+    .photobox > div {
+      font-size: 2em;
+      bottom: 0;
+      right: 0;
+    }
+    */
+    .photobox > img {
+      position: absolute;
+      margin: auto;
+      top: 0; bottom: 0;
+      left: 0; right: 0;
+      max-width: 200px;
+      max-height: 200px;
+    }
+    #help-message {
+      z-index: -1;
+      position: absolute;
+      top: 50%;
+      text-align: center;
+      left: 0;
+      right: 0;
+      margin-top: -0.5em;
+      font-size: 3em;
+      color: gray;
+      font-style: italic;
+    }
+    #photobox-template {
+      display: none;
+    }
+    .photobox:not([id=photobox-template]) {
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="photobox" id="photobox-template">
+      <img>
+      <input type="checkbox">
+    </div>
+    <div id="help-message">Click Add… or drag photos here.</div>
+  </div>
+</body>
+</html>

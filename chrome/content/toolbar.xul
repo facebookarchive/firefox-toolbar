@@ -38,6 +38,11 @@
                      tooltiptext="Share current page on Facebook"
                      oncommand="if (!fbSvc.loggedIn) FacebookLogin(); facebook.share()"/>
 
+      <toolbarbutton id="facebook-photoupload"
+                     class="facebook-icon-photoupload facebook-photoupload"
+                     tooltiptext="Upload photos to Facebook"
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); facebook.photoupload()"/>
+
       <toolbarbutton id="facebook-notification-poke"
                      class="facebook-icon-poke facebook-notification button"
                      label="?"
@@ -173,7 +178,7 @@
              context="toolbar-context-menu"
              toolbarname="Facebook Toolbar"
              crop="end"
-            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-event-invs,facebook-notification-group-invs,facebook-notification-separator,facebook-share,spring,facebook-login-info">
+            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-event-invs,facebook-notification-group-invs,facebook-notification-separator,facebook-share,facebook-photoupload,spring,facebook-login-info">
     </toolbar>
     <popupset>
     <popup position="after_start"

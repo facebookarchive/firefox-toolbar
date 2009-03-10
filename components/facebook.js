@@ -162,6 +162,9 @@ CountedNotif.prototype.update = function(notif) {
 
 var fbSvc; // so that all our callback functions objects can access "this"
 function facebookService() {
+    // XXX temporary hack for accessing private members from the photo uploader.
+    this.wrappedJSObject = this;
+
     debug('constructor');
 
     this._apiKey = '8d7be0a45c164647647602a27106cc65';

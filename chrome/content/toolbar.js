@@ -338,6 +338,10 @@ var facebook = {
       eval(openCmd);
     }
   },
+  photoupload: function() {
+    window.openDialog('chrome://facebook/content/photoupload/photoupload.xul',
+                      'facebook:photoupload', '');
+  },
   clearFriends: function(sessionEnded) {
     var list = document.getElementById('PopupFacebookFriendsList');
     while (list.firstChild && list.firstChild.id != 'FacebookHint') {
