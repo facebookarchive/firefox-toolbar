@@ -831,7 +831,20 @@ facebookService.prototype = {
         params.push('call_id=' + callId);
         params.push('format=json');
         params.push('sig=' + this.generateSig(params));
-        var message = encodeURI(params.join('&'));
+
+        paramsEncoded = [];
+        for each (var param in params) {
+            var idx = param.indexOf("=");
+            if (idx < 0) {
+                debug("Invalid parameter: " + param);
+                return;
+            }
+            var key = param.slice(0, idx);
+            var value = param.slice(idx + 1);
+            paramsEncoded.push(key + "=" + encodeURIComponent(value));
+        }
+        var message = paramsEncoded.join('&');
+
         try {
             // Yuck...xmlhttprequest doesn't always work so we have to do this
             // the hard way.  Thanks to Manish from Flock for the tip!
