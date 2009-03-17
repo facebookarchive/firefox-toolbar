@@ -832,7 +832,7 @@ facebookService.prototype = {
         params.push('format=json');
         params.push('sig=' + this.generateSig(params));
 
-        paramsEncoded = [];
+        var paramsEncoded = [];
         for each (var param in params) {
             var idx = param.indexOf("=");
             if (idx < 0) {
