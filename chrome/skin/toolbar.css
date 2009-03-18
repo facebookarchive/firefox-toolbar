@@ -66,9 +66,10 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
 }
 
 #facebook-search image {
-  -moz-image-region: rect(0px 64px 14px 48px);
-  height: 17px !important;
-  width: 16px !important;
+  -moz-image-region: rect(0px 64px 15px 48px);
+  height: 15px;
+  margin: 1px 0;
+  width: 16px;
 }
 
 #facebook-search .textbox-input {
