@@ -24,7 +24,7 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   color: #2f4778;
 }
 
-.facebook-notification, .facebook-share, .facebook-photoupload,
+.facebook-notification, .facebook-share,
 #facebook-searchbox, .facebook-sidebar-icon image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding: 0px;
@@ -213,16 +213,16 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
 
 .facebook-icon-photoupload {
   /* TODO: update icon once artwork is there */
+  list-style-image: url('chrome://facebook/skin/upload16c.gif');
   padding-left: 4px;
   margin-left: 0px;
-  -moz-image-region: rect(0px 425px 16px 409px);
 }
 
 .facebook-icon-photoupload:hover {
   /* TODO: update icon once artwork is there */
+  list-style-image: url('chrome://facebook/skin/upload16.gif');
   padding-left: 4px;
   margin-left: 0px;
-  -moz-image-region: rect(0px 441px 16px 425px);
 }
 
 .facebook-icon-wall {
