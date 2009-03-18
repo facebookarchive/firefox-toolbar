@@ -15,3 +15,8 @@ pref("extensions.facebook.notifications.friend.album", true);
 pref("extensions.facebook.notifications.growl", false);
 // populated on login
 pref("extensions.facebook.uid", "" );
+// What to do after a photo upload:
+//  0: ask user
+//  1: open album page
+//  2: do nothing
+pref("extensions.facebook.postuploadaction", 0);

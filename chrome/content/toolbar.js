@@ -340,7 +340,7 @@ var facebook = {
   },
   photoupload: function() {
     window.openDialog('chrome://facebook/content/photoupload/photoupload.xul',
-                      'facebook:photoupload', '');
+                      'facebook:photoupload', 'chrome,titlebar,toolbar,dialog=no');
   },
   clearFriends: function(sessionEnded) {
     var list = document.getElementById('PopupFacebookFriendsList');

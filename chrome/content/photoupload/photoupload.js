@@ -1,6 +1,6 @@
 /**
  * Facebook Firefox Toolbar Software License
- * Copyright (c) 2007 Facebook, Inc.
+ * Copyright (c) 2009 Facebook, Inc.
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -43,6 +43,9 @@ const FileInputStream = CC("@mozilla.org/network/file-input-stream;1",
 const StringInputStream = CC("@mozilla.org/io/string-input-stream;1",
                              "nsIStringInputStream")
 
+// Keep this in sync with the albumid attribute of the default album in photoupload.xul
+const DEFAULT_ALBUM = "-1";
+
 // Debugging.
 function d(s) {
   dump(s + "\n");
@@ -57,6 +60,7 @@ var PhotoSet = {
   // metadata editing is implemented.
   _photos: [],
   _listeners: [],
+  _cancelled: false,
 
   add: function(aFiles) {
     Array.prototype.push.apply(this._photos, aFiles)
@@ -66,6 +70,11 @@ var PhotoSet = {
 
   removeAll: function() {
     this._photos = [];
+    this._notifyChanged();
+  },
+
+  remove: function(photo) {
+    this._photos = this._photos.filter(function(p) p != photo);
     this._notifyChanged();
   },
 
@@ -90,7 +99,8 @@ var PhotoSet = {
     }
   },
 
-  _uploadFile: function(file, onComplete, onError) {
+  _uploadFile: function(albumId, file, onComplete, onError) {
+    return onComplete();
     var fbSvc = Cc['@facebook.com/facebook-service;1'].
                 getService(Ci.fbIFacebookService);
 
@@ -102,6 +112,8 @@ var PhotoSet = {
 
     // method specific:
     params.method = "facebook.photos.upload";
+    if (albumId != DEFAULT_ALBUM)
+      params.aid = albumId;
 
     // TODO: this should be refactored with callMethod in the XPCOM component.
     params.session_key = fbSvc_._sessionKey;
@@ -207,16 +219,23 @@ var PhotoSet = {
     xhr.send(mis);
   },
 
-  upload: function(progressCallback, errorCallback) {
+  upload: function(albumId, progressCallback, errorCallback) {
     var toUpload = this._photos;
-    this._photos = [];
-    this._notifyChanged();
-
     var total = toUpload.length;
     var done = 0;
-
     var self = this;
+
+    function uploadDone() {
+      self._photos = [];
+      self._notifyChanged();
+    }
+
     function doUpload() {
+      if (self._cancelled) {
+        d("Upload cancelled");
+        progressCallback(100, true);
+        return;
+      }
       if (done == total) {
         d("How could that happen?");
         return;
@@ -227,16 +246,23 @@ var PhotoSet = {
         return;
       }
 
-      self._uploadFile(photo, function() {
+      self._uploadFile(albumId, photo, function() {
         done++;
-        progressCallback(done / total * 100);
-        if (done < total)
+        progressCallback(done / total * 100, false);
+        if (done == total) {
+          uploadDone();
+        } else {
           doUpload();
+        }
       }, function() {
         errorCallback.apply(this, arguments);
       });
     }
     doUpload();
+  },
+
+  cancelUpload: function() {
+    this._cancelled = true;
   }
 };
 
@@ -268,16 +294,34 @@ var PhotoPanel = {
 
     photos.forEach(function(photo) {
       var newBox = photoboxTemplate.cloneNode(true);
+      newBox.photo = photo;
       newBox.removeAttribute("id");
 
       var uri = ios.newFileURI(photo);
 
       // TODO: 3.0 compat
       newBox.querySelector("img").src = uri.spec;
+
       photoboxTemplate.parentNode.insertBefore(newBox, photoboxTemplate);
     });
+  },
+  removePhoto: function(event) {
+    var photoBox = event.target.parentNode;
+    var photo = photoBox.photo;
+    if (!photo) {
+      d("Error, photo not found");
+      return;
+    }
+    PhotoSet.remove(photo);
   }
 };
+
+const NEW_ALBUM = 0;
+const EXISTING_ALBUM = 1;
+
+const POST_UPLOAD_ASKUSER = 0;
+const POST_UPLOAD_OPENALBUM = 1;
+const POST_UPLOAD_STAYHERE = 2;
 
 /**
  * Manages the Photo upload window.
@@ -288,33 +332,144 @@ var PhotoUpload = {
     return this._stringBundle = document.getElementById("facebookStringBundle");
   },
 
+  get _fbSvc() {
+    delete this._fbSvc;
+    return this._fbSvc = Cc['@facebook.com/facebook-service;1'].
+                         getService(Ci.fbIFacebookService);
+  },
+
+  _url: function(spec) {
+    var ios = Cc["@mozilla.org/network/io-service;1"].
+              getService(Ci.nsIIOService);
+    return ios.newURI(spec, null, null);
+  },
+
   init: function() {
     PhotoPanel.init();
+    PhotoSet.addChangedListener(this.photosChanged);
+
+    var albumsPopup = document.getElementById("albumsPopup");
+    var self = this;
+    this._getAlbums(function(albums) {
+
+      var lastAlbumId = document.getElementById("albumsList")
+                                .getAttribute("lastalbumid");
+      var selectedItem;
+      for each (var album in albums) {
+        var menuitem = document.createElement("menuitem");
+        menuitem.setAttribute("label", album.name);
+        menuitem.setAttribute("albumid", album.aid);
+        if (album.aid == lastAlbumId)
+          selectedItem = menuitem;
+        d("Album name: " + album.name + " album id: " + album.aid);
+        albumsPopup.appendChild(menuitem);
+      }
+      if (selectedItem) {
+        var albumsList = document.getElementById("albumsList");
+        albumsList.selectedItem = selectedItem;
+      }
+      self._checkPhotoUploadPermission();
+    });
+
+    // XXX debug
+    /*
+    var file = Cc["@mozilla.org/file/local;1"].
+               createInstance(Ci.nsILocalFile);
+    file.initWithPath("/home/sypasche/projects/facebook/sample_images/metafont.png");
+    var file2 = Cc["@mozilla.org/file/local;1"].
+                createInstance(Ci.nsILocalFile);
+    file2.initWithPath("/home/sypasche/projects/facebook/sample_images/recycled.png");
+    PhotoSet.add([file, file2]);
+    */
   },
 
   uninit: function() {
     PhotoPanel.uninit();
+    PhotoSet.removeChangedListener(this.photosChanged);
+    if (this.getAlbumSelectionMode() == EXISTING_ALBUM) {
+      var albumsList = document.getElementById("albumsList");
+      var albumId = albumsList.selectedItem.getAttribute("albumid");
+      document.getElementById("albumsList").setAttribute("lastalbumid", albumId);
+    }
+    document.persist("albumsList", "lastalbumid");
   },
 
-  _getAlbums: function() {
-    var fbSvc = Cc['@facebook.com/facebook-service;1'].
-                getService(Ci.fbIFacebookService);
+  _checkPhotoUploadPermission: function() {
+    d("Checking photo upload permission");
+    const PERM = "photo_upload";
 
+    var self = this;
     // XXX wrappedJSObject hack because the method is not exposed.
-    fbSvc.wrappedJSObject.callMethod('facebook.photos.getAlbums',
-                                     ["uid=" + fbSvc.wrappedJSObject._uid],
-                                     function(albums) {
-      d("Got response: " + albums);
-      for each (let album in albums) {
-        d("alb " + album.aid + " - " + album.name + " -created: " + album.created);
+    this._fbSvc.wrappedJSObject.callMethod('facebook.users.hasAppPermission',
+                                           ['ext_perm=' + PERM],
+                                           function(data) {
+      if ('1' == data.toString()) {
+        d("photo upload is authorized");
+        return;
       }
+
+      let promptTitle = self._stringBundle.getString("allowUploadTitle");
+      let promptMessage = self._stringBundle.getString("allowUploadMessage");
+      let openAuthorize = self._stringBundle.getString("openAuthorizePage");
+
+      const IPS = Ci.nsIPromptService;
+      let ps = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(IPS);
+      let rv = ps.confirmEx(window, promptTitle, promptMessage,
+                            (IPS.BUTTON_TITLE_IS_STRING * IPS.BUTTON_POS_0) +
+                            (IPS.BUTTON_TITLE_CANCEL * IPS.BUTTON_POS_1),
+                            openAuthorize, null, null, null, {value: 0});
+
+      if (rv != 0)
+        return;
+      var authorizeUrl = "http://www.facebook.com/authorize.php?api_key=" +
+                         self._fbSvc.apiKey +"&v=1.0&ext_perm=" + PERM;
+      Application.activeWindow.open(self._url(authorizeUrl)).focus();
+      window.close();
     });
+  },
+
+  photosChanged: function() {
+    document.getElementById("uploadButton").disabled = PhotoSet.photos.length == 0;
+  },
+
+  getAlbumSelectionMode: function() {
+    var albumSelectionGroup = document.getElementById("albumSelectionGroup");
+    var existingAlbumRadio = document.getElementById("existingAlbumRadio");
+    var newAlbumRadio = document.getElementById("newAlbumRadio");
+
+    if (albumSelectionGroup.selectedItem == existingAlbumRadio)
+      return EXISTING_ALBUM;
+    if (albumSelectionGroup.selectedItem == newAlbumRadio)
+      return NEW_ALBUM;
+
+    throw "Unknown album selection mode";
+  },
+
+  onAlbumSelectionModeChange: function() {
+    var albumSelectionDeck = document.getElementById("albumSelectionDeck");
+    var selectionMode = this.getAlbumSelectionMode();
+
+    if (selectionMode == EXISTING_ALBUM) {
+      albumSelectionDeck.selectedPanel =
+        document.getElementById("existingAlbumPanel");
+    } else if (selectionMode == NEW_ALBUM) {
+      albumSelectionDeck.selectedPanel =
+        document.getElementById("newAlbumPanel");
+    }
+  },
+
+  _getAlbums: function(callback) {
+    // XXX wrappedJSObject hack because the method is not exposed.
+    this._fbSvc.wrappedJSObject.callMethod('facebook.photos.getAlbums',
+                                     ["uid=" + this._fbSvc.wrappedJSObject._uid],
+                                     callback
+    );
   },
 
   addPhotos: function() {
     var fp = Cc["@mozilla.org/filepicker;1"].
              createInstance(Ci.nsIFilePicker);
-    fp.init(window, this._stringBundle.getString("photoupload.fp.title"),
+    fp.init(window, this._stringBundle.getString("filePickerTitle"),
             Ci.nsIFilePicker.modeOpenMultiple);
     fp.appendFilters(Ci.nsIFilePicker.filterImages);
     if (fp.show() != Ci.nsIFilePicker.returnCancel) {
@@ -327,55 +482,131 @@ var PhotoUpload = {
     }
   },
 
-  removeSelectedPhotos: function() {
-    alert("TODO");
-  },
-
   removeAllPhotos: function() {
     PhotoSet.removeAll();
   },
 
   cancelUpload: function() {
-    alert("TODO");
+    PhotoSet.cancelUpload();
+  },
+
+  /**
+   * Converts the album id that is used in the Facebook API to the album id
+   * that is used in the aid GET parameter of the editalbum.php page.
+   */
+  _albumIdToUrlAlbumId: function(albumId) {
+    // the url album id is the least significant 32 bits of the api-generated
+    // album id, the user id is the most significant 32 bits.
+
+    // Javascript Number are 64bit floating point. The albumid is a 64bit integer.
+    // That number is too big to be handled directly without loss of precision,
+    // so we use an external library for calculation.
+    var id = new BigInteger(albumId, 10);
+    var mask = new BigInteger("ffffffff", 16);
+    var urlAlbumId = id.and(mask);
+    return urlAlbumId.toString(10);
+  },
+
+  _postUpload: function(albumId) {
+
+    var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+    var postUploadAction = prefSvc.getIntPref("extensions.facebook.postuploadaction");
+
+    if (postUploadAction == POST_UPLOAD_ASKUSER) {
+
+      let promptTitle = this._stringBundle.getString("uploadCompleteTitle");
+      let promptMessage = this._stringBundle.getString("uploadCompleteMessage");
+      let checkboxLabel = this._stringBundle.getString("rememberDecision");
+      let goToAlbum = this._stringBundle.getString("goToAlbum");
+      let stayHere = this._stringBundle.getString("stayHere");
+
+      const IPS = Ci.nsIPromptService;
+      let ps = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(IPS);
+      let remember = { value: false };
+      let rv = ps.confirmEx(window, promptTitle, promptMessage,
+                            (IPS.BUTTON_TITLE_IS_STRING * IPS.BUTTON_POS_0) +
+                            (IPS.BUTTON_TITLE_IS_STRING * IPS.BUTTON_POS_1),
+                            goToAlbum, stayHere, null, checkboxLabel, remember);
+
+      postUploadAction = rv == 0 ? POST_UPLOAD_OPENALBUM : POST_UPLOAD_STAYHERE;
+      if (remember.value) {
+        prefSvc.setIntPref("extensions.facebook.postuploadaction", postUploadAction);
+      }
+    }
+    if (postUploadAction == POST_UPLOAD_STAYHERE)
+      return;
+
+    if (postUploadAction == POST_UPLOAD_OPENALBUM) {
+      var aid = "";
+      // TODO: what should the URL be in this case?
+      if (albumId != DEFAULT_ALBUM)
+        aid = "aid=" + this._albumIdToUrlAlbumId(albumId) + "&";
+      Application.activeWindow.open(
+        this._url("http://www.facebook.com/editalbum.php?" + aid + "org=1")).focus();
+      window.close();
+    }
   },
 
   upload: function() {
-    // TODO: should disable the button if there are no photos.
     if (PhotoSet.photos.length == 0) {
-      alert("Please add some Photos");
+      // This shouldn't happen (button is disabled when there are no photos).
       return;
     }
 
+    var albumId = DEFAULT_ALBUM;
+    var selectionMode = this.getAlbumSelectionMode();
+    if (selectionMode == NEW_ALBUM) {
+      alert("Album creation not yet implemented");
+      // TODO
+      return;
+    } else if (selectionMode == EXISTING_ALBUM) {
+      var albumsList = document.getElementById("albumsList");
+      albumId = albumsList.selectedItem.getAttribute("albumid");
+    } else {
+      throw "Unexpected selection mode";
+    }
+
+    d("album id: " + albumId);
+
     var uploadStatus = document.getElementById("uploadStatus")
-    var uploadDeck = document.getElementById("uploadDeck");
+    var uploadStatusDeck = document.getElementById("uploadStatusDeck");
     var progress = document.getElementById("uploadProgress");
 
-    uploadDeck.selectedIndex = 1;
+    uploadStatusDeck.selectedIndex = 1;
+    var uploadBroadcaster = document.getElementById("uploadBroadcaster");
+    uploadBroadcaster.setAttribute("disabled", "true");
     uploadStatus.className = "upload-status";
     uploadStatus.value = "";
 
-    PhotoSet.upload(function(percent) {
+    function uploadDone() {
+      progress.value = 0;
+      uploadBroadcaster.setAttribute("disabled", "false");
+      uploadStatusDeck.selectedIndex = 0;
+      document.getElementById("uploadButton").disabled = true;
+    }
+
+    var self = this;
+    PhotoSet.upload(albumId, function(percent, cancelled) {
       d("Got progress " + percent);
 
       progress.value = percent;
       if (percent < 100)
         return;
+      uploadDone();
 
-      uploadDeck.selectedIndex = 0;
-      progress.value = 0;
-      // TODO: l10n
-      uploadStatus.value = "Upload completed successfully";
-
-      if (document.getElementById("closeAfterUpload").value) {
-        d("TODO: close document and open album page");
-        //window.close();
+      if (cancelled) {
+        uploadStatus.value = self._stringBundle.getString("uploadCancelled");
+      } else {
+        uploadStatus.value = self._stringBundle.getString("uploadComplete");
       }
+      self._postUpload(albumId);
+
     }, function(message, detail) {
-      uploadDeck.selectedIndex = 0;
-      // TODO: l10n
-      alert("Failed to upload photos\n\nTechnical Detail: " + message);
+      uploadDone();
+      alert(self._stringBundle.getString("uploadFailedAlert") + " " + message);
       uploadStatus.className += " error";
-      uploadStatus.value = "Upload failed. Technical Detail: " + message;
+      uploadStatus.value = self._stringBundle.getString("uploadFailedStatus") +
+                           " " + message;
     });
   }
 };

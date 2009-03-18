@@ -14,6 +14,8 @@
         onload="PhotoUpload.init()"
         onunload="PhotoUpload.uninit()"
         persist="screenX screenY width height">
+  <script type="application/x-javascript" src="chrome://facebook/content/photoupload/jsbn/jsbn.js"/>
+  <script type="application/x-javascript" src="chrome://facebook/content/photoupload/jsbn/jsbn2.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/photoupload/photoupload.js"/>
 
   <stringbundleset id="stringbundleset">
@@ -21,50 +23,76 @@
                   src="chrome://facebook/locale/photoupload.properties"/>
   </stringbundleset>
 
-  <deck id="uploadDeck" flex="1">
-    <!-- Image selection and editing box -->
-    <vbox>
-      <!-- TODO: album selection -->
-      <groupbox hidden="true">
-        <caption label="Select Album"/>
-        <hbox>
-          <radiogroup>
-            <radio label="Existing"/>
-            <radio label="New"/>
-          </radiogroup>
-          <deck>
-            <!-- Album drop down here -->
-            <!-- New Album fields here -->
-          </deck>
+  <broadcaster id="uploadBroadcaster"/>
+
+  <vbox flex="1">
+    <groupbox>
+      <caption label="Album"/>
+      <hbox>
+        <!-- TODO: hidden because new album creation is not yet available -->
+        <radiogroup id="albumSelectionGroup" flex="1"
+                    hidden="true"
+                    oncommand="PhotoUpload.onAlbumSelectionModeChange()"
+                    observes="uploadBroadcaster">
+          <radio label="Existing Album" id="existingAlbumRadio"
+                 observes="uploadBroadcaster"/>
+          <radio label="New Album" id="newAlbumRadio"
+                 observes="uploadBroadcaster"/>
+        </radiogroup>
+        <deck id="albumSelectionDeck" flex="1">
+          <vbox id="existingAlbumPanel">
+            <hbox>
+              <menulist id="albumsList" flex="1"
+                        observes="uploadBroadcaster">
+                <menupopup id="albumsPopup">
+                  <menuitem label="Default Album" albumid="-1"/>
+                </menupopup>
+              </menulist>
+              <spacer flex="1"/>
+            </hbox>
+            <spacer flex="1"/>
+          </vbox>
+          <vbox flex="1" id="newAlbumPanel">
+            <hbox align="center">
+              <label value="Name:"/>
+              <textbox flex="1" observes="uploadBroadcaster"/>
+              <label value="Location:"/>
+              <textbox flex="1" observes="uploadBroadcaster"/>
+            </hbox>
+            <hbox align="center">
+              <label value="Description:"/>
+              <textbox flex="1" observes="uploadBroadcaster"/>
+            </hbox>
+          </vbox>
+        </deck>
+      </hbox>
+    </groupbox>
+
+    <hbox>
+      <button label="Add…" icon="add"
+              oncommand="PhotoUpload.addPhotos();"
+              observes="uploadBroadcaster"/>
+      <button label="Remove All" icon="clear"
+              oncommand="PhotoUpload.removeAllPhotos();"
+              observes="uploadBroadcaster"/>
+    </hbox>
+
+    <browser flex="1" src="chrome://facebook/content/photoupload/photopanel.html"
+             id="photopanel"/>
+
+    <hbox align="center">
+      <button label="Upload" id="uploadButton" disabled="true"
+              oncommand="PhotoUpload.upload();"
+              observes="uploadBroadcaster"/>
+      <deck id="uploadStatusDeck" flex="1">
+        <hbox align="center">
+          <label class="upload-status" id="uploadStatus"/>
         </hbox>
-      </groupbox>
-
-      <hbox>
-        <button label="Add…" icon="add" oncommand="PhotoUpload.addPhotos();"/>
-        <button label="Remove" icon="remove" oncommand="PhotoUpload.removeSelectedPhotos();"/>
-        <button label="Remove All" icon="clear" oncommand="PhotoUpload.removeAllPhotos();"/>
-      </hbox>
-
-      <browser flex="1" src="photopanel.html" id="photopanel"/>
-
-      <hbox align="center">
-        <button label="Upload" oncommand="PhotoUpload.upload();"/>
-        <label class="upload-status" id="uploadStatus"/>
-      </hbox>
-    </vbox>
-
-    <!-- upload box -->
-    <vbox>
-      <spacer flex="1"/>
-      <label value="Uploading, please wait…"/>
-      <progressmeter id="uploadProgress" mode="determined" value="0" />
-      <checkbox id="closeAfterUpload" checked="true"
-                label="Close this window and open Album page when done"/>
-      <spacer flex="1"/>
-      <hbox>
-        <button label="Cancel Upload" oncommand="PhotoUpload.cancelUpload()"/>
-      </hbox>
-    </vbox>
-
-  </deck>
+        <hbox>
+          <progressmeter id="uploadProgress" mode="determined" value="0" flex="1"/>
+          <button label="Cancel Upload" oncommand="PhotoUpload.cancelUpload()"/>
+        </hbox>
+      </deck>
+    </hbox>
+  </vbox>
 </window>

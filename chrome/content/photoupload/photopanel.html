@@ -1,5 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <style type="text/css">
@@ -17,16 +17,31 @@
       border: 1px solid #CCCCCC;
       background-color: white;
     }
+    .photobox > .remove {
+      display: none;
+      right: 0;
+      bottom: 0;
+      font-family: sans;
+      background-color: rgba(0, 0, 0, 0.8);
+      -moz-border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+      font-size: 150%;
+      padding: 5px;
+      opacity: 0.5;
+      transparent: true;
+    }
+    .photobox:hover > .remove {
+      display: block;
+    }
+    .photobox:hover {
+      -moz-box-shadow: black 10px 10px 10px;
+      border-color: black;
+    }
     .photobox > * {
       position: absolute;
     }
-    /*
-    .photobox > div {
-      font-size: 2em;
-      bottom: 0;
-      right: 0;
-    }
-    */
     .photobox > img {
       position: absolute;
       margin: auto;
@@ -53,14 +68,21 @@
     .photobox:not([id=photobox-template]) {
     }
   </style>
+  <script>
+  // wrappedJSObject is used when the document is loaded in a content window.
+  // (useful for debugging, but note that other things may fail in that situation).
+  var PhotoPanel = parent.PhotoPanel || parent.wrappedJSObject.PhotoPanel;
+  </script>
 </head>
 <body>
   <div class="container">
     <div class="photobox" id="photobox-template">
       <img>
-      <input type="checkbox">
+      <div class="remove" onclick="PhotoPanel.removePhoto(event);">Remove</div>
     </div>
-    <div id="help-message">Click Add… or drag photos here.</div>
+    <!-- TODO: uncomment once dragging is implemented
+         <div id="help-message">Click Add… or drag photos here.</div> -->
+    <div id="help-message">Click Add… to add photos</div>
   </div>
 </body>
 </html>
