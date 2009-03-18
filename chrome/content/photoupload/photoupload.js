@@ -100,7 +100,6 @@ var PhotoSet = {
   },
 
   _uploadFile: function(albumId, file, onComplete, onError) {
-    return onComplete();
     var fbSvc = Cc['@facebook.com/facebook-service;1'].
                 getService(Ci.fbIFacebookService);
 
