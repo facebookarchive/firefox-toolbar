@@ -1,5 +1,14 @@
 /* TODO: should probably go to skin */
 
+#facebook-photoupload {
+  padding: 10px;
+}
+
+#photos-container {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 .upload-status.error {
-    color: red;
+  color: red;
 }

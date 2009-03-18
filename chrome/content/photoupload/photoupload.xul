@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://facebook/content/photoupload/photoupload.css" type="text/css"?>
 
@@ -14,6 +15,7 @@
         onload="PhotoUpload.init()"
         onunload="PhotoUpload.uninit()"
         persist="screenX screenY width height">
+
   <script type="application/x-javascript" src="chrome://facebook/content/photoupload/jsbn/jsbn.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/photoupload/jsbn/jsbn2.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/photoupload/photoupload.js"/>
@@ -77,8 +79,10 @@
               observes="uploadBroadcaster"/>
     </hbox>
 
-    <browser flex="1" src="chrome://facebook/content/photoupload/photopanel.html"
+    <vbox id="photos-container" flex="1">
+        <browser flex="1" src="chrome://facebook/content/photoupload/photopanel.html"
              id="photopanel"/>
+    </vbox>
 
     <hbox align="center">
       <button label="Upload" id="uploadButton" disabled="true"
