@@ -39,6 +39,10 @@
       -moz-box-shadow: black 10px 10px 10px;
       border-color: black;
     }
+    .photobox[selected=true] {
+      outline: medium solid purple;
+      background-color: #eee;
+    }
     .photobox > * {
       position: absolute;
     }
@@ -76,7 +80,8 @@
 </head>
 <body>
   <div id="photo-container">
-    <div class="photobox" id="photobox-template">
+    <div class="photobox" id="photobox-template"
+         onclick="PhotoPanel.selectPhoto(event);">
       <img>
       <div class="remove" onclick="PhotoPanel.removePhoto(event);">Remove</div>
     </div>

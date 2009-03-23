@@ -5,8 +5,19 @@
 }
 
 #photos-container {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 10px 10px 0px;
+}
+
+#sidebar {
+  padding: 10px;
+}
+
+#sidebarImageContainer {
+  padding: 20px 5px;
+}
+
+#sidebarImage {
+  border: 1px solid #CCCCCC;
 }
 
 .upload-status.error {

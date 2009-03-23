@@ -60,6 +60,16 @@ function d(s) {
 }
 
 /**
+ * This objects represents a photo that is going to be uploaded.
+ */
+function Photo() {
+}
+
+Photo.prototype = {
+  /* TODO */
+}
+
+/**
  * This object (singleton) represent the list of photos that will be uploaded
  * or that can be edited.
  */
@@ -67,6 +77,7 @@ var PhotoSet = {
   // XXX photos are nsIFile objects now. This may change once resizing or
   // metadata editing is implemented.
   _photos: [],
+  _selected: null,
   _listeners: [],
   _cancelled: false,
 
@@ -76,13 +87,62 @@ var PhotoSet = {
     this._notifyChanged();
   },
 
+  _updateSelected: function() {
+    var p = this._photos.filter(function(p) p == this._selected);
+    if (p.length > 1) {
+      d("ERROR: more that once selected photo?");
+      return;
+    }
+    if (p.length == 0) {
+      this._selected = null;
+    }
+  },
+
   removeAll: function() {
     this._photos = [];
+    this._updateSelected();
     this._notifyChanged();
   },
 
   remove: function(photo) {
     this._photos = this._photos.filter(function(p) p != photo);
+    this._updateSelected();
+    this._notifyChanged();
+  },
+
+  _ensurePhotoExists: function(photo) {
+    var p = this._photos.filter(function(p) p == photo);
+    if (p.length == 0) {
+      d("ERROR: photo does not exist in set");
+      return false;
+    }
+    if (p.length > 1) {
+      d("ERROR: more than one photo matching?");
+      return false;
+    }
+    return true;
+  },
+
+  update: function(photo) {
+    if (!this._ensurePhotoExists(photo))
+      return;
+
+    // The modified photo should be a reference to the photo in the set.
+    // So there is nothing to update.
+
+    // There is no listeners for this now. Do not fire the event for perf.
+    // TODO: uncomment once there are listener.
+    //this._notifyChanged();
+  },
+
+  get selected() {
+    return this._selected;
+  },
+
+  set selected(photo) {
+    if (!this._ensurePhotoExists(photo))
+      return;
+    this._selected = photo;
     this._notifyChanged();
   },
 
@@ -311,20 +371,78 @@ var PhotoPanel = {
       var newBox = photoboxTemplate.cloneNode(true);
       newBox.photo = photo;
       newBox.removeAttribute("id");
+      if (photo == PhotoSet.selected)
+        newBox.setAttribute("selected", "true");
 
       var uri = ios.newFileURI(photo);
+      // TODO: have a method on the photo object to get the url
       newBox.getElementsByTagName("img")[0].src = uri.spec;
       photoboxTemplate.parentNode.insertBefore(newBox, photoboxTemplate);
     });
   },
-  removePhoto: function(event) {
+  _photoFromEvent: function(event) {
+    event.stopPropagation();
     var photoBox = event.target.parentNode;
-    var photo = photoBox.photo;
+    return photoBox.photo;
+  },
+  selectPhoto: function(event) {
+    var photo = this._photoFromEvent(event);
+    if (!photo) {
+      d("Error, photo not found");
+      return;
+    }
+    PhotoSet.selected = photo;
+  },
+  removePhoto: function(event) {
+    var photo = this._photoFromEvent(event);
     if (!photo) {
       d("Error, photo not found");
       return;
     }
     PhotoSet.remove(photo);
+  }
+};
+
+/**
+ * The sidebar that shows the selected photo where attributes can be edited.
+ */
+var PhotoSidebar = {
+  init: function() {
+    PhotoSet.addChangedListener(this.photosChanged);
+  },
+  uninit: function() {
+    PhotoSet.removeChangedListener(this.photosChanged);
+  },
+  photosChanged: function() {
+    d("sidebar: PhotosChanged");
+
+    var sidebarImage = document.getElementById("sidebarImage");
+    var captionField = document.getElementById("sidebarCaptionField");
+
+    if (!PhotoSet.selected) {
+      sidebarImage.setAttribute("src", "about:blank");
+      captionField.value = "";
+      return;
+    }
+
+    var selectedPhoto = PhotoSet.selected;
+
+    // TODO: have a method on the photo object to get the url
+    var ios = Cc["@mozilla.org/network/io-service;1"].
+              getService(Ci.nsIIOService);
+    var uri = ios.newFileURI(selectedPhoto);
+    sidebarImage.setAttribute("src", uri.spec);
+    // TODO
+    //captionField.value = selectedPhoto.caption;
+  },
+  onCaptionInput: function(event) {
+    var selectedPhoto = PhotoSet.selected;
+    if (!selectedPhoto)
+      return;
+
+    // TODO
+    //selectedPhoto.caption = event.target.value;
+    PhotoSet.update(selectedPhoto);
   }
 };
 
@@ -358,6 +476,7 @@ var PhotoUpload = {
 
   init: function() {
     PhotoPanel.init();
+    PhotoSidebar.init();
     PhotoSet.addChangedListener(this.photosChanged);
 
     var albumsPopup = document.getElementById("albumsPopup");
@@ -391,12 +510,18 @@ var PhotoUpload = {
     var file2 = Cc["@mozilla.org/file/local;1"].
                 createInstance(Ci.nsILocalFile);
     file2.initWithPath("/home/sypasche/projects/facebook/sample_images/recycled.png");
-    PhotoSet.add([file, file2]);
+    var file3 = Cc["@mozilla.org/file/local;1"].
+                createInstance(Ci.nsILocalFile);
+    file3.initWithPath("/home/sypasche/projects/facebook/sample_images/hot-2560x1280.jpg");
+
+    PhotoSet.add([file, file2, file3]);
+    PhotoSet.selected = file;
     */
   },
 
   uninit: function() {
     PhotoPanel.uninit();
+    PhotoSidebar.uninit();
     PhotoSet.removeChangedListener(this.photosChanged);
     if (this.getAlbumSelectionMode() == EXISTING_ALBUM) {
       var albumsList = document.getElementById("albumsList");
