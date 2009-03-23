@@ -80,6 +80,13 @@ Cc['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Ci.mozIJSSubScriptLoader)
     .loadSubScript('chrome://facebook/content/md5.js');
 
+// Compatibility with Firefox 3.0 that doesn't have native JSON.
+if (typeof(JSON) == "undefined") {
+  Components.utils.import("resource://gre/modules/JSON.jsm");
+  JSON.parse = JSON.fromString;
+  JSON.stringify = JSON.toString;
+}
+
 /** class SetNotif:
  * Encapsulates notifs for a set of ids delivered as a JSON array.
  * Watcher for "size" property notifies the observer when the size value

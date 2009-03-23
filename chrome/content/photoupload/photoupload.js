@@ -46,6 +46,14 @@ const StringInputStream = CC("@mozilla.org/io/string-input-stream;1",
 // Keep this in sync with the albumid attribute of the default album in photoupload.xul
 const DEFAULT_ALBUM = "-1";
 
+// Compatibility with Firefox 3.0 that doesn't have native JSON.
+// TODO: remove this once the Facebook component is used for requests.
+if (typeof(JSON) == "undefined") {
+  Components.utils.import("resource://gre/modules/JSON.jsm");
+  JSON.parse = JSON.fromString;
+  JSON.stringify = JSON.toString;
+}
+
 // Debugging.
 function d(s) {
   dump(s + "\n");
@@ -213,7 +221,9 @@ var PhotoSet = {
 
     // XXX progress events do not work
     xhr.onprogress = updateProgress;
-    xhr.upload.onprogress = updateProgress;
+    // The upload property is not available with Firefox 3.0
+    if (xhr.upload)
+      xhr.upload.onprogress = updateProgress;
 
     xhr.send(mis);
   },
@@ -279,15 +289,21 @@ var PhotoPanel = {
     d("PhotosChanged ");
 
     var panelDoc = document.getElementById("photopanel").contentDocument;
+    var photoContainer = panelDoc.getElementById("photo-container")
     var photoboxTemplate = panelDoc.getElementById("photobox-template")
     var photos = PhotoSet.photos;
 
-    // TODO: 3.0 compat
-    var toDelete = panelDoc.querySelectorAll(".photobox:not([id=photobox-template])");
-    for (let i = toDelete.length; --i >= 0;)
-      toDelete[i].parentNode.removeChild(toDelete[i]);
+    var node = photoContainer.firstChild;
+    while (node) {
+      var nextNode = node.nextSibling;
+      if (node.nodeType == Node.ELEMENT_NODE &&
+          node.className == "photobox" &&
+          node.id != "photobox-template") {
+        photoContainer.removeChild(node);
+      }
+      node = nextNode;
+    }
 
-    panelDoc.querySelectorAll(".photobox:not([id=photobox-template])")
     var ios = Cc["@mozilla.org/network/io-service;1"].
               getService(Ci.nsIIOService);
 
@@ -297,10 +313,7 @@ var PhotoPanel = {
       newBox.removeAttribute("id");
 
       var uri = ios.newFileURI(photo);
-
-      // TODO: 3.0 compat
-      newBox.querySelector("img").src = uri.spec;
-
+      newBox.getElementsByTagName("img")[0].src = uri.spec;
       photoboxTemplate.parentNode.insertBefore(newBox, photoboxTemplate);
     });
   },
