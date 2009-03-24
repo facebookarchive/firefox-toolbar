@@ -85,37 +85,37 @@
     </hbox>
 
     <hbox flex="1">
-      <vbox id="photos-container" flex="1">
-          <browser flex="1" id="photopanel"
-                   src="chrome://facebook/content/photoupload/photopanel.html"/>
+      <vbox id="overviewPanelContainer" flex="1">
+          <browser flex="1" id="overviewPanel"
+                   src="chrome://facebook/content/photoupload/overviewpanel.html"/>
       </vbox>
-      <vbox width="300" id="sidebar">
+      <vbox id="editPanel">
         <caption label="Photo detail:"/>
-        <vbox id="sidebarImageContainer" align="center">
-          <!-- XXX width/max-width as a CSS property or XUL attribute has no effect on the image width.
-               maybe the properties should be set manually from JS.
-          -->
-          <html:img id="sidebarImage"/>
+        <vbox id="editImageContainer" align="center">
+          <!-- width/max-width as a CSS property or XUL attribute has no effect on the image width.
+               That's why a <browser> is used instead. -->
+          <browser id="editImageFrame" width="300" height="300"
+                   src="editimage.html"/>
         </vbox>
         <label value="Caption:"/>
-        <textbox id="sidebarCaptionField" multiline="true"
-                 oninput="PhotoSidebar.onCaptionInput(event)"/>
+        <textbox id="editCaptionField" multiline="true"
+                 oninput="EditPanel.onCaptionInput(event)"/>
       </vbox>
     </hbox>
 
     <hbox align="center">
-      <button label="Upload" id="uploadButton" disabled="true"
-              oncommand="PhotoUpload.upload();"
-              observes="uploadBroadcaster"/>
       <deck id="uploadStatusDeck" flex="1">
         <hbox align="center">
           <label class="upload-status" id="uploadStatus"/>
         </hbox>
         <hbox>
-          <progressmeter id="uploadProgress" mode="determined" value="0" flex="1"/>
           <button label="Cancel Upload" oncommand="PhotoUpload.cancelUpload()"/>
+          <progressmeter id="uploadProgress" mode="determined" value="0" flex="1"/>
         </hbox>
       </deck>
+      <button label="Upload" id="uploadButton" disabled="true"
+              oncommand="PhotoUpload.upload();"
+              observes="uploadBroadcaster"/>
     </hbox>
   </vbox>
 </window>

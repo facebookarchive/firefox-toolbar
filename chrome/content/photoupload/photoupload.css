@@ -4,20 +4,16 @@
   padding: 10px;
 }
 
-#photos-container {
+#overviewPanelContainer {
   padding: 10px 10px 10px 0px;
 }
 
-#sidebar {
+#editPanel {
   padding: 10px;
 }
 
-#sidebarImageContainer {
+#editImageContainer {
   padding: 20px 5px;
-}
-
-#sidebarImage {
-  border: 1px solid #CCCCCC;
 }
 
 .upload-status.error {

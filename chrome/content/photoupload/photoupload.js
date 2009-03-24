@@ -338,7 +338,7 @@ var PhotoSet = {
 /**
  * Manages the UI for displaying and manipulating the list of photos.
  */
-var PhotoPanel = {
+var OverviewPanel = {
   init: function() {
     PhotoSet.addChangedListener(this.photosChanged);
   },
@@ -348,7 +348,7 @@ var PhotoPanel = {
   photosChanged: function() {
     d("PhotosChanged ");
 
-    var panelDoc = document.getElementById("photopanel").contentDocument;
+    var panelDoc = document.getElementById("overviewPanel").contentDocument;
     var photoContainer = panelDoc.getElementById("photo-container")
     var photoboxTemplate = panelDoc.getElementById("photobox-template")
     var photos = PhotoSet.photos;
@@ -382,8 +382,13 @@ var PhotoPanel = {
   },
   _photoFromEvent: function(event) {
     event.stopPropagation();
-    var photoBox = event.target.parentNode;
-    return photoBox.photo;
+    var node = event.target;
+    while (node) {
+      if (node.photo)
+        return node.photo;
+      node = node.parentNode;
+    }
+    return null;
   },
   selectPhoto: function(event) {
     var photo = this._photoFromEvent(event);
@@ -404,9 +409,9 @@ var PhotoPanel = {
 };
 
 /**
- * The sidebar that shows the selected photo where attributes can be edited.
+ * The panel that shows the selected photo where attributes can be edited.
  */
-var PhotoSidebar = {
+var EditPanel = {
   init: function() {
     PhotoSet.addChangedListener(this.photosChanged);
   },
@@ -414,13 +419,15 @@ var PhotoSidebar = {
     PhotoSet.removeChangedListener(this.photosChanged);
   },
   photosChanged: function() {
-    d("sidebar: PhotosChanged");
+    d("editPanel: PhotosChanged");
 
-    var sidebarImage = document.getElementById("sidebarImage");
-    var captionField = document.getElementById("sidebarCaptionField");
+    var editImageFrame = document.getElementById("editImageFrame");
+    var imageElement = editImageFrame.contentDocument.getElementById("image");
+    var captionField = document.getElementById("editCaptionField");
 
+    imageElement.removeAttribute("hidden");
     if (!PhotoSet.selected) {
-      sidebarImage.setAttribute("src", "about:blank");
+      imageElement.setAttribute("hidden", "true");
       captionField.value = "";
       return;
     }
@@ -431,7 +438,9 @@ var PhotoSidebar = {
     var ios = Cc["@mozilla.org/network/io-service;1"].
               getService(Ci.nsIIOService);
     var uri = ios.newFileURI(selectedPhoto);
-    sidebarImage.setAttribute("src", uri.spec);
+
+    imageElement.setAttribute("src", uri.spec);
+
     // TODO
     //captionField.value = selectedPhoto.caption;
   },
@@ -475,8 +484,8 @@ var PhotoUpload = {
   },
 
   init: function() {
-    PhotoPanel.init();
-    PhotoSidebar.init();
+    OverviewPanel.init();
+    EditPanel.init();
     PhotoSet.addChangedListener(this.photosChanged);
 
     var albumsPopup = document.getElementById("albumsPopup");
@@ -506,22 +515,24 @@ var PhotoUpload = {
     /*
     var file = Cc["@mozilla.org/file/local;1"].
                createInstance(Ci.nsILocalFile);
-    file.initWithPath("/home/sypasche/projects/facebook/sample_images/metafont.png");
+    //file.initWithPath("/home/sypasche/projects/facebook/sample_images/metafont.png");
+    file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_wide.png");
     var file2 = Cc["@mozilla.org/file/local;1"].
                 createInstance(Ci.nsILocalFile);
-    file2.initWithPath("/home/sypasche/projects/facebook/sample_images/recycled.png");
+    //file2.initWithPath("/home/sypasche/projects/facebook/sample_images/recycled.png");
+    file2.initWithPath("/home/sypasche/projects/facebook/sample_images/very_tall.png");
     var file3 = Cc["@mozilla.org/file/local;1"].
                 createInstance(Ci.nsILocalFile);
     file3.initWithPath("/home/sypasche/projects/facebook/sample_images/hot-2560x1280.jpg");
 
     PhotoSet.add([file, file2, file3]);
-    PhotoSet.selected = file;
+    PhotoSet.selected = file3;
     */
   },
 
   uninit: function() {
-    PhotoPanel.uninit();
-    PhotoSidebar.uninit();
+    OverviewPanel.uninit();
+    EditPanel.uninit();
     PhotoSet.removeChangedListener(this.photosChanged);
     if (this.getAlbumSelectionMode() == EXISTING_ALBUM) {
       var albumsList = document.getElementById("albumsList");

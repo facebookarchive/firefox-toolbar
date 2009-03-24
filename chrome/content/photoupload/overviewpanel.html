@@ -14,7 +14,7 @@
       -moz-box-shadow: gray 10px 10px 10px;
       margin: 10px;
       overflow: hidden;
-      border: 1px solid #CCCCCC;
+      border: 3px solid #CCCCCC;
       background-color: white;
     }
     .photobox > .remove {
@@ -35,12 +35,11 @@
     .photobox:hover > .remove {
       display: block;
     }
-    .photobox:hover {
+    .photobox:hover, .photobox[selected=true] {
       -moz-box-shadow: black 10px 10px 10px;
       border-color: black;
     }
     .photobox[selected=true] {
-      outline: medium solid purple;
       background-color: #eee;
     }
     .photobox > * {
@@ -75,15 +74,15 @@
   <script>
   // wrappedJSObject is used when the document is loaded in a content window.
   // (useful for debugging, but note that other things may fail in that situation).
-  var PhotoPanel = parent.PhotoPanel || parent.wrappedJSObject.PhotoPanel;
+  var OverviewPanel = parent.OverviewPanel || parent.wrappedJSObject.OverviewPanel;
   </script>
 </head>
 <body>
   <div id="photo-container">
     <div class="photobox" id="photobox-template"
-         onclick="PhotoPanel.selectPhoto(event);">
+         onclick="OverviewPanel.selectPhoto(event);">
       <img>
-      <div class="remove" onclick="PhotoPanel.removePhoto(event);">Remove</div>
+      <div class="remove" onclick="OverviewPanel.removePhoto(event);">Remove</div>
     </div>
     <!-- TODO: uncomment once dragging is implemented
          <div id="help-message">Click Add… or drag photos here.</div> -->
