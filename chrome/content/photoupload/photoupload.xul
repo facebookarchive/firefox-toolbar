@@ -97,7 +97,7 @@
           <browser id="editImageFrame" src="editimage.html"/>
         </vbox>
         <label value="Caption:"/>
-        <textbox id="editCaptionField" multiline="true"
+        <textbox id="editCaptionField" multiline="true" disabled="true"
                  oninput="EditPanel.onCaptionInput(event)"/>
       </vbox>
     </hbox>

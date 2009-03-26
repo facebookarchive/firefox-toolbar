@@ -62,21 +62,33 @@ function d(s) {
 /**
  * This objects represents a photo that is going to be uploaded.
  */
-function Photo() {
-}
+function Photo(/* nsIFile */ file) {
+  // photos are stored as nsIFile objects. This may change when resizing or
+  // photo editing (rotate, ...) is implemented.
+  this.file = file;
+  this.caption = "";
+  d(" Constructed " + this.file);
+};
 
 Photo.prototype = {
-  /* TODO */
-}
+  get url() {
+    var ios = Cc["@mozilla.org/network/io-service;1"].
+              getService(Ci.nsIIOService);
+    d("this " + this + " FILE " + this.file);
+    return ios.newFileURI(this.file).spec;
+  }
+};
+
+const BOUNDARY = "facebookPhotoUploaderBoundary";
 
 /**
  * This object (singleton) represent the list of photos that will be uploaded
  * or that can be edited.
  */
 var PhotoSet = {
-  // XXX photos are nsIFile objects now. This may change once resizing or
-  // metadata editing is implemented.
+  // Array of Photo objects.
   _photos: [],
+  // Currently selected Photo object.
   _selected: null,
   _listeners: [],
   _cancelled: false,
@@ -167,13 +179,64 @@ var PhotoSet = {
     }
   },
 
-  _uploadFile: function(albumId, file, onComplete, onError) {
+  _getUploadStream: function(photo, params) {
+    const EOL = "\r\n";
+
+    // Header stream.
+    var header = "";
+
+    for (let [name, value] in Iterator(params)) {
+      header += "--" + BOUNDARY + EOL;
+      header += "Content-disposition: form-data; name=\"" + name + "\"" + EOL + EOL;
+      header += value;
+      header += EOL;
+    }
+    d("header:\n" + header);
+
+    header += "--" + BOUNDARY + EOL;
+    header += "Content-disposition: form-data;name=\"filename\"; filename=\"" +
+              photo.file.leafName + "\"" + EOL;
+    // Apparently Facebook accepts binay content type and will sniff the file
+    // for the correct image mime type.
+    header += "Content-Type: application/octet-stream" + EOL;
+    header += EOL;
+
+    // Convert the stream to UTF-8, otherwise bad things happen.
+    // See http://developer.taboca.com/cases/en/XMLHTTPRequest_post_utf-8/
+    var converter = Cc["@mozilla.org/intl/scriptableunicodeconverter"].
+                    createInstance(Ci.nsIScriptableUnicodeConverter);
+    converter.charset = "UTF-8";
+    var headerStream = converter.convertToInputStream(header);
+
+    // Image stream
+    const PR_RDONLY = 0x01;
+    var fis = new FileInputStream(photo.file, PR_RDONLY, 0444, null);
+
+    var imageStream = Cc["@mozilla.org/network/buffered-input-stream;1"].
+                      createInstance(Ci.nsIBufferedInputStream);
+    imageStream.init(fis, 4096);
+
+    // Ending stream
+    var endingStream = new StringInputStream();
+    var boundaryString = "\r\n--" + BOUNDARY + "--\r\n";
+    endingStream.setData(boundaryString, boundaryString.length);
+
+    var mis = Cc["@mozilla.org/io/multiplex-input-stream;1"].
+              createInstance(Ci.nsIMultiplexInputStream);
+    mis.appendStream(headerStream);
+    mis.appendStream(imageStream);
+    mis.appendStream(endingStream);
+
+    return mis;
+  },
+
+  _uploadPhoto: function(albumId, photo, onComplete, onError) {
     var fbSvc = Cc['@facebook.com/facebook-service;1'].
                 getService(Ci.fbIFacebookService);
 
     // Hack for accessing private members.
     var fbSvc_ = fbSvc.wrappedJSObject;
-    d("file is " + file);
+    d("photo is " + photo);
 
     var params = {};
 
@@ -181,6 +244,8 @@ var PhotoSet = {
     params.method = "facebook.photos.upload";
     if (albumId != DEFAULT_ALBUM)
       params.aid = albumId;
+    if (photo.caption)
+      params.caption = photo.caption;
 
     // TODO: this should be refactored with callMethod in the XPCOM component.
     params.session_key = fbSvc_._sessionKey;
@@ -201,51 +266,9 @@ var PhotoSet = {
     }
     params.sig = fbSvc_.generateSig(paramsForSig);
 
-    const BOUNDARY = "facebookPhotoUploaderBoundary";
-
-    var mis = Cc["@mozilla.org/io/multiplex-input-stream;1"].
-              createInstance(Ci.nsIMultiplexInputStream);
-
-    const PR_RDONLY = 0x01;
-    var fis = new FileInputStream(file, PR_RDONLY, 0444, null);
-
-    var bis = Cc["@mozilla.org/network/buffered-input-stream;1"].
-              createInstance(Ci.nsIBufferedInputStream);
-    bis.init(fis, 4096);
-
-    var sis = new StringInputStream();
-    var header = "";
-
-    for (let [name, value] in Iterator(params)) {
-      header += "--" + BOUNDARY + "\r\n";
-      header += "Content-disposition: form-data; name=\"" + name + "\"\r\n\r\n";
-      header += value;
-      header += "\r\n";
-    }
-
-    d("header:\n" + header);
-
-    header += "--" + BOUNDARY + "\r\n";
-    header += "Content-disposition: form-data;name=\"filename\"; filename=\"" +
-              file.leafName + "\"\r\n";
-    // Apparently Facebook accepts binay content type and will sniff the file
-    // for the correct image mime type.
-    header += "Content-Type: application/octet-stream\r\n";
-    header += "\r\n";
-
-    sis.setData(header, header.length);
-
-    var endsis = new StringInputStream();
-    var bs = "\r\n--" + BOUNDARY + "--\r\n";
-    endsis.setData(bs, bs.length);
-
-    mis.appendStream(sis);
-    mis.appendStream(bis);
-    mis.appendStream(endsis);
+    const RESTSERVER = 'http://api.facebook.com/restserver.php';
 
     var xhr = new XMLHttpRequest();
-
-    const RESTSERVER = 'http://api.facebook.com/restserver.php';
     xhr.open("POST", RESTSERVER);
 
     xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
@@ -256,7 +279,6 @@ var PhotoSet = {
       if (xhr.readyState != 4)
         return;
 
-      // XXX 3.0 compat
       try {
         var data = JSON.parse(xhr.responseText);
       } catch(e) {
@@ -285,19 +307,14 @@ var PhotoSet = {
     if (xhr.upload)
       xhr.upload.onprogress = updateProgress;
 
-    xhr.send(mis);
+    xhr.send(this._getUploadStream(photo, params));
   },
 
   upload: function(albumId, progressCallback, errorCallback) {
     var toUpload = this._photos;
     var total = toUpload.length;
-    var done = 0;
+    var index = 0;
     var self = this;
-
-    function uploadDone() {
-      self._photos = [];
-      self._notifyChanged();
-    }
 
     function doUpload() {
       if (self._cancelled) {
@@ -305,21 +322,21 @@ var PhotoSet = {
         progressCallback(100, true);
         return;
       }
-      if (done == total) {
+      if (index == total) {
         d("How could that happen?");
         return;
       }
-      var photo = toUpload.shift();
+      var photo = toUpload[index];
       if (!photo) {
         d("How could that happen?");
         return;
       }
 
-      self._uploadFile(albumId, photo, function() {
-        done++;
-        progressCallback(done / total * 100, false);
-        if (done == total) {
-          uploadDone();
+      self._uploadPhoto(albumId, photo, function() {
+        index++;
+        progressCallback(index / total * 100, false);
+        if (index == total) {
+          self.removeAll();
         } else {
           doUpload();
         }
@@ -364,9 +381,6 @@ var OverviewPanel = {
       node = nextNode;
     }
 
-    var ios = Cc["@mozilla.org/network/io-service;1"].
-              getService(Ci.nsIIOService);
-
     photos.forEach(function(photo) {
       var newBox = photoboxTemplate.cloneNode(true);
       newBox.photo = photo;
@@ -374,9 +388,7 @@ var OverviewPanel = {
       if (photo == PhotoSet.selected)
         newBox.setAttribute("selected", "true");
 
-      var uri = ios.newFileURI(photo);
-      // TODO: have a method on the photo object to get the url
-      newBox.getElementsByTagName("img")[0].src = uri.spec;
+      newBox.getElementsByTagName("img")[0].src = photo.url;
       photoboxTemplate.parentNode.insertBefore(newBox, photoboxTemplate);
     });
   },
@@ -426,31 +438,24 @@ var EditPanel = {
     var captionField = document.getElementById("editCaptionField");
 
     imageElement.removeAttribute("hidden");
+    captionField.disabled = false;
     if (!PhotoSet.selected) {
       imageElement.setAttribute("hidden", "true");
       captionField.value = "";
+      captionField.disabled = true;
       return;
     }
 
     var selectedPhoto = PhotoSet.selected;
-
-    // TODO: have a method on the photo object to get the url
-    var ios = Cc["@mozilla.org/network/io-service;1"].
-              getService(Ci.nsIIOService);
-    var uri = ios.newFileURI(selectedPhoto);
-
-    imageElement.setAttribute("src", uri.spec);
-
-    // TODO
-    //captionField.value = selectedPhoto.caption;
+    imageElement.setAttribute("src", selectedPhoto.url);
+    captionField.value = selectedPhoto.caption;
   },
   onCaptionInput: function(event) {
     var selectedPhoto = PhotoSet.selected;
     if (!selectedPhoto)
       return;
 
-    // TODO
-    //selectedPhoto.caption = event.target.value;
+    selectedPhoto.caption = event.target.value;
     PhotoSet.update(selectedPhoto);
   }
 };
@@ -513,20 +518,27 @@ var PhotoUpload = {
 
     // XXX debug
     /*
-    var file = Cc["@mozilla.org/file/local;1"].
+    document.getElementById("reopenButton").hidden = false;
+    var file, files = [];
+    file = Cc["@mozilla.org/file/local;1"].
                createInstance(Ci.nsILocalFile);
-    //file.initWithPath("/home/sypasche/projects/facebook/sample_images/metafont.png");
-    file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_wide.png");
-    var file2 = Cc["@mozilla.org/file/local;1"].
+    file.initWithPath("/home/sypasche/projects/facebook/sample_images/metafont.png");
+    //file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_wide.png");
+    files.push(file);
+    file = Cc["@mozilla.org/file/local;1"].
                 createInstance(Ci.nsILocalFile);
-    //file2.initWithPath("/home/sypasche/projects/facebook/sample_images/recycled.png");
-    file2.initWithPath("/home/sypasche/projects/facebook/sample_images/very_tall.png");
-    var file3 = Cc["@mozilla.org/file/local;1"].
-                createInstance(Ci.nsILocalFile);
-    file3.initWithPath("/home/sypasche/projects/facebook/sample_images/hot-2560x1280.jpg");
+    //file.initWithPath("/home/sypasche/projects/facebook/sample_images/recycled.png");
+    file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_tall.png");
+    files.push(file);
 
-    PhotoSet.add([file, file2, file3]);
-    PhotoSet.selected = file3;
+    var file = Cc["@mozilla.org/file/local;1"].
+                createInstance(Ci.nsILocalFile);
+    file.initWithPath("/home/sypasche/projects/facebook/sample_images/hot-2560x1280.jpg");
+    files.push(file);
+    var photos = [new Photo(f) for each (f in files)];
+    d("photos " + photos);
+    PhotoSet.add(photos);
+    PhotoSet.selected = photos[2];
     */
   },
 
@@ -621,12 +633,12 @@ var PhotoUpload = {
             Ci.nsIFilePicker.modeOpenMultiple);
     fp.appendFilters(Ci.nsIFilePicker.filterImages);
     if (fp.show() != Ci.nsIFilePicker.returnCancel) {
-      var files = [];
+      var photos = [];
       var filesEnum = fp.files;
       while (filesEnum.hasMoreElements()) {
-        files.push(filesEnum.getNext());
+        photos.push(new Photo(filesEnum.getNext()));
       }
-      PhotoSet.add(files);
+      PhotoSet.add(photos);
     }
   },
 
@@ -656,12 +668,10 @@ var PhotoUpload = {
   },
 
   _postUpload: function(albumId) {
-
     var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
     var postUploadAction = prefSvc.getIntPref("extensions.facebook.postuploadaction");
 
     if (postUploadAction == POST_UPLOAD_ASKUSER) {
-
       let promptTitle = this._stringBundle.getString("uploadCompleteTitle");
       let promptMessage = this._stringBundle.getString("uploadCompleteMessage");
       let checkboxLabel = this._stringBundle.getString("rememberDecision");
@@ -730,7 +740,6 @@ var PhotoUpload = {
       progress.value = 0;
       uploadBroadcaster.setAttribute("disabled", "false");
       uploadStatusDeck.selectedIndex = 0;
-      document.getElementById("uploadButton").disabled = true;
     }
 
     var self = this;
