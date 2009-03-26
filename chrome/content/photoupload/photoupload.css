@@ -6,6 +6,9 @@
 
 #overviewPanelContainer {
   padding: 10px 10px 10px 0px;
+  /* the minimum width should show just one thumbnail. make sure this is in
+     sync with the .photobox size overviewpanel.html */
+  min-width: 260px;
 }
 
 #editPanel {
@@ -14,6 +17,11 @@
 
 #editImageContainer {
   padding: 20px 5px;
+}
+
+#editImageFrame {
+  width: 300px;
+  height: 300px;
 }
 
 .upload-status.error {

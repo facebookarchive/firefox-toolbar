@@ -78,7 +78,7 @@
               oncommand="PhotoUpload.removeAllPhotos();"
               observes="uploadBroadcaster"/>
       <!-- For debugging -->
-      <button label="close and reopen this window" hidden="true" oncommand="
+      <button id="reopenButton" label="close and reopen this window" hidden="true" oncommand="
         window.close();
         window.openDialog('chrome://facebook/content/photoupload/photoupload.xul',
                           'facebook:photoupload', 'chrome,titlebar,toolbar,dialog=no');"/>
@@ -94,8 +94,7 @@
         <vbox id="editImageContainer" align="center">
           <!-- width/max-width as a CSS property or XUL attribute has no effect on the image width.
                That's why a <browser> is used instead. -->
-          <browser id="editImageFrame" width="300" height="300"
-                   src="editimage.html"/>
+          <browser id="editImageFrame" src="editimage.html"/>
         </vbox>
         <label value="Caption:"/>
         <textbox id="editCaptionField" multiline="true"
@@ -113,7 +112,7 @@
           <progressmeter id="uploadProgress" mode="determined" value="0" flex="1"/>
         </hbox>
       </deck>
-      <button label="Upload" id="uploadButton" disabled="true"
+      <button label="Upload All" id="uploadButton" disabled="true"
               oncommand="PhotoUpload.upload();"
               observes="uploadBroadcaster"/>
     </hbox>
