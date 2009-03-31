@@ -16,6 +16,8 @@
         onunload="PhotoUpload.uninit()"
         persist="screenX screenY width height">
 
+  <script src="chrome://global/content/nsDragAndDrop.js"/>
+  <script src="chrome://global/content/nsTransferable.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/photoupload/jsbn/jsbn.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/photoupload/jsbn/jsbn2.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/photoupload/photoupload.js"/>
@@ -81,11 +83,12 @@
       <button id="reopenButton" label="close and reopen this window" hidden="true" oncommand="
         window.close();
         window.openDialog('chrome://facebook/content/photoupload/photoupload.xul',
-                          'facebook:photoupload', 'chrome,titlebar,toolbar,dialog=no');"/>
+                          'facebook:photoupload', 'all');"/>
     </hbox>
 
     <hbox flex="1">
-      <vbox id="overviewPanelContainer" flex="1">
+      <vbox id="overviewPanelContainer" flex="1"
+            ondragdrop="nsDragAndDrop.drop(event, PhotoDNDObserver);">
           <browser flex="1" id="overviewPanel"
                    src="chrome://facebook/content/photoupload/overviewpanel.html"/>
       </vbox>

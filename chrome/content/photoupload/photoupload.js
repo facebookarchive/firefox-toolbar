@@ -460,6 +460,53 @@ var EditPanel = {
   }
 };
 
+var PhotoDNDObserver = {
+  getSupportedFlavours : function () {
+    var flavours = new FlavourSet();
+    flavours.appendFlavour("text/x-moz-url");
+    flavours.appendFlavour("application/x-moz-file",  "nsIFile");
+    return flavours;
+  },
+
+  _getFileFromDragSession: function (session, position) {
+    var fileData = { };
+    var ios = Cc["@mozilla.org/network/io-service;1"].
+              getService(Ci.nsIIOService);
+    // if this fails we do not have valid data to drop
+    try {
+      var xfer = Cc["@mozilla.org/widget/transferable;1"].
+                 createInstance(Ci.nsITransferable);
+      xfer.addDataFlavor("text/x-moz-url");
+      xfer.addDataFlavor("application/x-moz-file", "nsIFile");
+      session.getData(xfer, position);
+
+      var flavour = { }, data = { }, length = { };
+      xfer.getAnyTransferData(flavour, data, length);
+      var selectedFlavour = this.getSupportedFlavours().flavourTable[flavour.value];
+      var xferData = new FlavourData(data.value, length.value, selectedFlavour);
+
+      var fileURL = transferUtils.retrieveURLFromData(xferData.data,
+                                                      xferData.flavour.contentType);
+      var file = ios.newURI(fileURL, null, null).QueryInterface(Ci.nsIFileURL).file;
+    } catch (e) {
+      d("Exception while getting drag data: " + e);
+      return null;
+    }
+    return file;
+  },
+
+  onDrop: function (event, dropdata, session) {
+    var count = session.numDropItems;
+    var files = [];
+    for (var i = 0; i < count; ++i) {
+      var file = this._getFileFromDragSession(session, i);
+      if (file)
+        files.push(file);
+    }
+    PhotoSet.add([new Photo(f) for each (f in files)]);
+  }
+};
+
 const NEW_ALBUM = 0;
 const EXISTING_ALBUM = 1;
 
@@ -521,18 +568,18 @@ var PhotoUpload = {
     document.getElementById("reopenButton").hidden = false;
     var file, files = [];
     file = Cc["@mozilla.org/file/local;1"].
-               createInstance(Ci.nsILocalFile);
+           createInstance(Ci.nsILocalFile);
     file.initWithPath("/home/sypasche/projects/facebook/sample_images/metafont.png");
     //file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_wide.png");
     files.push(file);
     file = Cc["@mozilla.org/file/local;1"].
-                createInstance(Ci.nsILocalFile);
+           createInstance(Ci.nsILocalFile);
     //file.initWithPath("/home/sypasche/projects/facebook/sample_images/recycled.png");
     file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_tall.png");
     files.push(file);
 
     var file = Cc["@mozilla.org/file/local;1"].
-                createInstance(Ci.nsILocalFile);
+               createInstance(Ci.nsILocalFile);
     file.initWithPath("/home/sypasche/projects/facebook/sample_images/hot-2560x1280.jpg");
     files.push(file);
     var photos = [new Photo(f) for each (f in files)];
