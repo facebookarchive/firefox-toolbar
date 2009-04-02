@@ -54,9 +54,12 @@ if (typeof(JSON) == "undefined") {
   JSON.stringify = JSON.toString;
 }
 
+const DEBUG = false;
+
 // Debugging.
-function d(s) {
-  dump(s + "\n");
+function LOG(s) {
+  if (DEBUG)
+    dump(s + "\n");
 }
 
 /**
@@ -67,14 +70,13 @@ function Photo(/* nsIFile */ file) {
   // photo editing (rotate, ...) is implemented.
   this.file = file;
   this.caption = "";
-  d(" Constructed " + this.file);
+  LOG(" Constructed " + this.file);
 };
 
 Photo.prototype = {
   get url() {
     var ios = Cc["@mozilla.org/network/io-service;1"].
               getService(Ci.nsIIOService);
-    d("this " + this + " FILE " + this.file);
     return ios.newFileURI(this.file).spec;
   }
 };
@@ -102,7 +104,7 @@ var PhotoSet = {
   _updateSelected: function() {
     var p = this._photos.filter(function(p) p == this._selected);
     if (p.length > 1) {
-      d("ERROR: more that once selected photo?");
+      LOG("ERROR: more that once selected photo?");
       return;
     }
     if (p.length == 0) {
@@ -125,11 +127,11 @@ var PhotoSet = {
   _ensurePhotoExists: function(photo) {
     var p = this._photos.filter(function(p) p == photo);
     if (p.length == 0) {
-      d("ERROR: photo does not exist in set");
+      LOG("ERROR: photo does not exist in set");
       return false;
     }
     if (p.length > 1) {
-      d("ERROR: more than one photo matching?");
+      LOG("ERROR: more than one photo matching?");
       return false;
     }
     return true;
@@ -191,7 +193,6 @@ var PhotoSet = {
       header += value;
       header += EOL;
     }
-    d("header:\n" + header);
 
     header += "--" + BOUNDARY + EOL;
     header += "Content-disposition: form-data;name=\"filename\"; filename=\"" +
@@ -230,13 +231,13 @@ var PhotoSet = {
     return mis;
   },
 
-  _uploadPhoto: function(albumId, photo, onComplete, onError) {
+  _uploadPhoto: function(albumId, photo, onProgress, onComplete, onError) {
     var fbSvc = Cc['@facebook.com/facebook-service;1'].
                 getService(Ci.fbIFacebookService);
 
     // Hack for accessing private members.
     var fbSvc_ = fbSvc.wrappedJSObject;
-    d("photo is " + photo);
+    LOG("Uploading photo: " + photo);
 
     var params = {};
 
@@ -266,16 +267,32 @@ var PhotoSet = {
     }
     params.sig = fbSvc_.generateSig(paramsForSig);
 
+    // For debugging.
+    //const RESTSERVER = 'http://localhost/~sypasche/testcases/xhr/progress/posthandler_fb.php';
     const RESTSERVER = 'http://api.facebook.com/restserver.php';
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", RESTSERVER);
 
+    function updateProgress(event) {
+      if (!event.lengthComputable)
+        return;
+      onProgress((event.loaded / event.total) * 100);
+    }
+
+    // Progress handlers have to be set before calling open(). See
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=311425
+
+    // The upload property is not available with Firefox 3.0
+    if (xhr.upload) {
+      xhr.upload.onprogress = updateProgress;
+    }
+
+    xhr.open("POST", RESTSERVER);
     xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
     xhr.setRequestHeader("MIME-version", "1.0");
 
     xhr.onreadystatechange = function(event) {
-      d("onreadstatechange " + xhr.readyState)
+      LOG("onreadstatechange " + xhr.readyState)
       if (xhr.readyState != 4)
         return;
 
@@ -296,53 +313,56 @@ var PhotoSet = {
       onError("XMLHttpRequest error", event);
     }
 
-    // progress on transfers from the server to the client (downloads)
-    function updateProgress(evt) {
-      d("updateProgress");
-    }
-
-    // XXX progress events do not work
-    xhr.onprogress = updateProgress;
-    // The upload property is not available with Firefox 3.0
-    if (xhr.upload)
-      xhr.upload.onprogress = updateProgress;
-
     xhr.send(this._getUploadStream(photo, params));
   },
 
-  upload: function(albumId, progressCallback, errorCallback) {
+  upload: function(albumId, onProgress, onComplete, onError) {
     var toUpload = this._photos;
     var total = toUpload.length;
     var index = 0;
     var self = this;
 
+    var totalSizeBytes = [photo.file.fileSize for each (photo in toUpload)].
+                             reduce(function(a, b) a + b);
+    var uploadedBytes = 0;
+
     function doUpload() {
       if (self._cancelled) {
-        d("Upload cancelled");
-        progressCallback(100, true);
+        LOG("Upload cancelled");
+        onComplete(true);
         return;
       }
       if (index == total) {
-        d("How could that happen?");
+        LOG("PhotoSet.upload: index != total, How could that happen?");
         return;
       }
       var photo = toUpload[index];
       if (!photo) {
-        d("How could that happen?");
+        LOG("PhotoSet.upload: no photo to upload, How could that happen?");
         return;
       }
+      var photoSize = photo.file.fileSize;
 
-      self._uploadPhoto(albumId, photo, function() {
-        index++;
-        progressCallback(index / total * 100, false);
-        if (index == total) {
-          self.removeAll();
-        } else {
-          doUpload();
-        }
-      }, function() {
-        errorCallback.apply(this, arguments);
-      });
+      self._uploadPhoto(albumId, photo,
+        function(photoPercent) { // onProgress callback
+          LOG("on progress from photo upload " + photoPercent);
+          var donePercent = (uploadedBytes / totalSizeBytes) * 100;
+          var photoRelativePercent = photoPercent * (photoSize / totalSizeBytes);
+          onProgress(donePercent + photoRelativePercent);
+        }, function() { // onComplete callback
+          index++;
+          uploadedBytes += photoSize;
+          // Call progress here for Firefox 3.0 which won't get progress
+          // notification during image upload.
+          onProgress((uploadedBytes / totalSizeBytes) * 100)
+
+          if (index == total) {
+            onComplete(false);
+            self.removeAll();
+          } else {
+            doUpload();
+          }
+        }, onError);
     }
     doUpload();
   },
@@ -363,7 +383,7 @@ var OverviewPanel = {
     PhotoSet.removeChangedListener(this.photosChanged);
   },
   photosChanged: function() {
-    d("PhotosChanged ");
+    LOG("PhotosChanged ");
 
     var panelDoc = document.getElementById("overviewPanel").contentDocument;
     var photoContainer = panelDoc.getElementById("photo-container")
@@ -405,7 +425,7 @@ var OverviewPanel = {
   selectPhoto: function(event) {
     var photo = this._photoFromEvent(event);
     if (!photo) {
-      d("Error, photo not found");
+      LOG("Error, photo not found");
       return;
     }
     PhotoSet.selected = photo;
@@ -413,7 +433,7 @@ var OverviewPanel = {
   removePhoto: function(event) {
     var photo = this._photoFromEvent(event);
     if (!photo) {
-      d("Error, photo not found");
+      LOG("Error, photo not found");
       return;
     }
     PhotoSet.remove(photo);
@@ -431,7 +451,7 @@ var EditPanel = {
     PhotoSet.removeChangedListener(this.photosChanged);
   },
   photosChanged: function() {
-    d("editPanel: PhotosChanged");
+    LOG("editPanel: PhotosChanged");
 
     var editImageFrame = document.getElementById("editImageFrame");
     var imageElement = editImageFrame.contentDocument.getElementById("image");
@@ -489,7 +509,7 @@ var PhotoDNDObserver = {
                                                       xferData.flavour.contentType);
       var file = ios.newURI(fileURL, null, null).QueryInterface(Ci.nsIFileURL).file;
     } catch (e) {
-      d("Exception while getting drag data: " + e);
+      LOG("Exception while getting drag data: " + e);
       return null;
     }
     return file;
@@ -553,7 +573,7 @@ var PhotoUpload = {
         menuitem.setAttribute("albumid", album.aid);
         if (album.aid == lastAlbumId)
           selectedItem = menuitem;
-        d("Album name: " + album.name + " album id: " + album.aid);
+        LOG("Album name: " + album.name + " album id: " + album.aid);
         albumsPopup.appendChild(menuitem);
       }
       if (selectedItem) {
@@ -567,25 +587,24 @@ var PhotoUpload = {
     /*
     document.getElementById("reopenButton").hidden = false;
     var file, files = [];
-    file = Cc["@mozilla.org/file/local;1"].
-           createInstance(Ci.nsILocalFile);
+    file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
     file.initWithPath("/home/sypasche/projects/facebook/sample_images/metafont.png");
     //file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_wide.png");
     files.push(file);
-    file = Cc["@mozilla.org/file/local;1"].
-           createInstance(Ci.nsILocalFile);
+    file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
     //file.initWithPath("/home/sypasche/projects/facebook/sample_images/recycled.png");
     file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_tall.png");
     files.push(file);
-
-    var file = Cc["@mozilla.org/file/local;1"].
-               createInstance(Ci.nsILocalFile);
+    file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
     file.initWithPath("/home/sypasche/projects/facebook/sample_images/hot-2560x1280.jpg");
     files.push(file);
+    file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+    file.initWithPath("/home/sypasche/projects/facebook/sample_images/strings-dark-1600x1200.jpg");
+    files.push(file);
     var photos = [new Photo(f) for each (f in files)];
-    d("photos " + photos);
+    LOG("photos " + photos);
     PhotoSet.add(photos);
-    PhotoSet.selected = photos[2];
+    PhotoSet.selected = photos[0];
     */
   },
 
@@ -602,7 +621,7 @@ var PhotoUpload = {
   },
 
   _checkPhotoUploadPermission: function() {
-    d("Checking photo upload permission");
+    LOG("Checking photo upload permission");
     const PERM = "photo_upload";
 
     var self = this;
@@ -611,7 +630,7 @@ var PhotoUpload = {
                                            ['ext_perm=' + PERM],
                                            function(data) {
       if ('1' == data.toString()) {
-        d("photo upload is authorized");
+        LOG("photo upload is authorized");
         return;
       }
 
@@ -771,7 +790,7 @@ var PhotoUpload = {
       throw "Unexpected selection mode";
     }
 
-    d("album id: " + albumId);
+    LOG("album id: " + albumId);
 
     var uploadStatus = document.getElementById("uploadStatus")
     var uploadStatusDeck = document.getElementById("uploadStatusDeck");
@@ -790,27 +809,25 @@ var PhotoUpload = {
     }
 
     var self = this;
-    PhotoSet.upload(albumId, function(percent, cancelled) {
-      d("Got progress " + percent);
+    PhotoSet.upload(albumId,
+      function(percent) { // onProgress callback
+        LOG("Got progress " + percent);
+        progress.value = percent;
+      }, function(cancelled) { // onComplete callback
+        uploadDone();
 
-      progress.value = percent;
-      if (percent < 100)
-        return;
-      uploadDone();
-
-      if (cancelled) {
-        uploadStatus.value = self._stringBundle.getString("uploadCancelled");
-      } else {
-        uploadStatus.value = self._stringBundle.getString("uploadComplete");
-      }
-      self._postUpload(albumId);
-
-    }, function(message, detail) {
-      uploadDone();
-      alert(self._stringBundle.getString("uploadFailedAlert") + " " + message);
-      uploadStatus.className += " error";
-      uploadStatus.value = self._stringBundle.getString("uploadFailedStatus") +
-                           " " + message;
+        if (cancelled) {
+          uploadStatus.value = self._stringBundle.getString("uploadCancelled");
+        } else {
+          uploadStatus.value = self._stringBundle.getString("uploadComplete");
+          self._postUpload(albumId);
+        }
+      }, function(message, detail) { // onError callback
+        uploadDone();
+        alert(self._stringBundle.getString("uploadFailedAlert") + " " + message);
+        uploadStatus.className += " error";
+        uploadStatus.value = self._stringBundle.getString("uploadFailedStatus") +
+                             " " + message;
     });
   }
 };
