@@ -259,8 +259,12 @@ function facebookService() {
         .getService(Ci.nsIObserverService);
     this._prefService     = Cc['@mozilla.org/preferences-service;1']
         .getService(Ci.nsIPrefBranch2);
-    this._alertService    = Cc["@mozilla.org/alerts-service;1"]
-        .getService(Components.interfaces.nsIAlertsService);
+    try {
+      this._alertService = Cc["@mozilla.org/alerts-service;1"]
+        .getService(Ci.nsIAlertsService);
+    } catch(e) {
+      this._alertService = null;
+    }
 
     this._ff3Login = false;
     if ("@mozilla.org/passwordmanager;1" in Cc) {
@@ -953,6 +957,8 @@ facebookService.prototype = {
     _showPopup: function(type, pic, label, url) {
         debug('showPopup', type, pic, label, url);
         try {
+            if (!this._alertService)
+                this._alertService = Cc["@mozilla.org/alerts-service;1"].getService(Ci.nsIAlertsService);
             if (this._prefService.getBoolPref('extensions.facebook.notifications.growl')) {
                 if (url) {
                     this._alertService.showAlertNotification(pic, "Facebook Notification", label,
