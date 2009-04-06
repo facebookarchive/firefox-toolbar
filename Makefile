@@ -22,7 +22,7 @@ all: xpi
 
 xpt: $(XPTS)
 
-components/%.xpt: components/%.idl
+components/%.xpt: idl/%.idl
 ifneq ($(warn_nocompile),)
 	@echo
 	@echo "WARNING: the MOZSDKDIR environment variable was not set. .xpt files won't be compiled."
