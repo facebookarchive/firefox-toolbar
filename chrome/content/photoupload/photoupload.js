@@ -78,6 +78,12 @@ Photo.prototype = {
     var ios = Cc["@mozilla.org/network/io-service;1"].
               getService(Ci.nsIIOService);
     return ios.newFileURI(this.file).spec;
+  },
+  get sizeInBytes() {
+    return this.file.fileSize;
+  },
+  get filename() {
+    return this.file.leafName;
   }
 };
 
@@ -181,6 +187,73 @@ var PhotoSet = {
     }
   },
 
+  _getMimeTypeFromExtension: function(imageExt) {
+    var mimeSvc = Cc["@mozilla.org/mime;1"].getService(Ci.nsIMIMEService);
+    imageExt = imageExt.toLowerCase();
+    var dotPos = imageExt.lastIndexOf(".");
+    if (dotPos != -1)
+      imageExt = imageExt.substring(dotPos + 1, imageExt.length);
+    return mimeSvc.getTypeFromExtension(imageExt);
+  },
+
+  /**
+   * Returns an InputStream with the image data. The photo is resized if too
+   * large.
+   */
+  _maybeResizePhoto: function(photo) {
+    const PR_RDONLY = 0x01;
+    function getImageInputStream() {
+      var fis = new FileInputStream(photo.file, PR_RDONLY, 0444, null);
+
+      var imageStream = Cc["@mozilla.org/network/buffered-input-stream;1"].
+                        createInstance(Ci.nsIBufferedInputStream);
+      imageStream.init(fis, 4096);
+      return imageStream;
+    }
+
+    var imgTools = Cc["@mozilla.org/image/tools;1"].
+                   getService(Ci.imgITools);
+
+    var filename = photo.filename;
+    var extension = filename.substring(filename.lastIndexOf("."),
+                                       filename.length).toLowerCase();
+
+    var mimeType = this._getMimeTypeFromExtension(extension);
+    LOG("Found mime: " + mimeType + " for file " + filename);
+    var outParam = { value: null };
+    imgTools.decodeImageData(getImageInputStream(), mimeType, outParam);
+    var container = outParam.value;
+    LOG("Container: " + container.width + " x " + container.height);
+
+    const MAX_WIDTH = 604;
+    const MAX_HEIGHT = 604;
+
+    var imageStream;
+    if (container.width < MAX_WIDTH && container.height < MAX_HEIGHT) {
+      LOG("No resizing needed");
+      return getImageInputStream();
+    }
+    LOG("resizing image. Original size: " + container.width + " x " +
+        container.height);
+    var newWidth, newHeight;
+    var ratio = container.height / container.width;
+    if (container.width > MAX_WIDTH) {
+      newWidth = MAX_WIDTH;
+      newHeight = container.height * (MAX_WIDTH / container.width);
+    } else if (container.height > MAX_HEIGHT) {
+      newHeight = MAX_HEIGHT;
+      newWidth = container.width * (MAX_HEIGHT / container.height);
+    } else {
+      LOG("Unexpected state");
+    }
+    LOG("New size: " + newWidth + " x " + newHeight);
+    try {
+      return imgTools.encodeScaledImage(container, mimeType, newWidth, newHeight);
+    } catch (e) {
+      throw "Failure while resizing image: " + e;
+    }
+  },
+
   _getUploadStream: function(photo, params) {
     const EOL = "\r\n";
 
@@ -209,23 +282,17 @@ var PhotoSet = {
     converter.charset = "UTF-8";
     var headerStream = converter.convertToInputStream(header);
 
-    // Image stream
-    const PR_RDONLY = 0x01;
-    var fis = new FileInputStream(photo.file, PR_RDONLY, 0444, null);
+    var mis = Cc["@mozilla.org/io/multiplex-input-stream;1"].
+              createInstance(Ci.nsIMultiplexInputStream);
+    mis.appendStream(headerStream);
 
-    var imageStream = Cc["@mozilla.org/network/buffered-input-stream;1"].
-                      createInstance(Ci.nsIBufferedInputStream);
-    imageStream.init(fis, 4096);
+    // Image stream
+    mis.appendStream(this._maybeResizePhoto(photo));
 
     // Ending stream
     var endingStream = new StringInputStream();
     var boundaryString = "\r\n--" + BOUNDARY + "--\r\n";
     endingStream.setData(boundaryString, boundaryString.length);
-
-    var mis = Cc["@mozilla.org/io/multiplex-input-stream;1"].
-              createInstance(Ci.nsIMultiplexInputStream);
-    mis.appendStream(headerStream);
-    mis.appendStream(imageStream);
     mis.appendStream(endingStream);
 
     return mis;
@@ -267,8 +334,6 @@ var PhotoSet = {
     }
     params.sig = fbSvc_.generateSig(paramsForSig);
 
-    // For debugging.
-    //const RESTSERVER = 'http://localhost/~sypasche/testcases/xhr/progress/posthandler_fb.php';
     const RESTSERVER = 'http://api.facebook.com/restserver.php';
 
     var xhr = new XMLHttpRequest();
@@ -322,7 +387,7 @@ var PhotoSet = {
     var index = 0;
     var self = this;
 
-    var totalSizeBytes = [photo.file.fileSize for each (photo in toUpload)].
+    var totalSizeBytes = [photo.sizeInBytes for each (photo in toUpload)].
                              reduce(function(a, b) a + b);
     var uploadedBytes = 0;
 
@@ -341,28 +406,32 @@ var PhotoSet = {
         LOG("PhotoSet.upload: no photo to upload, How could that happen?");
         return;
       }
-      var photoSize = photo.file.fileSize;
+      var photoSize = photo.sizeInBytes;
 
-      self._uploadPhoto(albumId, photo,
-        function(photoPercent) { // onProgress callback
-          LOG("on progress from photo upload " + photoPercent);
-          var donePercent = (uploadedBytes / totalSizeBytes) * 100;
-          var photoRelativePercent = photoPercent * (photoSize / totalSizeBytes);
-          onProgress(donePercent + photoRelativePercent);
-        }, function() { // onComplete callback
-          index++;
-          uploadedBytes += photoSize;
-          // Call progress here for Firefox 3.0 which won't get progress
-          // notification during image upload.
-          onProgress((uploadedBytes / totalSizeBytes) * 100)
+      try {
+        self._uploadPhoto(albumId, photo,
+          function(photoPercent) { // onProgress callback
+            LOG("on progress from photo upload " + photoPercent);
+            var donePercent = (uploadedBytes / totalSizeBytes) * 100;
+            var photoRelativePercent = photoPercent * (photoSize / totalSizeBytes);
+            onProgress(donePercent + photoRelativePercent);
+          }, function() { // onComplete callback
+            index++;
+            uploadedBytes += photoSize;
+            // Call progress here for Firefox 3.0 which won't get progress
+            // notification during image upload.
+            onProgress((uploadedBytes / totalSizeBytes) * 100)
 
-          if (index == total) {
-            onComplete(false);
-            self.removeAll();
-          } else {
-            doUpload();
-          }
-        }, onError);
+            if (index == total) {
+              onComplete(false);
+              self.removeAll();
+            } else {
+              doUpload();
+            }
+          }, onError);
+      } catch (e) {
+        onError("Failure during upload: " + e);
+      }
     }
     doUpload();
   },
@@ -455,12 +524,16 @@ var EditPanel = {
 
     var editImageFrame = document.getElementById("editImageFrame");
     var imageElement = editImageFrame.contentDocument.getElementById("image");
+    var filenameField = document.getElementById("editFilenameField");
+    var sizeField = document.getElementById("editSizeField");
     var captionField = document.getElementById("editCaptionField");
 
     imageElement.removeAttribute("hidden");
     captionField.disabled = false;
     if (!PhotoSet.selected) {
       imageElement.setAttribute("hidden", "true");
+      filenameField.value = "";
+      sizeField.value = "";
       captionField.value = "";
       captionField.disabled = true;
       return;
@@ -468,6 +541,13 @@ var EditPanel = {
 
     var selectedPhoto = PhotoSet.selected;
     imageElement.setAttribute("src", selectedPhoto.url);
+    var filename = selectedPhoto.filename;
+    const MAX_FILENAME_SIZE = 30;
+    if (filename.length > MAX_FILENAME_SIZE)
+      filename = filename.substring(0, MAX_FILENAME_SIZE) + "...";
+    filenameField.value = filename;
+    var sizeKb = selectedPhoto.sizeInBytes / 1024;
+    sizeField.value = sizeKb.toFixed(0) + " kb";
     captionField.value = selectedPhoto.caption;
   },
   onCaptionInput: function(event) {

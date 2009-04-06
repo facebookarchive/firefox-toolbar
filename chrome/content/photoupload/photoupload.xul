@@ -99,6 +99,14 @@
                That's why a <browser> is used instead. -->
           <browser id="editImageFrame" src="editimage.html"/>
         </vbox>
+        <hbox>
+            <label value="File name:"/>
+            <label id="editFilenameField"/>
+        </hbox>
+        <hbox>
+            <label value="Size:"/>
+            <label id="editSizeField"/>
+        </hbox>
         <label value="Caption:"/>
         <textbox id="editCaptionField" multiline="true" disabled="true"
                  oninput="EditPanel.onCaptionInput(event)"/>
