@@ -16,12 +16,12 @@
 }
 
 #editImageContainer {
-  padding: 20px 5px;
+  padding: 10px 5px;
 }
 
 #editImageFrame {
   width: 300px;
-  height: 300px;
+  height: 200px;
 }
 
 .upload-status.error {

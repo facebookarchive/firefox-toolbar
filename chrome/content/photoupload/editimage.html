@@ -7,6 +7,13 @@
       margin: 0;
       padding: 0;
     }
+    #tagHighlight {
+      position: absolute;
+      margin: -15px;
+      width: 30px;
+      height: 30px;
+      border: 3px solid #0066FF;
+    }
     img {
       position: absolute;
       margin: auto;
@@ -15,13 +22,24 @@
       max-width: 280px;
       max-height: 200px;
       -moz-box-shadow: gray 10px 10px 10px;
+      border: 1px solid grey;
+      cursor: crosshair;
     }
-    img[hidden] {
+    #tagHighlight, img {
+      cursor: crosshair;
+    }
+    *[hidden] {
       display: none;
     }
   </style>
+  <script>
+    var EditPanel = parent.EditPanel;
+  </script>
 </head>
 <body style="overflow: hidden">
-    <img id="image" hidden="true">
+    <img id="image" hidden="true"
+         onclick="EditPanel.onPhotoClick(event)">
+    <div id="tagHighlight" hidden="true"
+         onclick="EditPanel.onPhotoClick(event)">
 </body>
 </html>

@@ -32,6 +32,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+// Constants
+
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 const CC = Components.Constructor;
@@ -45,6 +47,12 @@ const StringInputStream = CC("@mozilla.org/io/string-input-stream;1",
 
 // Keep this in sync with the albumid attribute of the default album in photoupload.xul
 const DEFAULT_ALBUM = "-1";
+
+// Global objects.
+
+var gFacebookService =  Cc['@facebook.com/facebook-service;1'].
+                        getService(Ci.fbIFacebookService);
+
 
 // Compatibility with Firefox 3.0 that doesn't have native JSON.
 // TODO: remove this once the Facebook component is used for requests.
@@ -63,13 +71,62 @@ function LOG(s) {
 }
 
 /**
+ * Base class for representing a photo tag.
+ */
+function Tag(label, x, y) {
+  this.label = label;
+  this.x = x;
+  this.y = y;
+}
+Tag.prototype = {
+  getUploadObject: function() {
+    var uploadObject = {
+      x: this.x,
+      y: this.y
+    };
+    var [key, value] = this.getUploadObjectKeyValue();
+    uploadObject[key] = value;
+    return uploadObject;
+  }
+}
+
+/**
+ * Class for text based tags.
+ */
+function TextTag(text, x, y) {
+  Tag.call(this, text, x, y);
+  this.text = text;
+}
+TextTag.prototype = {
+  __proto__: Tag.prototype,
+  getUploadObjectKeyValue: function() {
+    return ["tag_text", this.text];
+  }
+}
+
+/**
+ * Class for people based tags.
+ */
+function PeopleTag(uid, x, y) {
+  // TODO: need both uid and label here.
+  Tag.call(this, "todo " + uid, x, y)
+  this.uid = uid;
+}
+PeopleTag.prototype = {
+  __proto__: Tag.prototype,
+  getUploadObjectKeyValue: function() {
+    return ["tag_uid", this.uid];
+  }
+}
+
+/**
  * This objects represents a photo that is going to be uploaded.
  */
 function Photo(/* nsIFile */ file) {
-  // photos are stored as nsIFile objects. This may change when resizing or
-  // photo editing (rotate, ...) is implemented.
-  this.file = file;
+  LOG("Creating new photo " + file);
+  this.file = file.QueryInterface(Ci.nsIFile);
   this.caption = "";
+  this.tags = [];
   LOG(" Constructed " + this.file);
 };
 
@@ -84,6 +141,12 @@ Photo.prototype = {
   },
   get filename() {
     return this.file.leafName;
+  },
+  addTag: function(tag) {
+    this.tags.push(tag);
+  },
+  removeTag: function(tag) {
+    this.tags = this.tags.filter(function(p) p != tag);
   }
 };
 
@@ -98,6 +161,8 @@ var PhotoSet = {
   _photos: [],
   // Currently selected Photo object.
   _selected: null,
+  // Listeners wanted to get notified when a photo changes.
+  // Stored as (function callback, context object) pairs.
   _listeners: [],
   _cancelled: false,
 
@@ -150,9 +215,7 @@ var PhotoSet = {
     // The modified photo should be a reference to the photo in the set.
     // So there is nothing to update.
 
-    // There is no listeners for this now. Do not fire the event for perf.
-    // TODO: uncomment once there are listener.
-    //this._notifyChanged();
+    this._notifyChanged();
   },
 
   get selected() {
@@ -172,18 +235,19 @@ var PhotoSet = {
 
   _notifyChanged: function() {
     this._listeners.forEach(function(listener) {
-      listener.call(this);
+      var [func, context] = listener;
+      func.call(context);
     }, this);
   },
 
-  addChangedListener: function(aListener) {
-    this._listeners.push(aListener);
+  addChangedListener: function(func, context) {
+    this._listeners.push([func, context]);
   },
 
-  removeChangedListener: function(aListener) {
+  removeChangedListener: function(func, context) {
     this._listeners = this._listeners.filter(hasFilter);
     function hasFilter(listener) {
-      return listener != aListener;
+      return listener[0] != func && listener[1] != context;
     }
   },
 
@@ -372,13 +436,45 @@ var PhotoSet = {
         onError("Server returned an error: " + data.error_msg, data);
         return;
       }
-      onComplete();
+      onComplete(data.pid);
     }
     xhr.onerror = function(event) {
       onError("XMLHttpRequest error", event);
     }
 
     xhr.send(this._getUploadStream(photo, params));
+  },
+
+  _tagPhoto: function(photo, photoId, onComplete, onError) {
+    if (photo.tags.length == 0) {
+      onComplete()
+      return;
+    }
+    var tagUploadObjects = [tag.getUploadObject() for each (tag in photo.tags)];
+
+    // XXX wrappedJSObject hack because the method is not exposed.
+    gFacebookService.wrappedJSObject.callMethod('facebook.photos.addTag',
+      [
+        "pid=" + photoId,
+        "uid=" + gFacebookService.wrappedJSObject._uid,
+        "tags=" + JSON.stringify(tagUploadObjects)
+      ],
+      function(data) {
+        if (data !== true) {
+          onError("Error during tagging " + data);
+          return;
+        }
+        onComplete();
+      }
+    );
+  },
+
+  _uploadAndTagPhoto: function(albumId, photo, onProgress, onComplete, onError) {
+    this._uploadPhoto(albumId, photo, onProgress,
+      function(photoId) { // onComplete callback
+        PhotoSet._tagPhoto(photo, photoId, onComplete, onError);
+      },
+    onError);
   },
 
   upload: function(albumId, onProgress, onComplete, onError) {
@@ -409,7 +505,7 @@ var PhotoSet = {
       var photoSize = photo.sizeInBytes;
 
       try {
-        self._uploadPhoto(albumId, photo,
+        self._uploadAndTagPhoto(albumId, photo,
           function(photoPercent) { // onProgress callback
             LOG("on progress from photo upload " + photoPercent);
             var donePercent = (uploadedBytes / totalSizeBytes) * 100;
@@ -446,13 +542,13 @@ var PhotoSet = {
  */
 var OverviewPanel = {
   init: function() {
-    PhotoSet.addChangedListener(this.photosChanged);
+    PhotoSet.addChangedListener(this.photosChanged, OverviewPanel);
   },
   uninit: function() {
-    PhotoSet.removeChangedListener(this.photosChanged);
+    PhotoSet.removeChangedListener(this.photosChanged, OverviewPanel);
   },
   photosChanged: function() {
-    LOG("PhotosChanged ");
+    LOG("OverviewPanel::PhotosChanged");
 
     var panelDoc = document.getElementById("overviewPanel").contentDocument;
     var photoContainer = panelDoc.getElementById("photo-container")
@@ -513,25 +609,43 @@ var OverviewPanel = {
  * The panel that shows the selected photo where attributes can be edited.
  */
 var EditPanel = {
-  init: function() {
-    PhotoSet.addChangedListener(this.photosChanged);
-  },
-  uninit: function() {
-    PhotoSet.removeChangedListener(this.photosChanged);
-  },
-  photosChanged: function() {
-    LOG("editPanel: PhotosChanged");
+  _editImageFrame: null,
+  _imageElement: null,
+  _highlightDiv: null,
 
-    var editImageFrame = document.getElementById("editImageFrame");
-    var imageElement = editImageFrame.contentDocument.getElementById("image");
+  init: function() {
+    PhotoSet.addChangedListener(this.photosChanged, EditPanel);
+    this._editImageFrame = document.getElementById("editImageFrame");
+    this._imageElement = this._editImageFrame.contentDocument
+                             .getElementById("image");
+    this._highlightDiv = this._editImageFrame.contentDocument
+                             .getElementById("tagHighlight");
+  },
+
+  uninit: function() {
+    PhotoSet.removeChangedListener(this.photosChanged, EditPanel);
+  },
+
+  photosChanged: function() {
+    LOG("EditPanel::PhotosChanged");
+
     var filenameField = document.getElementById("editFilenameField");
     var sizeField = document.getElementById("editSizeField");
     var captionField = document.getElementById("editCaptionField");
+    var tagList = document.getElementById("editTagList");
+    var tagHelpBox = document.getElementById("editTagHelpBox");
+    var removeTagsButton = document.getElementById("editRemoveTagsButton");
 
-    imageElement.removeAttribute("hidden");
+    this._imageElement.removeAttribute("hidden");
+    this._hideTagHighlight();
     captionField.disabled = false;
+    tagHelpBox.collapsed = false;
+    removeTagsButton.disabled = true;
+    while (tagList.hasChildNodes())
+      tagList.removeChild(tagList.firstChild);
+
     if (!PhotoSet.selected) {
-      imageElement.setAttribute("hidden", "true");
+      this._imageElement.setAttribute("hidden", "true");
       filenameField.value = "";
       sizeField.value = "";
       captionField.value = "";
@@ -540,7 +654,7 @@ var EditPanel = {
     }
 
     var selectedPhoto = PhotoSet.selected;
-    imageElement.setAttribute("src", selectedPhoto.url);
+    this._imageElement.setAttribute("src", selectedPhoto.url);
     var filename = selectedPhoto.filename;
     const MAX_FILENAME_SIZE = 30;
     if (filename.length > MAX_FILENAME_SIZE)
@@ -549,13 +663,106 @@ var EditPanel = {
     var sizeKb = selectedPhoto.sizeInBytes / 1024;
     sizeField.value = sizeKb.toFixed(0) + " kb";
     captionField.value = selectedPhoto.caption;
+
+    if (selectedPhoto.tags.length == 0)
+      return;
+
+    tagHelpBox.collapsed = true;
+
+    for each (let tag in selectedPhoto.tags) {
+      var item = document.createElement("listitem");
+      item.setAttribute("label", tag.label);
+      item.tag = tag;
+      tagList.appendChild(item);
+    }
   },
+
+  _showTagHighlight: function(tag) {
+    var divX = this._imageElement.offsetLeft +
+                   (tag.x * this._imageElement.clientWidth / 100);
+    var divY = this._imageElement.offsetTop +
+                   (tag.y * this._imageElement.clientHeight / 100);
+
+    this._highlightDiv.style.left = divX + "px";
+    this._highlightDiv.style.top = divY + "px";
+    this._highlightDiv.removeAttribute("hidden");
+  },
+
+  _hideTagHighlight: function() {
+    this._highlightDiv.setAttribute("hidden", "true");
+  },
+
+  _updateRemoveTagsButton: function() {
+    var tagList = document.getElementById("editTagList");
+    var removeTagsButton = document.getElementById("editRemoveTagsButton");
+    removeTagsButton.disabled = !tagList.selectedCount;
+  },
+
+  onTagSelect: function(event) {
+    var tagList = event.target;
+    this._updateRemoveTagsButton();
+  },
+
+  onMouseOver: function(event) {
+    if (event.target.nodeName != "listitem")
+      return;
+    var tag = event.target.tag;
+    if (!tag)
+      return;
+    this._showTagHighlight(tag);
+  },
+
+  onMouseOut: function(event) {
+    this._hideTagHighlight();
+  },
+
+  onRemoveSelectedTags: function(event) {
+    var tagList = document.getElementById("editTagList");
+    var selectedPhoto = PhotoSet.selected;
+    if (tagList.selectedCount == 0 || !selectedPhoto)
+      return;
+
+    for each (let item in tagList.selectedItems) {
+      var tag = item.tag;
+      selectedPhoto.removeTag(tag);
+      // This is not needed, the list will be filled again in the change listener.
+      item.parentNode.removeChild(item);
+    }
+    PhotoSet.update(selectedPhoto);
+
+    this._updateRemoveTagsButton();
+  },
+
   onCaptionInput: function(event) {
     var selectedPhoto = PhotoSet.selected;
     if (!selectedPhoto)
       return;
 
     selectedPhoto.caption = event.target.value;
+    PhotoSet.update(selectedPhoto);
+  },
+
+  onPhotoClick: function(event) {
+    var selectedPhoto = PhotoSet.selected;
+    if (!selectedPhoto)
+      return;
+
+    var offsetXInImage = event.clientX - this._imageElement.offsetLeft;
+    var offsetYInImage = event.clientY - this._imageElement.offsetTop;
+    var offsetXPercent = (offsetXInImage / this._imageElement.clientWidth * 100).toFixed(0);
+    var offsetYPercent = (offsetYInImage / this._imageElement.clientHeight * 100).toFixed(0);
+    offsetXPercent = Math.min(Math.max(offsetXPercent, 0), 100);
+    offsetYPercent = Math.min(Math.max(offsetYPercent, 0), 100);
+
+    // temporary tag for showing highlight while the tag editing popup is shown.
+    var tempTag = new Tag("tempTag", offsetXPercent, offsetYPercent);
+    this._showTagHighlight(tempTag);
+
+    // TODO: custom dialog for entering both text and people tags.
+    var tagName = prompt("Enter a tag");
+
+    var tag = new TextTag(tagName, offsetXPercent, offsetYPercent);
+    selectedPhoto.addTag(tag);
     PhotoSet.update(selectedPhoto);
   }
 };
@@ -623,12 +830,6 @@ var PhotoUpload = {
     return this._stringBundle = document.getElementById("facebookStringBundle");
   },
 
-  get _fbSvc() {
-    delete this._fbSvc;
-    return this._fbSvc = Cc['@facebook.com/facebook-service;1'].
-                         getService(Ci.fbIFacebookService);
-  },
-
   _url: function(spec) {
     var ios = Cc["@mozilla.org/network/io-service;1"].
               getService(Ci.nsIIOService);
@@ -638,7 +839,7 @@ var PhotoUpload = {
   init: function() {
     OverviewPanel.init();
     EditPanel.init();
-    PhotoSet.addChangedListener(this.photosChanged);
+    PhotoSet.addChangedListener(this.photosChanged, PhotoUpload);
 
     var albumsPopup = document.getElementById("albumsPopup");
     var self = this;
@@ -672,8 +873,8 @@ var PhotoUpload = {
     //file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_wide.png");
     files.push(file);
     file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-    //file.initWithPath("/home/sypasche/projects/facebook/sample_images/recycled.png");
-    file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_tall.png");
+    file.initWithPath("/home/sypasche/projects/facebook/sample_images/recycled.png");
+    //file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_tall.png");
     files.push(file);
     file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
     file.initWithPath("/home/sypasche/projects/facebook/sample_images/hot-2560x1280.jpg");
@@ -683,6 +884,10 @@ var PhotoUpload = {
     files.push(file);
     var photos = [new Photo(f) for each (f in files)];
     LOG("photos " + photos);
+    //photos[0].addTextTag("sample text tag 1");
+    photos[0].addTag(new TextTag("sample text tag 1", 50, 50));
+    //photos[0].addTextTag("sample text tag 2");
+    photos[0].addTag(new TextTag("sample text tag 2", 0, 100));
     PhotoSet.add(photos);
     PhotoSet.selected = photos[0];
     */
@@ -691,7 +896,7 @@ var PhotoUpload = {
   uninit: function() {
     OverviewPanel.uninit();
     EditPanel.uninit();
-    PhotoSet.removeChangedListener(this.photosChanged);
+    PhotoSet.removeChangedListener(this.photosChanged, PhotoUpload);
     if (this.getAlbumSelectionMode() == EXISTING_ALBUM) {
       var albumsList = document.getElementById("albumsList");
       var albumId = albumsList.selectedItem.getAttribute("albumid");
@@ -706,9 +911,9 @@ var PhotoUpload = {
 
     var self = this;
     // XXX wrappedJSObject hack because the method is not exposed.
-    this._fbSvc.wrappedJSObject.callMethod('facebook.users.hasAppPermission',
-                                           ['ext_perm=' + PERM],
-                                           function(data) {
+    gFacebookService.wrappedJSObject.callMethod('facebook.users.hasAppPermission',
+                                                ['ext_perm=' + PERM],
+                                                function(data) {
       if ('1' == data.toString()) {
         LOG("photo upload is authorized");
         return;
@@ -728,7 +933,7 @@ var PhotoUpload = {
       if (rv != 0)
         return;
       var authorizeUrl = "http://www.facebook.com/authorize.php?api_key=" +
-                         self._fbSvc.apiKey +"&v=1.0&ext_perm=" + PERM;
+                         gFacebookService.apiKey +"&v=1.0&ext_perm=" + PERM;
       Application.activeWindow.open(self._url(authorizeUrl)).focus();
       window.close();
     });
@@ -766,8 +971,8 @@ var PhotoUpload = {
 
   _getAlbums: function(callback) {
     // XXX wrappedJSObject hack because the method is not exposed.
-    this._fbSvc.wrappedJSObject.callMethod('facebook.photos.getAlbums',
-                                     ["uid=" + this._fbSvc.wrappedJSObject._uid],
+    gFacebookService.wrappedJSObject.callMethod('facebook.photos.getAlbums',
+                                     ["uid=" + gFacebookService.wrappedJSObject._uid],
                                      callback
     );
   },

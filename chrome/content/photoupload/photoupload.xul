@@ -110,6 +110,37 @@
         <label value="Caption:"/>
         <textbox id="editCaptionField" multiline="true" disabled="true"
                  oninput="EditPanel.onCaptionInput(event)"/>
+        <hbox>
+          <label value="In this photo:"/>
+        </hbox>
+        <stack>
+          <listbox id="editTagList"
+                   seltype="multiple"
+                   onselect="EditPanel.onTagSelect(event);"
+                   onmouseover="EditPanel.onMouseOver(event);"
+                   onmouseout="EditPanel.onMouseOut(event);">
+          </listbox>
+          <!-- I wanted to put this help message below the listbox and make
+               the listbox transparent. It turns out setting background-color
+               to transparent on the listbox has no effect: it is always opaque.
+               The workaround is to put that box on top and collapse it when
+               there are list items to show -->
+          <vbox id="editTagHelpBox">
+            <spacer flex="1"/>
+            <hbox>
+              <spacer flex="1"/>
+              <label value="Click on people in the photo to tag them."
+                     style="color: gray"/>
+              <spacer flex="1"/>
+            </hbox>
+            <spacer flex="1"/>
+          </vbox>
+        </stack>
+        <hbox>
+          <button id="editRemoveTagsButton"
+                  oncommand="EditPanel.onRemoveSelectedTags(event)"
+                  label="Remove selected tags"/>
+        </hbox>
       </vbox>
     </hbox>
 
