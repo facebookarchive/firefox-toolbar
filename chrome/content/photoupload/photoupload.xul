@@ -72,20 +72,6 @@
       </hbox>
     </groupbox>
 
-    <hbox>
-      <button label="Add…" icon="add"
-              oncommand="PhotoUpload.addPhotos();"
-              observes="uploadBroadcaster"/>
-      <button label="Remove All" icon="clear"
-              oncommand="PhotoUpload.removeAllPhotos();"
-              observes="uploadBroadcaster"/>
-      <!-- For debugging -->
-      <button id="reopenButton" label="close and reopen this window" hidden="true" oncommand="
-        window.close();
-        window.openDialog('chrome://facebook/content/photoupload/photoupload.xul',
-                          'facebook:photoupload', 'all');"/>
-    </hbox>
-
     <hbox flex="1">
       <vbox id="overviewPanelContainer" flex="1"
             ondragdrop="nsDragAndDrop.drop(event, PhotoDNDObserver);">
@@ -99,6 +85,7 @@
                That's why a <browser> is used instead. -->
           <browser id="editImageFrame" src="editimage.html"/>
         </vbox>
+        <spacer flex="1"/>
         <hbox>
             <label value="File name:"/>
             <label id="editFilenameField"/>
@@ -146,7 +133,18 @@
 
     <hbox align="center">
       <deck id="uploadStatusDeck" flex="1">
-        <hbox align="center">
+        <hbox>
+          <button label="Add…" icon="add"
+                  oncommand="PhotoUpload.addPhotos();"
+                  observes="uploadBroadcaster"/>
+          <button label="Remove All" icon="clear"
+                  oncommand="PhotoUpload.removeAllPhotos();"
+                  observes="uploadBroadcaster"/>
+          <!-- For debugging -->
+          <button id="reopenButton" label="close and reopen this window" hidden="true" oncommand="
+            window.close();
+            window.openDialog('chrome://facebook/content/photoupload/photoupload.xul',
+                              'facebook:photoupload', 'all');"/>
           <label class="upload-status" id="uploadStatus"/>
         </hbox>
         <hbox>
