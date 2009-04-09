@@ -39,7 +39,7 @@
                      oncommand="if (!fbSvc.loggedIn) FacebookLogin(); facebook.share()"/>
 
       <toolbarbutton id="facebook-photoupload"
-                     class="facebook-icon-photoupload facebook-photoupload"
+                     class="facebook-icon-photoupload button"
                      tooltiptext="Upload photos to Facebook"
                      oncommand="if (!fbSvc.loggedIn) FacebookLogin(); facebook.photoupload()"/>
 
@@ -124,7 +124,7 @@
 
           <menuseparator />
 
-	  <!-- Settings Menu -->
+          <!-- Settings Menu -->
           <menuitem label="Account Settings"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/editaccount.php?src=fftb', event)"

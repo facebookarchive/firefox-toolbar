@@ -212,11 +212,14 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
   -moz-image-region: rect(0px 154px 14px 109px);
 }
 
+/* Upload */
 .facebook-icon-photoupload {
-  -moz-image-region: rect(0 457px 16px 441px);
-  list-style-image: url(chrome://facebook/skin/toolbar.png);
+  list-style-image: url('chrome://facebook/skin/toolbar.png');
+  padding: 0px;
   padding-left: 4px;
-  margin-left: 0px;
+  border: 0;
+  margin: 0;
+  -moz-image-region: rect(0 457px 16px 441px);
 }
 
 .facebook-icon-photoupload:hover {
