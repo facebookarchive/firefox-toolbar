@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://facebook/content/photoupload/photoupload.css" type="text/css"?>
+<?xml-stylesheet href="chrome://facebook/skin/photoupload.css" type="text/css"?>
 
 <!DOCTYPE window SYSTEM "chrome://facebook/locale/photoupload.dtd">
 
