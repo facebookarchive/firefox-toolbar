@@ -725,8 +725,6 @@ var EditPanel = {
     for each (let item in tagList.selectedItems) {
       var tag = item.tag;
       selectedPhoto.removeTag(tag);
-      // This is not needed, the list will be filled again in the change listener.
-      item.parentNode.removeChild(item);
     }
     PhotoSet.update(selectedPhoto);
 
@@ -760,6 +758,8 @@ var EditPanel = {
 
     // TODO: custom dialog for entering both text and people tags.
     var tagName = prompt("Enter a tag");
+    if (tagName === null)
+      return;
 
     var tag = new TextTag(tagName, offsetXPercent, offsetYPercent);
     selectedPhoto.addTag(tag);
