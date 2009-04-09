@@ -478,6 +478,7 @@ var PhotoSet = {
   },
 
   upload: function(albumId, onProgress, onComplete, onError) {
+    this._cancelled = false;
     var toUpload = this._photos;
     var total = toUpload.length;
     var index = 0;
@@ -821,10 +822,20 @@ const POST_UPLOAD_ASKUSER = 0;
 const POST_UPLOAD_OPENALBUM = 1;
 const POST_UPLOAD_STAYHERE = 2;
 
+const UPLOAD_CANCELLED = 0;
+const UPLOAD_COMPLETE = 1;
+const UPLOAD_ERROR = 2;
+
 /**
  * Manages the Photo upload window.
  */
 var PhotoUpload = {
+  _uploadCancelled: false,
+  _uploadStatus: null,
+  _uploadStatusDeck: null,
+  _uploadProgress: null,
+  _uploadBroadcaster: null,
+
   get _stringBundle() {
     delete this._stringBundle;
     return this._stringBundle = document.getElementById("facebookStringBundle");
@@ -840,6 +851,11 @@ var PhotoUpload = {
     OverviewPanel.init();
     EditPanel.init();
     PhotoSet.addChangedListener(this.photosChanged, PhotoUpload);
+
+    this._uploadStatus = document.getElementById("uploadStatus")
+    this._uploadStatusDeck = document.getElementById("uploadStatusDeck");
+    this._uploadProgress = document.getElementById("uploadProgress");
+    this._uploadBroadcaster = document.getElementById("uploadBroadcaster");
 
     var albumsPopup = document.getElementById("albumsPopup");
     var self = this;
@@ -998,6 +1014,7 @@ var PhotoUpload = {
   },
 
   cancelUpload: function() {
+    this._uploadCancelled = true;
     PhotoSet.cancelUpload();
   },
 
@@ -1018,7 +1035,7 @@ var PhotoUpload = {
     return urlAlbumId.toString(10);
   },
 
-  _postUpload: function(albumId) {
+  _maybeOpenAlbumPage: function(albumId) {
     var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
     var postUploadAction = prefSvc.getIntPref("extensions.facebook.postuploadaction");
 
@@ -1056,63 +1073,113 @@ var PhotoUpload = {
     }
   },
 
+  _createAlbum: function() {
+    var albumName = document.getElementById("albumName").value;
+    if (!albumName) {
+      // TODO: would be better to disable the Upload button in that case.
+      alert("Album name shouldn't be empty");
+      this._uploadComplete(UPLOAD_CANCELLED);
+      return;
+    }
+    var albumLocation = document.getElementById("albumLocation").value;
+    var albumDescription = document.getElementById("albumDescription").value;
+
+    var params = [
+        "uid=" + gFacebookService.wrappedJSObject._uid,
+        "name=" + albumName
+    ];
+    if (albumLocation)
+      params.push("location=" + albumLocation);
+    if (albumDescription)
+      params.push("description=" + albumDescription);
+
+    // XXX wrappedJSObject hack because the method is not exposed.
+    gFacebookService.wrappedJSObject.callMethod('facebook.photos.createAlbum',
+      params,
+      function(data) {
+        if (!data.aid) {
+          LOG("Error while creating album");
+          self._uploadComplete(UPLOAD_ERROR, null, "Error while creating album");
+          return;
+        }
+        PhotoUpload._uploadToAlbum(data.aid)
+      }
+    );
+  },
+
+  /**
+   * Starts the upload process. This is the public method that should be
+   * called from the UI.
+   */
   upload: function() {
     if (PhotoSet.photos.length == 0) {
       // This shouldn't happen (button is disabled when there are no photos).
       return;
     }
+    // TODO: store albumId in a field instead of passing it around.
 
-    var albumId = DEFAULT_ALBUM;
+    this._uploadStatusDeck.selectedIndex = 1;
+    this._uploadBroadcaster.setAttribute("disabled", "true");
+    this._uploadStatus.className = "upload-status";
+    this._uploadStatus.value = "";
+
     var selectionMode = this.getAlbumSelectionMode();
     if (selectionMode == NEW_ALBUM) {
-      alert("Album creation not yet implemented");
-      // TODO
-      return;
+      this._createAlbum();
     } else if (selectionMode == EXISTING_ALBUM) {
       var albumsList = document.getElementById("albumsList");
-      albumId = albumsList.selectedItem.getAttribute("albumid");
+      this._uploadToAlbum(albumsList.selectedItem.getAttribute("albumid"));
     } else {
       throw "Unexpected selection mode";
     }
+  },
 
-    LOG("album id: " + albumId);
+  /**
+   * Should be called when the upload is complete or cancelled in order to
+   * restore the UI / show error messages / or open the album page.
+   */
+  _uploadComplete: function(status, albumId, errorMessage) {
+    this._uploadCancelled = false;
+    this._uploadProgress.value = 0;
+    this._uploadBroadcaster.setAttribute("disabled", "false");
+    this._uploadStatusDeck.selectedIndex = 0;
 
-    var uploadStatus = document.getElementById("uploadStatus")
-    var uploadStatusDeck = document.getElementById("uploadStatusDeck");
-    var progress = document.getElementById("uploadProgress");
+    if (status == UPLOAD_CANCELLED) {
+      this._uploadStatus.value = this._stringBundle.getString("uploadCancelled");
+    } else if (status == UPLOAD_COMPLETE) {
+      this._uploadStatus.value = this._stringBundle.getString("uploadComplete");
+      this._maybeOpenAlbumPage(albumId);
+    } else if (status == UPLOAD_ERROR) {
+      alert(this._stringBundle.getString("uploadFailedAlert") + " " + errorMessage);
+      this._uploadStatus.className += " error";
+      this._uploadStatus.value = this._stringBundle.getString("uploadFailedStatus") +
+                                 " " + errorMessage;
+    } else {
+      LOG("Unknown upload status: " + status);
+    }
+  },
 
-    uploadStatusDeck.selectedIndex = 1;
-    var uploadBroadcaster = document.getElementById("uploadBroadcaster");
-    uploadBroadcaster.setAttribute("disabled", "true");
-    uploadStatus.className = "upload-status";
-    uploadStatus.value = "";
-
-    function uploadDone() {
-      progress.value = 0;
-      uploadBroadcaster.setAttribute("disabled", "false");
-      uploadStatusDeck.selectedIndex = 0;
+  /**
+   * Second phase of the upload process. This is called from upload() and is
+   * in a separate method in order to be called asynchronously when creating
+   * a new album
+   */
+  _uploadToAlbum: function(albumId) {
+    if (this._uploadCancelled) {
+      this._uploadComplete(UPLOAD_CANCELLED, albumId);
+      return;
     }
 
     var self = this;
     PhotoSet.upload(albumId,
       function(percent) { // onProgress callback
         LOG("Got progress " + percent);
-        progress.value = percent;
+        self._uploadProgress.value = percent;
       }, function(cancelled) { // onComplete callback
-        uploadDone();
-
-        if (cancelled) {
-          uploadStatus.value = self._stringBundle.getString("uploadCancelled");
-        } else {
-          uploadStatus.value = self._stringBundle.getString("uploadComplete");
-          self._postUpload(albumId);
-        }
+        self._uploadComplete(cancelled ? UPLOAD_CANCELLED : UPLOAD_COMPLETE, albumId);
       }, function(message, detail) { // onError callback
-        uploadDone();
-        alert(self._stringBundle.getString("uploadFailedAlert") + " " + message);
-        uploadStatus.className += " error";
-        uploadStatus.value = self._stringBundle.getString("uploadFailedStatus") +
-                             " " + message;
+        // TODO: remove detail which is unused
+        self._uploadComplete(UPLOAD_ERROR, null, errorMessage);
     });
   }
 };

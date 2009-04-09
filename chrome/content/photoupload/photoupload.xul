@@ -38,10 +38,8 @@
                     observes="uploadBroadcaster">
           <radio label="Existing Album" id="existingAlbumRadio"
                  observes="uploadBroadcaster"/>
-          <!-- TODO: disabled because new album creation is not yet available -->
           <radio label="New Album" id="newAlbumRadio"
-                 observes="uploadBroadcaster"
-                 disabled="true"/>
+                 observes="uploadBroadcaster"/>
         </radiogroup>
         <deck id="albumSelectionDeck" flex="1">
           <vbox id="existingAlbumPanel">
@@ -59,13 +57,16 @@
           <vbox flex="1" id="newAlbumPanel">
             <hbox align="center">
               <label value="Name:"/>
-              <textbox flex="1" observes="uploadBroadcaster"/>
+              <textbox id="albumName" flex="1"
+                       observes="uploadBroadcaster"/>
               <label value="Location:"/>
-              <textbox flex="1" observes="uploadBroadcaster"/>
+              <textbox id="albumLocation" flex="1"
+                       observes="uploadBroadcaster"/>
             </hbox>
             <hbox align="center">
               <label value="Description:"/>
-              <textbox flex="1" observes="uploadBroadcaster"/>
+              <textbox id="albumDescription" flex="1"
+                       observes="uploadBroadcaster"/>
             </hbox>
           </vbox>
         </deck>
