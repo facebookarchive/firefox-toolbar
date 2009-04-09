@@ -33,15 +33,15 @@
     <groupbox>
       <caption label="Album"/>
       <hbox>
-        <!-- TODO: hidden because new album creation is not yet available -->
         <radiogroup id="albumSelectionGroup" flex="1"
-                    hidden="true"
                     oncommand="PhotoUpload.onAlbumSelectionModeChange()"
                     observes="uploadBroadcaster">
           <radio label="Existing Album" id="existingAlbumRadio"
                  observes="uploadBroadcaster"/>
+          <!-- TODO: disabled because new album creation is not yet available -->
           <radio label="New Album" id="newAlbumRadio"
-                 observes="uploadBroadcaster"/>
+                 observes="uploadBroadcaster"
+                 disabled="true"/>
         </radiogroup>
         <deck id="albumSelectionDeck" flex="1">
           <vbox id="existingAlbumPanel">
