@@ -213,17 +213,14 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
 }
 
 .facebook-icon-photoupload {
-  /* TODO: update icon once artwork is there */
-  list-style-image: url('chrome://facebook/skin/upload16c.gif');
+  -moz-image-region: rect(0 457px 16px 441px);
+  list-style-image: url(chrome://facebook/skin/toolbar.png);
   padding-left: 4px;
   margin-left: 0px;
 }
 
 .facebook-icon-photoupload:hover {
-  /* TODO: update icon once artwork is there */
-  list-style-image: url('chrome://facebook/skin/upload16.gif');
-  padding-left: 4px;
-  margin-left: 0px;
+  -moz-image-region: rect(0 473px 16px 457px);
 }
 
 .facebook-icon-wall {
