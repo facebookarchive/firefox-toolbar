@@ -123,11 +123,9 @@ PeopleTag.prototype = {
  * This objects represents a photo that is going to be uploaded.
  */
 function Photo(/* nsIFile */ file) {
-  LOG("Creating new photo " + file);
   this.file = file.QueryInterface(Ci.nsIFile);
   this.caption = "";
   this.tags = [];
-  LOG(" Constructed " + this.file);
 };
 
 Photo.prototype = {
@@ -147,6 +145,9 @@ Photo.prototype = {
   },
   removeTag: function(tag) {
     this.tags = this.tags.filter(function(p) p != tag);
+  },
+  toString: function() {
+    return "<Photo file: " + this.filename + ">";
   }
 };
 
@@ -166,19 +167,22 @@ var PhotoSet = {
   _listeners: [],
   _cancelled: false,
 
-  add: function(aFiles) {
-    Array.prototype.push.apply(this._photos, aFiles)
-
+  add: function(photos) {
+    Array.prototype.push.apply(this._photos, photos)
+    // Selects the last added photos. When adding only one photo, that's
+    // useful to have it selected for direct metadata editing.
+    this._selected = photos[photos.length - 1];
     this._notifyChanged();
   },
 
   _updateSelected: function() {
-    var p = this._photos.filter(function(p) p == this._selected);
+    var p = this._photos.filter(function(p) p == this._selected, this);
     if (p.length > 1) {
       LOG("ERROR: more that once selected photo?");
       return;
     }
     if (p.length == 0) {
+      LOG("No selected photo");
       this._selected = null;
     }
   },
@@ -190,7 +194,15 @@ var PhotoSet = {
   },
 
   remove: function(photo) {
-    this._photos = this._photos.filter(function(p) p != photo);
+    var photoIndex = this._photos.indexOf(photo);
+    if (photoIndex == -1) {
+      LOG("Warning: trying to remove a photo not in set");
+      return;
+    }
+    this._photos.splice(photoIndex, 1);
+    // Select the photo just after the removed one.
+    var selectedIndex = Math.min(photoIndex, this._photos.length - 1);
+    this._selected = this._photos[selectedIndex];
     this._updateSelected();
     this._notifyChanged();
   },
