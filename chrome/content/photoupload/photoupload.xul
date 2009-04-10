@@ -30,48 +30,59 @@
   <broadcaster id="uploadBroadcaster"/>
 
   <vbox flex="1">
-    <groupbox>
-      <caption label="Album"/>
-      <hbox>
-        <radiogroup id="albumSelectionGroup" flex="1"
-                    oncommand="PhotoUpload.onAlbumSelectionModeChange()"
-                    observes="uploadBroadcaster">
-          <radio label="Existing Album" id="existingAlbumRadio"
-                 observes="uploadBroadcaster"/>
-          <radio label="New Album" id="newAlbumRadio"
-                 observes="uploadBroadcaster"/>
-        </radiogroup>
-        <deck id="albumSelectionDeck" flex="1">
-          <vbox id="existingAlbumPanel">
-            <hbox>
-              <menulist id="albumsList" flex="1"
-                        observes="uploadBroadcaster">
-                <menupopup id="albumsPopup">
-                  <menuitem label="Default Album" albumid="-1"/>
-                </menupopup>
-              </menulist>
-              <spacer flex="1"/>
-            </hbox>
+    <hbox>
+      <radiogroup id="albumSelectionGroup"
+                  oncommand="PhotoUpload.onAlbumSelectionModeChange()"
+                  observes="uploadBroadcaster">
+        <radio label="Existing Album" id="existingAlbumRadio"
+               observes="uploadBroadcaster"/>
+        <radio label="New Album" id="newAlbumRadio"
+               observes="uploadBroadcaster"/>
+      </radiogroup>
+      <deck id="albumSelectionDeck" flex="1">
+        <vbox id="existingAlbumPanel">
+          <hbox>
+            <separator/>
+            <menulist id="albumsList"
+                      observes="uploadBroadcaster">
+              <menupopup id="albumsPopup">
+                <menuitem label="Default Album" albumid="-1"/>
+              </menupopup>
+            </menulist>
             <spacer flex="1"/>
-          </vbox>
-          <vbox flex="1" id="newAlbumPanel">
-            <hbox align="center">
-              <label value="Name:"/>
-              <textbox id="albumName" flex="1"
-                       observes="uploadBroadcaster"/>
-              <label value="Location:"/>
-              <textbox id="albumLocation" flex="1"
-                       observes="uploadBroadcaster"/>
-            </hbox>
-            <hbox align="center">
-              <label value="Description:"/>
-              <textbox id="albumDescription" flex="1"
-                       observes="uploadBroadcaster"/>
-            </hbox>
-          </vbox>
-        </deck>
-      </hbox>
-    </groupbox>
+          </hbox>
+          <spacer flex="1"/>
+        </vbox>
+        <hbox flex="1" id="newAlbumPanel">
+          <separator class="groove"/>
+          <grid flex="1">
+            <columns>
+              <column/>
+              <column flex="1"/>
+            </columns>
+            <rows>
+              <row align="center">
+                <label value="Name:"/>
+                <hbox align="center">
+                  <textbox id="albumName" flex="1"
+                           observes="uploadBroadcaster"/>
+                  <label value="Location:"/>
+                  <textbox id="albumLocation" flex="1"
+                           observes="uploadBroadcaster"/>
+                </hbox>
+              </row>
+              <row align="center">
+                <label value="Description:"/>
+                <hbox align="center">
+                  <textbox id="albumDescription" flex="1"
+                           observes="uploadBroadcaster"/>
+                </hbox>
+              </row>
+            </rows>
+          </grid>
+        </hbox>
+      </deck>
+    </hbox>
 
     <hbox flex="1">
       <vbox id="overviewPanelContainer" flex="1"
