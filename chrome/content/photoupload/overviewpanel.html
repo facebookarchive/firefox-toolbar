@@ -5,6 +5,7 @@
   <style type="text/css">
     body {
       background-color: white;
+      font-family: sans-serif;
     }
     /* If you change the .photobox size, update the
        #overviewPanelContainer.min-width in photoupload.css */
@@ -18,24 +19,6 @@
       overflow: hidden;
       border: 3px solid #CCCCCC;
       background-color: white;
-    }
-    .photobox > .remove {
-      display: none;
-      right: 0;
-      bottom: 0;
-      font-family: sans;
-      background-color: rgba(0, 0, 0, 0.8);
-      -moz-border-radius: 5px;
-      cursor: pointer;
-      color: white;
-      font-weight: bold;
-      font-size: 120%;
-      padding: 5px;
-      opacity: 0.5;
-      transparent: true;
-    }
-    .photobox:hover > .remove {
-      display: block;
     }
     .photobox:hover, .photobox[selected=true] {
       -moz-box-shadow: black 10px 10px 10px;
@@ -55,6 +38,30 @@
       max-width: 200px;
       max-height: 200px;
     }
+    .photobox > .filename {
+      font-size: 14px;
+      color: #333;
+      left: 5px;
+      bottom: 5px;
+      while-space: pre;
+    }
+    .photobox > .remove {
+      display: none;
+      right: 0;
+      bottom: 0;
+      background-color: black;
+      -moz-border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+      font-size: 120%;
+      padding: 5px;
+      opacity: 0.6;
+      transparent: true;
+    }
+    .photobox:hover > .remove {
+      display: block;
+    }
     #help-message {
       z-index: -1;
       position: absolute;
@@ -64,8 +71,6 @@
       right: 0;
       margin-top: -0.5em;
       color: gray;
-      /*font-size: 3em;
-      font-style: italic;*/
     }
     #photobox-template {
       display: none;
@@ -84,6 +89,7 @@
     <div class="photobox" id="photobox-template"
          onclick="OverviewPanel.selectPhoto(event);">
       <img>
+      <div class="filename">&npsp;</div>
       <div class="remove" onclick="OverviewPanel.removePhoto(event);">Remove</div>
     </div>
     <div id="help-message">Click Add… or drag photos here.</div>

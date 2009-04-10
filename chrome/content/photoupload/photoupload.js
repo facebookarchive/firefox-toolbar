@@ -583,6 +583,8 @@ var OverviewPanel = {
         newBox.setAttribute("selected", "true");
 
       newBox.getElementsByTagName("img")[0].src = photo.url;
+      var filenameDiv = newBox.getElementsByClassName("filename")[0];
+      filenameDiv.firstChild.data = photo.filename;
       photoboxTemplate.parentNode.insertBefore(newBox, photoboxTemplate);
     });
   },
