@@ -25,3 +25,7 @@
 .upload-status.error {
   color: red;
 }
+
+#editTagList {
+  min-height: 60px;
+}

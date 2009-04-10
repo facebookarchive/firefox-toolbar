@@ -112,8 +112,9 @@
         <hbox>
           <label value="In this photo:"/>
         </hbox>
-        <stack>
-          <listbox id="editTagList"
+        <stack flex="1">
+          <listbox flex="1"
+                   id="editTagList"
                    seltype="multiple"
                    onselect="EditPanel.onTagSelect(event);"
                    onmouseover="EditPanel.onMouseOver(event);"
@@ -124,7 +125,7 @@
                to transparent on the listbox has no effect: it is always opaque.
                The workaround is to put that box on top and collapse it when
                there are list items to show -->
-          <vbox id="editTagHelpBox">
+          <vbox id="editTagHelpBox" flex="1">
             <spacer flex="1"/>
             <hbox>
               <spacer flex="1"/>
