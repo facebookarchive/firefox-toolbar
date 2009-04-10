@@ -145,7 +145,7 @@
 
     <hbox align="center">
       <deck id="uploadStatusDeck" flex="1">
-        <hbox>
+        <hbox align="center">
           <button label="Add…" icon="add"
                   oncommand="PhotoUpload.addPhotos();"
                   observes="uploadBroadcaster"/>
