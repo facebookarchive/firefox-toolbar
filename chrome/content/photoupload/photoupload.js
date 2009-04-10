@@ -828,6 +828,8 @@ var PhotoDNDObserver = {
 const NEW_ALBUM = 0;
 const EXISTING_ALBUM = 1;
 
+const PROFILE_PICTURES_URL_ALBUM_ID = "4294967293"; // -3 in two's complement 32bit integer.
+
 const POST_UPLOAD_ASKUSER = 0;
 const POST_UPLOAD_OPENALBUM = 1;
 const POST_UPLOAD_STAYHERE = 2;
@@ -918,12 +920,19 @@ var PhotoUpload = {
     gFacebookService.wrappedJSObject.callMethod('facebook.photos.getAlbums',
       ["uid=" + gFacebookService.wrappedJSObject._uid],
       function(albums) {
+        // Remove the "Profile Pictures" album from the list, it's a special
+        // album and uploading to this album generates errors.
+        albums = albums.filter(function(a) {
+          var urlAlbumId = PhotoUpload._albumIdToUrlAlbumId(a.aid);
+          return urlAlbumId != PROFILE_PICTURES_URL_ALBUM_ID;
+        });
+
         if (albums.length == 0) {
-          // There should always be the "Profile Picture" album, which can't
-          // be deleted apparently.
-          // XXX I'm getting errors when uploading to this album
-          // ("Invalid album id").
-          LOG("No albums: how did this happen?");
+          LOG("No albums");
+          var newAlbumRadio = document.getElementById("newAlbumRadio");
+          document.getElementById("albumSelectionGroup").selectedItem = newAlbumRadio;
+          PhotoUpload.onAlbumSelectionModeChange()
+          document.getElementById("existingAlbumRadio").disabled = true;
           return;
         }
         var albumsPopup = document.getElementById("albumsPopup");
