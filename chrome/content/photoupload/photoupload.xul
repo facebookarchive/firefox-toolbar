@@ -40,14 +40,13 @@
                observes="uploadBroadcaster"/>
       </radiogroup>
       <deck id="albumSelectionDeck" flex="1">
-        <vbox id="existingAlbumPanel">
+        <vbox id="existingAlbumPanel" class="loading-albums">
           <hbox>
             <separator/>
+            <label id="loadingAlbumsLabel" value="Loading Albums…"/>
             <menulist id="albumsList"
                       observes="uploadBroadcaster">
-              <menupopup id="albumsPopup">
-                <menuitem label="Default Album" albumid="-1"/>
-              </menupopup>
+              <menupopup id="albumsPopup"/>
             </menulist>
             <spacer flex="1"/>
           </hbox>

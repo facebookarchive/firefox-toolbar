@@ -2,6 +2,16 @@
   padding: 10px;
 }
 
+#existingAlbumPanel.loading-albums #loadingAlbumsLabel,
+#existingAlbumPanel:not(.loading-albums) #albumsList {
+  display: block;
+}
+
+#existingAlbumPanel:not(loading-albums) #loadingAlbumsLabel,
+#existingAlbumPanel.loading-albums #albumsList {
+  display: none;
+}
+
 #overviewPanelContainer {
   padding: 10px 10px 10px 0px;
   /* the minimum width should show just one thumbnail. make sure this is in

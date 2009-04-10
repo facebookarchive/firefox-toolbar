@@ -45,9 +45,6 @@ const FileInputStream = CC("@mozilla.org/network/file-input-stream;1",
 const StringInputStream = CC("@mozilla.org/io/string-input-stream;1",
                              "nsIStringInputStream")
 
-// Keep this in sync with the albumid attribute of the default album in photoupload.xul
-const DEFAULT_ALBUM = "-1";
-
 // Global objects.
 
 var gFacebookService =  Cc['@facebook.com/facebook-service;1'].
@@ -386,8 +383,7 @@ var PhotoSet = {
 
     // method specific:
     params.method = "facebook.photos.upload";
-    if (albumId != DEFAULT_ALBUM)
-      params.aid = albumId;
+    params.aid = albumId;
     if (photo.caption)
       params.caption = photo.caption;
 
@@ -869,26 +865,8 @@ var PhotoUpload = {
     this._uploadProgress = document.getElementById("uploadProgress");
     this._uploadBroadcaster = document.getElementById("uploadBroadcaster");
 
-    var albumsPopup = document.getElementById("albumsPopup");
     var self = this;
-    this._getAlbums(function(albums) {
-
-      var lastAlbumId = document.getElementById("albumsList")
-                                .getAttribute("lastalbumid");
-      var selectedItem;
-      for each (var album in albums) {
-        var menuitem = document.createElement("menuitem");
-        menuitem.setAttribute("label", album.name);
-        menuitem.setAttribute("albumid", album.aid);
-        if (album.aid == lastAlbumId)
-          selectedItem = menuitem;
-        LOG("Album name: " + album.name + " album id: " + album.aid);
-        albumsPopup.appendChild(menuitem);
-      }
-      if (selectedItem) {
-        var albumsList = document.getElementById("albumsList");
-        albumsList.selectedItem = selectedItem;
-      }
+    this._fillAlbumList(function() { // onComplete callback
       self._checkPhotoUploadPermission();
     });
 
@@ -933,6 +911,44 @@ var PhotoUpload = {
     document.persist("albumsList", "lastalbumid");
   },
 
+  _fillAlbumList: function(onComplete) {
+    // XXX wrappedJSObject hack because the method is not exposed.
+    gFacebookService.wrappedJSObject.callMethod('facebook.photos.getAlbums',
+      ["uid=" + gFacebookService.wrappedJSObject._uid],
+      function(albums) {
+        if (albums.length == 0) {
+          // There should always be the "Profile Picture" album, which can't
+          // be deleted apparently.
+          // XXX I'm getting errors when uploading to this album
+          // ("Invalid album id").
+          LOG("No albums: how did this happen?");
+          return;
+        }
+        var albumsPopup = document.getElementById("albumsPopup");
+        var lastAlbumId = document.getElementById("albumsList")
+                                  .getAttribute("lastalbumid");
+        var selectedItem;
+        for each (var album in albums) {
+          var menuitem = document.createElement("menuitem");
+          menuitem.setAttribute("label", album.name);
+          menuitem.setAttribute("albumid", album.aid);
+          if (album.aid == lastAlbumId)
+            selectedItem = menuitem;
+          LOG("Album name: " + album.name + " album id: " + album.aid);
+          albumsPopup.appendChild(menuitem);
+        }
+        var albumsList = document.getElementById("albumsList");
+        if (selectedItem) {
+          albumsList.selectedItem = selectedItem;
+        } else {
+          albumsList.selectedIndex = 0;
+        }
+        document.getElementById("existingAlbumPanel").className = "";
+        onComplete();
+      }
+    );
+  },
+
   _checkPhotoUploadPermission: function() {
     LOG("Checking photo upload permission");
     const PERM = "photo_upload";
@@ -940,31 +956,32 @@ var PhotoUpload = {
     var self = this;
     // XXX wrappedJSObject hack because the method is not exposed.
     gFacebookService.wrappedJSObject.callMethod('facebook.users.hasAppPermission',
-                                                ['ext_perm=' + PERM],
-                                                function(data) {
-      if ('1' == data.toString()) {
-        LOG("photo upload is authorized");
-        return;
+      ['ext_perm=' + PERM],
+      function(data) {
+        if ('1' == data.toString()) {
+          LOG("photo upload is authorized");
+          return;
+        }
+
+        let promptTitle = self._stringBundle.getString("allowUploadTitle");
+        let promptMessage = self._stringBundle.getString("allowUploadMessage");
+        let openAuthorize = self._stringBundle.getString("openAuthorizePage");
+
+        const IPS = Ci.nsIPromptService;
+        let ps = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(IPS);
+        let rv = ps.confirmEx(window, promptTitle, promptMessage,
+                              (IPS.BUTTON_TITLE_IS_STRING * IPS.BUTTON_POS_0) +
+                              (IPS.BUTTON_TITLE_CANCEL * IPS.BUTTON_POS_1),
+                              openAuthorize, null, null, null, {value: 0});
+
+        if (rv != 0)
+          return;
+        var authorizeUrl = "http://www.facebook.com/authorize.php?api_key=" +
+                           gFacebookService.apiKey +"&v=1.0&ext_perm=" + PERM;
+        Application.activeWindow.open(self._url(authorizeUrl)).focus();
+        window.close();
       }
-
-      let promptTitle = self._stringBundle.getString("allowUploadTitle");
-      let promptMessage = self._stringBundle.getString("allowUploadMessage");
-      let openAuthorize = self._stringBundle.getString("openAuthorizePage");
-
-      const IPS = Ci.nsIPromptService;
-      let ps = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(IPS);
-      let rv = ps.confirmEx(window, promptTitle, promptMessage,
-                            (IPS.BUTTON_TITLE_IS_STRING * IPS.BUTTON_POS_0) +
-                            (IPS.BUTTON_TITLE_CANCEL * IPS.BUTTON_POS_1),
-                            openAuthorize, null, null, null, {value: 0});
-
-      if (rv != 0)
-        return;
-      var authorizeUrl = "http://www.facebook.com/authorize.php?api_key=" +
-                         gFacebookService.apiKey +"&v=1.0&ext_perm=" + PERM;
-      Application.activeWindow.open(self._url(authorizeUrl)).focus();
-      window.close();
-    });
+    );
   },
 
   photosChanged: function() {
@@ -995,14 +1012,6 @@ var PhotoUpload = {
       albumSelectionDeck.selectedPanel =
         document.getElementById("newAlbumPanel");
     }
-  },
-
-  _getAlbums: function(callback) {
-    // XXX wrappedJSObject hack because the method is not exposed.
-    gFacebookService.wrappedJSObject.callMethod('facebook.photos.getAlbums',
-                                     ["uid=" + gFacebookService.wrappedJSObject._uid],
-                                     callback
-    );
   },
 
   addPhotos: function() {
@@ -1076,9 +1085,7 @@ var PhotoUpload = {
 
     if (postUploadAction == POST_UPLOAD_OPENALBUM) {
       var aid = "";
-      // TODO: what should the URL be in this case?
-      if (albumId != DEFAULT_ALBUM)
-        aid = "aid=" + this._albumIdToUrlAlbumId(albumId) + "&";
+      aid = "aid=" + this._albumIdToUrlAlbumId(albumId) + "&";
       Application.activeWindow.open(
         this._url("http://www.facebook.com/editalbum.php?" + aid + "org=1")).focus();
       window.close();
@@ -1097,8 +1104,8 @@ var PhotoUpload = {
     var albumDescription = document.getElementById("albumDescription").value;
 
     var params = [
-        "uid=" + gFacebookService.wrappedJSObject._uid,
-        "name=" + albumName
+      "uid=" + gFacebookService.wrappedJSObject._uid,
+      "name=" + albumName
     ];
     if (albumLocation)
       params.push("location=" + albumLocation);
@@ -1191,7 +1198,7 @@ var PhotoUpload = {
         self._uploadComplete(cancelled ? UPLOAD_CANCELLED : UPLOAD_COMPLETE, albumId);
       }, function(message, detail) { // onError callback
         // TODO: remove detail which is unused
-        self._uploadComplete(UPLOAD_ERROR, null, errorMessage);
+        self._uploadComplete(UPLOAD_ERROR, null, message);
     });
   }
 };
