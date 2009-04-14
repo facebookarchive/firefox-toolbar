@@ -869,6 +869,11 @@ var PhotoUpload = {
     this._uploadProgress = document.getElementById("uploadProgress");
     this._uploadBroadcaster = document.getElementById("uploadBroadcaster");
 
+    // New album default name
+    var defaultAlbumName = this._stringBundle.getString("defaultAlbumName");
+    defaultAlbumName = defaultAlbumName.replace("%DATE%", new Date().toLocaleDateString());
+    document.getElementById("albumName").value = defaultAlbumName;
+
     var self = this;
     this._fillAlbumList(function() { // onComplete callback
       self._checkPhotoUploadPermission();
