@@ -997,6 +997,7 @@ var PhotoUpload = {
 
   photosChanged: function() {
     document.getElementById("uploadButton").disabled = PhotoSet.photos.length == 0;
+    document.getElementById("removeAllButton").disabled = PhotoSet.photos.length == 0;
   },
 
   getAlbumSelectionMode: function() {
@@ -1113,10 +1114,13 @@ var PhotoUpload = {
     }
     var albumLocation = document.getElementById("albumLocation").value;
     var albumDescription = document.getElementById("albumDescription").value;
+    var albumVisibility = document.getElementById("albumVisibility")
+                                  .selectedItem.value;
 
     var params = [
       "uid=" + gFacebookService.wrappedJSObject._uid,
-      "name=" + albumName
+      "name=" + albumName,
+      "visible=" + albumVisibility
     ];
     if (albumLocation)
       params.push("location=" + albumLocation);

@@ -30,6 +30,7 @@
   <broadcaster id="uploadBroadcaster"/>
 
   <vbox flex="1">
+    <label value="Upload New Photos to:"/>
     <hbox>
       <radiogroup id="albumSelectionGroup"
                   oncommand="PhotoUpload.onAlbumSelectionModeChange()"
@@ -75,6 +76,20 @@
                 <hbox align="center">
                   <textbox id="albumDescription" flex="1"
                            observes="uploadBroadcaster"/>
+                  <label value="Who can see this?"/>
+                  <menulist id="albumVisibility">
+                     <menupopup>
+                        <menuitem label="Everyone"
+                                  value="everyone"/>
+                        <menuitem label="Friends of Friends"
+                                  value="friends-of-friends"/>
+                        <menuitem label="Only Friends"
+                                  value="friends"/>
+                        <!-- XXX more descriptive label? -->
+                        <menuitem label="Networks"
+                                  value="networks"/>
+                     </menupopup>
+                   </menulist>
                 </hbox>
               </row>
             </rows>
@@ -146,10 +161,11 @@
     <hbox align="center">
       <deck id="uploadStatusDeck" flex="1">
         <hbox align="center">
-          <button label="Add…" icon="add"
+          <button label="Add Photos…" icon="add" id="addPhotosButton"
                   oncommand="PhotoUpload.addPhotos();"
                   observes="uploadBroadcaster"/>
-          <button label="Remove All" icon="clear"
+          <button label="Remove All" icon="clear" id="removeAllButton"
+                  disabled="true"
                   oncommand="PhotoUpload.removeAllPhotos();"
                   observes="uploadBroadcaster"/>
           <!-- For debugging -->

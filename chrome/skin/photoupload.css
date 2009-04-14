@@ -34,6 +34,11 @@
   border: 3px solid #CCCCCC;
 }
 
+#addPhotosButton {
+  font-size: 130%;
+  font-weight: bold;
+}
+
 .upload-status.error {
   color: red;
 }
