@@ -1,0 +1,4 @@
+<!ENTITY  window.title              "Enter a Tag">
+
+<!ENTITY  tagText.label             "Type any name or tag:">
+<!ENTITY  choosePerson.label        "or choose a person:">

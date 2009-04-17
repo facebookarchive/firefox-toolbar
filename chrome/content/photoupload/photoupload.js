@@ -98,21 +98,39 @@ TextTag.prototype = {
   __proto__: Tag.prototype,
   getUploadObjectKeyValue: function() {
     return ["tag_text", this.text];
+  },
+  toString: function() {
+    return "<TextTag " + this.text + ">";
   }
 }
 
 /**
+ * Object that represents a friend.
+ */
+function Friend(name, uid) {
+  this.name = name;
+  this.uid = uid;
+}
+Friend.prototype = {
+  toString: function() {
+    return "<Friend name: '" + this.name + "' uid: " + this.uid + ">";
+  }
+};
+
+/**
  * Class for people based tags.
  */
-function PeopleTag(uid, x, y) {
-  // TODO: need both uid and label here.
-  Tag.call(this, "todo " + uid, x, y)
-  this.uid = uid;
+function PeopleTag(friend, x, y) {
+  Tag.call(this, friend.name, x, y);
+  this.friend = friend;
 }
 PeopleTag.prototype = {
   __proto__: Tag.prototype,
   getUploadObjectKeyValue: function() {
-    return ["tag_uid", this.uid];
+    return ["tag_uid", this.friend.uid];
+  },
+  toString: function() {
+    return "<PeopleTag " + this.friend + ">";
   }
 }
 
@@ -436,18 +454,18 @@ var PhotoSet = {
       try {
         var data = JSON.parse(xhr.responseText);
       } catch(e) {
-        onError("Failed to parse JSON", xhr.reponseText);
+        onError("Failed to parse JSON");
         return;
       }
       // TODO: refactor with facebook.js::callMethod
       if (typeof data.error_code != "undefined") {
-        onError("Server returned an error: " + data.error_msg, data);
+        onError("Server returned an error: " + data.error_msg);
         return;
       }
       onComplete(data.pid);
     }
     xhr.onerror = function(event) {
-      onError("XMLHttpRequest error", event);
+      onError("XMLHttpRequest error");
     }
 
     xhr.send(this._getUploadStream(photo, params));
@@ -623,6 +641,9 @@ var EditPanel = {
   _editImageFrame: null,
   _imageElement: null,
   _highlightDiv: null,
+  // True when fetching the friend list asynchronously. Used to prevent reentrancy.
+  _fetchingFriends: false,
+  _friends: null,
 
   init: function() {
     PhotoSet.addChangedListener(this.photosChanged, EditPanel);
@@ -751,9 +772,35 @@ var EditPanel = {
     PhotoSet.update(selectedPhoto);
   },
 
+  _getFriends: function(onComplete) {
+    // XXX wrappedJSObject hack because the method is not exposed.
+    gFacebookService.wrappedJSObject.callMethod('facebook.friends.get',
+      ["uid=" + gFacebookService.wrappedJSObject._uid],
+      function(uids) {
+        LOG("uids " + uids);
+        // XXX wrappedJSObject hack because the method is not exposed.
+        gFacebookService.wrappedJSObject.callMethod('facebook.users.getInfo',
+          [
+            "uid=" + gFacebookService.wrappedJSObject._uid,
+            "uids=" + uids.join(","),
+            "fields=" + "name",
+          ],
+          function(users) {
+            LOG("users " + users);
+            var friends = [];
+            for each (var user in users) {
+              friends.push(new Friend(user.name, user.uid));
+            }
+            onComplete(friends);
+          }
+        );
+      }
+    );
+  },
+
   onPhotoClick: function(event) {
     var selectedPhoto = PhotoSet.selected;
-    if (!selectedPhoto)
+    if (!selectedPhoto || this._fetchingFriends)
       return;
 
     var offsetXInImage = event.clientX - this._imageElement.offsetLeft;
@@ -767,13 +814,40 @@ var EditPanel = {
     var tempTag = new Tag("tempTag", offsetXPercent, offsetYPercent);
     this._showTagHighlight(tempTag);
 
-    // TODO: custom dialog for entering both text and people tags.
-    var tagName = prompt("Enter a tag");
-    if (tagName === null)
+    if (this._friends) {
+      this._showTaggingDialog(offsetXPercent, offsetYPercent);
+      return;
+    }
+
+    LOG("fetching friends...");
+    this._fetchingFriends = true;
+    var self = this;
+    this._getFriends(function(friends) {
+      self._fetchingFriends = false;
+      LOG("got friends " + friends);
+      self._friends = friends;
+      self._showTaggingDialog(offsetXPercent, offsetYPercent);
+    });
+  },
+
+  _showTaggingDialog: function(offsetXPercent, offsetYPercent) {
+    var dialogParams = {
+      offsetXPercent: offsetXPercent,
+      offsetYPercent: offsetYPercent,
+      friends: this._friends,
+      TextTag: TextTag,
+      PeopleTag: PeopleTag
+    };
+    openDialog("chrome://facebook/content/photoupload/taggingdialog.xul", null,
+               "chrome,modal,centerscreen,titlebar,dialog=yes", dialogParams);
+    this._hideTagHighlight();
+    if (!dialogParams.tag)
       return;
 
-    var tag = new TextTag(tagName, offsetXPercent, offsetYPercent);
-    selectedPhoto.addTag(tag);
+    var selectedPhoto = PhotoSet.selected;
+    if (!selectedPhoto)
+      return;
+    selectedPhoto.addTag(dialogParams.tag);
     PhotoSet.update(selectedPhoto);
   }
 };
@@ -914,6 +988,8 @@ var PhotoUpload = {
     PhotoSet.removeChangedListener(this.photosChanged, PhotoUpload);
     if (this.getAlbumSelectionMode() == EXISTING_ALBUM) {
       var albumsList = document.getElementById("albumsList");
+      if (!albumsList.selectedItem)
+        return;
       var albumId = albumsList.selectedItem.getAttribute("albumid");
       document.getElementById("albumsList").setAttribute("lastalbumid", albumId);
     }
@@ -1167,6 +1243,10 @@ var PhotoUpload = {
       this._createAlbum();
     } else if (selectionMode == EXISTING_ALBUM) {
       var albumsList = document.getElementById("albumsList");
+      if (!albumsList.selectedItem) {
+          this._uploadComplete(UPLOAD_ERROR, null, "Unexpected state");
+        return;
+      }
       this._uploadToAlbum(albumsList.selectedItem.getAttribute("albumid"));
     } else {
       throw "Unexpected selection mode";
@@ -1216,8 +1296,7 @@ var PhotoUpload = {
         self._uploadProgress.value = percent;
       }, function(cancelled) { // onComplete callback
         self._uploadComplete(cancelled ? UPLOAD_CANCELLED : UPLOAD_COMPLETE, albumId);
-      }, function(message, detail) { // onError callback
-        // TODO: remove detail which is unused
+      }, function(message) { // onError callback
         self._uploadComplete(UPLOAD_ERROR, null, message);
     });
   }

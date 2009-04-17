@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://facebook/locale/photoupload/taggingdialog.dtd">
+
+<dialog id="taggingDialog"
+        title="&window.title;"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        persist="screenX screenY width height"
+        buttons="accept,cancel"
+        buttonlabelaccept="Tag"
+        onload="TaggingDialog.onLoad();"
+        ondialogaccept="TaggingDialog.onAccept();"
+        buttondisabledaccept="true">
+  <script src="chrome://facebook/content/photoupload/taggingdialog.js"/>
+
+  <label value="&tagText.label;"/>
+  <textbox id="tagText" oninput="TaggingDialog.onTagTextInput(event)"/>
+  <label value="&choosePerson.label;"/>
+  <listbox id="friendList" flex="1" oncommand="TaggingDialog.onFriendListCommand(event)"/>
+</dialog>
