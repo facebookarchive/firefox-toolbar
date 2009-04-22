@@ -168,6 +168,19 @@ Photo.prototype = {
 
 const BOUNDARY = "facebookPhotoUploaderBoundary";
 
+// Change notification constants:
+
+// All photos are removed. No parameter.
+const CHANGE_REMOVE_ALL = "removeAll";
+// A photo is removed. Parameter is the removed photo.
+const CHANGE_REMOVE = "remove";
+// A photo is added. Parameter is the added photo.
+const CHANGE_ADD = "add";
+// A photo is updated. Parameter is the updated photo
+const CHANGE_UPDATE = "update";
+// The selected photo changes. Parameter is the new selected photo.
+const CHANGE_SELECTED = "selected";
+
 /**
  * This object (singleton) represent the list of photos that will be uploaded
  * or that can be edited.
@@ -184,28 +197,31 @@ var PhotoSet = {
 
   add: function(photos) {
     Array.prototype.push.apply(this._photos, photos)
+    this._notifyChanged(CHANGE_ADD, photos);
+
     // Selects the last added photos. When adding only one photo, that's
     // useful to have it selected for direct metadata editing.
     this._selected = photos[photos.length - 1];
-    this._notifyChanged();
+    this._updateSelected();
   },
 
   _updateSelected: function() {
     var p = this._photos.filter(function(p) p == this._selected, this);
     if (p.length > 1) {
-      LOG("ERROR: more that once selected photo?");
+      LOG("ERROR: more that one selected photo?");
       return;
     }
     if (p.length == 0) {
       LOG("No selected photo");
       this._selected = null;
     }
+    this._notifyChanged(CHANGE_SELECTED, this._selected);
   },
 
   removeAll: function() {
     this._photos = [];
+    this._notifyChanged(CHANGE_REMOVE_ALL);
     this._updateSelected();
-    this._notifyChanged();
   },
 
   remove: function(photo) {
@@ -215,11 +231,12 @@ var PhotoSet = {
       return;
     }
     this._photos.splice(photoIndex, 1);
+    this._notifyChanged(CHANGE_REMOVE, photo);
+
     // Select the photo just after the removed one.
     var selectedIndex = Math.min(photoIndex, this._photos.length - 1);
     this._selected = this._photos[selectedIndex];
     this._updateSelected();
-    this._notifyChanged();
   },
 
   _ensurePhotoExists: function(photo) {
@@ -242,7 +259,7 @@ var PhotoSet = {
     // The modified photo should be a reference to the photo in the set.
     // So there is nothing to update.
 
-    this._notifyChanged();
+    this._notifyChanged(CHANGE_UPDATE, photo);
   },
 
   get selected() {
@@ -252,18 +269,20 @@ var PhotoSet = {
   set selected(photo) {
     if (!this._ensurePhotoExists(photo))
       return;
+    if (this._selected == photo)
+      return;
     this._selected = photo;
-    this._notifyChanged();
+    this._updateSelected();
   },
 
   get photos() {
     return this._photos;
   },
 
-  _notifyChanged: function() {
+  _notifyChanged: function(changeType, parameter) {
     this._listeners.forEach(function(listener) {
       var [func, context] = listener;
-      func.call(context);
+      func.call(context, changeType, parameter);
     }, this);
   },
 
@@ -568,44 +587,90 @@ var PhotoSet = {
  * Manages the UI for displaying and manipulating the list of photos.
  */
 var OverviewPanel = {
+  _panelDoc: null,
+  _photoContainer: null,
+
   init: function() {
     PhotoSet.addChangedListener(this.photosChanged, OverviewPanel);
+    this._panelDoc = document.getElementById("overviewPanel").contentDocument;
+    this._photoContainer = this._panelDoc.getElementById("photo-container");
   },
+
   uninit: function() {
     PhotoSet.removeChangedListener(this.photosChanged, OverviewPanel);
   },
-  photosChanged: function() {
-    LOG("OverviewPanel::PhotosChanged");
 
-    var panelDoc = document.getElementById("overviewPanel").contentDocument;
-    var photoContainer = panelDoc.getElementById("photo-container")
-    var photoboxTemplate = panelDoc.getElementById("photobox-template")
-    var photos = PhotoSet.photos;
-
-    var node = photoContainer.firstChild;
+  _iteratePhotoNodes: function(callback, context) {
+    var node = this._photoContainer.firstChild;
     while (node) {
       var nextNode = node.nextSibling;
       if (node.nodeType == Node.ELEMENT_NODE &&
           node.className == "photobox" &&
           node.id != "photobox-template") {
-        photoContainer.removeChild(node);
+        callback.call(context, node);
       }
       node = nextNode;
     }
-
-    photos.forEach(function(photo) {
-      var newBox = photoboxTemplate.cloneNode(true);
-      newBox.photo = photo;
-      newBox.removeAttribute("id");
-      if (photo == PhotoSet.selected)
-        newBox.setAttribute("selected", "true");
-
-      newBox.getElementsByTagName("img")[0].src = photo.url;
-      var filenameDiv = newBox.getElementsByClassName("filename")[0];
-      filenameDiv.firstChild.data = photo.filename;
-      photoboxTemplate.parentNode.insertBefore(newBox, photoboxTemplate);
-    });
   },
+
+  _getNodeFromPhoto: function(photo) {
+    var photoNode = null;
+    this._iteratePhotoNodes(function(node) {
+      if (node.photo == photo)
+        photoNode = node;
+    }, this);
+    return photoNode;
+  },
+
+  _updateSelected: function(photo) {
+    this._iteratePhotoNodes(function(node) {
+      node.removeAttribute("selected");
+    }, this);
+    var photoNode = this._getNodeFromPhoto(photo);
+    if (photoNode)
+      photoNode.setAttribute("selected", "true");
+  },
+
+  photosChanged: function(changeType, parameter) {
+    LOG("OverviewPanel::PhotosChanged " + changeType);
+
+    if (changeType == CHANGE_SELECTED) {
+      var selectedPhoto = parameter;
+      this._updateSelected(selectedPhoto);
+      return;
+    }
+    if (changeType == CHANGE_REMOVE_ALL) {
+      this._iteratePhotoNodes(function(node) {
+        this._photoContainer.removeChild(node);
+      }, this);
+      return;
+    }
+    if (changeType == CHANGE_REMOVE) {
+      var toRemovePhoto = parameter;
+      var photoNode = this._getNodeFromPhoto(toRemovePhoto);
+      if (!photoNode) {
+        LOG("Warning: can't find node of the photo to remove");
+        return;
+      }
+      this._photoContainer.removeChild(photoNode);
+      return;
+    }
+    if (changeType == CHANGE_ADD) {
+      var toAddPhotos = parameter;
+      var photoboxTemplate = this._panelDoc.getElementById("photobox-template");
+      toAddPhotos.forEach(function(photo) {
+        var newBox = photoboxTemplate.cloneNode(true);
+        newBox.photo = photo;
+        newBox.removeAttribute("id");
+        newBox.getElementsByTagName("img")[0].src = photo.url;
+        var filenameDiv = newBox.getElementsByClassName("filename")[0];
+        filenameDiv.firstChild.data = photo.filename;
+        photoboxTemplate.parentNode.insertBefore(newBox, photoboxTemplate);
+      });
+      return;
+    }
+  },
+
   _photoFromEvent: function(event) {
     event.stopPropagation();
     var node = event.target;
@@ -616,6 +681,7 @@ var OverviewPanel = {
     }
     return null;
   },
+
   selectPhoto: function(event) {
     var photo = this._photoFromEvent(event);
     if (!photo) {
@@ -624,6 +690,7 @@ var OverviewPanel = {
     }
     PhotoSet.selected = photo;
   },
+
   removePhoto: function(event) {
     var photo = this._photoFromEvent(event);
     if (!photo) {
@@ -658,8 +725,15 @@ var EditPanel = {
     PhotoSet.removeChangedListener(this.photosChanged, EditPanel);
   },
 
-  photosChanged: function() {
-    LOG("EditPanel::PhotosChanged");
+  photosChanged: function(changeType, parameter) {
+    LOG("EditPanel::PhotosChanged " + changeType);
+
+    // Only care about update and selection change. If a photo is removed, we'll
+    // always be notified of a selection change.
+    if (changeType != CHANGE_UPDATE && changeType != CHANGE_SELECTED)
+      return;
+
+    var selectedPhoto = parameter;
 
     var filenameField = document.getElementById("editFilenameField");
     var sizeField = document.getElementById("editSizeField");
@@ -676,8 +750,9 @@ var EditPanel = {
     while (tagList.hasChildNodes())
       tagList.removeChild(tagList.firstChild);
 
-    if (!PhotoSet.selected) {
+    if (!selectedPhoto) {
       this._imageElement.setAttribute("hidden", "true");
+      this._imageElement.setAttribute("src", "about:blank");
       filenameField.value = "";
       sizeField.value = "";
       captionField.value = "";
@@ -685,7 +760,6 @@ var EditPanel = {
       return;
     }
 
-    var selectedPhoto = PhotoSet.selected;
     this._imageElement.setAttribute("src", selectedPhoto.url);
     var filename = selectedPhoto.filename;
     const MAX_FILENAME_SIZE = 30;
@@ -777,13 +851,15 @@ var EditPanel = {
     gFacebookService.wrappedJSObject.callMethod('facebook.friends.get',
       ["uid=" + gFacebookService.wrappedJSObject._uid],
       function(uids) {
+        if (uids.length === undefined) // no friends
+          uids = [];
         LOG("uids " + uids);
         // XXX wrappedJSObject hack because the method is not exposed.
         gFacebookService.wrappedJSObject.callMethod('facebook.users.getInfo',
           [
             "uid=" + gFacebookService.wrappedJSObject._uid,
             "uids=" + uids.join(","),
-            "fields=" + "name",
+            "fields=" + "name"
           ],
           function(users) {
             LOG("users " + users);
@@ -973,9 +1049,7 @@ var PhotoUpload = {
     files.push(file);
     var photos = [new Photo(f) for each (f in files)];
     LOG("photos " + photos);
-    //photos[0].addTextTag("sample text tag 1");
     photos[0].addTag(new TextTag("sample text tag 1", 50, 50));
-    //photos[0].addTextTag("sample text tag 2");
     photos[0].addTag(new TextTag("sample text tag 2", 0, 100));
     PhotoSet.add(photos);
     PhotoSet.selected = photos[0];
@@ -1076,7 +1150,7 @@ var PhotoUpload = {
     );
   },
 
-  photosChanged: function() {
+  photosChanged: function(changeType, parameter) {
     document.getElementById("uploadButton").disabled = PhotoSet.photos.length == 0;
     document.getElementById("removeAllButton").disabled = PhotoSet.photos.length == 0;
   },
