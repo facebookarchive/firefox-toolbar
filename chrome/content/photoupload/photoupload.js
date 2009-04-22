@@ -1124,7 +1124,10 @@ var PhotoUpload = {
     gFacebookService.wrappedJSObject.callMethod('facebook.users.hasAppPermission',
       ['ext_perm=' + PERM],
       function(data) {
-        if ('1' == data.toString()) {
+        LOG("facebook.users.hasAppPermission returns: " + data + " ts " + data.toString());
+        // It previously returned the '1' string, but this changed to 'true'
+        // in mid April 2009. Check both in case it changes again.
+        if ('1' == data.toString() || 'true' == data.toString()) {
           LOG("photo upload is authorized");
           return;
         }
