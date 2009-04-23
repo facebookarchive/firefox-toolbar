@@ -412,7 +412,7 @@ var PhotoSet = {
     var fbSvc = Cc['@facebook.com/facebook-service;1'].
                 getService(Ci.fbIFacebookService);
 
-    // Hack for accessing private members.
+    // XXX Hack for accessing private members.
     var fbSvc_ = fbSvc.wrappedJSObject;
     LOG("Uploading photo: " + photo);
 
@@ -708,9 +708,6 @@ var EditPanel = {
   _editImageFrame: null,
   _imageElement: null,
   _highlightDiv: null,
-  // True when fetching the friend list asynchronously. Used to prevent reentrancy.
-  _fetchingFriends: false,
-  _friends: null,
 
   init: function() {
     PhotoSet.addChangedListener(this.photosChanged, EditPanel);
@@ -846,37 +843,9 @@ var EditPanel = {
     PhotoSet.update(selectedPhoto);
   },
 
-  _getFriends: function(onComplete) {
-    // XXX wrappedJSObject hack because the method is not exposed.
-    gFacebookService.wrappedJSObject.callMethod('facebook.friends.get',
-      ["uid=" + gFacebookService.wrappedJSObject._uid],
-      function(uids) {
-        if (uids.length === undefined) // no friends
-          uids = [];
-        LOG("uids " + uids);
-        // XXX wrappedJSObject hack because the method is not exposed.
-        gFacebookService.wrappedJSObject.callMethod('facebook.users.getInfo',
-          [
-            "uid=" + gFacebookService.wrappedJSObject._uid,
-            "uids=" + uids.join(","),
-            "fields=" + "name"
-          ],
-          function(users) {
-            LOG("users " + users);
-            var friends = [];
-            for each (var user in users) {
-              friends.push(new Friend(user.name, user.uid));
-            }
-            onComplete(friends);
-          }
-        );
-      }
-    );
-  },
-
   onPhotoClick: function(event) {
     var selectedPhoto = PhotoSet.selected;
-    if (!selectedPhoto || this._fetchingFriends)
+    if (!selectedPhoto)
       return;
 
     var offsetXInImage = event.clientX - this._imageElement.offsetLeft;
@@ -890,27 +859,16 @@ var EditPanel = {
     var tempTag = new Tag("tempTag", offsetXPercent, offsetYPercent);
     this._showTagHighlight(tempTag);
 
-    if (this._friends) {
-      this._showTaggingDialog(offsetXPercent, offsetYPercent);
-      return;
+    var fbUsers = gFacebookService.getFriends({});
+    var friends = [];
+    for each (var fbUser in fbUsers) {
+      friends.push(new Friend(fbUser.name, fbUser.id));
     }
 
-    LOG("fetching friends...");
-    this._fetchingFriends = true;
-    var self = this;
-    this._getFriends(function(friends) {
-      self._fetchingFriends = false;
-      LOG("got friends " + friends);
-      self._friends = friends;
-      self._showTaggingDialog(offsetXPercent, offsetYPercent);
-    });
-  },
-
-  _showTaggingDialog: function(offsetXPercent, offsetYPercent) {
     var dialogParams = {
       offsetXPercent: offsetXPercent,
       offsetYPercent: offsetYPercent,
-      friends: this._friends,
+      friends: friends,
       TextTag: TextTag,
       PeopleTag: PeopleTag
     };
