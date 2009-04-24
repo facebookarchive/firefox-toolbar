@@ -276,6 +276,8 @@ function facebookService() {
       this._ff3Login = true;
       this._loginManager = Cc["@mozilla.org/login-manager;1"].getService(Ci.nsILoginManager);
     }
+
+    this._observerService.addObserver(this, "final-ui-startup", false);
 }
 
 function AlertObserver() { }
@@ -320,6 +322,7 @@ facebookService.prototype = {
     // nsISupports implementation
     QueryInterface: function (iid) {
         if (iid.equals(Ci.fbIFacebookService) ||
+            iid.equals(Ci.nsIObserver) ||
             iid.equals(Ci.nsISupports) ||
             iid.equals(Ci.nsISupportsWeakReference) ||
             iid.equals(Ci.nsIWeakReference)
@@ -337,6 +340,105 @@ facebookService.prototype = {
     // nsISupportsWeakReference
     GetWeakReference: function() {
         return this;
+    },
+
+    // nsIObserver
+    observe: function(subject, topic, data) {
+        if (topic != "final-ui-startup")
+            return;
+        this.migrate();
+    },
+
+    // ----------- Migration code -----------------//
+
+    // Make the photo uploader button visible if the toolbar was customized.
+    migrate_0to1: function() {
+        const PHOTOUPLOAD_BUTTON_ID = "facebook-photoupload";
+        var currentSet = this._rdf.GetResource("currentset");
+
+        // get an nsIRDFResource for the facebook-toolbar item
+        var fbBar = this._rdf.GetResource("chrome://browser/content/browser.xul#facebook-toolbar");
+        var target = this._getPersist(fbBar, currentSet);
+
+        if (!target || target.indexOf(PHOTOUPLOAD_BUTTON_ID) != -1)
+            return;
+
+        if (target.indexOf("facebook-share,") != -1) {
+            // Try to add it on the right of the share icon.
+            target = target.replace("facebook-share,", "facebook-share," + PHOTOUPLOAD_BUTTON_ID + ",");
+        } else if (target.indexOf(",spring,facebook-login-info") != -1) {
+            // Otherwise, try to add it on the left of the login info button.
+            target = target.replace(",spring,facebook-login-info",
+                                    "," + PHOTOUPLOAD_BUTTON_ID + ",spring,facebook-login-info");
+        } else {
+            // At last resort, put it in the end.
+            target += "," + PHOTOUPLOAD_BUTTON_ID
+        }
+        this._setPersist(fbBar, currentSet, target);
+
+        // force the RDF to be saved
+        if (this._dirty)
+            this._dataSource.QueryInterface(Ci.nsIRDFRemoteDataSource).Flush();
+    },
+
+    migrate: function() {
+        const MIGRATION_PREF = "extensions.facebook.migration.version";
+        const LAST_MIGRATION_VERSION = 1;
+
+        var prefBranch = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefBranch);
+        var migration = 0;
+        try {
+            migration = prefBranch.getIntPref(MIGRATION_PREF);
+        } catch(ex) { }
+
+        if (migration == LAST_MIGRATION_VERSION)
+            return;
+
+        // grab the localstore.rdf and make changes needed for new UI
+        this._rdf = Cc["@mozilla.org/rdf/rdf-service;1"].getService(Ci.nsIRDFService);
+        this._dataSource = this._rdf.GetDataSource("rdf:local-store");
+        this._dirty = false;
+
+        // Version 0 is for version less or equal to 1.3 (the migration.version
+        // pref didn't exist yet).
+
+        // Version 1 is for version 1.4.
+        // This version adds the the photo uploader button which needs to be
+        // added if the toolbar was customized otherwise it will be hidden.
+
+        if (migration == 0) {
+            this.migrate_0to1();
+        }
+
+        // update the migration version
+        prefBranch.setIntPref(MIGRATION_PREF, LAST_MIGRATION_VERSION);
+        // free up the RDF service
+        this._rdf = null;
+        this._dataSource = null;
+    },
+
+    _getPersist: function (aSource, aProperty) {
+        var target = this._dataSource.GetTarget(aSource, aProperty, true);
+        if (target instanceof Ci.nsIRDFLiteral)
+            return target.Value;
+        return null;
+    },
+
+    _setPersist: function (aSource, aProperty, aTarget) {
+        this._dirty = true;
+        try {
+            var oldTarget = this._dataSource.GetTarget(aSource, aProperty, true);
+            if (oldTarget) {
+                if (aTarget)
+                    this._dataSource.Change(aSource, aProperty, oldTarget, this._rdf.GetLiteral(aTarget));
+                else
+                    this._dataSource.Unassert(aSource, aProperty, oldTarget);
+            }
+            else {
+                this._dataSource.Assert(aSource, aProperty, this._rdf.GetLiteral(aTarget), true);
+            }
+        }
+        catch(ex) {}
     },
 
     // ----------- Start Notifications -----------------//
@@ -1000,12 +1102,25 @@ var facebookModule = {
         debug('registerSelf');
         aCompMgr = aCompMgr.QueryInterface(Ci.nsIComponentRegistrar);
         aCompMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, aFileSpec, aLocation, aType);
+
+        // Adding app-startup category in order to get the final-ui-startup
+        // notification.
+        this.getCategoryManager().addCategoryEntry("app-startup", "FB-startup",
+                                                   "service," + CONTRACT_ID, true, true);
     },
     unregisterSelf: function(aCompMgr, aLocation, aType) {
         debug('unregisterSelf');
         aCompMgr = aCompMgr.QueryInterface(Ci.nsIComponentRegistrar);
         aCompMgr.unregisterFactoryLocation(CLASS_ID, aLocation);
+
+        this.getCategoryManager().deleteCategoryEntry("app-startup", "FB-startup", true);
     },
+
+    getCategoryManager: function() {
+      return Cc["@mozilla.org/categorymanager;1"].
+               getService(Ci.nsICategoryManager);
+    },
+
     getClassObject: function (aCompMgr, aCID, aIID) {
         debug('getClassObject');
         if (!aIID.equals (Ci.nsIFactory))

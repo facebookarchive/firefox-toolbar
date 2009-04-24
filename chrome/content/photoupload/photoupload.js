@@ -409,6 +409,7 @@ var PhotoSet = {
   },
 
   _uploadPhoto: function(albumId, photo, onProgress, onComplete, onError) {
+    // XXX use gFacebookService instead.
     var fbSvc = Cc['@facebook.com/facebook-service;1'].
                 getService(Ci.fbIFacebookService);
 

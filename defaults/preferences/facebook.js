@@ -21,3 +21,4 @@ pref("extensions.facebook.uid", "" );
 //  1: open album page
 //  2: do nothing
 pref("extensions.facebook.postuploadaction", 0);
+pref("extensions.facebook.migration.version", 1);
