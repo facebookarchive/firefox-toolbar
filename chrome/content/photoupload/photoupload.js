@@ -1184,6 +1184,26 @@ var PhotoUpload = {
     return urlAlbumId.toString(10);
   },
 
+  _showUploadCompleteNotification: function(albumId) {
+    try {
+      var fbSvc = Cc['@facebook.com/facebook-service;1'].
+                  getService(Ci.fbIFacebookService);
+
+      // XXX Hack for accessing private members.
+      var fbSvc_ = fbSvc.wrappedJSObject;
+
+      let upText = this._stringBundle.getString("uploadCompleteAlert");
+      let aid = "";
+      aid = "aid=" + this._albumIdToUrlAlbumId(albumId) + "&";
+      let postUploadUrl = "http://www.facebook.com/editalbum.php?" + aid + "org=1";
+      fbSvc_.showPopup('upload.complete', 'chrome://facebook/skin/upload16.gif',
+                                           upText, postUploadUrl);
+    }
+    catch(e) {
+      LOG("Error showing upload complete alert: " + e);
+    }
+  },
+
   _maybeOpenAlbumPage: function(albumId) {
     var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
     var postUploadAction = prefSvc.getIntPref("extensions.facebook.postuploadaction");
@@ -1302,6 +1322,7 @@ var PhotoUpload = {
       this._uploadStatus.value = this._stringBundle.getString("uploadCancelled");
     } else if (status == UPLOAD_COMPLETE) {
       this._uploadStatus.value = this._stringBundle.getString("uploadComplete");
+      this._showUploadCompleteNotification(albumId);
       this._maybeOpenAlbumPage(albumId);
     } else if (status == UPLOAD_ERROR) {
       alert(this._stringBundle.getString("uploadFailedAlert") + " " + errorMessage);

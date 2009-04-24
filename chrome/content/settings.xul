@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://facebook/skin/settings.css" type="text/css"?>
 
@@ -78,6 +79,10 @@
                   type="bool"
                   id="friend-note"
                   />
+      <preference name="extensions.facebook.notifications.upload.complete"
+                  type="bool"
+                  id="upload-complete"
+                  />
 
     </preferences>
 
@@ -98,14 +103,20 @@
             <checkbox preference="you-wall"      label="Someone writes on your wall"/>
           </groupbox>
 
-          <groupbox id="facebook-notifications-friendbox">
-            <caption label="Notifications about my friends"/>
-            <checkbox preference="friend-profile" label="A friend updates his/her profile"/>
-            <checkbox preference="friend-status"  label="A friend updates his/her status"/>
-            <checkbox preference="friend-album"   label="A friend updates his/her albums"/>
-            <checkbox preference="friend-wall"    label="Someone writes on a friend's wall"/>
-            <checkbox preference="friend-note"    label="A friend writes a note"/>
+          <vbox>
+            <groupbox id="facebook-notifications-friendbox">
+              <caption label="Notifications about my friends"/>
+              <checkbox preference="friend-profile" label="A friend updates his/her profile"/>
+              <checkbox preference="friend-status"  label="A friend updates his/her status"/>
+              <checkbox preference="friend-album"   label="A friend updates his/her albums"/>
+              <checkbox preference="friend-wall"    label="Someone writes on a friend's wall"/>
+              <checkbox preference="friend-note"    label="A friend writes a note"/>
+            </groupbox>
+            <groupbox id="facebook-notifications-other">
+              <caption label="Other notifications"/>
+              <checkbox preference="upload-complete" label="Uploads Complete"/>
           </groupbox>
+          </vbox>
         </hbox>
       </groupbox>
 

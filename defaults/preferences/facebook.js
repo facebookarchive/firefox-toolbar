@@ -12,6 +12,7 @@ pref("extensions.facebook.notifications.friend.status", true);
 pref("extensions.facebook.notifications.friend.note", true);
 pref("extensions.facebook.notifications.friend.profile", false);
 pref("extensions.facebook.notifications.friend.album", true);
+pref("extensions.facebook.notifications.upload.complete", true);
 pref("extensions.facebook.notifications.growl", false);
 // populated on login
 pref("extensions.facebook.uid", "" );
