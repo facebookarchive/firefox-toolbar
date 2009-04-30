@@ -852,6 +852,9 @@ var EditPanel = {
 
     var fbUsers = gFacebookService.getFriends({});
     var friends = [];
+    // Add logged in user so she can tag herself.
+    friends.push(new Friend(gFacebookService.loggedInUser.name,
+                            gFacebookService.loggedInUser.id));
     for each (var fbUser in fbUsers) {
       friends.push(new Friend(fbUser.name, fbUser.id));
     }
