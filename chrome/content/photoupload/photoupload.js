@@ -47,12 +47,17 @@ const StringInputStream = CC("@mozilla.org/io/string-input-stream;1",
 
 // Global objects.
 
+// JavaScript semantics is required for some member access, that's why
+// we use wrappedJSObject instead of going throught the .idl.
 var gFacebookService =  Cc['@facebook.com/facebook-service;1'].
-                        getService(Ci.fbIFacebookService);
+                        getService(Ci.fbIFacebookService).
+                        wrappedJSObject;
+// Unwrapped version.
+var gFacebookServiceUnwrapped =  Cc['@facebook.com/facebook-service;1'].
+                                 getService(Ci.fbIFacebookService);
 
 
 // Compatibility with Firefox 3.0 that doesn't have native JSON.
-// TODO: remove this once the Facebook component is used for requests.
 if (typeof(JSON) == "undefined") {
   Components.utils.import("resource://gre/modules/JSON.jsm");
   JSON.parse = JSON.fromString;
@@ -409,12 +414,6 @@ var PhotoSet = {
   },
 
   _uploadPhoto: function(albumId, photo, onProgress, onComplete, onError) {
-    // XXX use gFacebookService instead.
-    var fbSvc = Cc['@facebook.com/facebook-service;1'].
-                getService(Ci.fbIFacebookService);
-
-    // XXX Hack for accessing private members.
-    var fbSvc_ = fbSvc.wrappedJSObject;
     LOG("Uploading photo: " + photo);
 
     var params = {};
@@ -425,24 +424,16 @@ var PhotoSet = {
     if (photo.caption)
       params.caption = photo.caption;
 
-    // TODO: this should be refactored with callMethod in the XPCOM component.
-    params.session_key = fbSvc_._sessionKey;
-    params.api_key = fbSvc.apiKey;
-    params.v = "1.0";
-    var callId = Date.now();
-    if (callId <= fbSvc_._lastCallId) {
-        callId = fbSvc_._lastCallId + 1;
+    for (let [name, value] in Iterator(gFacebookService.getCommonParams())) {
+        params[name] = value;
     }
-    fbSvc_._lastCallId = callId;
-    params.call_id = callId;
-    params.format = "JSON";
 
     // Builds another array of params in the format accepted by generateSig()
     var paramsForSig = [];
     for (let [name, value] in Iterator(params)) {
       paramsForSig.push(name + "=" + value);
     }
-    params.sig = fbSvc_.generateSig(paramsForSig);
+    params.sig = gFacebookService.generateSig(paramsForSig);
 
     const RESTSERVER = 'http://api.facebook.com/restserver.php';
 
@@ -477,7 +468,7 @@ var PhotoSet = {
         onError("Failed to parse JSON");
         return;
       }
-      // TODO: refactor with facebook.js::callMethod
+      // Duplicated from facebook.js::callMethod
       if (typeof data.error_code != "undefined") {
         onError("Server returned an error: " + data.error_msg);
         return;
@@ -498,11 +489,10 @@ var PhotoSet = {
     }
     var tagUploadObjects = [tag.getUploadObject() for each (tag in photo.tags)];
 
-    // XXX wrappedJSObject hack because the method is not exposed.
-    gFacebookService.wrappedJSObject.callMethod('facebook.photos.addTag',
+    gFacebookService.callMethod('facebook.photos.addTag',
       [
         "pid=" + photoId,
-        "uid=" + gFacebookService.wrappedJSObject._uid,
+        "uid=" + gFacebookServiceUnwrapped.loggedInUser.id,
         "tags=" + JSON.stringify(tagUploadObjects)
       ],
       function(data) {
@@ -1030,9 +1020,8 @@ var PhotoUpload = {
   },
 
   _fillAlbumList: function(onComplete) {
-    // XXX wrappedJSObject hack because the method is not exposed.
-    gFacebookService.wrappedJSObject.callMethod('facebook.photos.getAlbums',
-      ["uid=" + gFacebookService.wrappedJSObject._uid],
+    gFacebookService.callMethod('facebook.photos.getAlbums',
+      ["uid=" + gFacebookServiceUnwrapped.loggedInUser.id],
       function(albums) {
         // Remove the "Profile Pictures" album from the list, it's a special
         // album and uploading to this album generates errors.
@@ -1079,8 +1068,7 @@ var PhotoUpload = {
     const PERM = "photo_upload";
 
     var self = this;
-    // XXX wrappedJSObject hack because the method is not exposed.
-    gFacebookService.wrappedJSObject.callMethod('facebook.users.hasAppPermission',
+    gFacebookService.callMethod('facebook.users.hasAppPermission',
       ['ext_perm=' + PERM],
       function(data) {
         LOG("facebook.users.hasAppPermission returns: " + data + " ts " + data.toString());
@@ -1187,18 +1175,11 @@ var PhotoUpload = {
 
   _showUploadCompleteNotification: function(albumId) {
     try {
-      var fbSvc = Cc['@facebook.com/facebook-service;1'].
-                  getService(Ci.fbIFacebookService);
-
-      // XXX Hack for accessing private members.
-      var fbSvc_ = fbSvc.wrappedJSObject;
-
       let upText = this._stringBundle.getString("uploadCompleteAlert");
-      let aid = "";
-      aid = "aid=" + this._albumIdToUrlAlbumId(albumId) + "&";
+      let aid = "aid=" + this._albumIdToUrlAlbumId(albumId) + "&";
       let postUploadUrl = "http://www.facebook.com/editalbum.php?" + aid + "org=1";
-      fbSvc_.showPopup('upload.complete', 'chrome://facebook/skin/upload16.gif',
-                                           upText, postUploadUrl);
+      gFacebookService.showPopup('upload.complete', 'chrome://facebook/skin/upload16.gif',
+                                 upText, postUploadUrl);
     }
     catch(e) {
       LOG("Error showing upload complete alert: " + e);
@@ -1255,7 +1236,7 @@ var PhotoUpload = {
                                   .selectedItem.value;
 
     var params = [
-      "uid=" + gFacebookService.wrappedJSObject._uid,
+      "uid=" + gFacebookServiceUnwrapped.loggedInUser.id,
       "name=" + albumName,
       "visible=" + albumVisibility
     ];
@@ -1264,8 +1245,7 @@ var PhotoUpload = {
     if (albumDescription)
       params.push("description=" + albumDescription);
 
-    // XXX wrappedJSObject hack because the method is not exposed.
-    gFacebookService.wrappedJSObject.callMethod('facebook.photos.createAlbum',
+    gFacebookService.callMethod('facebook.photos.createAlbum',
       params,
       function(data) {
         if (!data.aid) {

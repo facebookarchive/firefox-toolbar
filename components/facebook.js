@@ -169,7 +169,8 @@ CountedNotif.prototype.update = function(notif) {
 
 var fbSvc; // so that all our callback functions objects can access "this"
 function facebookService() {
-    // XXX temporary hack for accessing private members from the photo uploader.
+    // wrappedJSObject for accessing properties directly from JavaScript.
+    // Used insetad of .idl when it would make it difficult or very verbose.
     this.wrappedJSObject = this;
 
     debug('constructor');
@@ -924,6 +925,28 @@ facebookService.prototype = {
         str += this._sessionSecret;
         return MD5(str);
     },
+    /**
+     * Returns common parameters that will always be sent in any request.
+     * You should use this when calling the facebook server API yourself (i.e.
+     * not using callMethod()).
+     *
+     * @returns An object with parameter names and values as key and values
+     * respectively.
+     */
+    getCommonParams: function() {
+        var callId = Date.now();
+        if (callId <= this._lastCallId) {
+            callId = this._lastCallId + 1;
+        }
+        this._lastCallId = callId;
+        return {
+            'session_key': this._sessionKey,
+            'api_key': this._apiKey,
+            'v': '1.0',
+            'call_id': callId,
+            'format': 'json'
+        };
+    },
     // Note that this is intended to call non-login related Facebook API
     // functions - ie things other than facebook.auth.*.  The login-related
     // calls are done in the chrome layer because they are in direct response to user actions.
@@ -933,16 +956,11 @@ facebookService.prototype = {
 
         var origParams = params.slice(0); // easy way to make a deep copy of the array
         params.push('method=' + method);
-        params.push('session_key=' + this._sessionKey);
-        params.push('api_key=' + this._apiKey);
-        params.push('v=1.0');
-        var callId = Date.now();
-        if (callId <= this._lastCallId) {
-            callId = this._lastCallId + 1;
+
+        for (let [name, value] in Iterator(this.getCommonParams())) {
+            params.push(name + "=" + value);
         }
-        this._lastCallId = callId;
-        params.push('call_id=' + callId);
-        params.push('format=json');
+
         params.push('sig=' + this.generateSig(params));
 
         var paramsEncoded = [];
@@ -977,7 +995,7 @@ facebookService.prototype = {
                     this.resultTxt += sis.read(count);
                 },
                 onStartRequest: function(request, context) {
-                    debug('starting request', method, callId);
+                    debug('starting request', method);
                     this.resultTxt = '';
                     if (fbSvc._pendingRequests.length) {
                         (fbSvc._pendingRequests.shift())();
