@@ -699,6 +699,8 @@ var EditPanel = {
   _editImageFrame: null,
   _imageElement: null,
   _highlightDiv: null,
+  // Keep this in sync with the css in editimage.htlm
+  IMAGE_BORDER_SIZE: 1,
 
   init: function() {
     PhotoSet.addChangedListener(this.photosChanged, EditPanel);
@@ -772,9 +774,9 @@ var EditPanel = {
   },
 
   _showTagHighlight: function(tag) {
-    var divX = this._imageElement.offsetLeft +
+    var divX = this._imageElement.offsetLeft + this.IMAGE_BORDER_SIZE +
                    (tag.x * this._imageElement.clientWidth / 100);
-    var divY = this._imageElement.offsetTop +
+    var divY = this._imageElement.offsetTop + this.IMAGE_BORDER_SIZE +
                    (tag.y * this._imageElement.clientHeight / 100);
 
     this._highlightDiv.style.left = divX + "px";
@@ -839,8 +841,8 @@ var EditPanel = {
     if (!selectedPhoto)
       return;
 
-    var offsetXInImage = event.clientX - this._imageElement.offsetLeft;
-    var offsetYInImage = event.clientY - this._imageElement.offsetTop;
+    var offsetXInImage = event.clientX - this._imageElement.offsetLeft - this.IMAGE_BORDER_SIZE;
+    var offsetYInImage = event.clientY - this._imageElement.offsetTop - this.IMAGE_BORDER_SIZE;
     var offsetXPercent = (offsetXInImage / this._imageElement.clientWidth * 100).toFixed(0);
     var offsetYPercent = (offsetYInImage / this._imageElement.clientHeight * 100).toFixed(0);
     offsetXPercent = Math.min(Math.max(offsetXPercent, 0), 100);
@@ -853,8 +855,11 @@ var EditPanel = {
     var fbUsers = gFacebookService.getFriends({});
     var friends = [];
     // Add logged in user so she can tag herself.
-    friends.push(new Friend(gFacebookService.loggedInUser.name,
-                            gFacebookService.loggedInUser.id));
+    var ownUserName = PhotoUpload._stringBundle.getString("ownUserName");
+    ownUserName = ownUserName.replace("%USERNAME%",
+                                      gFacebookService.loggedInUser.name);
+    friends.push(new Friend(ownUserName, gFacebookService.loggedInUser.id));
+
     for each (var fbUser in fbUsers) {
       friends.push(new Friend(fbUser.name, fbUser.id));
     }
@@ -977,35 +982,14 @@ var PhotoUpload = {
     document.getElementById("albumName").value = defaultAlbumName;
 
     var self = this;
+    if (!gFacebookServiceUnwrapped.loggedInUser) {
+      alert(this._stringBundle.getString("mustLoginDialog"));
+      window.close();
+      return;
+    }
     this._fillAlbumList(function() { // onComplete callback
       self._checkPhotoUploadPermission();
     });
-
-    // XXX debug
-    /*
-    document.getElementById("reopenButton").hidden = false;
-    var file, files = [];
-    file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-    file.initWithPath("/home/sypasche/projects/facebook/sample_images/metafont.png");
-    //file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_wide.png");
-    files.push(file);
-    file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-    file.initWithPath("/home/sypasche/projects/facebook/sample_images/recycled.png");
-    //file.initWithPath("/home/sypasche/projects/facebook/sample_images/very_tall.png");
-    files.push(file);
-    file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-    file.initWithPath("/home/sypasche/projects/facebook/sample_images/hot-2560x1280.jpg");
-    files.push(file);
-    file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-    file.initWithPath("/home/sypasche/projects/facebook/sample_images/strings-dark-1600x1200.jpg");
-    files.push(file);
-    var photos = [new Photo(f) for each (f in files)];
-    LOG("photos " + photos);
-    photos[0].addTag(new TextTag("sample text tag 1", 50, 50));
-    photos[0].addTag(new TextTag("sample text tag 2", 0, 100));
-    PhotoSet.add(photos);
-    PhotoSet.selected = photos[0];
-    */
   },
 
   uninit: function() {

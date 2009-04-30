@@ -9,10 +9,16 @@
     }
     #tagHighlight {
       position: absolute;
-      margin: -25px;
-      width: 50px;
-      height: 50px;
-      border: 3px solid #0066FF;
+      /* This should be:
+       - (outside div border width) - (inside div border width) -
+         (inside div size / 2) */
+      margin: -92px;
+      border:solid 7px #D8DFEA;
+    }
+    #tagHighlightInside {
+      border: solid 2px #3B5998;
+      width: 166px;
+      height: 166px;
     }
     img {
       position: absolute;
@@ -41,5 +47,7 @@
          onclick="EditPanel.onPhotoClick(event)">
     <div id="tagHighlight" hidden="true"
          onclick="EditPanel.onPhotoClick(event)">
+      <div id="tagHighlightInside"></div>
+    </div>
 </body>
 </html>
