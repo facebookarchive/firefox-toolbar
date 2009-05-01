@@ -146,14 +146,90 @@ function Photo(/* nsIFile */ file) {
   this.file = file.QueryInterface(Ci.nsIFile);
   this.caption = "";
   this.tags = [];
+  this._facebookSize = null;
+  this._size = null;
+  this.__mimeType = null;
+  this.__container = null;
 };
 
 Photo.prototype = {
+  MAX_WIDTH: 604,
+  MAX_HEIGHT: 604,
+
   get url() {
     var ios = Cc["@mozilla.org/network/io-service;1"].
               getService(Ci.nsIIOService);
     return ios.newFileURI(this.file).spec;
   },
+
+  get _mimeType() {
+    if (this.__mimeType)
+      return this.__mimeType;
+    var filename = this.filename;
+    var extension = filename.substring(filename.lastIndexOf("."),
+                                       filename.length).toLowerCase();
+
+    var mimeSvc = Cc["@mozilla.org/mime;1"].getService(Ci.nsIMIMEService);
+    extension = extension.toLowerCase();
+    var dotPos = extension.lastIndexOf(".");
+    if (dotPos != -1)
+      extension = extension.substring(dotPos + 1, extension.length);
+    return this.__mimeType = mimeSvc.getTypeFromExtension(extension);
+  },
+
+  get _inputStream() {
+    const PR_RDONLY = 0x01;
+    var fis = new FileInputStream(this.file, PR_RDONLY, 0444, null);
+
+    var imageStream = Cc["@mozilla.org/network/buffered-input-stream;1"].
+                      createInstance(Ci.nsIBufferedInputStream);
+    imageStream.init(fis, 4096);
+    return imageStream;
+  },
+
+  get _container() {
+    if (this.__container)
+      return this.__container;
+
+    var imgTools = Cc["@mozilla.org/image/tools;1"].
+                   getService(Ci.imgITools);
+    LOG("Found mime: " + this._mimeType + " for file " + this.filename);
+    var outParam = { value: null };
+    imgTools.decodeImageData(this._inputStream, this._mimeType, outParam);
+    return this.__container = outParam.value;
+  },
+
+  get size() {
+    if (this._size)
+      return this._size;
+    var container = this._container;
+    return this._size = [container.width, container.height];
+  },
+
+  get facebookSize() {
+    if (this._facebookSize)
+      return this._facebookSize;
+
+    if (this.size[0] < this.MAX_WIDTH && this.size[1] < this.MAX_HEIGHT) {
+      return this._facebookSize = this.size;
+    }
+    var [oldWidth, oldHeight] = this.size;
+    LOG("resizing image. Original size: " + oldWidth + " x " + oldHeight);
+    var newWidth, newHeight;
+    var ratio = oldHeight / oldWidth;
+    if (oldWidth > this.MAX_WIDTH) {
+      newWidth = this.MAX_WIDTH;
+      newHeight = oldHeight * (this.MAX_WIDTH / oldWidth);
+    } else if (oldHeight > this.MAX_HEIGHT) {
+      newHeight = MAX_HEIGHT;
+      newWidth = oldWidth * (this.MAX_HEIGHT / oldHeight);
+    } else {
+      LOG("Unexpected state");
+    }
+    LOG("new size: " + [newWidth, newHeight]);
+    return this._facebookSize = [newWidth, newHeight];
+  },
+
   get sizeInBytes() {
     return this.file.fileSize;
   },
@@ -168,6 +244,22 @@ Photo.prototype = {
   },
   toString: function() {
     return "<Photo file: " + this.filename + ">";
+  },
+
+  get resizedInputStream() {
+    var fbSize = this.facebookSize;
+    if (this.size[0] == fbSize[0] &&
+        this.size[1] == fbSize[1]) {
+      LOG("no resizing needed");
+      return this._inputStream;
+    }
+    var imgTools = Cc["@mozilla.org/image/tools;1"].
+                   getService(Ci.imgITools);
+    try {
+      return imgTools.encodeScaledImage(this._container, this._mimeType, fbSize[0], fbSize[1]);
+    } catch (e) {
+      throw "Failure while resizing image: " + e;
+    }
   }
 };
 
@@ -302,73 +394,6 @@ var PhotoSet = {
     }
   },
 
-  _getMimeTypeFromExtension: function(imageExt) {
-    var mimeSvc = Cc["@mozilla.org/mime;1"].getService(Ci.nsIMIMEService);
-    imageExt = imageExt.toLowerCase();
-    var dotPos = imageExt.lastIndexOf(".");
-    if (dotPos != -1)
-      imageExt = imageExt.substring(dotPos + 1, imageExt.length);
-    return mimeSvc.getTypeFromExtension(imageExt);
-  },
-
-  /**
-   * Returns an InputStream with the image data. The photo is resized if too
-   * large.
-   */
-  _maybeResizePhoto: function(photo) {
-    const PR_RDONLY = 0x01;
-    function getImageInputStream() {
-      var fis = new FileInputStream(photo.file, PR_RDONLY, 0444, null);
-
-      var imageStream = Cc["@mozilla.org/network/buffered-input-stream;1"].
-                        createInstance(Ci.nsIBufferedInputStream);
-      imageStream.init(fis, 4096);
-      return imageStream;
-    }
-
-    var imgTools = Cc["@mozilla.org/image/tools;1"].
-                   getService(Ci.imgITools);
-
-    var filename = photo.filename;
-    var extension = filename.substring(filename.lastIndexOf("."),
-                                       filename.length).toLowerCase();
-
-    var mimeType = this._getMimeTypeFromExtension(extension);
-    LOG("Found mime: " + mimeType + " for file " + filename);
-    var outParam = { value: null };
-    imgTools.decodeImageData(getImageInputStream(), mimeType, outParam);
-    var container = outParam.value;
-    LOG("Container: " + container.width + " x " + container.height);
-
-    const MAX_WIDTH = 604;
-    const MAX_HEIGHT = 604;
-
-    var imageStream;
-    if (container.width < MAX_WIDTH && container.height < MAX_HEIGHT) {
-      LOG("No resizing needed");
-      return getImageInputStream();
-    }
-    LOG("resizing image. Original size: " + container.width + " x " +
-        container.height);
-    var newWidth, newHeight;
-    var ratio = container.height / container.width;
-    if (container.width > MAX_WIDTH) {
-      newWidth = MAX_WIDTH;
-      newHeight = container.height * (MAX_WIDTH / container.width);
-    } else if (container.height > MAX_HEIGHT) {
-      newHeight = MAX_HEIGHT;
-      newWidth = container.width * (MAX_HEIGHT / container.height);
-    } else {
-      LOG("Unexpected state");
-    }
-    LOG("New size: " + newWidth + " x " + newHeight);
-    try {
-      return imgTools.encodeScaledImage(container, mimeType, newWidth, newHeight);
-    } catch (e) {
-      throw "Failure while resizing image: " + e;
-    }
-  },
-
   _getUploadStream: function(photo, params) {
     const EOL = "\r\n";
 
@@ -402,7 +427,7 @@ var PhotoSet = {
     mis.appendStream(headerStream);
 
     // Image stream
-    mis.appendStream(this._maybeResizePhoto(photo));
+    mis.appendStream(photo.resizedInputStream);
 
     // Ending stream
     var endingStream = new StringInputStream();
@@ -699,7 +724,9 @@ var EditPanel = {
   _editImageFrame: null,
   _imageElement: null,
   _highlightDiv: null,
-  // Keep this in sync with the css in editimage.htlm
+  _highlightDivInside: null,
+  _imageWidth: null,
+  // Keep this in sync with the css in editimage.html
   IMAGE_BORDER_SIZE: 1,
 
   init: function() {
@@ -707,12 +734,22 @@ var EditPanel = {
     this._editImageFrame = document.getElementById("editImageFrame");
     this._imageElement = this._editImageFrame.contentDocument
                              .getElementById("image");
+    var self = this;
+    this._imageElement.addEventListener("load", function(event) {
+      self._onImageLoaded(event);
+    }, false);
     this._highlightDiv = this._editImageFrame.contentDocument
                              .getElementById("tagHighlight");
+    this._highlightDivInside = this._editImageFrame.contentDocument
+                                   .getElementById("tagHighlightInside");
   },
 
   uninit: function() {
     PhotoSet.removeChangedListener(this.photosChanged, EditPanel);
+  },
+
+  _onImageLoaded: function(event) {
+    this._imageWidth = event.target.width;
   },
 
   photosChanged: function(changeType, parameter) {
@@ -741,6 +778,7 @@ var EditPanel = {
       tagList.removeChild(tagList.firstChild);
 
     if (!selectedPhoto) {
+      this._imageWidth = null;
       this._imageElement.setAttribute("hidden", "true");
       this._imageElement.setAttribute("src", "about:blank");
       filenameField.value = "";
@@ -782,6 +820,32 @@ var EditPanel = {
     this._highlightDiv.style.left = divX + "px";
     this._highlightDiv.style.top = divY + "px";
     this._highlightDiv.removeAttribute("hidden");
+
+    // The tag highlight box is 166x166 pixel large in the photo.php Facebook
+    // page (the page users see when browsing photos).
+    // The photo in the edit panel could be smaller than the photo in photo.php.
+    // To make things more convenient, the tag highlight box is made
+    // proportional to the highlight box size that would appear in photo.php.
+
+    var highlightSize = [166, 166];
+    if (this._imageWidth) {
+      var ratio = this._imageWidth / PhotoSet.selected.facebookSize[0];
+      highlightSize[0] *= ratio;
+      highlightSize[1] *= ratio;
+    }
+    // This is the sum of the tagHighlight div border and tagHighlightInside border
+    // Keep this in sync with the css of editimage.html.
+    // TODO: use getComputedStyle to make this dynamic.
+    const HIGHLIGHT_DIV_OFFSET_BASE = 9;
+
+    var offsetLeft = HIGHLIGHT_DIV_OFFSET_BASE + highlightSize[0] / 2
+    var offsetTop = HIGHLIGHT_DIV_OFFSET_BASE + highlightSize[1] / 2;
+
+    this._highlightDiv.style.marginLeft = "-" + offsetLeft.toFixed(0) + "px";
+    this._highlightDiv.style.marginTop = "-" + offsetTop.toFixed(0) + "px";
+
+    this._highlightDivInside.style.width = highlightSize[0] + "px";
+    this._highlightDivInside.style.height = highlightSize[1] + "px";
   },
 
   _hideTagHighlight: function() {
