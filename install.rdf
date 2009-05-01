@@ -5,7 +5,7 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>firefox@facebook.com</em:id>
-    <em:version>1.3.6</em:version>
+    <em:version>1.3.7</em:version>
     <em:type>2</em:type>
 
     <!-- Target Application this extension can install into,
@@ -30,6 +30,7 @@
     <em:name>Facebook Toolbar</em:name>
     <em:description>Integrate your Facebook life into your browser</em:description>
     <em:creator>Facebook Team</em:creator>
+    <em:contributor>Briks Software (http://briks.si)</em:contributor>
     <em:developer>Eugene Letuchy</em:developer>
     <em:developer>Ari Steinberg</em:developer>
     <em:developer>Julie Zhuo</em:developer>
