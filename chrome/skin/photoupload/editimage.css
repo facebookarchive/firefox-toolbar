@@ -1,0 +1,37 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#tagHighlight {
+  position: absolute;
+  border:solid 7px #D8DFEA;
+}
+
+#tagHighlightInside {
+  border: solid 2px #3B5998;
+  width: 166px;
+  height: 166px;
+}
+
+img {
+  position: absolute;
+  margin: auto;
+  top: 0px; bottom: 15px;
+  left: 0px; right: 15px;
+  /* Keep this in sync with the #editImageFrame rule in photoupload.css
+     width should be 20px smaller for the shadow */
+  max-width: 380px;
+  max-height: 250px;
+  -moz-box-shadow: gray 10px 10px 10px;
+  border: 1px solid grey;
+  cursor: crosshair;
+}
+
+#tagHighlight, img {
+  cursor: crosshair;
+}
+
+*[hidden] {
+  display: none;
+}

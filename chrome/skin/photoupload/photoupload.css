@@ -28,6 +28,8 @@
 }
 
 #editImageFrame {
+  /* Keep the size of the frame in sync with the max-width/max-height properties
+     of the img element in editimage.css */
   width: 400px;
   height: 250px;
   -moz-box-shadow: gray 10px 10px 10px;
