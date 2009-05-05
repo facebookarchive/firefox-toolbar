@@ -1048,7 +1048,7 @@ var PhotoUpload = {
     // When closing the login dialog, the loggedInUser property is not set
     // immediatly. Wait a few moment before asking the user to log in.
 
-    const LOGGED_IN_POLL_TIMEOUT = 200;
+    const LOGGED_IN_POLL_TIMEOUT = 400;
     const NUM_TRIES = 5;
 
     var self = this;
