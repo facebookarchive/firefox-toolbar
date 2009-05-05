@@ -1045,15 +1045,35 @@ var PhotoUpload = {
     defaultAlbumName = defaultAlbumName.replace("%DATE%", new Date().toLocaleDateString());
     document.getElementById("albumName").value = defaultAlbumName;
 
+    // When closing the login dialog, the loggedInUser property is not set
+    // immediatly. Wait a few moment before asking the user to log in.
+
+    const LOGGED_IN_POLL_TIMEOUT = 200;
+    const NUM_TRIES = 5;
+
     var self = this;
-    if (!gFacebookServiceUnwrapped.loggedInUser) {
-      alert(this._stringBundle.getString("mustLoginDialog"));
-      window.close();
-      return;
+    var tries = 0;
+
+    function checkIfLoggedIn() {
+      LOG("Checking if user is logged in, try " + tries + " / " + NUM_TRIES);
+      tries++;
+      if (tries == NUM_TRIES) {
+        alert(self._stringBundle.getString("mustLoginDialog"));
+        window.close();
+        return;
+      }
+      if (!gFacebookServiceUnwrapped.loggedInUser) {
+        LOG("not logged in, retrying");
+        setTimeout(checkIfLoggedIn, LOGGED_IN_POLL_TIMEOUT);
+        return;
+      }
+      LOG("logged in");
+      self._fillAlbumList(function() { // onComplete callback
+        self._checkPhotoUploadPermission();
+      });
     }
-    this._fillAlbumList(function() { // onComplete callback
-      self._checkPhotoUploadPermission();
-    });
+
+    checkIfLoggedIn();
   },
 
   uninit: function() {
