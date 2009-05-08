@@ -1249,7 +1249,7 @@ var PhotoUpload = {
       let upText = this._stringBundle.getString("uploadCompleteAlert");
       let aid = "aid=" + this._albumIdToUrlAlbumId(albumId) + "&";
       let postUploadUrl = "http://www.facebook.com/editalbum.php?" + aid + "org=1";
-      gFacebookService.showPopup('upload.complete', 'chrome://facebook/skin/upload16.gif',
+      gFacebookService.showPopup('upload.complete', 'chrome://facebook/skin/photo.gif',
                                  upText, postUploadUrl);
     }
     catch(e) {
