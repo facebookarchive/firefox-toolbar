@@ -339,8 +339,17 @@ var facebook = {
     }
   },
   photoupload: function() {
-    window.openDialog('chrome://facebook/content/photoupload/photoupload.xul',
-                      'facebook:photoupload', 'chrome,titlebar,toolbar,dialog=no,resizable');
+    var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                   .getService(Components.interfaces.nsIWindowMediator);
+    var win = wm.getMostRecentWindow("facebook:photoupload");
+    if (win) {
+        win.focus();
+    }
+    else
+    {
+        window.openDialog('chrome://facebook/content/photoupload/photoupload.xul',
+                          'facebook:photoupload', 'chrome,titlebar,toolbar,dialog=no,resizable');
+    }
   },
   clearFriends: function(sessionEnded) {
     var list = document.getElementById('PopupFacebookFriendsList');
