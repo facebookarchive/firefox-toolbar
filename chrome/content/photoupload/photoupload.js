@@ -1048,14 +1048,14 @@ var PhotoUpload = {
     // When closing the login dialog, the loggedInUser property is not set
     // immediatly. Wait a few moment before asking the user to log in.
 
-    const LOGGED_IN_POLL_TIMEOUT = 400;
+    const LOGGED_IN_POLL_TIMEOUT = 1000;
     const NUM_TRIES = 5;
 
     var self = this;
     var tries = 0;
 
     function checkIfLoggedIn() {
-      LOG("Checking if user is logged in, try " + tries + " / " + NUM_TRIES);
+      LOG("Checking if user is logged in, try " + (tries + 1) + " / " + NUM_TRIES);
       tries++;
       if (tries == NUM_TRIES) {
         alert(self._stringBundle.getString("mustLoginDialog"));
