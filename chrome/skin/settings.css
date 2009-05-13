@@ -1,0 +1,10 @@
+/* bug-fix for incorrect declatation in xul.css:
+ * from http://fixunix.com/mozilla/407908-description-box-wrap-messes-up-groupboxes.html
+ */
+prefpane > .content-box {
+    overflow: -moz-hidden-unscrollable !important;
+}
+
+.prefWindow-dlgbuttons {
+    align: center !important;
+}
