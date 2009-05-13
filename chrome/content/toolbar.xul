@@ -122,6 +122,11 @@
                     oncommand="openUILink('http://www.facebook.com/posted.php?src=fftb', event)"
                     />
 
+          <menuitem label="Video"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="openUILink('http://www.facebook.com/video/?src=fftb', event)"
+                    />
+
           <menuseparator />
 
           <!-- Settings Menu -->
