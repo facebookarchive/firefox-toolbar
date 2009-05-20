@@ -1,5 +1,5 @@
 Facebook Toolbar Software License
-Copyright (c) 2007 Facebook, Inc.
+Copyright (c) 2007-2009 Facebook, Inc.
 
 Permission is hereby granted, free of charge, to any person or organization
 obtaining a copy of the software and accompanying documentation covered by
@@ -31,8 +31,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 -----
 
-All included files licensed as described above except for one file (md5.js)
-licensed under the MIT license (http://www.webtoolkit.info/javascript-md5.html)
+All included files licensed as described above except for md5.js,
+licensed under the MIT license
+(http://www.webtoolkit.info/javascript-md5.html), and jsbn.js and
+jsbn2.js, licensed under the BSD license
+(http://www-cs-students.stanford.edu/~tjw/jsbn/LICENSE)
 
-Previous versions of this file licensed under the BSD license as
+Previous versions of md5.js licensed under the BSD license as
 described at http://pajhome.org.uk/site/legal.html
+
