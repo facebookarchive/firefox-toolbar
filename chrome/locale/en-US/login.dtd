@@ -1,0 +1,4 @@
+<!ENTITY  login.window.title              "Login to Facebook">
+
+<!ENTITY  login.wait                      "Please wait while we prepare to log you in...">
+<!ENTITY  login.close                     "Close login window">

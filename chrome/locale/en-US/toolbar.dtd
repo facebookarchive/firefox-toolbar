@@ -1,0 +1,16 @@
+<!ENTITY  toolbar.button.facebook.label             "Facebook">
+
+<!ENTITY  toolbar.button.facebook.tooltip           "Facebook Toolbar">
+<!ENTITY  toolbar.button.sidebar.tooltip            "Facebook Friends Sidebar">
+<!ENTITY  toolbar.search.label                      "Search Facebook">
+<!ENTITY  toolbar.button.home.tooltip               "Go to Facebook">
+<!ENTITY  toolbar.button.share.tooltip              "Share current page on Facebook">
+<!ENTITY  toolbar.button.upload.tooltip             "Upload photos to Facebook">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "New Pokes">
+<!ENTITY  toolbar.button.friends.tooltip            "New Friend Requests">
+<!ENTITY  toolbar.button.groups.tooltip             "New Group Invitations">
+<!ENTITY  toolbar.button.events.tooltip             "New Event Invitations">
+<!ENTITY  toolbar.button.messages.tooltip           "New Messages">
+
+<!ENTITY  toolbar.button.links.label                "Quick Links">

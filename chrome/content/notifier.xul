@@ -3,21 +3,24 @@
 <?xml-stylesheet href="chrome://facebook/skin/notifier.css" type="text/css"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
+<!DOCTYPE window SYSTEM "chrome://facebook/locale/notifier.dtd">
+
 <window id="facebook-notifier"
-        orient="vertical"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         windowtype="facebook:notify">
-  <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
-  <script type="application/x-javascript" src="chrome://facebook/content/notifier.js"/>
-  <vbox style="max-width: 300px">
-    <label id="title" class="notifier-title" value="Facebook Notification"/>
-    <hbox>
-      <vbox>
-        <image id="pic" class="notifier-image"/>
-      </vbox>
-      <description id="label" class="notifier-text">
-      </description>
-    </hbox>
-  </vbox>
+
+    <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
+    <script type="application/x-javascript" src="chrome://facebook/content/notifier.js"/>
+
+    <vbox style="max-width: 300px">
+        <label id="title" class="notifier-title" value="&notifier.title;"/>
+        <hbox>
+            <vbox>
+                <image id="pic" class="notifier-image"/>
+            </vbox>
+            <description id="label" class="notifier-text">
+            </description>
+        </hbox>
+    </vbox>
 
 </window>
