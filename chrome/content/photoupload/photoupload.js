@@ -293,6 +293,19 @@ var PhotoSet = {
   _cancelled: false,
 
   add: function(photos) {
+    // don't re-add any photos (bug 913)
+    for (var i=0; i<photos.length; i++) {
+      for (var j=0; j<this._photos.length; j++) {
+        if (this._photos[j].file && this._photos[j].file.equals(photos[i].file)) {
+          LOG("will not add duplicate image");
+          delete photos[i];
+        }
+      }
+    }
+    if (photos.length == 0) {
+      return;
+    }
+
     Array.prototype.push.apply(this._photos, photos)
     this._notifyChanged(CHANGE_ADD, photos);
 
