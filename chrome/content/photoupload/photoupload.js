@@ -72,6 +72,24 @@ function LOG(s) {
     dump(s + "\n");
 }
 
+var QuitObserver = {
+  observe: function(subject, topic, data) {
+    switch (topic) {
+      case "quit-application-requested":
+        if (!PhotoUpload.canClose()) {
+          // deny the application close request
+          try {
+            let cancelQuit = subject.QueryInterface(Components.interfaces.nsISupportsPRBool);
+            cancelQuit.data = true;
+          } catch (ex) {
+            LOG("cannot cancel quit: " + ex);
+          }
+        }
+      break;
+    }
+  }
+};
+
 /**
  * Base class for representing a photo tag.
  */
@@ -1031,6 +1049,8 @@ var PhotoUpload = {
   _uploadStatusDeck: null,
   _uploadProgress: null,
   _uploadBroadcaster: null,
+  _observerService: null,
+  _quitObserver: null,
 
   get _stringBundle() {
     delete this._stringBundle;
@@ -1044,6 +1064,8 @@ var PhotoUpload = {
   },
 
   init: function() {
+    var self = this;
+
     OverviewPanel.init();
     EditPanel.init();
     PhotoSet.addChangedListener(this.photosChanged, PhotoUpload);
@@ -1052,6 +1074,10 @@ var PhotoUpload = {
     this._uploadStatusDeck = document.getElementById("uploadStatusDeck");
     this._uploadProgress = document.getElementById("uploadProgress");
     this._uploadBroadcaster = document.getElementById("uploadBroadcaster");
+
+    // Observe when the application wants to quit
+    this._observerService = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
+    this._observerService.addObserver(QuitObserver, "quit-application-requested", false);
 
     // New album default name
     var defaultAlbumName = this._stringBundle.getString("defaultAlbumName");
@@ -1090,9 +1116,13 @@ var PhotoUpload = {
   },
 
   uninit: function() {
+    var self = this;
     OverviewPanel.uninit();
     EditPanel.uninit();
     PhotoSet.removeChangedListener(this.photosChanged, PhotoUpload);
+
+    this._observerService.removeObserver(QuitObserver, "quit-application-requested");
+
     if (this.getAlbumSelectionMode() == EXISTING_ALBUM) {
       var albumsList = document.getElementById("albumsList");
       if (!albumsList.selectedItem)
@@ -1101,6 +1131,55 @@ var PhotoUpload = {
       document.getElementById("albumsList").setAttribute("lastalbumid", albumId);
     }
     document.persist("albumsList", "lastalbumid");
+  },
+
+  /**
+   * canClose:
+   * returns true if there are no uploads
+   * returns true if there ARE uploads, but user wants to cancel them
+   * returns false if there ARE uploads, but user wants to let them finish
+   */
+  canClose: function() {
+    var self = this;
+    var isUploading = (this._uploadProgress.value > 0);
+
+    if (!isUploading) {
+      return true;
+    }
+
+    var showConfirmCloseWhileUploadingPrompt = function() {
+      const IPS = Ci.nsIPromptService;
+      var ps = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(IPS);
+
+      var dummy = {value: false};
+
+      var flags = IPS.BUTTON_POS_0 * IPS.BUTTON_TITLE_IS_STRING +
+        IPS.BUTTON_POS_1 * IPS.BUTTON_TITLE_IS_STRING;
+
+      var ret = ps.confirmEx(
+          window,
+          self._stringBundle.getString("showConfirmCloseWhileUploadingPromptTitle"),
+          self._stringBundle.getString("showConfirmCloseWhileUploadingPromptText"),
+          flags,
+          self._stringBundle.getString("showConfirmCloseWhileUploadingPromptLetUploadFinish"),
+          self._stringBundle.getString("showConfirmCloseWhileUploadingPromptCancelUploadAndClose"),
+          null,
+          null,
+          dummy
+          );
+
+      return (ret == 0);
+    };
+
+    if (showConfirmCloseWhileUploadingPrompt()) {
+      return false;
+    }
+
+    LOG("canClose() : user wants to continue with window close, will cancel uploads");
+
+    self.cancelUpload();
+
+    return true;
   },
 
   _fillAlbumList: function(onComplete) {

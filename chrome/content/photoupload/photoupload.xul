@@ -14,6 +14,7 @@
         height="800"
         onload="PhotoUpload.init()"
         onunload="PhotoUpload.uninit()"
+        onclose="return PhotoUpload.canClose();"
         persist="screenX screenY width height">
 
   <script type="application/x-javascript" src="chrome://global/content/nsDragAndDrop.js"/>
