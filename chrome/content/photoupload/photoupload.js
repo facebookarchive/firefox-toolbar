@@ -312,24 +312,31 @@ var PhotoSet = {
 
   add: function(photos) {
     // don't re-add any photos (bug 913)
-    for (var i=0; i<photos.length; i++) {
+    var photos2 = [];
+
+    outer: for (var i=0; i<photos.length; i++) {
       for (var j=0; j<this._photos.length; j++) {
         if (this._photos[j].file && this._photos[j].file.equals(photos[i].file)) {
           LOG("will not add duplicate image");
-          delete photos[i];
+          //delete photos[i];
+          continue outer;
         }
       }
-    }
-    if (photos.length == 0) {
-      return;
+
+      photos2.push(photos[i]);
     }
 
-    Array.prototype.push.apply(this._photos, photos)
-    this._notifyChanged(CHANGE_ADD, photos);
+    if (photos2.length == 0) {
+        this._selected = photos[photos.length - 1];
+        return;
+    }
+
+    Array.prototype.push.apply(this._photos, photos2)
+    this._notifyChanged(CHANGE_ADD, photos2);
 
     // Selects the last added photos. When adding only one photo, that's
     // useful to have it selected for direct metadata editing.
-    this._selected = photos[photos.length - 1];
+    this._selected = photos2[photos2.length - 1];
     this._updateSelected();
   },
 
