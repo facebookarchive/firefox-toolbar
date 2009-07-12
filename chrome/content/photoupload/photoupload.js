@@ -239,7 +239,7 @@ Photo.prototype = {
       newWidth = this.MAX_WIDTH;
       newHeight = oldHeight * (this.MAX_WIDTH / oldWidth);
     } else if (oldHeight > this.MAX_HEIGHT) {
-      newHeight = MAX_HEIGHT;
+      newHeight = this.MAX_HEIGHT;
       newWidth = oldWidth * (this.MAX_HEIGHT / oldHeight);
     } else {
       LOG("Unexpected state");
