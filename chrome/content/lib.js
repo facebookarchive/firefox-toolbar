@@ -1,6 +1,6 @@
 /**
  * Facebook Firefox Toolbar Software License
- * Copyright (c) 2007 Facebook, Inc.
+ * Copyright (c) 2007-2009 Facebook, Inc.
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -455,4 +455,12 @@ function facebook_toggleToolbar()
     var toolbar = document.getElementById("facebook-toolbar");
     toolbar.collapsed = !toolbar.collapsed;
     document.persist("facebook-toolbar", "collapsed");
+}
+
+function GetFBStringbundle() {
+  var sb = top.document.getElementById('facebook-strings');
+  if (!sb) {
+    sb = top.document.getElementById('sidebar').contentDocument.getElementById('facebook-strings');
+  }
+  return sb;
 }

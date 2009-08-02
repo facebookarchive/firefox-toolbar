@@ -1,6 +1,6 @@
 /**
  * Facebook Firefox Toolbar Software License
- * Copyright (c) 2007 Facebook, Inc.
+ * Copyright (c) 2007-2009 Facebook, Inc.
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -63,6 +63,7 @@ function checkSeparator(data) {
 var fbToolbarObserver = {
     observe: function(subject, topic, data) {
         debug('toolbar observing something: ', topic);
+        var fStrings = GetFBStringbundle();
         var eltId = topicToXulId[topic];
         if( eltId ) {
             setAttributeById(eltId, 'label', data);
@@ -81,11 +82,11 @@ var fbToolbarObserver = {
                 setAttributeById('facebook-menu-my-profile', 'userid', subject.id);
                 setAttributeById('facebook-login-status', 'label', 'Logout');
                 var sb = GetFBSearchBox();
-                if (sb.value != 'Search Facebook' && sb.value != '') {
+                if (sb.value != fStrings.getString('searchplaceholder') && sb.value != '') {
                     sb.value = '';
                     facebook.searchBoxBlur(sb);
                 }
-                SetHint(true, 'Loading friend list...', '');
+                SetHint(true, fStrings.getString('loadingfriends'), '');
                 break;
             case 'facebook-session-end':
                 debug('ending session...');
@@ -148,6 +149,7 @@ var topics_of_interest =    [ 'facebook-session-start'
                             ];
 
 var facebook = {
+    fStringbundle : null,
     load: function() {
         debug( "loading toolbar..." );
         var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
@@ -164,6 +166,8 @@ var facebook = {
             debug( "observer added", topic );
             obsSvc.addObserver(fbToolbarObserver, topic, false);
         }
+
+        fStringbundle = GetFBStringbundle();
 
         var loggedInUser = fbSvc.loggedInUser;
         if (loggedInUser) {
@@ -214,9 +218,9 @@ var facebook = {
     var friends = fbSvc.getFriends(count);
     debug('got friends', count.value);
     if (!fbSvc.loggedIn) {
-      SetHint(true, 'Log in from the toolbar to see your friend list.', 'FacebookLogin()');
+      SetHint(true, this.fStringbundle.getString('loadFriends'), 'FacebookLogin()');
     } else if (!count.value) {
-      SetHint(true, 'Loading friend list...', '');
+      SetHint(true, this.fStringbundle.getString('loadingFriends'), '');
     } else {
       friends.sort(this.sortFriends);
       for each (var friend in friends) {

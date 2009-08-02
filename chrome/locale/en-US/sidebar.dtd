@@ -1,0 +1,7 @@
+<!ENTITY  sidebar.title                     "Facebook Sidebar">
+
+<!ENTITY  sidebar.settings.label            "Settings">
+<!ENTITY  sidebar.sortlast.label            "Last update time">
+<!ENTITY  sidebar.sortstatus.label          "Status update time">
+<!ENTITY  sidebar.sortprofile.label         "Profile update time">
+<!ENTITY  sidebar.sortname.label            "Name">

@@ -1,15 +1,23 @@
 <?xml version="1.0"?>
+
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://facebook/skin/toolbar.css" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://facebook/locale/sidebar.dtd">
+
 <page id="facebook-sidebar-page"
-      title="Facebook Sidebar"
+      title="&sidebar.title;"
       orient="vertical"
       onload="SidebarLoad()"
       onunload="SidebarUnload()"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
   <script type="application/x-javascript" src="chrome://browser/content/utilityOverlay.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/sidebar.js"/>
+
+  <stringbundle id="facebook-strings" src="chrome://facebook/locale/facebook.properties"/>
+
   <hbox>
     <textbox id="facebook-search-sidebar"
              oninput="SearchFriends(this.value)"
@@ -22,14 +30,14 @@
     </richlistitem>
   </richlistbox>
   <hbox>
-    <toolbarbutton label="Settings" oncommand="OpenSettings();" />
+    <toolbarbutton label="&sidebar.settings.label;" oncommand="OpenSettings();" />
     <spacer flex="1" />
     <toolbarbutton id="fbSidebarSorter" type="menu" selectedsort="last update" persist="selectedsort" >
       <menupopup>
-        <menuitem id="fbSortUpdate" label="Last update time" type="radio" oncommand="SortBy('last update');"/>
-        <menuitem id="fbSortStatus" label="Status update time" type="radio" oncommand="SortBy('status');"/>
-        <menuitem id="fbSortProfile" label="Profile update time" type="radio" oncommand="SortBy('profile');"/>
-        <menuitem id="fbSortName" label="Name" type="radio" oncommand="SortBy('name');"/>
+        <menuitem id="fbSortUpdate" label="&sidebar.sortlast.label;" type="radio" oncommand="SortBy('last update');"/>
+        <menuitem id="fbSortStatus" label="&sidebar.sortstatus.label;" type="radio" oncommand="SortBy('status');"/>
+        <menuitem id="fbSortProfile" label="&sidebar.sortprofile.label;" type="radio" oncommand="SortBy('profile');"/>
+        <menuitem id="fbSortName" label="&sidebar.sortname.label;" type="radio" oncommand="SortBy('name');"/>
       </menupopup>
     </toolbarbutton>
   </hbox>
