@@ -171,12 +171,12 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   padding-left: 4px;
   border: 0;
   margin: 0;
-  -moz-image-region: rect(0px 425px 16px 409px);
+  -moz-image-region: rect(0px 424px 16px 409px);
 }
 #facebook-home:active,
 #facebook-home:hover
 {
-  -moz-image-region: rect(0px 441px 16px 425px);
+  -moz-image-region: rect(0px 440px 16px 425px);
 }
 
 #facebook-home .toolbarbutton-text,
