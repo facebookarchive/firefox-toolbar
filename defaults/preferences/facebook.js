@@ -6,7 +6,6 @@ pref("extensions.facebook.notifications.you.event.inv", true);
 pref("extensions.facebook.notifications.you.group.inv", true);
 pref("extensions.facebook.notifications.you.poke", true);
 pref("extensions.facebook.notifications.you.friend", true);
-pref("extensions.facebook.notifications.you.wall", true);
 pref("extensions.facebook.notifications.you.site", true);
 pref("extensions.facebook.notifications.friend.wall", false);
 pref("extensions.facebook.notifications.friend.status", true);

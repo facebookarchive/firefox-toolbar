@@ -75,8 +75,6 @@ interface fbIFacebookService : nsISupports
     //       (the count of new messages has been updated)
     //   facebook-pokes-updated             null                         new poke count
     //       (the count of pokes has been updated)
-    //   facebook-wall-updated              null                         new wall count
-    //       (the count of your wall posts has been updated)
     //   facebook-event-invs-updated        null                         new event invite count
     //       (the count of your wall posts has been updated)
     //   facebook-group-invs-updated        null                         new group invite count

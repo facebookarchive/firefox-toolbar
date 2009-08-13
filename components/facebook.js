@@ -855,14 +855,6 @@ facebookService.prototype = {
 
             // Check for user's info changes
             if (fbSvc._loggedInUser) {
-                if (fbSvc._loggedInUser.wall != loggedInUser.wall) {
-                    fbSvc.notify(null, 'facebook-wall-updated', loggedInUser.wall);
-                    if (fbSvc._loggedInUser.wall < loggedInUser.wall) {
-                        fbSvc.showPopup( 'you.wall', 'chrome://facebook/content/wall_post.gif',
-                                         'Someone wrote on your wall',
-                                         'http://www.facebook.com/profile.php?id=' + fbSvc._uid + '&src=fftb#wall');
-                    }
-                }
                 if (fbSvc._loggedInUser.status != loggedInUser.status) {
                     fbSvc.notify(null, 'facebook-status-updated', loggedInUser.status);
                 }
