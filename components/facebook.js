@@ -51,7 +51,7 @@ var debug = ( VERBOSITY < 1 )
     }
   }
   dump('\n');
-}
+};
 var vdebug = ( VERBOSITY < 2 ) ? function() {} : debug;
 
 const CONTRACT_ID  = '@facebook.com/facebook-service;1';
@@ -694,28 +694,58 @@ facebookService.prototype = {
 
         if (this._prefService.getBoolPref('extensions.facebook.notifications.toggle')
             && this._prefService.getBoolPref('extensions.facebook.notifications.you.site')) {
-          var query = " SELECT title_text, href FROM notification "
+
+          var notif_query = " SELECT title_text, body_text, href, app_id FROM notification "
             + " WHERE recipient_id = :user and is_hidden=0";
           if (!onInit) {
-	    query += " AND updated_time > (now() - :window)";
-            query = query
-	      .replace( /:user/g, this._uid )
-	      .replace( /:window/g, Math.ceil(window/1000) + 30 );
-	  } else {
-            query = query.replace( /:user/g, this._uid );
-	  }
+            notif_query += " AND updated_time > (now() - :window)";
+            notif_query = notif_query
+              .replace( /:user/g, this._uid )
+              .replace( /:window/g, Math.ceil(window/1000) + 30 );
+          } else {
+            notif_query = notif_query.replace( /:user/g, this._uid );
+          }
 
-          this.callMethod('facebook.fql.query', ['query='+query], function(data) {
-			    for each( var notification in data ) {
-			      vdebug(notification);
-			      fbSvc.showPopup('you.site',
-					      'chrome://facebook/content/poke.gif', // TODO: replace with app icon
-					      notification.title_text,
-					      notification.href);
-			    }
-			  });
-	}
+          var app_query = " SELECT app_id, icon_url FROM application"
+           + " WHERE app_id IN (SELECT app_id FROM #notif_query)";
 
+          var queries = {
+            notif_query: notif_query,
+            app_query: app_query
+          };
+          var queries_str = JSON.stringify(queries);
+
+          this.callMethod('facebook.fql.multiquery', ['queries='+queries_str], function(data) {
+                            var application_icons = {};
+                            var app_result, notif_result;
+                            for each (var query_result in data) {
+                              if ('notif_query' == query_result.name) {
+                                notif_result = query_result.fql_result_set;
+                              }
+                              if ('app_query' == query_result.name) {
+                                app_result = query_result.fql_result_set;
+                              }
+                            }
+
+                            for each (var app_info in app_result) {
+                              application_icons[app_info.app_id] = app_info.icon_url;
+                            }
+
+                            for each (var notification in notif_result) {
+                              var notification_contents = notification.title_text;
+                              if (notification.body_text) {
+                                notification_contents += "\n\n"
+                                  + '"' + notification.body_text + '"';
+                              }
+                              var app_icon = application_icons[notification.app_id]
+                                || 'chrome://facebook/content/wall_post.gif';
+                              fbSvc.showPopup('you.site', app_icon,
+                                              notification_contents,
+                                              notification.href);
+                            }
+
+                          });
+        }
     },
     parseUsers: function(user_data) {
         users = {};
