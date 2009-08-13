@@ -187,7 +187,7 @@ function facebookService() {
             debug('_checker.notify: checking', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
             // note: suppress notifications if we haven't successfully checked for the last 30 minutes
             fbSvc.checkUsers(now > (fbSvc._lastCheckedFriends + BASE_CHECK_INTERVAL * 6));
-            fbSvc.checkNotifications(false);
+            fbSvc.checkNotifications(false, interval);
             fbSvc.checkAlbums(interval);
             fbSvc.checkCanSetStatus();
           } else {
@@ -204,7 +204,7 @@ function facebookService() {
           debug('_checker.notify: checking', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
           // note: suppress notifications if we haven't successfully checked for the last 30 minutes
           fbSvc.checkUsers(now > fbSvc._lastCheckedFriends + BASE_CHECK_INTERVAL * 6);
-          fbSvc.checkNotifications(false);
+          fbSvc.checkNotifications(false, interval);
           fbSvc.checkAlbums(interval);
           fbSvc.checkCanSetStatus();
         }
@@ -638,7 +638,11 @@ facebookService.prototype = {
     clearCanSetStatus: function() {
         this._canSetStatus = null;
     },
-    checkNotifications: function(onInit){
+
+    // onInit : bool : true if this is an initial load of notifications, false otherwise
+    // interval: int : for non-initial loads of notifications, the window in which to
+    // grab facebook notifications
+    checkNotifications: function(onInit, window) {
         this.callMethod('facebook.notifications.get', [], function(data) {
             vdebug('notification data:', data);
             if (onInit){
@@ -688,19 +692,30 @@ facebookService.prototype = {
             }
         });
 
-        var query = " SELECT title_text, href FROM notification "
-          + " WHERE recipient_id = :user and is_hidden=0";
-        query = query.replace( /:user/g, this._uid );
-        this.callMethod('facebook.fql.query', ['query='+query], function(data) {
-          for each( var notification in data ) {
-            vdebug(notification);
-            fbSvc.showPopup('you.req',
-                            'chrome://facebook/content/poke.gif',
-                            notification.title_text,
-                            notification.href);
+        if (this._prefService.getBoolPref('extensions.facebook.notifications.toggle')
+            && this._prefService.getBoolPref('extensions.facebook.notifications.you.site')) {
+          var query = " SELECT title_text, href FROM notification "
+            + " WHERE recipient_id = :user and is_hidden=0";
+          if (!onInit) {
+	    query += " AND updated_time > (now() - :window)";
+            query = query
+	      .replace( /:user/g, this._uid )
+	      .replace( /:window/g, Math.ceil(window/1000) + 30 );
+	  } else {
+            query = query.replace( /:user/g, this._uid );
+	  }
 
-          }
-        });
+          this.callMethod('facebook.fql.query', ['query='+query], function(data) {
+			    for each( var notification in data ) {
+			      vdebug(notification);
+			      fbSvc.showPopup('you.site',
+					      'chrome://facebook/content/poke.gif', // TODO: replace with app icon
+					      notification.title_text,
+					      notification.href);
+			    }
+			  });
+	}
+
     },
     parseUsers: function(user_data) {
         users = {};
@@ -754,7 +769,7 @@ facebookService.prototype = {
           + " WHERE owner IN (SELECT uid2 FROM friend WHERE uid1 = :user )"
          + " AND modified > (now() - :window) AND size > 0;";
         query = query.replace( /:user/g, this._uid )
-                     .replace( /:window/g, Math.floor(window/1000) + 30 ); // 30 sec of wiggle room
+                     .replace( /:window/g, Math.ceil(window/1000) + 30 ); // 30 sec of wiggle room
         debug(query);
         this.callMethod('facebook.fql.query', ['query='+query], function(data) {
           for each( var album in data ) {

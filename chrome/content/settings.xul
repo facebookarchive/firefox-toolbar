@@ -57,6 +57,10 @@
                   type="bool"
                   id="you-wall"
                   />
+      <preference name="extensions.facebook.notifications.you.site"
+                  type="bool"
+                  id="you-site"
+                  />
 
       <!-- Notifications About My Friends -->
       <preference name="extensions.facebook.notifications.friend.profile"
@@ -101,6 +105,7 @@
             <checkbox preference="you-group-inv" label="New group invite"/>
             <checkbox preference="you-share"     label="New share"/>
             <checkbox preference="you-wall"      label="Someone writes on your wall"/>
+            <checkbox preference="you-site"      label="Other notifications (comments, applications, etc.)"/>
           </groupbox>
 
           <vbox>
