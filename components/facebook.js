@@ -4,7 +4,7 @@
  * the Apache License, Version 2.0.  Accordingly, the following notice
  * applies to the source code included in this file:
  *
- * Copyright Â© 2009 Facebook, Inc.
+ * Copyright © 2009 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
@@ -26,14 +26,15 @@ var debug = ( VERBOSITY < 1 )
   ? function() {}
   : function() {
   dump('FacebookService: ');
-  if (debug.caller && debug.caller.name)
-    dump(debug.caller.name + ': ')
+  if (debug.caller && debug.caller.name) {
+    dump(debug.caller.name + ': ');
+  }
   for( var i=0; i < arguments.length; i++ ) {
     if( i ) dump( ', ' );
     switch( typeof arguments[i] ) {
       case 'xml':
         dump( arguments[i].toXMLString() );
-        break;s
+        break;
       case 'object':
         try { // won't work if object has methods :(
             var out = JSON.stringify(arguments[i]);
@@ -359,7 +360,7 @@ facebookService.prototype = {
                                     "," + PHOTOUPLOAD_BUTTON_ID + ",spring,facebook-login-info");
         } else {
             // At last resort, put it in the end.
-            target += "," + PHOTOUPLOAD_BUTTON_ID
+            target += "," + PHOTOUPLOAD_BUTTON_ID;
         }
         this._setPersist(fbBar, currentSet, target);
 
@@ -664,12 +665,12 @@ facebookService.prototype = {
                                           text, 'http://www.facebook.com/home.php');
                         }
                     } );
-                fbSvc._groupInvs = new SetNotif( data.group_invites, 'facebook-group-invs-updated', fbSvc, null );
-                fbSvc._eventInvs = new SetNotif( data.event_invites, 'facebook-event-invs-updated', fbSvc, null );
-                fbSvc._reqs      = new SetNotif( data.friend_requests, 'facebook-reqs-updated', fbSvc
+                fbSvc._groupInvs = new SetNotif(data.group_invites, 'facebook-group-invs-updated', fbSvc, null );
+                fbSvc._eventInvs = new SetNotif(data.event_invites, 'facebook-event-invs-updated', fbSvc, null );
+                fbSvc._reqs = new SetNotif(data.friend_requests, 'facebook-reqs-updated', fbSvc
                     , function( self, delta ) {
                         fbSvc.getUsersInfo(delta, function(users) {
-                            debug( "Got friend reqs", users.length )
+                            debug( "Got friend reqs", users.length );
                             for each (var user in users) {
                                 self.items[user.id] = user;
                                 fbSvc.notify(user, 'facebook-new-req', user.id);
@@ -798,7 +799,8 @@ facebookService.prototype = {
                 if (fbSvc._loggedInUser.wall != loggedInUser.wall) {
                     fbSvc.notify(null, 'facebook-wall-updated', loggedInUser.wall);
                     if (fbSvc._loggedInUser.wall < loggedInUser.wall) {
-                        fbSvc.showPopup( 'you.wall', 'chrome://facebook/content/wall_post.gif', 'Someone wrote on your wall',
+                        fbSvc.showPopup( 'you.wall', 'chrome://facebook/content/wall_post.gif',
+					 'Someone wrote on your wall',
                                          'http://www.facebook.com/profile.php?id=' + fbSvc._uid + '&src=fftb#wall');
                     }
                 }
