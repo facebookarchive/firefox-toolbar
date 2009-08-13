@@ -696,7 +696,7 @@ facebookService.prototype = {
             && this._prefService.getBoolPref('extensions.facebook.notifications.you.site')) {
 
           var notif_query = " SELECT title_text, body_text, href, app_id FROM notification "
-            + " WHERE recipient_id = :user and is_hidden=0";
+            + " WHERE recipient_id = :user AND is_hidden=0 AND is_unread=1";
           if (!onInit) {
             notif_query += " AND updated_time > (now() - :window)";
             notif_query = notif_query
