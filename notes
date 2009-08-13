@@ -8,7 +8,6 @@ install prereqs (from http://developer.mozilla.org/en/docs/Mac_OS_X_Build_Prereq
   $ sudo apt-get install orbit orbit-dev glib
 
 unfortunately, you'll get errors from glib when building on an x86 mac complaining about the architecture.
- 
 
 compile idl file:
 Makefile
@@ -30,4 +29,4 @@ ari@Ari:platform/client/firefox$ cat `which FirefoxDev.sh`
 to persist data across multiple windows, try http://www.xulplanet.com/references/xpcomref/comps/c_hashpropertybag1.html
 
 to package:
-. build.bat // works in bash ... zomg! 
+. build.bat // works in bash ... zomg!

@@ -686,7 +686,21 @@ facebookService.prototype = {
                 fbSvc._eventInvs.update( data.event_invites );
                 fbSvc._reqs.update( data.friend_requests );
             }
-        })
+        });
+
+        var query = " SELECT title_text, href FROM notification "
+          + " WHERE recipient_id = :user and is_hidden=0";
+        query = query.replace( /:user/g, this._uid );
+        this.callMethod('facebook.fql.query', ['query='+query], function(data) {
+          for each( var notification in data ) {
+            vdebug(notification);
+            fbSvc.showPopup('you.req',
+                            'chrome://facebook/content/poke.gif',
+                            notification.title_text,
+                            notification.href);
+
+          }
+        });
     },
     parseUsers: function(user_data) {
         users = {};
@@ -800,7 +814,7 @@ facebookService.prototype = {
                     fbSvc.notify(null, 'facebook-wall-updated', loggedInUser.wall);
                     if (fbSvc._loggedInUser.wall < loggedInUser.wall) {
                         fbSvc.showPopup( 'you.wall', 'chrome://facebook/content/wall_post.gif',
-					 'Someone wrote on your wall',
+                                         'Someone wrote on your wall',
                                          'http://www.facebook.com/profile.php?id=' + fbSvc._uid + '&src=fftb#wall');
                     }
                 }
