@@ -50,7 +50,7 @@ function checkSeparator(data) {
 var fbToolbarObserver = {
     observe: function(subject, topic, data) {
         debug('toolbar observing something: ', topic);
-        var fStrings = GetFBStringbundle();
+        var fStrings = GetFBStringBundle();
         var eltId = topicToXulId[topic];
         if( eltId ) {
             setAttributeById(eltId, 'label', data);
@@ -136,7 +136,7 @@ var topics_of_interest =    [ 'facebook-session-start'
                             ];
 
 var facebook = {
-    fStringbundle : null,
+    fStringBundle : null,
     load: function() {
         debug( "loading toolbar..." );
         var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
@@ -154,8 +154,7 @@ var facebook = {
             obsSvc.addObserver(fbToolbarObserver, topic, false);
         }
 
-        fStringbundle = GetFBStringbundle();
-
+        var fStringBundle = GetFBStringBundle();
         var loggedInUser = fbSvc.loggedInUser;
         if (loggedInUser) {
             loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
@@ -205,9 +204,9 @@ var facebook = {
     var friends = fbSvc.getFriends(count);
     debug('got friends', count.value);
     if (!fbSvc.loggedIn) {
-      SetHint(true, this.fStringbundle.getString('loadFriends'), 'FacebookLogin()');
+      SetHint(true, this.fStringBundle.getString('loadFriends'), 'FacebookLogin()');
     } else if (!count.value) {
-      SetHint(true, this.fStringbundle.getString('loadingFriends'), '');
+      SetHint(true, this.fStringBundle.getString('loadingFriends'), '');
     } else {
       friends.sort(this.sortFriends);
       for each (var friend in friends) {
@@ -323,7 +322,8 @@ var facebook = {
           throw null;
       // ...and if the function is there then we have to do this lame javascript: url hack to
       // execute it.
-      content.document.location = 'javascript:try { share_internal_bookmarklet("' + p + '"); } catch (e) { setTimeout("' + openCmd + '", 0); } void(0);'
+      content.document.location = 'javascript:try { share_internal_bookmarklet("' + p +
+        '"); } catch (e) { setTimeout("' + openCmd + '", 0); } void(0);';
     } catch(e) {
       debug('title is: ' + document.title, 'url: ' + content.document.location.href, openCmd);
       eval(openCmd);

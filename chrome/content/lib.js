@@ -444,7 +444,7 @@ function facebook_toggleToolbar()
     document.persist("facebook-toolbar", "collapsed");
 }
 
-function GetFBStringbundle() {
+function GetFBStringBundle() {
   var sb = top.document.getElementById('facebook-strings');
   if (!sb) {
     sb = top.document.getElementById('sidebar').contentDocument.getElementById('facebook-strings');
