@@ -332,17 +332,27 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
 }
 
 /* Add separators between each friend box */
-richlistitem {
-  padding: 0px;
+#PopupFacebookFriends richlistitem,
+#SidebarFriendsList richlistitem {
+  padding: 3px;
   margin: 0px;
   border-bottom: 1px solid #b1bdd6;
 }
-richlistitem:last-child { border-bottom: none; }
+#PopupFacebookFriends richlistitem:last-child,
+#SidebarFriendsList richlistitem:last-child {
+  border-bottom: none;
+}
 
-richlistitem[selected=true] .facebook-link,
-richlistitem[selected=true] .stime,
-richlistitem[selected=true] .status,
+#PopupFacebookFriends richlistitem[selected=true],
+#PopupFacebookFriends richlistitem[selected=true] .facebook-link,
+#PopupFacebookFriends richlistitem[selected=true] .stime,
+#PopupFacebookFriends richlistitem[selected=true] .status,
+#SidebarFriendsList richlistitem[selected=true],
+#SidebarFriendsList richlistitem[selected=true] .facebook-link,
+#SidebarFriendsList richlistitem[selected=true] .stime,
+#SidebarFriendsList richlistitem[selected=true] .status,
 #FacebookHint[selected=true] {
     background-color: Highlight;
     color: HighlightText;
 }
+
