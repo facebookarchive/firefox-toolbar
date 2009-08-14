@@ -16,7 +16,9 @@
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/sidebar.js"/>
 
-  <stringbundle id="facebook-strings" src="chrome://facebook/locale/facebook.properties"/>
+  <stringbundleset id="fbbundles">
+    <stringbundle id="facebook-strings" src="chrome://facebook/locale/facebook.properties"/>
+  </stringbundleset>
 
   <hbox>
     <textbox id="facebook-search-sidebar"

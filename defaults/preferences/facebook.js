@@ -1,3 +1,5 @@
+pref("extensions.facebook.debug", false);
+
 pref("extensions.facebook.notifications.toggle", true);
 pref("extensions.facebook.notifications.you.req", true);
 pref("extensions.facebook.notifications.you.msg", true);

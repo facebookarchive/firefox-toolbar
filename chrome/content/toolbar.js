@@ -136,9 +136,10 @@ var topics_of_interest =    [ 'facebook-session-start'
                             ];
 
 var facebook = {
-    fStringBundle : null,
     load: function() {
         debug( "loading toolbar..." );
+        facebook.fStringBundle = GetFBStringBundle();
+        debug(facebook.fStringBundle.src);
         var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
         if (!prefSvc.prefHasUserValue('extensions.facebook.not_first_run')) {
           // unfortunately if we create any tabs here, session store overrides
@@ -154,7 +155,6 @@ var facebook = {
             obsSvc.addObserver(fbToolbarObserver, topic, false);
         }
 
-        var fStringBundle = GetFBStringBundle();
         var loggedInUser = fbSvc.loggedInUser;
         if (loggedInUser) {
             loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
@@ -204,9 +204,10 @@ var facebook = {
     var friends = fbSvc.getFriends(count);
     debug('got friends', count.value);
     if (!fbSvc.loggedIn) {
-      SetHint(true, this.fStringBundle.getString('loadFriends'), 'FacebookLogin()');
+      var lfLoad = facebook.fStringBundle.getString('loadFriends');
+      SetHint(true, lfLoad, 'FacebookLogin()');
     } else if (!count.value) {
-      SetHint(true, this.fStringBundle.getString('loadingFriends'), '');
+      SetHint(true, facebook.fStringBundle.getString('loadingFriends'), '');
     } else {
       friends.sort(this.sortFriends);
       for each (var friend in friends) {

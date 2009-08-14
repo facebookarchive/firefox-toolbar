@@ -27,14 +27,34 @@ var fbSvc = Cc['@facebook.com/facebook-service;1'].getService(Ci.fbIFacebookServ
 function debug() {
   if (debug.caller && debug.caller.name) {
     dump(debug.caller.name + ': ');
+    logConsole(debug.caller.name + ': ');
   } else {
     dump(' ');
+    //logConsole(' ');
   }
   for (var i = 0; i < arguments.length; i++) {
     if (i > 0) dump(', ');
     dump(arguments[i]);
+    logConsole(arguments[i]);
   }
   dump('\n');
+}
+
+/* Log message to error console if enableLogging preference is true */
+function logConsole (logMessage) {
+    var myExtId = "wussap@wussap.com";
+    var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+    var debug = prefSvc.getBoolPref('extensions.facebook.debug');
+    if (debug) {
+        var now = new Date();
+        //var logString = "Facebook Toolbar : " + " [" + now + "] " + " \"" + logMessage + "\"";
+        var logString = "Facebook Toolbar : " + logMessage;
+
+        // send a message to the console
+        var consoleService = Cc['@mozilla.org/consoleservice;1'].
+                getService(Ci.nsIConsoleService);
+        consoleService.logStringMessage(logString);
+    }
 }
 
 // wrapper for document.getElementById(id).setAttribute(attrib, val) that
@@ -444,10 +464,13 @@ function facebook_toggleToolbar()
     document.persist("facebook-toolbar", "collapsed");
 }
 
-function GetFBStringBundle() {
-  var sb = top.document.getElementById('facebook-strings');
+function GetFBStringBundle()
+{
+  debug( "GetFBStringBundle..." );
+  var sb = document.getElementById('facebook-strings');
   if (!sb) {
-    sb = top.document.getElementById('sidebar').contentDocument.getElementById('facebook-strings');
+    debug( "getting bundle from sidebar..." );
+    sb = document.getElementById('sidebar').contentDocument.getElementById('facebook-strings');
   }
   return sb;
 }

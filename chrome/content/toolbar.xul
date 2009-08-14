@@ -10,7 +10,9 @@
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/toolbar.js"/>
 
-  <stringbundle id="facebook-strings" src="chrome://facebook/locale/facebook.properties"/>
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="facebook-strings" src="chrome://facebook/locale/facebook.properties"/>
+  </stringbundleset>
 
   <toolbox id="navigator-toolbox" crop="end">
     <toolbarpalette id="BrowserToolbarPalette">
