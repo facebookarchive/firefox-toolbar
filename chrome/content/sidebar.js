@@ -24,6 +24,7 @@ var Ci = Components.interfaces;
 
 var fbSvc = Cc['@facebook.com/facebook-service;1'].getService(Ci.fbIFacebookService);
 var obsSvc = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
+var fbStringBundle = null;
 
 var observer = {
     observe: function(subject, topic, data) {
@@ -100,7 +101,7 @@ function FriendSort( field, eltId, func){
     this.sortFunc = this.defaultSortFunc;
 }
 FriendSort.prototype.__defineGetter__( "label", function() {
-  return 'Sorting by ' + this.field;
+  return fbStringBundle.getFormattedString('sortingby', [this.field]);
 });
 FriendSort.prototype.callbackSortFunc =
 FriendSort.prototype.defaultSortFunc = NameCmp;
@@ -146,7 +147,7 @@ function ClearFriends(sessionEnded) {
         list.removeChild(list.firstChild);
     }
     if (sessionEnded) {
-        SetHint(true, 'Login from the toolbar to see your friend list.', 'FacebookLogin()');
+        SetHint(true, fbStringBundle.String('loadFriends'), 'FacebookLogin()');
     }
 }
 
@@ -156,9 +157,9 @@ function LoadFriends() {
     var friends = fbSvc.getFriends(count);
     debug('Loading friends', count.value);
     if (!fbSvc.loggedIn) {
-        SetHint(true, 'Log in from the toolbar to see your friend list.', 'FacebookLogin()');
+        SetHint(true, fbStringBundle.String('loadFriends'), 'FacebookLogin()');
     } else if (!count.value) {
-        SetHint(true, 'Loading friend list...', '');
+        SetHint(true, fbStringBundle.String('loadingFriends'), '');
     } else {
         var friendSort = GetFriendSort();
         debug( "Sorting friends", friendSort.field );
@@ -171,7 +172,7 @@ function LoadFriends() {
             CreateFriendNode(list, friend, hint);
         }
         var searchTerm = GetFBSearchBox().value;
-        if (searchTerm != 'Search Facebook') {
+        if (searchTerm != fbStringBundle.String('searchplaceholder')) {
             SearchFriends(searchTerm);
         } else {
             SetHint(false, '', '');
@@ -203,7 +204,7 @@ function UpdateFriends() {
     }
     friendsToUpdate = [];
     var searchTerm = GetFBSearchBox().value;
-    if (searchTerm != 'Search Facebook') {
+    if (searchTerm != fbStringBundle.String('searchplaceholder')) {
         SearchFriends(searchTerm);
     }
 }
@@ -254,6 +255,7 @@ var _sidebar_topics = ['facebook-new-friend',
                        'facebook-new-day' ];
 function SidebarLoad() {
     debug('SidebarLoad');
+    fbStringBundle = GetFBStringBundle()
     top.document.getElementById('facebook-sidebar-toggle').checked = true;
     top.document.getElementById('PopupFacebookFriends').hidePopup(); // just in case it was still showing
 

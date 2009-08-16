@@ -77,7 +77,7 @@ var fbToolbarObserver = {
                 break;
             case 'facebook-session-end':
                 debug('ending session...');
-                setAttributeById('facebook-login-status', 'label', 'Login to Facebook');
+                setAttributeById('facebook-login-status', 'label', fStrings.getString('login'));
                 setAttributeById('facebook-name-info', 'label', '');
                 var statusBox = document.getElementById('facebook-toolbar-status');
                 statusBox.style.display="none";
@@ -276,7 +276,7 @@ var facebook = {
     }
     if (searchBox.value=='') {
       searchBox.style.color='#808080';
-      searchBox.value = 'Search Facebook';
+      searchBox.value = facebook.fStringBundle.getString('searchplaceholder');
     }
   },
   isEmptyStatusText: function (text) {
@@ -352,7 +352,7 @@ var facebook = {
     document.getElementById('PopupPoker').style.display = 'none';
     document.getElementById('PopupPoster').style.display = 'none';
     if (sessionEnded) {
-      SetHint(true, 'Login from the toolbar to see your friend list.', 'FacebookLogin()');
+      SetHint(true, facebook.fStringBundle.getString('loadFriends'), 'FacebookLogin()');
     }
   }
 };
