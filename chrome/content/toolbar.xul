@@ -16,9 +16,9 @@
 
   <toolbox id="navigator-toolbox" crop="end">
     <toolbarpalette id="BrowserToolbarPalette">
-      <toolbarbutton label="&toolbar.button.facebook.label;"
+      <toolbarbutton label="&toolbar.facebook.label;"
             class="chromeclass-toolbar-additional toolbarbutton-1"
-            id="facebook-toolbar-toggle" tooltiptext="&toolbar.button.facebook.tooltip;" oncommand="facebook_toggleToolbar()" />
+            id="facebook-toolbar-toggle" tooltiptext="&toolbar.facebook.name;" oncommand="facebook_toggleToolbar()" />
       <toolbarbutton id="facebook-sidebar-toggle"
                      class="facebook-sidebar-icon"
                      tooltiptext="&toolbar.button.sidebar.tooltip;"
@@ -93,17 +93,17 @@
         <menupopup id="facebook-link-popup">
 
           <!-- The Top Nav -->
-          <menuitem label="Profile"
+          <menuitem label="&toolbar.links.profile.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="OpenFBUrl('profile.php', this.getAttribute('userid'), event)"
                     id="facebook-menu-my-profile"
                     />
-          <menuitem label="Friends"
+          <menuitem label="&toolbar.links.friends.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/friends/?src=fftb', event);"
                     id="facebook-menu-my-profile"
                     />
-          <menuitem label="Inbox"
+          <menuitem label="&toolbar.links.inbox.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/inbox/?src=fftb', event)"
                     />
@@ -111,28 +111,28 @@
           <menuseparator />
 
           <!-- The Side Nav -->
-          <menuitem label="Photos"
+          <menuitem label="&toolbar.links.photos.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/photos.php?src=fftb', event)"
                     />
-          <menuitem label="Notes"
+          <menuitem label="&toolbar.links.notes.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/notes.php?src=fftb', event)"
                     />
-          <menuitem label="Groups"
+          <menuitem label="&toolbar.links.groups.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/groups.php?src=fftb', event)"
                     />
-          <menuitem label="Events"
+          <menuitem label="&toolbar.links.events.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/events.php?src=fftb', event)"
                     />
-          <menuitem label="Links"
+          <menuitem label="&toolbar.links.linkies.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/posted.php?src=fftb', event)"
                     />
 
-          <menuitem label="Video"
+          <menuitem label="&toolbar.links.videos.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/video/?src=fftb', event)"
                     />
@@ -140,22 +140,22 @@
           <menuseparator />
 
           <!-- Settings Menu -->
-          <menuitem label="Account Settings"
+          <menuitem label="&toolbar.settings.account.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/editaccount.php?src=fftb', event)"
                     />
-          <menuitem label="Privacy Settings"
+          <menuitem label="&toolbar.settings.privacy.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/privacy.php?src=fftb', event)"
                     />
-          <menuitem label="Application Settings"
+          <menuitem label="&toolbar.settings.application.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openUILink('http://www.facebook.com/editapps.php?src=fftb', event)"
                     />
 
           <menuseparator />
 
-          <menuitem label="Toolbar Settings"
+          <menuitem label="&toolbar.settings.toolbar.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openDialog('chrome://facebook/content/settings.xul', '', 'chrome,titlebar,toolbar,centerscreen,dialog=yes');" />
         </menupopup>
@@ -171,16 +171,16 @@
                  onfocus="facebook.onStatusBoxFocus(this);"
                  onblur="facebook.onStatusBoxBlur(this);"
                  oncommand="return SetFacebookStatus(this);"
-                 emptytext="set your status..."
-                 tooltiptext="Change your Facebook status"
+                 emptytext="&toolbar.status.emptytext.label;"
+                 tooltiptext="&toolbar.status.emptytext.tooltip;"
                  spellcheck="true"
                  style="display:none;"
         />
         <toolbarseparator/>
         <toolbarbutton id="facebook-login-status"
                        class="button"
-                       label="Login to Facebook"
-                       tooltiptext="Login to Facebook"
+                       label="&toolbar.login.label;"
+                       tooltiptext="&toolbar.login.label;"
                        oncommand="FacebookLogin()" />
       </toolbaritem>
     </toolbarpalette>
@@ -191,7 +191,7 @@
              iconsize="small"
              customizable="true"
              context="toolbar-context-menu"
-             toolbarname="Facebook Toolbar"
+             toolbarname="&toolbar.facebook.name;"
              crop="end"
             defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-event-invs,facebook-notification-group-invs,facebook-notification-separator,facebook-share,facebook-photoupload,spring,facebook-login-info">
     </toolbar>
@@ -231,14 +231,14 @@
   </toolbox>
   <broadcasterset id="mainBroadcasterSet">
     <broadcaster id="viewFacebookSidebar" autoCheck="false"
-                 label="Facebook Sidebar"
+                 label="&toolbar.sidebar.label;"
                  type="checkbox" group="sidebar"
                  sidebarurl="chrome://facebook/content/sidebar.xul"
-                 sidebartitle="Facebook Sidebar"
+                 sidebartitle="&toolbar.sidebar.label;"
                  oncommand="toggleSidebar('viewFacebookSidebar');event.stopPropagation();" />
   </broadcasterset>
   <menupopup id="viewSidebarMenu">
-    <menuitem key="viewFacebookSidebarKb" observes="viewFacebookSidebar" label="Facebook" accesskey=""/>
+    <menuitem key="viewFacebookSidebarKb" observes="viewFacebookSidebar" label="&toolbar.facebook.label;" accesskey=""/>
   </menupopup>
 
 </overlay>

@@ -253,7 +253,7 @@ var facebook = {
     }
   },
   searchBoxFocus: function(searchBox) {
-    if (searchBox.value == 'Search Facebook') {
+    if (searchBox.value == facebook.fStringBundle.getString('searchplaceholder')) {
       searchBox.value='';
       searchBox.style.color='#000000';
     }

@@ -3,15 +3,17 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://facebook/skin/settings.css" type="text/css"?>
 
+<!DOCTYPE prefwindow SYSTEM "chrome://facebook/locale/settings.dtd">
+
 <prefwindow id="facebook-settings"
-            title="Configure the Facebook Toolbar"
+            title="&settings.window.title;"
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
             type="prefwindow"
             windowtype="facebookToolbar:Preferences"
             dlgbuttons="cancel,accept"
             onload="var btnAccept=document.documentElement.getButton('accept');btnAccept.hidden = btnAccept.disabled = false;"
             >
-  <prefpane id="facebook-you-pane" label="Configure Facebook Toolbar Notifications"
+  <prefpane id="facebook-you-pane" label="&settings.panel.title;"
             selected="true">
     <preferences>
       <!-- General Notifications Preferences -->
@@ -87,46 +89,46 @@
     </preferences>
 
     <vbox>
-      <checkbox preference="toggle" label="Enable Pop-up Notifications"/>
+      <checkbox preference="toggle" label="&settings.notificationmes.enable.label;"/>
       <groupbox>
-        <label class="header" value="What Facebook happenings prompt a notification?" />
+        <label class="header" value="&settings.notificationme.header.label;" />
         <hbox>
           <groupbox id="facebook-notifications-youbox">
-            <caption label="Notifications about me"/>
-            <checkbox preference="you-req"       label="New friend request"/>
-            <checkbox preference="you-msg"       label="New message"/>
-            <checkbox preference="you-poke"      label="New poke"/>
-            <checkbox preference="you-friend"    label="New friend"/>
-            <checkbox preference="you-event-inv" label="New event invite"/>
-            <checkbox preference="you-group-inv" label="New group invite"/>
-            <checkbox preference="you-share"     label="New share"/>
+            <caption label="&settings.notificationme.about.label;"/>
+            <checkbox preference="you-req"       label="&settings.notificationme.friendreq.label;"/>
+            <checkbox preference="you-msg"       label="&settings.notificationme.message.label;"/>
+            <checkbox preference="you-poke"      label="&settings.notificationme.poke.label;"/>
+            <checkbox preference="you-friend"    label="&settings.notificationme.friend.label;"/>
+            <checkbox preference="you-event-inv" label="&settings.notificationme.event.label;"/>
+            <checkbox preference="you-group-inv" label="&settings.notificationme.group.label;"/>
+            <checkbox preference="you-share"     label="&settings.notificationme.share.label;"/>
             <checkbox preference="you-site"
-                      label="All other notifications (wall posts, comments, likes, etc.)"/>
+                      label="&settings.notificationme.other.label;"/>
           </groupbox>
 
           <vbox>
             <groupbox id="facebook-notifications-friendbox">
-              <caption label="Notifications about my friends"/>
-              <checkbox preference="friend-profile" label="A friend updates his/her profile"/>
-              <checkbox preference="friend-status"  label="A friend updates his/her status"/>
-              <checkbox preference="friend-album"   label="A friend updates his/her albums"/>
-              <checkbox preference="friend-wall"    label="Someone writes on a friend's wall"/>
-              <checkbox preference="friend-note"    label="A friend writes a note"/>
+              <caption label="&settings.notificationfriend.about.label;"/>
+              <checkbox preference="friend-profile" label="&settings.notificationfriend.profile.label;"/>
+              <checkbox preference="friend-status"  label="&settings.notificationfriend.status.label;"/>
+              <checkbox preference="friend-album"   label="&settings.notificationfriend.albums.label;"/>
+              <checkbox preference="friend-wall"    label="&settings.notificationfriend.wall.label;"/>
+              <checkbox preference="friend-note"    label="&settings.notificationfriend.note.label;"/>
             </groupbox>
             <groupbox id="facebook-notifications-other">
-              <caption label="Other notifications"/>
-              <checkbox preference="upload-complete" label="Uploads Complete"/>
+              <caption label="&settings.notificationother.about.label;"/>
+              <checkbox preference="upload-complete" label="&settings.notificationother.upload.label;"/>
           </groupbox>
           </vbox>
         </hbox>
       </groupbox>
 
       <groupbox id="facebook-notifications-method">
-        <label class="header" value="What do notifications look like?" />
+        <label class="header" value="&settings.notification.type.label;" />
         <radiogroup preference="growl">
-          <radio label="Use Facebook Toolbar notification windows"
+          <radio label="&settings.notification.native.label;"
                  value="false" />
-          <radio label="Use built-in Firefox notifications (on Mac OS X, Growl is used)"
+          <radio label="&settings.notification.firefox.label;"
                  value="true" />
         </radiogroup>
 

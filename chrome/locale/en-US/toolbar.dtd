@@ -1,6 +1,7 @@
-<!ENTITY  toolbar.button.facebook.label             "Facebook">
+<!ENTITY  toolbar.facebook.label                    "Facebook">
 
-<!ENTITY  toolbar.button.facebook.tooltip           "Facebook Toolbar">
+<!ENTITY  toolbar.facebook.name                     "Facebook Toolbar">
+
 <!ENTITY  toolbar.button.sidebar.tooltip            "Facebook Friends Sidebar">
 <!ENTITY  toolbar.search.label                      "Search Facebook">
 <!ENTITY  toolbar.button.home.tooltip               "Go to Facebook">
@@ -14,3 +15,23 @@
 <!ENTITY  toolbar.button.messages.tooltip           "New Messages">
 
 <!ENTITY  toolbar.button.links.label                "Quick Links">
+<!ENTITY  toolbar.links.profile.label               "Profile">
+<!ENTITY  toolbar.links.friends.label               "Friends">
+<!ENTITY  toolbar.links.inbox.label                 "Inbox">
+<!ENTITY  toolbar.links.photos.label                "Photos">
+<!ENTITY  toolbar.links.notes.label                 "Notes">
+<!ENTITY  toolbar.links.groups.label                "Groups">
+<!ENTITY  toolbar.links.events.label                "Events">
+<!ENTITY  toolbar.links.linkies.label               "Links">
+<!ENTITY  toolbar.links.videos.label                "Videos">
+<!ENTITY  toolbar.settings.account.label            "Account Settings">
+<!ENTITY  toolbar.settings.privacy.label            "Privacy Settings">
+<!ENTITY  toolbar.settings.application.label        "Application Settings">
+<!ENTITY  toolbar.settings.toolbar.label            "Toolbar Settings">
+
+<!ENTITY  toolbar.status.emptytext.label            "set your status...">
+<!ENTITY  toolbar.status.emptytext.tooltip          "Change your Facebook status">
+
+<!ENTITY  toolbar.login.label                       "Log in to Facebook">
+
+<!ENTITY  toolbar.sidebar.label                     "Facebook Sidebar">
