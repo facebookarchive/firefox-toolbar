@@ -1,1 +1,31 @@
-<!ENTITY  window.title              "Facebook Photo Upload">
+<!ENTITY  window.title                      "Facebook Photo Upload">
+
+<!ENTITY  upload.destination.label          "Upload New Photos to:">
+<!ENTITY  upload.album.label                "Existing Album">
+<!ENTITY  upload.newalbum.label             "New Album">
+<!ENTITY  upload.loadingalbums.label        "Loading Albums...">
+
+<!ENTITY  upload.album.name.label           "Name:">
+<!ENTITY  upload.album.location.label       "Location:">
+<!ENTITY  upload.album.description.label    "Description:">
+
+<!ENTITY  upload.privacy.label              "Who can see this?">
+<!ENTITY  upload.privacy.everyone.label     "Everyone">
+<!ENTITY  upload.privacy.fof.label          "Friends of Friends">
+<!ENTITY  upload.privacy.friends.label      "Only Friends">
+<!ENTITY  upload.privacy.networks.label     "Networks">
+
+<!ENTITY  upload.photo.detail.label         "Photo detail:">
+<!ENTITY  upload.photo.name.label           "File name:">
+<!ENTITY  upload.photo.size.label           "Size:">
+<!ENTITY  upload.photo.caption.label        "Caption:">
+
+<!ENTITY  upload.tag.start.label            "In this photo:">
+<!ENTITY  upload.tag.click.label            "Click on people in the photo to tag them.">
+<!ENTITY  upload.tag.remove.label           "Remove selected tags">
+
+<!ENTITY  upload.photos.add.label           "Add Photos...">
+<!ENTITY  upload.photos.remove.label        "Remove All">
+
+<!ENTITY  upload.cancel.label               "Cancel Upload">
+<!ENTITY  upload.all.label                  "Upload All">

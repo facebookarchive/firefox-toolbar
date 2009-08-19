@@ -31,21 +31,21 @@
   <broadcaster id="uploadBroadcaster"/>
 
   <vbox flex="1">
-    <label value="Upload New Photos to:"/>
+    <label value="&upload.destination.label;"/>
     <hbox>
       <radiogroup id="albumSelectionGroup"
                   oncommand="PhotoUpload.onAlbumSelectionModeChange()"
                   observes="uploadBroadcaster">
-        <radio label="Existing Album" id="existingAlbumRadio"
+        <radio label="&upload.album.label;" id="existingAlbumRadio"
                observes="uploadBroadcaster"/>
-        <radio label="New Album" id="newAlbumRadio"
+        <radio label="&upload.newalbum.label;" id="newAlbumRadio"
                observes="uploadBroadcaster"/>
       </radiogroup>
       <deck id="albumSelectionDeck" flex="1">
         <vbox id="existingAlbumPanel" class="loading-albums">
           <hbox>
             <separator/>
-            <label id="loadingAlbumsLabel" value="Loading Albums…"/>
+            <label id="loadingAlbumsLabel" value="&upload.loadingalbums.label;"/>
             <menulist id="albumsList"
                       observes="uploadBroadcaster">
               <menupopup id="albumsPopup"/>
@@ -63,31 +63,31 @@
             </columns>
             <rows>
               <row align="center">
-                <label value="Name:"/>
+                <label value="&upload.album.name.label;"/>
                 <hbox align="center">
                   <textbox id="albumName" flex="1"
                            observes="uploadBroadcaster"/>
-                  <label value="Location:"/>
+                  <label value="&upload.album.location.label;"/>
                   <textbox id="albumLocation" flex="1"
                            observes="uploadBroadcaster"/>
                 </hbox>
               </row>
               <row align="center">
-                <label value="Description:"/>
+                <label value="&upload.album.description.label;"/>
                 <hbox align="center">
                   <textbox id="albumDescription" flex="1"
                            observes="uploadBroadcaster"/>
-                  <label value="Who can see this?"/>
+                  <label value="&upload.privacy.label;"/>
                   <menulist id="albumVisibility">
                      <menupopup>
-                        <menuitem label="Everyone"
+                        <menuitem label="&upload.privacy.everyone.label;"
                                   value="everyone"/>
-                        <menuitem label="Friends of Friends"
+                        <menuitem label="&upload.privacy.fof.label;"
                                   value="friends-of-friends"/>
-                        <menuitem label="Only Friends"
+                        <menuitem label="&upload.privacy.friends.label;"
                                   value="friends"/>
                         <!-- XXX more descriptive label? -->
-                        <menuitem label="Networks"
+                        <menuitem label="&upload.privacy.networks.label;"
                                   value="networks"/>
                      </menupopup>
                    </menulist>
@@ -106,7 +106,7 @@
                    src="chrome://facebook/content/photoupload/overviewpanel.html"/>
       </vbox>
       <vbox id="editPanel">
-        <caption label="Photo detail:"/>
+        <caption label="&upload.photo.detail.label;"/>
         <vbox id="editImageContainer" align="center">
           <!-- width/max-width as a CSS property or XUL attribute has no effect on the image width.
                That's why a <browser> is used instead. -->
@@ -114,18 +114,18 @@
         </vbox>
         <spacer flex="1"/>
         <hbox>
-            <label value="File name:"/>
+            <label value="&upload.photo.name.label;"/>
             <label id="editFilenameField"/>
         </hbox>
         <hbox>
-            <label value="Size:"/>
+            <label value="&upload.photo.size.label;"/>
             <label id="editSizeField"/>
         </hbox>
-        <label value="Caption:"/>
+        <label value="&upload.photo.caption.label;"/>
         <textbox id="editCaptionField" multiline="true" disabled="true"
                  oninput="EditPanel.onCaptionInput(event)"/>
         <hbox>
-          <label value="In this photo:"/>
+          <label value="&upload.tag.start.label;"/>
         </hbox>
         <stack flex="1">
           <listbox flex="1"
@@ -144,7 +144,7 @@
             <spacer flex="1"/>
             <hbox>
               <spacer flex="1"/>
-              <label value="Click on people in the photo to tag them."
+              <label value="&upload.tag.click.label;"
                      style="color: gray"/>
               <spacer flex="1"/>
             </hbox>
@@ -154,7 +154,7 @@
         <hbox>
           <button id="editRemoveTagsButton"
                   oncommand="EditPanel.onRemoveSelectedTags(event)"
-                  label="Remove selected tags"/>
+                  label="&upload.tag.remove.label;"/>
         </hbox>
       </vbox>
     </hbox>
@@ -162,10 +162,10 @@
     <hbox align="center">
       <deck id="uploadStatusDeck" flex="1">
         <hbox align="center">
-          <button label="Add Photos…" icon="add" id="addPhotosButton"
+          <button label="&upload.photos.add.label;" icon="add" id="addPhotosButton"
                   oncommand="PhotoUpload.addPhotos();"
                   observes="uploadBroadcaster"/>
-          <button label="Remove All" icon="clear" id="removeAllButton"
+          <button label="&upload.photos.remove.label;" icon="clear" id="removeAllButton"
                   disabled="true"
                   oncommand="PhotoUpload.removeAllPhotos();"
                   observes="uploadBroadcaster"/>
@@ -177,11 +177,11 @@
           <label class="upload-status" id="uploadStatus"/>
         </hbox>
         <hbox>
-          <button label="Cancel Upload" oncommand="PhotoUpload.cancelUpload()"/>
+          <button label="&upload.cancel.label;" oncommand="PhotoUpload.cancelUpload()"/>
           <progressmeter id="uploadProgress" mode="determined" value="0" flex="1"/>
         </hbox>
       </deck>
-      <button label="Upload All" id="uploadButton" disabled="true"
+      <button label="&upload.all.label;" id="uploadButton" disabled="true"
               oncommand="PhotoUpload.upload();"
               observes="uploadBroadcaster"/>
     </hbox>
