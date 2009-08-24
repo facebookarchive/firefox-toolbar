@@ -130,8 +130,10 @@ function SelectItemInList(item, list) {
     // this must have been called via the sidebar
     list.selectedItem = item;
   } else {
-    // for some reason, calling hidePopup followed by showPopup results in the popup being hidden!
-    // so we need to disable the hidePopup call temporarily while the focus shifts around
+    // for some reason, calling hidePopup followed by showPopup
+    // results in the popup being hidden!
+    // so we need to disable the hidePopup call temporarily while the
+    // focus shifts around
     facebook.ignoreBlur = true;
     list.selectedItem = item;
     GetFBSearchBox().focus();
@@ -194,7 +196,7 @@ function SearchFriends(search) {
   debug('matched', numMatched);
   if (search && numMatched == 0) {
     SetHint(true, 'Press enter to search for "' + search + '" on Facebook',
-            "openUILink('http://www.facebook.com/s.php?src=fftb&q=' + encodeURIComponent(GetFBSearchBox().value), event);");
+            "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(GetFBSearchBox().value), event);");
   } else if (!sidebar && (numMatched > 4 || !search)) {
     var str = 'See all ' + numMatched + ' friends';
     if (search)
@@ -254,12 +256,13 @@ function HandleKeyPress(e) {
       if (item && item.style.display != 'none') {
         item.doCommand();
       } else {
-        openUILink('http://www.facebook.com/s.php?src=fftb&q=' +
+        openUILink('http://www.facebook.com/search/?src=fftb&q=' +
                    encodeURIComponent(GetFBSearchBox().value), e);
       }
       // fall-through to hide the pop-up...
     case e.DOM_VK_ESCAPE:
-      // for some reason calling blur() doesn't work here...lets just focus the browser instead
+      // for some reason calling blur() doesn't work here...lets just
+      // focus the browser instead
       content.focus();
       return;
   }
@@ -293,7 +296,7 @@ function FacebookLogin() {
     dump('logging out\n');
     fbSvc.sessionEnd();
     var req = new XMLHttpRequest();
-    req.open('post', 'http://www.facebook.com/logout.php')
+    req.open('post', 'http://www.facebook.com/logout.php');
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     req.send('confirm=1');
   } else {
