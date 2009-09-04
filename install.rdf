@@ -27,8 +27,6 @@
     </em:targetApplication>
 
     <!-- Front End MetaData -->
-    <em:name>Facebook Toolbar</em:name>
-    <em:description>Integrate your Facebook life into your browser</em:description>
     <em:creator>Facebook Team</em:creator>
     <em:contributor>Briks Software (http://briks.si)</em:contributor>
     <em:developer>Eugene Letuchy</em:developer>
@@ -39,5 +37,14 @@
     <em:iconURL>chrome://facebook/skin/fb32.png</em:iconURL>
     <em:optionsURL>chrome://facebook/content/settings.xul</em:optionsURL>
     <em:homepageURL>http://developers.facebook.com/toolbar/</em:homepageURL>
+
+    <em:localized>
+      <Description>
+        <em:locale>en-US</em:locale>
+        <em:name>Facebook Toolbar</em:name>
+        <em:description>Integrate your Facebook life into your browser</em:description>
+      </Description>
+    </em:localized>
+
   </Description>
 </RDF>
