@@ -19,8 +19,8 @@
 <!-- Notifications about my friends section -->
 <!ENTITY  settings.notificationfriend.about.label         "Notifications about my friends">
 <!ENTITY  settings.notificationfriend.profile.label       "A friend updates his/her profile">
-<!ENTITY  settings.notificationfriend.status.label        "A friend updates his/her profile">
-<!ENTITY  settings.notificationfriend.albums.label        "A friend updates his/her profile">
+<!ENTITY  settings.notificationfriend.status.label        "A friend updates his/her status">
+<!ENTITY  settings.notificationfriend.albums.label        "A friend updates his/her albums">
 <!ENTITY  settings.notificationfriend.wall.label          "Someone writes on a friend's wall">
 <!ENTITY  settings.notificationfriend.note.label          "A friend writes a note">
 
