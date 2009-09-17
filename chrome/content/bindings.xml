@@ -1,15 +1,20 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE bindings SYSTEM "chrome://facebook/locale/sidebar.dtd">
+
 <bindings id="textboxBindings"
           xmlns="http://www.mozilla.org/xbl"
           xmlns:xbl="http://www.mozilla.org/xbl"
           xmlns:html="http://www.w3.org/1999/xhtml"
           xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
   <binding id="facebook-search-hbox">
     <content>
       <xul:image />
       <children />
     </content>
   </binding>
+
   <binding id="friendBox" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
     <content>
       <xul:hbox flex="5" style="/*background-color:blue;*/">
@@ -25,13 +30,13 @@
           </xul:label>
           <xul:label xbl:inherits="value=stime" class="stime" />
           <xul:hbox pack="start" class="facebook-friendlinks" >
-            <xul:label value="message" xbl:inherits="onclick=msgCmd"
+            <xul:label value="&sidebar.friendmessage.label;" xbl:inherits="onclick=msgCmd"
                        class="facebook-link mini-link" />
             <xul:label value="-" style="color:#808080; font-size:9px;" />
-            <xul:label value="poke" xbl:inherits="onclick=pokeCmd"
+            <xul:label value="&sidebar.friendpoke.label;" xbl:inherits="onclick=pokeCmd"
                        class="facebook-link mini-link" />
             <xul:label value="-" style="color:#808080; font-size:9px;" />
-            <xul:label value="wall post" xbl:inherits="onclick=postCmd"
+            <xul:label value="&sidebar.friendpost.label;" xbl:inherits="onclick=postCmd"
                        class="facebook-link mini-link" />
           </xul:hbox>
         </xul:vbox>
@@ -57,22 +62,26 @@
       </constructor>
     </implementation>
   </binding>
+
   <binding id="popupMessager" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
     <content>
       <xul:toolbarbutton class="facebook-icon-msgs facebook-link" />
       <xul:label xbl:inherits="value" class="facebook-link" />
     </content>
   </binding>
+
   <binding id="popupPoker" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
     <content>
       <xul:toolbarbutton class="facebook-icon-poke facebook-link" />
       <xul:label xbl:inherits="value" class="facebook-link" />
     </content>
   </binding>
+
   <binding id="popupPoster" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
     <content>
       <xul:toolbarbutton class="facebook-icon-wall facebook-link" />
       <xul:label xbl:inherits="value" class="facebook-link" />
     </content>
   </binding>
+
 </bindings>

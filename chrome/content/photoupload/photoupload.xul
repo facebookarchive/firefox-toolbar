@@ -103,7 +103,7 @@
       <vbox id="overviewPanelContainer" flex="1"
             ondragdrop="nsDragAndDrop.drop(event, PhotoDNDObserver);">
           <browser flex="1" id="overviewPanel"
-                   src="chrome://facebook/content/photoupload/overviewpanel.html"/>
+                   src="chrome://facebook/content/photoupload/overviewpanel.xhtml"/>
       </vbox>
       <vbox id="editPanel">
         <caption label="&upload.photo.detail.label;"/>

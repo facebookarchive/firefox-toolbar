@@ -1,8 +1,14 @@
-<!DOCTYPE HTML "chrome://facebook/locale/photoupload/photoupload.dtd">
-<html>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" [
+<!ENTITY % photouploadDTD SYSTEM "chrome://facebook/locale/photoupload/photoupload.dtd">
+%photouploadDTD;
+]>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <link rel="stylesheet" href="chrome://facebook/skin/photoupload/overviewpanel.css">
+  <link rel="stylesheet" href="chrome://facebook/skin/photoupload/overviewpanel.css"></link>
   <script>
   // wrappedJSObject is used when the document is loaded in a content window.
   // (useful for debugging, but note that other things may fail in that situation).
@@ -13,8 +19,8 @@
   <div id="photo-container">
     <div class="photobox" id="photobox-template"
          onclick="OverviewPanel.selectPhoto(event);">
-      <img>
-      <div class="filename">&npsp;</div>
+      <img/>
+      <div class="filename">&#160;</div>
       <div class="remove" onclick="OverviewPanel.removePhoto(event);">&upload.remove.label;</div>
     </div>
     <div id="help-message">&upload.drag.label;</div>

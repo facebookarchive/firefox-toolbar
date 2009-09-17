@@ -5,3 +5,7 @@
 <!ENTITY  sidebar.sortstatus.label          "Status update time">
 <!ENTITY  sidebar.sortprofile.label         "Profile update time">
 <!ENTITY  sidebar.sortname.label            "Name">
+
+<!ENTITY  sidebar.friendmessage.label       "message">
+<!ENTITY  sidebar.friendpoke.label          "poke">
+<!ENTITY  sidebar.friendpost.label          "wall post">

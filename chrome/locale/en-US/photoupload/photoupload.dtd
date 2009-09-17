@@ -29,3 +29,6 @@
 
 <!ENTITY  upload.cancel.label               "Cancel Upload">
 <!ENTITY  upload.all.label                  "Upload All">
+
+<!ENTITY  upload.remove.label               "Remove">
+<!ENTITY  upload.drag.label                 "Click Add... or drag photos here.">

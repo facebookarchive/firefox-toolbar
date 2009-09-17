@@ -67,7 +67,7 @@ var fbToolbarObserver = {
                 facebook.onStatusBoxBlur(statusBox); // change color for emptyText
                 setAttributeById('facebook-name-info', 'userid', subject.id);
                 setAttributeById('facebook-menu-my-profile', 'userid', subject.id);
-                setAttributeById('facebook-login-status', 'label', 'Logout');
+                setAttributeById('facebook-login-status', 'label', fStrings.getString('logout'));
                 var sb = GetFBSearchBox();
                 if (sb.value != fStrings.getString('searchplaceholder') && sb.value != '') {
                     sb.value = '';
@@ -161,7 +161,7 @@ var facebook = {
             setAttributeById('facebook-name-info', 'label', loggedInUser.name);
             setAttributeById('facebook-name-info', 'userid', loggedInUser.id);
             setAttributeById('facebook-toolbar-status', 'value', loggedInUser.status);
-            setAttributeById('facebook-login-status', 'label', 'Logout');
+            setAttributeById('facebook-login-status', 'label', facebook.fStringBundle.getString('logout'));
             setAttributeById('facebook-menu-my-profile', 'userid', loggedInUser.id);
             setAttributeById('facebook-notification-msgs', 'label', fbSvc.numMsgs);
             setAttributeById('facebook-notification-poke', 'label', fbSvc.numPokes);
