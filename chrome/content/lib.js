@@ -387,16 +387,19 @@ function getRelativeTime(time) {
   return 'over a year ago';
 }*/
 
-function getRelTime(time) {
+function getRelTime(time, isProfile) {
   var sbundle = GetFBStringBundle();
   var elapsed   = Math.floor(new Date().getTime()/1000) - time;
   if( elapsed < dates_in_seconds.week )
-    return getRelTimeWithinWeek(time, false);
+    return getRelTimeWithinWeek(time, false, isProfile);
   if (elapsed < dates_in_seconds.week*1.5)
     return sbundle.getString('aboutaweekago');
   if (elapsed < dates_in_seconds.week*3.5) {
     var weeksElapsed = Math.round(elapsed/dates_in_seconds.week);
-    return sbundle.getFormattedString('aboutweeksago', [weeksElapsed]);
+    if (weeksElapsed == 2)
+      return sbundle.getString('abouttwoweeksago');
+    else
+      return sbundle.getFormattedString('aboutweeksago', [weeksElapsed]);
   }
   if (elapsed < dates_in_seconds.month*1.5)
     return sbundle.getString('aboutamonthago');
@@ -404,19 +407,22 @@ function getRelTime(time) {
 
   if (elapsed < dates_in_seconds.year) {
     var monthsElapsed = Math.round(elapsed/dates_in_seconds.month);
-    return sbundle.getFormattedString('aboutmonthsago', [monthsElapsed]);
+    if (monthsElapsed == 2)
+      return sbundle.getString('abouttwomonthsago');
+    else
+      return sbundle.getFormattedString('aboutmonthsago', [monthsElapsed]);
   }
   return sbundle.getString('overayear');
 }
 
 function getProfileTime(profile_time) {
-  var relative_time = getRelTime(profile_time);
+  var relative_time = getRelTime(profile_time, true);
   var sbundle = GetFBStringBundle();
   var updatedProfileTime = sbundle.getFormattedString('updatedProfileTime', [relative_time]);
   return relative_time ? updatedProfileTime : '';
 }
 
-function getRelTimeWithinWeek(time, initialCap ) {
+function getRelTimeWithinWeek(time, initialCap, isProfile) {
   var currentTime = new Date;
 
   var updateTime = new Date;
@@ -424,19 +430,32 @@ function getRelTimeWithinWeek(time, initialCap ) {
 
   var sbundle = GetFBStringBundle();
 
-  var mon = sbundle.getString('monday');
-  var tues = sbundle.getString('tuesday');
-  var wed = sbundle.getString('wednesday');
-  var thurs = sbundle.getString('thursday');
-  var fri = sbundle.getString('friday');
-  var sat = sbundle.getString('saturday');
-  var sun = sbundle.getString('sunday');
+  var mon, tues, weds, thurs, fri, sat, sun;
+  if (isProfile) {
+    mon = sbundle.getString('mondayInSentence');
+    tues = sbundle.getString('tuesdayInSentence');
+    wed = sbundle.getString('wednesdayInSentence');
+    thurs = sbundle.getString('thursdayInSentence');
+    fri = sbundle.getString('fridayInSentence');
+    sat = sbundle.getString('saturdayInSentence');
+    sun = sbundle.getString('sundayInSentence');
+  }
+  else {
+    mon = sbundle.getString('monday');
+    tues = sbundle.getString('tuesday');
+    wed = sbundle.getString('wednesday');
+    thurs = sbundle.getString('thursday');
+    fri = sbundle.getString('friday');
+    sat = sbundle.getString('saturday');
+    sun = sbundle.getString('sunday');
+  }
   var yesterday = sbundle.getString('yesterday');
   var yesterdayic = sbundle.getString('yesterdayic');
   var today = sbundle.getString('today');
   var todayic = sbundle.getString('todayic');
   var days = new Array(mon, tues, wed, thurs, fri, sat, sun);
   var day;
+  var recently = true;
 
   // assumption that status messages are only shown if in the last 7 days
   if (updateTime.getDate() == currentTime.getDate()) {
@@ -445,25 +464,27 @@ function getRelTimeWithinWeek(time, initialCap ) {
     day = initialCap ? yesterdayic : yesterday;
   } else {
     day = days[updateTime.getDay()];
+    recently = false;
   }
 
   var hour = updateTime.getHours();
-  if (hour > 11) timeOfDay = sbundle.getString('pm');
-  else timeOfDay = sbundle.getString('am');
-  if (hour >= 13) hour -= 12;
-  if (hour == 0) hour = 12;
 
   var minute = updateTime.getMinutes();
   if (minute < 10) {
     minute = '0' + minute;
   }
 
-  var tstr = sbundle.getFormattedString('timeString', [day, hour, minute, timeOfDay]);
+  var tstr;
+  if (recently)
+    tstr = sbundle.getFormattedString('timeStringRecent', [day, hour, minute]);
+  else
+    tstr = sbundle.getFormattedString('timeStringDay', [day, hour, minute]);
+
   return tstr;
 }
 
 function getStatusTime(status_time) {
-  return getRelTimeWithinWeek(status_time, true);
+  return getRelTimeWithinWeek(status_time, true, false);
 }
 
 /**
