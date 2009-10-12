@@ -1,0 +1,5 @@
+﻿<!ENTITY  window.title              "Skriv et tag">
+
+<!ENTITY  tagText.label             "Skriv et hvilket som helst navn eller tag:">
+<!ENTITY  choosePerson.label        "eller vælg en person:">
+

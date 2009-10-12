@@ -1,0 +1,34 @@
+﻿<!ENTITY  settings.window.title                           "設定 Facebook 工具列">
+
+<!ENTITY  settings.panel.title                            "設定 Facebook 工具列通知">
+
+<!ENTITY  settings.notificationmes.enable.label           "允許跳出視窗通知">
+
+<!-- Notifications about me section -->
+<!ENTITY  settings.notificationme.header.label            "什麼情況下 Facebook 通知會跳出？">
+<!ENTITY  settings.notificationme.about.label             "跟我有關的通知">
+<!ENTITY  settings.notificationme.friendreq.label         "新收到的交友邀請">
+<!ENTITY  settings.notificationme.message.label           "新信">
+<!ENTITY  settings.notificationme.poke.label              "被戳了">
+<!ENTITY  settings.notificationme.friend.label            "新朋友">
+<!ENTITY  settings.notificationme.event.label             "新收到的活動邀請">
+<!ENTITY  settings.notificationme.group.label             "新收到的社團邀請">
+<!ENTITY  settings.notificationme.share.label             "新的分享">
+<!ENTITY  settings.notificationme.other.label             "所有其他方面的通知 (牆上留言、回應、讚等等)">
+
+<!-- Notifications about my friends section -->
+<!ENTITY  settings.notificationfriend.about.label         "與我朋友有關的通知">
+<!ENTITY  settings.notificationfriend.profile.label       "有朋友更新了個人檔案">
+<!ENTITY  settings.notificationfriend.status.label        "有朋友更新了近況">
+<!ENTITY  settings.notificationfriend.albums.label        "有朋友更新了相簿">
+<!ENTITY  settings.notificationfriend.wall.label          "有人在朋友的牆上留言">
+<!ENTITY  settings.notificationfriend.note.label          "有朋友發表了文章">
+
+<!-- Other -->
+<!ENTITY  settings.notificationother.about.label          "其他通知">
+<!ENTITY  settings.notificationother.upload.label         "上傳已完成">
+
+<!-- Appearance -->
+<!ENTITY  settings.notification.type.label                "通知看起來如何呢？">
+<!ENTITY  settings.notification.native.label              "使用 Facebook 工具列通知視窗">
+<!ENTITY  settings.notification.firefox.label             "使用 Firefox 內建的通知 (Max OS X 使用 Growl)">

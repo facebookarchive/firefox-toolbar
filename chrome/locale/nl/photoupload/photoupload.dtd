@@ -1,0 +1,34 @@
+﻿<!ENTITY  window.title                      "Foto's uploaden naar Facebook">
+
+<!ENTITY  upload.destination.label          "Nieuwe foto's uploaden naar">
+<!ENTITY  upload.album.label                "Bestaand album">
+<!ENTITY  upload.newalbum.label             "Nieuw Album">
+<!ENTITY  upload.loadingalbums.label        "Albums laden...">
+
+<!ENTITY  upload.album.name.label           "Naam:">
+<!ENTITY  upload.album.location.label       "Locatie:">
+<!ENTITY  upload.album.description.label    "Beschrijving:">
+
+<!ENTITY  upload.privacy.label              "Wie kan dit zien?">
+<!ENTITY  upload.privacy.everyone.label     "Iedereen">
+<!ENTITY  upload.privacy.fof.label          "Vrienden van vrienden">
+<!ENTITY  upload.privacy.friends.label      "Alleen vrienden">
+<!ENTITY  upload.privacy.networks.label     "Netwerken">
+
+<!ENTITY  upload.photo.detail.label         "Fotogegevens:">
+<!ENTITY  upload.photo.name.label           "Bestandsnaam:">
+<!ENTITY  upload.photo.size.label           "Grootte:">
+<!ENTITY  upload.photo.caption.label        "Onderschrift:">
+
+<!ENTITY  upload.tag.start.label            "Op deze foto:">
+<!ENTITY  upload.tag.click.label            "Klik op mensen op deze foto om ze te taggen.">
+<!ENTITY  upload.tag.remove.label           "Geselecteerde tags verwijderen">
+
+<!ENTITY  upload.photos.add.label           "Foto's toevoegen...">
+<!ENTITY  upload.photos.remove.label        "Alles verwijderen">
+
+<!ENTITY  upload.cancel.label               "Upload annuleren">
+<!ENTITY  upload.all.label                  "Alles uploaden">
+
+<!ENTITY  upload.remove.label               "Verwijderen">
+<!ENTITY  upload.drag.label                 "Klik op Toevoegen... of sleep je foto's hier naartoe.">

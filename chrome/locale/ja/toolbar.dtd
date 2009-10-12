@@ -1,0 +1,38 @@
+﻿<!ENTITY  toolbar.facebook.label                    "Facebook">
+
+<!ENTITY  toolbar.facebook.name                     "Facebookツールバー">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "Facebook友達サイドバー">
+<!ENTITY  toolbar.search.label                      "Facebookを検索">
+<!ENTITY  toolbar.button.home.tooltip               "Facebookへ移動">
+<!ENTITY  toolbar.button.share.tooltip              "現在のページをFacebookでシェア">
+<!ENTITY  toolbar.button.upload.tooltip             "Facebookに写真をアップロード">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "新着あいさつ">
+<!ENTITY  toolbar.button.friends.tooltip            "新着友達リクエスト">
+<!ENTITY  toolbar.button.groups.tooltip             "新着グループ招待">
+<!ENTITY  toolbar.button.events.tooltip             "新着イベント招待">
+<!ENTITY  toolbar.button.messages.tooltip           "新着メッセージ">
+
+<!ENTITY  toolbar.button.links.label                "クイックリンク">
+<!ENTITY  toolbar.links.profile.label               "プロフィール">
+<!ENTITY  toolbar.links.friends.label               "友達">
+<!ENTITY  toolbar.links.inbox.label                 "受信箱">
+<!ENTITY  toolbar.links.photos.label                "写真">
+<!ENTITY  toolbar.links.notes.label                 "ノート">
+<!ENTITY  toolbar.links.groups.label                "グループ">
+<!ENTITY  toolbar.links.events.label                "イベント">
+<!ENTITY  toolbar.links.linkies.label               "投稿リンク">
+<!ENTITY  toolbar.links.videos.label                "動画">
+<!ENTITY  toolbar.settings.account.label            "アカウント設定">
+<!ENTITY  toolbar.settings.privacy.label            "プライバシー設定">
+<!ENTITY  toolbar.settings.application.label        "アプリケーション設定">
+<!ENTITY  toolbar.settings.toolbar.label            "ツールバーの設定">
+
+<!ENTITY  toolbar.status.emptytext.label            "近況を設定...">
+<!ENTITY  toolbar.status.emptytext.tooltip          "Facebookの近況をアップデート">
+
+<!ENTITY  toolbar.login.label                       "Facebookにログイン">
+
+<!ENTITY  toolbar.sidebar.label                     "Facebookサイドバー">
+

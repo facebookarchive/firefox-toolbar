@@ -1,0 +1,34 @@
+﻿<!ENTITY  settings.window.title                           "Facebook Araç Çubuğunu Yapılandır">
+
+<!ENTITY  settings.panel.title                            "Facebook Araç Çubuğu Bildirimlerini Yapılandır">
+
+<!ENTITY  settings.notificationmes.enable.label           "Açılır Pencere Bildirimlerini Etkinleştir">
+
+<!-- Notifications about me section -->
+<!ENTITY  settings.notificationme.header.label            "Facebook’taki hangi olaylar için bildirim gönderilir?">
+<!ENTITY  settings.notificationme.about.label             "Hakkımdaki bildirimler">
+<!ENTITY  settings.notificationme.friendreq.label         "Yeni arkadaşlık isteği">
+<!ENTITY  settings.notificationme.message.label           "Yeni mesaj">
+<!ENTITY  settings.notificationme.poke.label              "Yeni dürtme">
+<!ENTITY  settings.notificationme.friend.label            "Yeni arkadaş">
+<!ENTITY  settings.notificationme.event.label             "Yeni etkinlik daveti">
+<!ENTITY  settings.notificationme.group.label             "Yeni grup daveti">
+<!ENTITY  settings.notificationme.share.label             "Yeni paylaşım">
+<!ENTITY  settings.notificationme.other.label             "Diğer tüm bildirimler (duvar yazıları, yorumlar, beğenmeler, vb.)">
+
+<!-- Notifications about my friends section -->
+<!ENTITY  settings.notificationfriend.about.label         "Arkadaşlarım hakkındaki bildirimler">
+<!ENTITY  settings.notificationfriend.profile.label       "Bir arkadaşın profilini güncellemesi">
+<!ENTITY  settings.notificationfriend.status.label        "Bir arkadaşın durumunu güncellemesi">
+<!ENTITY  settings.notificationfriend.albums.label        "Bir arkadaşın albümlerini güncellemesi">
+<!ENTITY  settings.notificationfriend.wall.label          "Birisinin bir arkadaşın duvarına yazması">
+<!ENTITY  settings.notificationfriend.note.label          "Bir arkadaşın not yazması">
+
+<!-- Other -->
+<!ENTITY  settings.notificationother.about.label          "Diğer bildirimler">
+<!ENTITY  settings.notificationother.upload.label         "Yüklemeler Tamamlandı">
+
+<!-- Appearance -->
+<!ENTITY  settings.notification.type.label                "Bildirimler nasıl gözükecek?">
+<!ENTITY  settings.notification.native.label              "Facebook Araç Çubuğu bildirim pencerelerini kullan">
+<!ENTITY  settings.notification.firefox.label             "Yerleşik Firefox bildirimlerini kullan (Mac OS X için Growl kullanılır)">

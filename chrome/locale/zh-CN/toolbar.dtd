@@ -1,0 +1,38 @@
+﻿<!ENTITY  toolbar.facebook.label                    "Facebook">
+
+<!ENTITY  toolbar.facebook.name                     "Facebook 工具条">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "Facebook 朋友边栏">
+<!ENTITY  toolbar.search.label                      "搜索 Facebook">
+<!ENTITY  toolbar.button.home.tooltip               "访问 Facebook">
+<!ENTITY  toolbar.button.share.tooltip              "在 Facebook 上分享此页面">
+<!ENTITY  toolbar.button.upload.tooltip             "上传照片至 Facebook ">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "打招呼">
+<!ENTITY  toolbar.button.friends.tooltip            "朋友请求">
+<!ENTITY  toolbar.button.groups.tooltip             "圈子加入邀请">
+<!ENTITY  toolbar.button.events.tooltip             "活动邀请">
+<!ENTITY  toolbar.button.messages.tooltip           "未读站内信">
+
+<!ENTITY  toolbar.button.links.label                "快速链接">
+<!ENTITY  toolbar.links.profile.label               "个人主页">
+<!ENTITY  toolbar.links.friends.label               "朋友">
+<!ENTITY  toolbar.links.inbox.label                 "收件箱">
+<!ENTITY  toolbar.links.photos.label                "照片">
+<!ENTITY  toolbar.links.notes.label                 "博客">
+<!ENTITY  toolbar.links.groups.label                "圈子">
+<!ENTITY  toolbar.links.events.label                "活动">
+<!ENTITY  toolbar.links.linkies.label               "链接">
+<!ENTITY  toolbar.links.videos.label                "视频">
+<!ENTITY  toolbar.settings.account.label            "帐户设置">
+<!ENTITY  toolbar.settings.privacy.label            "隐私设置">
+<!ENTITY  toolbar.settings.application.label        "应用程序设置">
+<!ENTITY  toolbar.settings.toolbar.label            "工具条设置">
+
+<!ENTITY  toolbar.status.emptytext.label            "设置你的状态......">
+<!ENTITY  toolbar.status.emptytext.tooltip          "更改你的状态......">
+
+<!ENTITY  toolbar.login.label                       "Facebook 登录">
+
+<!ENTITY  toolbar.sidebar.label                     "Facebook 边栏">
+

@@ -1,0 +1,5 @@
+﻿<!ENTITY  window.title              "键入标签">
+
+<!ENTITY  tagText.label             "键入任何姓名或标签∶">
+<!ENTITY  choosePerson.label        "或选择一个人∶">
+

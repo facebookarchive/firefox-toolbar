@@ -1,0 +1,5 @@
+﻿<!ENTITY  login.window.title              "Entrar en Facebook">
+
+<!ENTITY  login.wait                      "Estamos preparando el inicio de sesión...">
+<!ENTITY  login.close                     "Cerrar la ventana de inicio de sesión">
+

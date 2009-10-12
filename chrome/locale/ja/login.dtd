@@ -1,0 +1,5 @@
+﻿<!ENTITY  login.window.title              "Facebookにログイン">
+
+<!ENTITY  login.wait                      "ログインの準備をしています。しばらくお待ちください。">
+<!ENTITY  login.close                     "ウィンドウを閉じる">
+

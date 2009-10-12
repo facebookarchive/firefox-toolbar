@@ -1,0 +1,34 @@
+﻿<!ENTITY  window.title                      "Facebook Fotoğraf Yükleme">
+
+<!ENTITY  upload.destination.label          "Yeni Fotoğrafları Yükle:">
+<!ENTITY  upload.album.label                "Mevcut Albüme">
+<!ENTITY  upload.newalbum.label             "Yeni Albüme">
+<!ENTITY  upload.loadingalbums.label        "Albümler Yükleniyor…">
+
+<!ENTITY  upload.album.name.label           "Ad:">
+<!ENTITY  upload.album.location.label       "Yer:">
+<!ENTITY  upload.album.description.label    "Açıklama:">
+
+<!ENTITY  upload.privacy.label              "Bunu kimler görebilir?">
+<!ENTITY  upload.privacy.everyone.label     "Herkes">
+<!ENTITY  upload.privacy.fof.label          "Arkadaşlarımın Arkadaşları">
+<!ENTITY  upload.privacy.friends.label      "Sadece Arkadaşlarım">
+<!ENTITY  upload.privacy.networks.label     "Ağlar">
+
+<!ENTITY  upload.photo.detail.label         "Fotoğraf detayı:">
+<!ENTITY  upload.photo.name.label           "Dosya adı:">
+<!ENTITY  upload.photo.size.label           "Boyut:">
+<!ENTITY  upload.photo.caption.label        "Açıklama:">
+
+<!ENTITY  upload.tag.start.label            "Fotoğraftakiler:">
+<!ENTITY  upload.tag.click.label            "Fotoğraftaki insanları etiketlemek için üzerlerine tıkla.">
+<!ENTITY  upload.tag.remove.label           "Seçilen etiketleri kaldır">
+
+<!ENTITY  upload.photos.add.label           "Fotoğraf Ekle…">
+<!ENTITY  upload.photos.remove.label        "Tümünü Kaldır">
+
+<!ENTITY  upload.cancel.label               "Yüklemeyi İptal Et">
+<!ENTITY  upload.all.label                  "Tümünü Yükle">
+
+<!ENTITY  upload.remove.label               "Kaldır">
+<!ENTITY  upload.drag.label                 "Ekle… düğmesine tıkla veya fotoğrafları buraya sürükle.">

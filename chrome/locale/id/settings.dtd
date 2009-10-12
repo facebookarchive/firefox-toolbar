@@ -1,0 +1,34 @@
+﻿<!ENTITY  settings.window.title                           "Konfigurasikan Bilah Alat Facebook">
+
+<!ENTITY  settings.panel.title                            "Konfigurasikan Pemberitahuan Bilah Alat Facebook">
+
+<!ENTITY  settings.notificationmes.enable.label           "Aktifkan Pemberitahuan Pop-up">
+
+<!-- Notifications about me section -->
+<!ENTITY  settings.notificationme.header.label            "Kirim pemberitahuan tentang hal yang sedang seru di Facebook?">
+<!ENTITY  settings.notificationme.about.label             "Pemberitahuan tentang saya">
+<!ENTITY  settings.notificationme.friendreq.label         "Permintaan pertemanan baru">
+<!ENTITY  settings.notificationme.message.label           "Pesan baru">
+<!ENTITY  settings.notificationme.poke.label              "Colekan baru">
+<!ENTITY  settings.notificationme.friend.label            "Teman baru">
+<!ENTITY  settings.notificationme.event.label             "Undangan acara baru">
+<!ENTITY  settings.notificationme.group.label             "Undangan grup baru">
+<!ENTITY  settings.notificationme.share.label             "Berbagi baru">
+<!ENTITY  settings.notificationme.other.label             "Semua pemberitahuan lainnya (kabar berita, komentar, suka, dll)">
+
+<!-- Notifications about my friends section -->
+<!ENTITY  settings.notificationfriend.about.label         "Pemberitahuan tentang teman saya">
+<!ENTITY  settings.notificationfriend.profile.label       "Seorang teman memperbarui profilnya">
+<!ENTITY  settings.notificationfriend.status.label        "Seorang teman memperbarui statusnya">
+<!ENTITY  settings.notificationfriend.albums.label        "Seorang teman memperbarui albumnya">
+<!ENTITY  settings.notificationfriend.wall.label          "Seseorang menulis di dinding teman">
+<!ENTITY  settings.notificationfriend.note.label          "Seorang teman menulis catatan">
+
+<!-- Other -->
+<!ENTITY  settings.notificationother.about.label          "Pemberitahuan lainnya">
+<!ENTITY  settings.notificationother.upload.label         "Pengunggahan Selesai">
+
+<!-- Appearance -->
+<!ENTITY  settings.notification.type.label                "Bagaimana bentuk pemberitahuannya?">
+<!ENTITY  settings.notification.native.label              "Gunakan jendela pemberitahuan Bilah Alat Facebook">
+<!ENTITY  settings.notification.firefox.label             "Gunakan pemberitahuan Firefox built-in (pada Mac OS X, gunakan Growl)">

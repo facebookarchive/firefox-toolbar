@@ -1,0 +1,34 @@
+﻿<!ENTITY  settings.window.title                           "De Facebook Toolbar configureren">
+
+<!ENTITY  settings.panel.title                            "Meldingen van de Facebook Toolbar configureren">
+
+<!ENTITY  settings.notificationmes.enable.label           "Pop-up-meldingen inschakelen">
+
+<!-- Notifications about me section -->
+<!ENTITY  settings.notificationme.header.label            "Bij welke gebeurtenissen wil je een melding krijgen?">
+<!ENTITY  settings.notificationme.about.label             "Meldingen over mij">
+<!ENTITY  settings.notificationme.friendreq.label         "Nieuw vriendschapsverzoek">
+<!ENTITY  settings.notificationme.message.label           "Nieuw bericht">
+<!ENTITY  settings.notificationme.poke.label              "Nieuwe por">
+<!ENTITY  settings.notificationme.friend.label            "Nieuwe vriend">
+<!ENTITY  settings.notificationme.event.label             "Nieuwe uitnodiging voor een evenement">
+<!ENTITY  settings.notificationme.group.label             "Nieuwe uitnodiging voor een groep">
+<!ENTITY  settings.notificationme.share.label             "Nieuw gedeeld item">
+<!ENTITY  settings.notificationme.other.label             "Alle andere meldingen (prikbordberichten, reacties, vind ik leuk, enz.)">
+
+<!-- Notifications about my friends section -->
+<!ENTITY  settings.notificationfriend.about.label         "Meldingen over mijn vrienden">
+<!ENTITY  settings.notificationfriend.profile.label       "Profielupdates van vrienden">
+<!ENTITY  settings.notificationfriend.status.label        "Statusupdates van vrienden">
+<!ENTITY  settings.notificationfriend.albums.label        "Albumupdates van vrienden">
+<!ENTITY  settings.notificationfriend.wall.label          "Iemand hangt iets aan het prikbord van een vriend">
+<!ENTITY  settings.notificationfriend.note.label          "Iemand schrijft een notitie">
+
+<!-- Other -->
+<!ENTITY  settings.notificationother.about.label          "Overige meldingen">
+<!ENTITY  settings.notificationother.upload.label         "Uploads voltooid">
+
+<!-- Appearance -->
+<!ENTITY  settings.notification.type.label                "Hoe zien meldingen eruit?">
+<!ENTITY  settings.notification.native.label              "Meldingsvensters van de Facebook Toolbar gebruiken">
+<!ENTITY  settings.notification.firefox.label             "Ingebouwde Firefox-meldingen gebruiken (op Mac OS wordt Growl gebruikt)">

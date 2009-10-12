@@ -1,0 +1,34 @@
+﻿<!ENTITY  window.title                      "העלאת תמונה בפייסבוק">
+
+<!ENTITY  upload.destination.label          "העלה תמונות חדשות אל:">
+<!ENTITY  upload.album.label                "אלבום קיים">
+<!ENTITY  upload.newalbum.label             "אלבום חדש">
+<!ENTITY  upload.loadingalbums.label        "מעלה אלבומים...">
+
+<!ENTITY  upload.album.name.label           "שם:">
+<!ENTITY  upload.album.location.label       "מיקום:">
+<!ENTITY  upload.album.description.label    "תיאור:">
+
+<!ENTITY  upload.privacy.label              "מי יכול לראות זאת?">
+<!ENTITY  upload.privacy.everyone.label     "כולם">
+<!ENTITY  upload.privacy.fof.label          "חברים של חברים">
+<!ENTITY  upload.privacy.friends.label      "רק חברים">
+<!ENTITY  upload.privacy.networks.label     "רשתות">
+
+<!ENTITY  upload.photo.detail.label         "פרטי התמונה:">
+<!ENTITY  upload.photo.name.label           "שם הקובץ:">
+<!ENTITY  upload.photo.size.label           "גודל:">
+<!ENTITY  upload.photo.caption.label        "כיתוב:">
+
+<!ENTITY  upload.tag.start.label            "בתמונה זו:">
+<!ENTITY  upload.tag.click.label            "לחץ על אנשים בתמונה כדי לתייג אותם.">
+<!ENTITY  upload.tag.remove.label           "הסר את התגים שנבחרו">
+
+<!ENTITY  upload.photos.add.label           "הוסף תמונות...">
+<!ENTITY  upload.photos.remove.label        "הסר הכול">
+
+<!ENTITY  upload.cancel.label               "בטל העלאה">
+<!ENTITY  upload.all.label                  "העלה הכול">
+
+<!ENTITY  upload.remove.label               "הסר">
+<!ENTITY  upload.drag.label                 "לחץ על 'הוסף'... או גרור תמונות לכאן.">

@@ -1,0 +1,38 @@
+﻿<!ENTITY  toolbar.facebook.label                    "Facebook">
+
+<!ENTITY  toolbar.facebook.name                     "Barra de ferramentas do Facebook">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "Barra lateral de amigos do Facebook">
+<!ENTITY  toolbar.search.label                      "Pesquisa do Facebook">
+<!ENTITY  toolbar.button.home.tooltip               "Ir para o Facebook">
+<!ENTITY  toolbar.button.share.tooltip              "Compartilhar página atual no Facebook">
+<!ENTITY  toolbar.button.upload.tooltip             "Carregar fotos no Facebook">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "Novas cutucadas">
+<!ENTITY  toolbar.button.friends.tooltip            "Novas solicitações de amizade">
+<!ENTITY  toolbar.button.groups.tooltip             "Novos convites de grupo">
+<!ENTITY  toolbar.button.events.tooltip             "Novos convites de evento">
+<!ENTITY  toolbar.button.messages.tooltip           "Novas mensagens">
+
+<!ENTITY  toolbar.button.links.label                "Links rápidos">
+<!ENTITY  toolbar.links.profile.label               "Perfil">
+<!ENTITY  toolbar.links.friends.label               "Amigos">
+<!ENTITY  toolbar.links.inbox.label                 "Caixa de entrada">
+<!ENTITY  toolbar.links.photos.label                "Fotos">
+<!ENTITY  toolbar.links.notes.label                 "Notas">
+<!ENTITY  toolbar.links.groups.label                "Grupos">
+<!ENTITY  toolbar.links.events.label                "Eventos">
+<!ENTITY  toolbar.links.linkies.label               "Links">
+<!ENTITY  toolbar.links.videos.label                "Vídeos">
+<!ENTITY  toolbar.settings.account.label            "Configurações de conta">
+<!ENTITY  toolbar.settings.privacy.label            "Configurações de privacidade">
+<!ENTITY  toolbar.settings.application.label        "Configurações do aplicativo">
+<!ENTITY  toolbar.settings.toolbar.label            "Configurações da barra de ferramentas">
+
+<!ENTITY  toolbar.status.emptytext.label            "definir seu status...">
+<!ENTITY  toolbar.status.emptytext.tooltip          "Alterar seu status do Facebook">
+
+<!ENTITY  toolbar.login.label                       "Fazer login no Facebook">
+
+<!ENTITY  toolbar.sidebar.label                     "Barra lateral do Facebook">
+

@@ -1,0 +1,38 @@
+<!ENTITY  toolbar.facebook.label                    "Facebook">
+
+<!ENTITY  toolbar.facebook.name                     "Facebook-verktygsfält">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "Sidofält för Facebook-vänner">
+<!ENTITY  toolbar.search.label                      "Sök på Facebook">
+<!ENTITY  toolbar.button.home.tooltip               "Gå till Facebook">
+<!ENTITY  toolbar.button.share.tooltip              "Dela den aktuella sidan på Facebook">
+<!ENTITY  toolbar.button.upload.tooltip             "Ladda upp foton till Facebook">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "Nya puffar">
+<!ENTITY  toolbar.button.friends.tooltip            "Nya vänförfrågningar">
+<!ENTITY  toolbar.button.groups.tooltip             "Nya gruppinbjudningar">
+<!ENTITY  toolbar.button.events.tooltip             "Nya evenemangsinbjudningar">
+<!ENTITY  toolbar.button.messages.tooltip           "Nya meddelanden">
+
+<!ENTITY  toolbar.button.links.label                "Snabblänkar">
+<!ENTITY  toolbar.links.profile.label               "Profil">
+<!ENTITY  toolbar.links.friends.label               "Vänner">
+<!ENTITY  toolbar.links.inbox.label                 "Inkorg">
+<!ENTITY  toolbar.links.photos.label                "Foton">
+<!ENTITY  toolbar.links.notes.label                 "Anteckningar">
+<!ENTITY  toolbar.links.groups.label                "Grupper">
+<!ENTITY  toolbar.links.events.label                "Evenemang">
+<!ENTITY  toolbar.links.linkies.label               "Länkar">
+<!ENTITY  toolbar.links.videos.label                "Filmklipp">
+<!ENTITY  toolbar.settings.account.label            "Kontoinställningar">
+<!ENTITY  toolbar.settings.privacy.label            "Sekretessinställningar">
+<!ENTITY  toolbar.settings.application.label        "Applikationsinställningar">
+<!ENTITY  toolbar.settings.toolbar.label            "Inställningar för verktygsfält">
+
+<!ENTITY  toolbar.status.emptytext.label            "ange din status...">
+<!ENTITY  toolbar.status.emptytext.tooltip          "Ändra din Facebook-status">
+
+<!ENTITY  toolbar.login.label                       "Logga in på Facebook">
+
+<!ENTITY  toolbar.sidebar.label                     "Facebook-sidofält">
+

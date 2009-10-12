@@ -1,0 +1,11 @@
+﻿<!ENTITY  sidebar.title                     "הסרגל הצידי של פייסבוק">
+
+<!ENTITY  sidebar.settings.label            "הגדרות">
+<!ENTITY  sidebar.sortlast.label            "שעת העדכון האחרון">
+<!ENTITY  sidebar.sortstatus.label          "שעת עדכון הסטטוס">
+<!ENTITY  sidebar.sortprofile.label         "שעת עדכון הפרופיל">
+<!ENTITY  sidebar.sortname.label            "שם">
+
+<!ENTITY  sidebar.friendmessage.label       "הודעה">
+<!ENTITY  sidebar.friendpoke.label          "נדנד">
+<!ENTITY  sidebar.friendpost.label          "פרסום קיר">

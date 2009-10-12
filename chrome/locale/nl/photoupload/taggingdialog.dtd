@@ -1,0 +1,5 @@
+﻿<!ENTITY  window.title              "Tag invoeren">
+
+<!ENTITY  tagText.label             "Typ een naam of tag in:">
+<!ENTITY  choosePerson.label        "of kies een persoon:">
+

@@ -1,0 +1,34 @@
+﻿<!ENTITY  window.title                      "Facebook billedoverførsel">
+
+<!ENTITY  upload.destination.label          "Overfør nye billeder til:">
+<!ENTITY  upload.album.label                "Eksisterende album">
+<!ENTITY  upload.newalbum.label             "Nyt album">
+<!ENTITY  upload.loadingalbums.label        "Indlæser album...">
+
+<!ENTITY  upload.album.name.label           "Navn:">
+<!ENTITY  upload.album.location.label       "Sted:">
+<!ENTITY  upload.album.description.label    "Beskrivelse:">
+
+<!ENTITY  upload.privacy.label              "Hvem kan se dette?">
+<!ENTITY  upload.privacy.everyone.label     "Alle">
+<!ENTITY  upload.privacy.fof.label          "Venners venner">
+<!ENTITY  upload.privacy.friends.label      "Kun venner">
+<!ENTITY  upload.privacy.networks.label     "Netværk">
+
+<!ENTITY  upload.photo.detail.label         "Billeddetaljer:">
+<!ENTITY  upload.photo.name.label           "Filnavn:">
+<!ENTITY  upload.photo.size.label           "Størrelse:">
+<!ENTITY  upload.photo.caption.label        "Billedtekst:">
+
+<!ENTITY  upload.tag.start.label            "På billedet:">
+<!ENTITY  upload.tag.click.label            "Klik på personen i billedet for at tagge dem.">
+<!ENTITY  upload.tag.remove.label           "Fjern markerede tags">
+
+<!ENTITY  upload.photos.add.label           "Tilføj billeder...">
+<!ENTITY  upload.photos.remove.label        "Fjern alle">
+
+<!ENTITY  upload.cancel.label               "Annuller overførsel">
+<!ENTITY  upload.all.label                  "Overfør alle">
+
+<!ENTITY  upload.remove.label               "Fjern">
+<!ENTITY  upload.drag.label               "Klik Tilføj…eller træk billederne herhen.">

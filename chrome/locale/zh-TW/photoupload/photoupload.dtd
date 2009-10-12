@@ -1,0 +1,34 @@
+﻿<!ENTITY  window.title                      "Facebook 相片上傳">
+
+<!ENTITY  upload.destination.label          "上傳新相片到：">
+<!ENTITY  upload.album.label                "已有的相簿">
+<!ENTITY  upload.newalbum.label             "新相簿">
+<!ENTITY  upload.loadingalbums.label        "相簿載入中......">
+
+<!ENTITY  upload.album.name.label           "名稱：">
+<!ENTITY  upload.album.location.label       "地點：">
+<!ENTITY  upload.album.description.label    "說明：">
+
+<!ENTITY  upload.privacy.label              "誰可以看得見這？">
+<!ENTITY  upload.privacy.everyone.label     "所有人">
+<!ENTITY  upload.privacy.fof.label          "朋友的朋友">
+<!ENTITY  upload.privacy.friends.label      "僅限朋友">
+<!ENTITY  upload.privacy.networks.label     "網絡">
+
+<!ENTITY  upload.photo.detail.label         "相片細節：">
+<!ENTITY  upload.photo.name.label           "檔案名：">
+<!ENTITY  upload.photo.size.label           "大小：">
+<!ENTITY  upload.photo.caption.label        "註解：">
+
+<!ENTITY  upload.tag.start.label            "相中人物：">
+<!ENTITY  upload.tag.click.label            "點取相片中的人貼姓名標籤。">
+<!ENTITY  upload.tag.remove.label           "刪除所選的標籤">
+
+<!ENTITY  upload.photos.add.label           "新添相片......">
+<!ENTITY  upload.photos.remove.label        "移除全部">
+
+<!ENTITY  upload.cancel.label               "取消上傳">
+<!ENTITY  upload.all.label                  "上傳全部">
+
+<!ENTITY  upload.remove.label               "移除">
+<!ENTITY  upload.drag.label                 "按「新增」或將相片拖到這裡。">

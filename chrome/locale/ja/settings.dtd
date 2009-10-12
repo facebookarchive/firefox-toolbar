@@ -1,0 +1,34 @@
+﻿<!ENTITY  settings.window.title                           "Facebookツールバーを設定">
+
+<!ENTITY  settings.panel.title                            "Facebookツールバーのお知らせを設定">
+
+<!ENTITY  settings.notificationmes.enable.label           "ポップアップ通知を有効にする">
+
+<!-- Notifications about me section -->
+<!ENTITY  settings.notificationme.header.label            "Facebookのどのようなイベントでお知らせが表示されますか？">
+<!ENTITY  settings.notificationme.about.label             "自分に関するお知らせ">
+<!ENTITY  settings.notificationme.friendreq.label         "新着友達リクエスト">
+<!ENTITY  settings.notificationme.message.label           "新着メッセージ">
+<!ENTITY  settings.notificationme.poke.label              "新着あいさつ">
+<!ENTITY  settings.notificationme.friend.label            "新しい友達">
+<!ENTITY  settings.notificationme.event.label             "新着イベント招待">
+<!ENTITY  settings.notificationme.group.label             "新着グループ招待">
+<!ENTITY  settings.notificationme.share.label             "新着シェア">
+<!ENTITY  settings.notificationme.other.label             "その他のお知らせ(掲示板への書き込み、コメント、いいね！など)">
+
+<!-- Notifications about my friends section -->
+<!ENTITY  settings.notificationfriend.about.label         "友達に関するお知らせ">
+<!ENTITY  settings.notificationfriend.profile.label       "友達がプロフィールを更新したとき">
+<!ENTITY  settings.notificationfriend.status.label        "友達が近況を更新したとき">
+<!ENTITY  settings.notificationfriend.albums.label        "友達がアルバムを更新したとき">
+<!ENTITY  settings.notificationfriend.wall.label          "友達の掲示板に書き込みがあったとき">
+<!ENTITY  settings.notificationfriend.note.label          "友達がノートを書いたとき">
+
+<!-- Other -->
+<!ENTITY  settings.notificationother.about.label          "その他のお知らせ">
+<!ENTITY  settings.notificationother.upload.label         "アップロード完了">
+
+<!-- Appearance -->
+<!ENTITY  settings.notification.type.label                "お知らせはどのように表示されますか？">
+<!ENTITY  settings.notification.native.label              "Facebookツールバーのお知らせウィンドウを使用する">
+<!ENTITY  settings.notification.firefox.label             "Firefoxのお知らせを使用する(Mac OS XではGrowl)">

@@ -1,0 +1,11 @@
+﻿<!ENTITY  sidebar.title                     "Facebook Sidebar">
+
+<!ENTITY  sidebar.settings.label            "Indstillinger">
+<!ENTITY  sidebar.sortlast.label            "Sidst opdateret">
+<!ENTITY  sidebar.sortstatus.label          "Status opdateret">
+<!ENTITY  sidebar.sortprofile.label         "Profil opdateret">
+<!ENTITY  sidebar.sortname.label            "Navn">
+
+<!ENTITY  sidebar.friendmessage.label       "besked">
+<!ENTITY  sidebar.friendpoke.label          "prik">
+<!ENTITY  sidebar.friendpost.label          "Vægopslag">

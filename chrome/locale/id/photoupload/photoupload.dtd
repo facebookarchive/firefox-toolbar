@@ -1,0 +1,34 @@
+﻿<!ENTITY  window.title                      "Unggah Foto Facebook">
+
+<!ENTITY  upload.destination.label          "Unggah Foto Baru ke:">
+<!ENTITY  upload.album.label                "Album yang Sudah Ada">
+<!ENTITY  upload.newalbum.label             "Album Baru">
+<!ENTITY  upload.loadingalbums.label        "Memuat Album...">
+
+<!ENTITY  upload.album.name.label           "Nama:">
+<!ENTITY  upload.album.location.label       "Lokasi:">
+<!ENTITY  upload.album.description.label    "Keterangan:">
+
+<!ENTITY  upload.privacy.label              "Siapa yang bisa melihat ini?">
+<!ENTITY  upload.privacy.everyone.label     "Semua Orang">
+<!ENTITY  upload.privacy.fof.label          "Teman dari Teman">
+<!ENTITY  upload.privacy.friends.label      "Hanya Teman">
+<!ENTITY  upload.privacy.networks.label     "Jaringan">
+
+<!ENTITY  upload.photo.detail.label         "Rincian foto">
+<!ENTITY  upload.photo.name.label           "Nama file:">
+<!ENTITY  upload.photo.size.label           "Ukuran:">
+<!ENTITY  upload.photo.caption.label        "Keterangan:">
+
+<!ENTITY  upload.tag.start.label            "Di foto ini:">
+<!ENTITY  upload.tag.click.label            "Klik orang dalam foto untuk menandainya.">
+<!ENTITY  upload.tag.remove.label           "Hapus tanda yang dipilih">
+
+<!ENTITY  upload.photos.add.label           "Tambah Foto...">
+<!ENTITY  upload.photos.remove.label        "Hapus Semua">
+
+<!ENTITY  upload.cancel.label               "Batalkan Pengunggahan">
+<!ENTITY  upload.all.label                  "Unggah Semua">
+
+<!ENTITY  upload.remove.label               "Hapus">
+<!ENTITY  upload.drag.label                 "Klik Tambahkan... atau tarik foto ke sini.">

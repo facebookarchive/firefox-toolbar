@@ -1,0 +1,34 @@
+<!ENTITY  settings.window.title                           "Configurer la barre d'outils Facebook">
+
+<!ENTITY  settings.panel.title                            "Configurer les notifications de la barre d'outils Facebook">
+
+<!ENTITY  settings.notificationmes.enable.label           "Activer les notifications">
+
+<!-- Notifications about me section -->
+<!ENTITY  settings.notificationme.header.label            "Sources de notifications">
+<!ENTITY  settings.notificationme.about.label             "Notifications à propos de moi">
+<!ENTITY  settings.notificationme.friendreq.label         "Nouvelle demande d'ajout d'ami(e)">
+<!ENTITY  settings.notificationme.message.label           "Nouveau message">
+<!ENTITY  settings.notificationme.poke.label              "Nouveau poke">
+<!ENTITY  settings.notificationme.friend.label            "Nouvel(le) ami(e)">
+<!ENTITY  settings.notificationme.event.label             "Nouvelle invitation à un événement">
+<!ENTITY  settings.notificationme.group.label             "Nouvelle invitation à un groupe">
+<!ENTITY  settings.notificationme.share.label             "Nouveau partage">
+<!ENTITY  settings.notificationme.other.label             "Toutes les autres notifications (message sur le mur, commentaire, j'aime/je n'aime plus, etc.)">
+
+<!-- Notifications about my friends section -->
+<!ENTITY  settings.notificationfriend.about.label         "Notifications à propos de mes amis">
+<!ENTITY  settings.notificationfriend.profile.label       "Un(e) ami(e) actualise son profil">
+<!ENTITY  settings.notificationfriend.status.label        "Un(e) ami(e) actualise son statut">
+<!ENTITY  settings.notificationfriend.albums.label        "Un(e) ami(e) actualise ses albums">
+<!ENTITY  settings.notificationfriend.wall.label          "Quelqu'un écrit sur le mur d'un(e) ami(e)">
+<!ENTITY  settings.notificationfriend.note.label          "Un(e) ami(e) écrit un article">
+
+<!-- Other -->
+<!ENTITY  settings.notificationother.about.label          "Autres notifications">
+<!ENTITY  settings.notificationother.upload.label         "Téléchargements terminés">
+
+<!-- Appearance -->
+<!ENTITY  settings.notification.type.label                "Apparence des notifications">
+<!ENTITY  settings.notification.native.label              "Utiliser les fenêtres de notification de la barre d'outils Facebook">
+<!ENTITY  settings.notification.firefox.label             "Utiliser la fonction de notification intégrée à Firefox (sur Mac OS X, c'est Growl qui est utilisé)">

@@ -1,0 +1,34 @@
+﻿<!ENTITY  window.title                      "Caricamento foto Facebook">
+
+<!ENTITY  upload.destination.label          "Carica nuove foto in:">
+<!ENTITY  upload.album.label                "Album esistente">
+<!ENTITY  upload.newalbum.label             "Nuovo album">
+<!ENTITY  upload.loadingalbums.label        "Caricamento album...">
+
+<!ENTITY  upload.album.name.label           "Nome:">
+<!ENTITY  upload.album.location.label       "Luogo:">
+<!ENTITY  upload.album.description.label    "Descrizione:">
+
+<!ENTITY  upload.privacy.label              "Chi può vederlo?">
+<!ENTITY  upload.privacy.everyone.label     "Tutti">
+<!ENTITY  upload.privacy.fof.label          "Amici di amici">
+<!ENTITY  upload.privacy.friends.label      "Solo amigi">
+<!ENTITY  upload.privacy.networks.label     "Reti">
+
+<!ENTITY  upload.photo.detail.label         "Dettagli foto:">
+<!ENTITY  upload.photo.name.label           "Nome file:">
+<!ENTITY  upload.photo.size.label           "Dimensioni:">
+<!ENTITY  upload.photo.caption.label        "Didascalia:">
+
+<!ENTITY  upload.tag.start.label            "In questa foto:">
+<!ENTITY  upload.tag.click.label            "Clicca sulle persone nella foto per taggarle.">
+<!ENTITY  upload.tag.remove.label           "Rimuovi i tag selezionati">
+
+<!ENTITY  upload.photos.add.label           "Aggiungi foto...">
+<!ENTITY  upload.photos.remove.label        "Rimuovi tutto">
+
+<!ENTITY  upload.cancel.label               "Annulla caricamento">
+<!ENTITY  upload.all.label                  "Carica tutto">
+
+<!ENTITY  upload.remove.label               "Rimuovi">
+<!ENTITY  upload.drag.label                 "Clicca su Aggiungi...o trascina le foto qui.">

@@ -1,0 +1,38 @@
+﻿<!ENTITY  toolbar.facebook.label                    "Facebook">
+
+<!ENTITY  toolbar.facebook.name                     "Bilah Alat Facebook">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "Sidebar Teman Facebook">
+<!ENTITY  toolbar.search.label                      "Cari di Facebook">
+<!ENTITY  toolbar.button.home.tooltip               "Buka Facebook">
+<!ENTITY  toolbar.button.share.tooltip              "Berbagi halaman yang sedang dilihat di Facebook">
+<!ENTITY  toolbar.button.upload.tooltip             "Unggah foto ke Facebook">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "Colekan Baru">
+<!ENTITY  toolbar.button.friends.tooltip            "Pemintaan Pertemanan Baru">
+<!ENTITY  toolbar.button.groups.tooltip             "Undangan Grup Baru">
+<!ENTITY  toolbar.button.events.tooltip             "Undangan Acara Baru">
+<!ENTITY  toolbar.button.messages.tooltip           "Pesan Baru">
+
+<!ENTITY  toolbar.button.links.label                "Tautan Cepat">
+<!ENTITY  toolbar.links.profile.label               "Profil">
+<!ENTITY  toolbar.links.friends.label               "Teman">
+<!ENTITY  toolbar.links.inbox.label                 "Pesan Masuk">
+<!ENTITY  toolbar.links.photos.label                "Koleksi Foto">
+<!ENTITY  toolbar.links.notes.label                 "Catatan">
+<!ENTITY  toolbar.links.groups.label                "Grup">
+<!ENTITY  toolbar.links.events.label                "Acara">
+<!ENTITY  toolbar.links.linkies.label               "Tautan">
+<!ENTITY  toolbar.links.videos.label                "Video">
+<!ENTITY  toolbar.settings.account.label            "Pengaturan Akun">
+<!ENTITY  toolbar.settings.privacy.label            "Pengaturan Privasi">
+<!ENTITY  toolbar.settings.application.label        "Pengaturan Aplikasi">
+<!ENTITY  toolbar.settings.toolbar.label            "Pengaturan Bilah Alat">
+
+<!ENTITY  toolbar.status.emptytext.label            "setel status Anda...">
+<!ENTITY  toolbar.status.emptytext.tooltip          "Ubah status Facebool Anda">
+
+<!ENTITY  toolbar.login.label                       "Masuk ke Facebook">
+
+<!ENTITY  toolbar.sidebar.label                     "Sidebar Facebook">
+

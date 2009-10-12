@@ -1,0 +1,11 @@
+﻿<!ENTITY  sidebar.title                     "Sidebar Facebook">
+
+<!ENTITY  sidebar.settings.label            "Pengaturan">
+<!ENTITY  sidebar.sortlast.label            "Waktu pembaruan terakhir">
+<!ENTITY  sidebar.sortstatus.label          "Waktu pembaruan status">
+<!ENTITY  sidebar.sortprofile.label         "Waktu pembaruan profil">
+<!ENTITY  sidebar.sortname.label            "Nama">
+
+<!ENTITY  sidebar.friendmessage.label       "pesan">
+<!ENTITY  sidebar.friendpoke.label          "colek">
+<!ENTITY  sidebar.friendpost.label          "kiriman dinding">

@@ -1,0 +1,11 @@
+﻿<!ENTITY  sidebar.title                     "Barra lateral do Facebook">
+
+<!ENTITY  sidebar.settings.label            "Configurações">
+<!ENTITY  sidebar.sortlast.label            "Horário da última atualização">
+<!ENTITY  sidebar.sortstatus.label          "Horário da atualização de status">
+<!ENTITY  sidebar.sortprofile.label         "Horário da atualização do perfil">
+<!ENTITY  sidebar.sortname.label            "Nome">
+
+<!ENTITY  sidebar.friendmessage.label       "mensagem">
+<!ENTITY  sidebar.friendpoke.label          "cutucar">
+<!ENTITY  sidebar.friendpost.label          "publicação do mural">

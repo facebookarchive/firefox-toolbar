@@ -2,4 +2,20 @@ content facebook chrome/content/
 overlay chrome://browser/content/browser.xul chrome://facebook/content/toolbar.xul
 skin facebook classic/1.0 chrome/skin/
 style chrome://global/content/customizeToolbar.xul chrome://facebook/skin/toolbar.css
+locale facebook ar     chrome/locale/ar/
+locale facebook da     chrome/locale/da/
+locale facebook de     chrome/locale/de/
 locale facebook en-US  chrome/locale/en-US/
+locale facebook es-MX  chrome/locale/es-MX/
+locale facebook es-ES  chrome/locale/es-ES/
+locale facebook fr     chrome/locale/fr/
+locale facebook he     chrome/locale/he/
+locale facebook id     chrome/locale/id/
+locale facebook it     chrome/locale/it/
+locale facebook ja     chrome/locale/ja/
+locale facebook nl     chrome/locale/nl/
+locale facebook pt-BR  chrome/locale/pt-BR/
+locale facebook sv-SE  chrome/locale/sv-SE/
+locale facebook tr     chrome/locale/tr/
+locale facebook zh-CN  chrome/locale/zh-CN/
+locale facebook zh-TW  chrome/locale/zh-TW/

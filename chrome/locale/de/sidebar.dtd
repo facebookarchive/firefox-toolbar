@@ -1,0 +1,11 @@
+﻿<!ENTITY  sidebar.title                     "Facebook-Seitenleiste">
+
+<!ENTITY  sidebar.settings.label            "Einstellungen">
+<!ENTITY  sidebar.sortlast.label            "Letzte Aktualisierung">
+<!ENTITY  sidebar.sortstatus.label          "Letzte Statusaktualisierung">
+<!ENTITY  sidebar.sortprofile.label         "Letzte Profilaktualisierung">
+<!ENTITY  sidebar.sortname.label            "Name">
+
+<!ENTITY  sidebar.friendmessage.label       "Nachricht">
+<!ENTITY  sidebar.friendpoke.label          "anstupsen">
+<!ENTITY  sidebar.friendpost.label          "Pinnwandeintrag">

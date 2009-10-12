@@ -1,0 +1,5 @@
+﻿<!ENTITY  window.title              "הזן תג">
+
+<!ENTITY  tagText.label             "הקלד שם או תג כלשהם:">
+<!ENTITY  choosePerson.label        "או בחר מישהו:">
+

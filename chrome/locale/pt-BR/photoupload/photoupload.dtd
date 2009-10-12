@@ -1,0 +1,34 @@
+﻿<!ENTITY  window.title                      "Carregar fotos no Facebook">
+
+<!ENTITY  upload.destination.label          "Carregar novas fotos para:">
+<!ENTITY  upload.album.label                "Álbum existente">
+<!ENTITY  upload.newalbum.label             "Novo álbum">
+<!ENTITY  upload.loadingalbums.label        "Carregando álbuns...">
+
+<!ENTITY  upload.album.name.label           "Nome:">
+<!ENTITY  upload.album.location.label       "Localização:">
+<!ENTITY  upload.album.description.label    "Descrição:">
+
+<!ENTITY  upload.privacy.label              "Quem pode ver isso?">
+<!ENTITY  upload.privacy.everyone.label     "Todos">
+<!ENTITY  upload.privacy.fof.label          "Amigos de amigos">
+<!ENTITY  upload.privacy.friends.label      "Apenas amigos">
+<!ENTITY  upload.privacy.networks.label     "Redes">
+
+<!ENTITY  upload.photo.detail.label         "Detalhes da foto:">
+<!ENTITY  upload.photo.name.label           "Nome do arquivo:">
+<!ENTITY  upload.photo.size.label           "Tamanho:">
+<!ENTITY  upload.photo.caption.label        "Legenda:">
+
+<!ENTITY  upload.tag.start.label            "Nesta foto:">
+<!ENTITY  upload.tag.click.label            "Clique nas pessoas para marcá-las na foto.">
+<!ENTITY  upload.tag.remove.label           "Remover marcações selecionadas">
+
+<!ENTITY  upload.photos.add.label           "Adicionar fotos...">
+<!ENTITY  upload.photos.remove.label        "Remover tudo">
+
+<!ENTITY  upload.cancel.label               "Cancelar carregamento">
+<!ENTITY  upload.all.label                  "Carregar tudo">
+
+<!ENTITY  upload.remove.label               "Remover">
+<!ENTITY  upload.drag.label                 "Clique em Adicionar... ou arraste as fotos para este local.">

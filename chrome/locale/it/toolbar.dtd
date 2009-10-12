@@ -1,0 +1,38 @@
+﻿<!ENTITY  toolbar.facebook.label                    "Facebook">
+
+<!ENTITY  toolbar.facebook.name                     "Barra degli strumenti di Facebook">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "Barra laterale degli amici di Facebook">
+<!ENTITY  toolbar.search.label                      "Cerca in Facebook">
+<!ENTITY  toolbar.button.home.tooltip               "Vai a Facebook">
+<!ENTITY  toolbar.button.share.tooltip              "Condividi la pagina attuale su Facebook">
+<!ENTITY  toolbar.button.upload.tooltip             "Carica foto su Facebook">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "Nuovi poke">
+<!ENTITY  toolbar.button.friends.tooltip            "Nuove richieste di amicizia">
+<!ENTITY  toolbar.button.groups.tooltip             "Nuovi inviti per gruppi">
+<!ENTITY  toolbar.button.events.tooltip             "Nuovi inviti ad eventi">
+<!ENTITY  toolbar.button.messages.tooltip           "Nuovi messaggi">
+
+<!ENTITY  toolbar.button.links.label                "Link rapidi">
+<!ENTITY  toolbar.links.profile.label               "Profilo">
+<!ENTITY  toolbar.links.friends.label               "Amici">
+<!ENTITY  toolbar.links.inbox.label                 "Posta">
+<!ENTITY  toolbar.links.photos.label                "Foto">
+<!ENTITY  toolbar.links.notes.label                 "Note">
+<!ENTITY  toolbar.links.groups.label                "Gruppi">
+<!ENTITY  toolbar.links.events.label                "Eventi">
+<!ENTITY  toolbar.links.linkies.label               "Link">
+<!ENTITY  toolbar.links.videos.label                "Video">
+<!ENTITY  toolbar.settings.account.label            "Impostazioni account">
+<!ENTITY  toolbar.settings.privacy.label            "Impostazioni sulla privacy">
+<!ENTITY  toolbar.settings.application.label        "Impostazioni applicazioni">
+<!ENTITY  toolbar.settings.toolbar.label            "Impostazioni barra degli strumenti">
+
+<!ENTITY  toolbar.status.emptytext.label            "imposta il tuo stato...">
+<!ENTITY  toolbar.status.emptytext.tooltip          "Modifica il tuo stato su Facebook">
+
+<!ENTITY  toolbar.login.label                       "Accedi a Facebook">
+
+<!ENTITY  toolbar.sidebar.label                     "Barra laterale di Facebook">
+

@@ -1,0 +1,38 @@
+﻿<!ENTITY  toolbar.facebook.label                    "Facebook">
+
+<!ENTITY  toolbar.facebook.name                     "Facebook Araç Çubuğu">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "Facebook Arkadaşlar Kenar Çubuğu">
+<!ENTITY  toolbar.search.label                      "Facebook'ta Ara">
+<!ENTITY  toolbar.button.home.tooltip               "Facebook'a git">
+<!ENTITY  toolbar.button.share.tooltip              "Bu sayfayı Facebook'ta paylaş">
+<!ENTITY  toolbar.button.upload.tooltip             "Facebook’a fotoğraflar yükle">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "Yeni Dürtmeler">
+<!ENTITY  toolbar.button.friends.tooltip            "Yeni Arkadaşlık İstekleri">
+<!ENTITY  toolbar.button.groups.tooltip             "Yeni Grup Davetleri">
+<!ENTITY  toolbar.button.events.tooltip             "Yeni Etkinlik Davetleri">
+<!ENTITY  toolbar.button.messages.tooltip           "Yeni Mesajlar">
+
+<!ENTITY  toolbar.button.links.label                "Hızlı Bağlantılar">
+<!ENTITY  toolbar.links.profile.label               "Profil">
+<!ENTITY  toolbar.links.friends.label               "Arkadaşlar">
+<!ENTITY  toolbar.links.inbox.label                 "Gelen kutusu">
+<!ENTITY  toolbar.links.photos.label                "Fotoğraflar">
+<!ENTITY  toolbar.links.notes.label                 "Notlar">
+<!ENTITY  toolbar.links.groups.label                "Gruplar">
+<!ENTITY  toolbar.links.events.label                "Etkinlikler">
+<!ENTITY  toolbar.links.linkies.label               "Bağlantılar">
+<!ENTITY  toolbar.links.videos.label                "Videolar">
+<!ENTITY  toolbar.settings.account.label            "Hesap Ayarları">
+<!ENTITY  toolbar.settings.privacy.label            "Gizlilik Ayarları">
+<!ENTITY  toolbar.settings.application.label        "Uygulama Ayarları">
+<!ENTITY  toolbar.settings.toolbar.label            "Araç Çubuğu Ayarları">
+
+<!ENTITY  toolbar.status.emptytext.label            "durumunu belirle...">
+<!ENTITY  toolbar.status.emptytext.tooltip          "Facebook durumunu değiştir">
+
+<!ENTITY  toolbar.login.label                       "Facebook’a giriş yap">
+
+<!ENTITY  toolbar.sidebar.label                     "Facebook Kenar Çubuğu">
+

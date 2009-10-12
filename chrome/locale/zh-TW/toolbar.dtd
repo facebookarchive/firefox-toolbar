@@ -1,0 +1,38 @@
+﻿<!ENTITY  toolbar.facebook.label                    "Facebook">
+
+<!ENTITY  toolbar.facebook.name                     "Facebook 工具列">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "Facebook 朋友側邊欄">
+<!ENTITY  toolbar.search.label                      "搜尋 Facebook">
+<!ENTITY  toolbar.button.home.tooltip               "前往 Facebook">
+<!ENTITY  toolbar.button.share.tooltip              "在 Facebook 上分享此頁面">
+<!ENTITY  toolbar.button.upload.tooltip             "上傳相片到 Facebook 上">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "戳">
+<!ENTITY  toolbar.button.friends.tooltip            "交友邀請">
+<!ENTITY  toolbar.button.groups.tooltip             "社團邀請">
+<!ENTITY  toolbar.button.events.tooltip             "活動邀請">
+<!ENTITY  toolbar.button.messages.tooltip           "未讀郵件">
+
+<!ENTITY  toolbar.button.links.label                "捷徑">
+<!ENTITY  toolbar.links.profile.label               "個人檔案">
+<!ENTITY  toolbar.links.friends.label               "朋友">
+<!ENTITY  toolbar.links.inbox.label                 "收件匣">
+<!ENTITY  toolbar.links.photos.label                "相片">
+<!ENTITY  toolbar.links.notes.label                 "網誌">
+<!ENTITY  toolbar.links.groups.label                "社團">
+<!ENTITY  toolbar.links.events.label                "活動">
+<!ENTITY  toolbar.links.linkies.label               "連結">
+<!ENTITY  toolbar.links.videos.label                "影片">
+<!ENTITY  toolbar.settings.account.label            "帳戶設定">
+<!ENTITY  toolbar.settings.privacy.label            "隱私設定">
+<!ENTITY  toolbar.settings.application.label        "應用程式設定">
+<!ENTITY  toolbar.settings.toolbar.label            "工具列設定">
+
+<!ENTITY  toolbar.status.emptytext.label            "更新你的近況‧‧‧‧‧‧">
+<!ENTITY  toolbar.status.emptytext.tooltip          "更改你的近況‧‧‧‧‧‧">
+
+<!ENTITY  toolbar.login.label                       "登入 Facebook">
+
+<!ENTITY  toolbar.sidebar.label                     "Facebook 側邊欄">
+

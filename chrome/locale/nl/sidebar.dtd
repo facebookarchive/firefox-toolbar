@@ -1,0 +1,11 @@
+﻿<!ENTITY  sidebar.title                     "Facebook-venster">
+
+<!ENTITY  sidebar.settings.label            "Instellingen">
+<!ENTITY  sidebar.sortlast.label            "Laatste keer bijgewerkt">
+<!ENTITY  sidebar.sortstatus.label          "Status laatste keer bijgewerkt">
+<!ENTITY  sidebar.sortprofile.label         "Profiel laatste keer bijgewerkt">
+<!ENTITY  sidebar.sortname.label            "Naam">
+
+<!ENTITY  sidebar.friendmessage.label       "bericht">
+<!ENTITY  sidebar.friendpoke.label          "porren">
+<!ENTITY  sidebar.friendpost.label          "prikbordbericht">

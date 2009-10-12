@@ -1,0 +1,38 @@
+﻿<!ENTITY  toolbar.facebook.label                    "Facebook">
+
+<!ENTITY  toolbar.facebook.name                     "Facebook-Symbolleiste">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "Facebook-Freunde Seitenleiste">
+<!ENTITY  toolbar.search.label                      "Facebook durchsuchen">
+<!ENTITY  toolbar.button.home.tooltip               "Zu Facebook">
+<!ENTITY  toolbar.button.share.tooltip              "Aktuelle Seite auf Facebook teilen">
+<!ENTITY  toolbar.button.upload.tooltip             "Fotos zu Facebook hochladen">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "Neue Anstupser">
+<!ENTITY  toolbar.button.friends.tooltip            "Neue Freundschaftsanfragen">
+<!ENTITY  toolbar.button.groups.tooltip             "Neue Gruppeneinladungen">
+<!ENTITY  toolbar.button.events.tooltip             "Neue Veranstaltungseinladungen">
+<!ENTITY  toolbar.button.messages.tooltip           "Neue Nachrichten">
+
+<!ENTITY  toolbar.button.links.label                "Quick Links">
+<!ENTITY  toolbar.links.profile.label               "Profil">
+<!ENTITY  toolbar.links.friends.label               "Freunde">
+<!ENTITY  toolbar.links.inbox.label                 "Postfach">
+<!ENTITY  toolbar.links.photos.label                "Fotos">
+<!ENTITY  toolbar.links.notes.label                 "Notizen">
+<!ENTITY  toolbar.links.groups.label                "Gruppen">
+<!ENTITY  toolbar.links.events.label                "Veranstaltungen">
+<!ENTITY  toolbar.links.linkies.label               "Links">
+<!ENTITY  toolbar.links.videos.label                "Videos">
+<!ENTITY  toolbar.settings.account.label            "Kontoeinstellungen">
+<!ENTITY  toolbar.settings.privacy.label            "Privatsphäre-Einstellungen">
+<!ENTITY  toolbar.settings.application.label        "Anwendungseinstellungen">
+<!ENTITY  toolbar.settings.toolbar.label            "Symbolleiste-Einstellungen">
+
+<!ENTITY  toolbar.status.emptytext.label            "aktualisiere deinen Status ...">
+<!ENTITY  toolbar.status.emptytext.tooltip          "Deinen Facebook-Status ändern">
+
+<!ENTITY  toolbar.login.label                       "Bei Facebook anmelden">
+
+<!ENTITY  toolbar.sidebar.label                     "Facebook-Seitenleiste">
+

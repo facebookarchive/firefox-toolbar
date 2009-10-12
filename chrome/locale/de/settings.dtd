@@ -1,0 +1,34 @@
+﻿<!ENTITY  settings.window.title                           "Facebook-Symbolleiste konfigurieren">
+
+<!ENTITY  settings.panel.title                            "Benachrichtigungen für die Facebook-Symbolleiste konfigurieren">
+
+<!ENTITY  settings.notificationmes.enable.label           "Pop-Up-Benachrichtigungen aktivieren">
+
+<!-- Notifications about me section -->
+<!ENTITY  settings.notificationme.header.label            "Durch welche Vorgänge auf Facebook wird eine Benachrichtigung hervorgerufen?">
+<!ENTITY  settings.notificationme.about.label             "Benachrichtigungen über mich">
+<!ENTITY  settings.notificationme.friendreq.label         "Neue Freundschaftsanfrage">
+<!ENTITY  settings.notificationme.message.label           "Neue Nachricht">
+<!ENTITY  settings.notificationme.poke.label              "Neuer Anstupser">
+<!ENTITY  settings.notificationme.friend.label            "Neue/r FreundIn">
+<!ENTITY  settings.notificationme.event.label             "Neue Veranstaltungseinladung">
+<!ENTITY  settings.notificationme.group.label             "Neue Gruppeneinladung">
+<!ENTITY  settings.notificationme.share.label             "Neuer geteilter Inhalt">
+<!ENTITY  settings.notificationme.other.label             "Alle anderen Benachrichtigungen (Pinnwandeinträge, Kommentare, „Gefällt mir“ usw.)">
+
+<!-- Notifications about my friends section -->
+<!ENTITY  settings.notificationfriend.about.label         "Benachrichtigungen über meine Freunde">
+<!ENTITY  settings.notificationfriend.profile.label       "Ein/e FreundIn aktualisiert sein/ihr Profil">
+<!ENTITY  settings.notificationfriend.status.label        "Ein/e FreundIn aktualisiert seinen/ihren Status">
+<!ENTITY  settings.notificationfriend.albums.label        "Ein/e FreundIn aktualisiert seine/ihre Alben">
+<!ENTITY  settings.notificationfriend.wall.label          "Jemand schreibt an die Pinnwand eines Freundes">
+<!ENTITY  settings.notificationfriend.note.label          "Ein/e FreundIn schreibt eine Notiz">
+
+<!-- Other -->
+<!ENTITY  settings.notificationother.about.label          "Andere Benachrichtigungen">
+<!ENTITY  settings.notificationother.upload.label         "Hochladen abgeschlossen">
+
+<!-- Appearance -->
+<!ENTITY  settings.notification.type.label                "Wie sehen Benachrichtigungen aus?">
+<!ENTITY  settings.notification.native.label              "Benachrichtigungsfenster der Facebook-Symbolleiste verwenden">
+<!ENTITY  settings.notification.firefox.label             "Firefox-Benachrichtigungen verwenden (Mac OS X verwendet Growl)">

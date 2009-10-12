@@ -1,0 +1,34 @@
+﻿<!ENTITY  window.title                      "Carga de fotos en Facebook">
+
+<!ENTITY  upload.destination.label          "Cargar nuevas fotos en:">
+<!ENTITY  upload.album.label                "Un álbum existente">
+<!ENTITY  upload.newalbum.label             "Un álbum nuevo">
+<!ENTITY  upload.loadingalbums.label        "Cargando álbumes...">
+
+<!ENTITY  upload.album.name.label           "Nombre:">
+<!ENTITY  upload.album.location.label       "Lugar:">
+<!ENTITY  upload.album.description.label    "Descripción:">
+
+<!ENTITY  upload.privacy.label              "¿Quién puede verlo?">
+<!ENTITY  upload.privacy.everyone.label     "Todos">
+<!ENTITY  upload.privacy.fof.label          "Amigos de mis amigos">
+<!ENTITY  upload.privacy.friends.label      "Sólo mis amigos">
+<!ENTITY  upload.privacy.networks.label     "Redes">
+
+<!ENTITY  upload.photo.detail.label         "Detalles de la foto:">
+<!ENTITY  upload.photo.name.label           "Nombre del archivo:">
+<!ENTITY  upload.photo.size.label           "Tamaño:">
+<!ENTITY  upload.photo.caption.label        "Pie de foto:">
+
+<!ENTITY  upload.tag.start.label            "En esta foto aparecen las siguientes personas:">
+<!ENTITY  upload.tag.click.label            "Haz clic en las personas que aparecen en la foto para etiquetarlas.">
+<!ENTITY  upload.tag.remove.label           "Eliminar las etiquetas seleccionadas">
+
+<!ENTITY  upload.photos.add.label           "Agregar fotos...">
+<!ENTITY  upload.photos.remove.label        "Eliminar todas las fotos">
+
+<!ENTITY  upload.cancel.label               "Cancelar la carga de fotos">
+<!ENTITY  upload.all.label                  "Cargar todas las fotos">
+
+<!ENTITY  upload.remove.label               "Eliminar">
+<!ENTITY  upload.drag.label                 "Haz clic en “Agregar” o arrastra las fotos aquí.">

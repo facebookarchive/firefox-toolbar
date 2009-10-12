@@ -1,0 +1,11 @@
+﻿<!ENTITY  sidebar.title                     "Facebook Kenar Çubuğu">
+
+<!ENTITY  sidebar.settings.label            "Ayarlar">
+<!ENTITY  sidebar.sortlast.label            "Son güncelleme zamanı">
+<!ENTITY  sidebar.sortstatus.label          "Durum güncellemesi zamanı">
+<!ENTITY  sidebar.sortprofile.label         "Profil güncellemesi zamanı">
+<!ENTITY  sidebar.sortname.label            "Ad">
+
+<!ENTITY  sidebar.friendmessage.label       "mesaj">
+<!ENTITY  sidebar.friendpoke.label          "dürt">
+<!ENTITY  sidebar.friendpost.label          "duvar yazısı">

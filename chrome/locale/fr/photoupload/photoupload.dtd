@@ -1,0 +1,34 @@
+<!ENTITY  window.title                      "Téléchargement de photos sur Facebook">
+
+<!ENTITY  upload.destination.label          "Télécharger les nouvelles photos vers :">
+<!ENTITY  upload.album.label                "Album existant">
+<!ENTITY  upload.newalbum.label             "Nouvel album">
+<!ENTITY  upload.loadingalbums.label        "Chargement des albums...">
+
+<!ENTITY  upload.album.name.label           "Nom :">
+<!ENTITY  upload.album.location.label       "Emplacement :">
+<!ENTITY  upload.album.description.label    "Description :">
+
+<!ENTITY  upload.privacy.label              "Qui peut y accéder ?">
+<!ENTITY  upload.privacy.everyone.label     "Tout le monde">
+<!ENTITY  upload.privacy.fof.label          "Amis de mes amis">
+<!ENTITY  upload.privacy.friends.label      "Mes amis uniquement">
+<!ENTITY  upload.privacy.networks.label     "Réseaux">
+
+<!ENTITY  upload.photo.detail.label         "Détails de la photo :">
+<!ENTITY  upload.photo.name.label           "Nom du fichier :">
+<!ENTITY  upload.photo.size.label           "Taille :">
+<!ENTITY  upload.photo.caption.label        "Légende :">
+
+<!ENTITY  upload.tag.start.label            "Dans cette photo :">
+<!ENTITY  upload.tag.click.label            "Cliquez sur les personnes que vous souhaitez identifier dans cette photo.">
+<!ENTITY  upload.tag.remove.label           "Retirer les identifications sélectionnées">
+
+<!ENTITY  upload.photos.add.label           "Ajouter des photos...">
+<!ENTITY  upload.photos.remove.label        "Supprimer tout">
+
+<!ENTITY  upload.cancel.label               "Annuler le téléchargement">
+<!ENTITY  upload.all.label                  "Télécharger tout">
+
+<!ENTITY  upload.remove.label               "Supprimer">
+<!ENTITY  upload.drag.label                 "Cliquez sur Ajouter... ou déposez des photos.">

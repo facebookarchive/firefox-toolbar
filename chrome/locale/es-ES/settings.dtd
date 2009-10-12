@@ -1,0 +1,34 @@
+﻿<!ENTITY  settings.window.title                           "Configuración de la barra de herramientas de Facebook">
+
+<!ENTITY  settings.panel.title                            "Configuración de las notificaciones de la barra de herramientas de Facebook">
+
+<!ENTITY  settings.notificationmes.enable.label           "Permitir notificaciones en ventana emergente">
+
+<!-- Notifications about me section -->
+<!ENTITY  settings.notificationme.header.label            "¿Por qué acciones quieres recibir una notificación?">
+<!ENTITY  settings.notificationme.about.label             "Notificaciones sobre mí">
+<!ENTITY  settings.notificationme.friendreq.label         "Nueva solicitud de amistad">
+<!ENTITY  settings.notificationme.message.label           "Nuevo mensaje">
+<!ENTITY  settings.notificationme.poke.label              "Nuevo toque">
+<!ENTITY  settings.notificationme.friend.label            "Nuevo amigo">
+<!ENTITY  settings.notificationme.event.label             "Nueva invitación a un evento">
+<!ENTITY  settings.notificationme.group.label             "Nueva invitación a un grupo">
+<!ENTITY  settings.notificationme.share.label             "Nuevo contenido compartido">
+<!ENTITY  settings.notificationme.other.label             "El resto de notificaciones (publicaciones en el muro, comentarios, cada vez que un amigo exprese que le gusta algo, etc.)">
+
+<!-- Notifications about my friends section -->
+<!ENTITY  settings.notificationfriend.about.label         "Notificaciones sobre mis amigos">
+<!ENTITY  settings.notificationfriend.profile.label       "Un amigo actualiza su perfil">
+<!ENTITY  settings.notificationfriend.status.label        "Un amigo actualizado su estado.">
+<!ENTITY  settings.notificationfriend.albums.label        "Un amigo actualiza sus álbumes.">
+<!ENTITY  settings.notificationfriend.wall.label          "Alguien escribe en el muro de un amigo">
+<!ENTITY  settings.notificationfriend.note.label          "Un amigo escribe una nota">
+
+<!-- Other -->
+<!ENTITY  settings.notificationother.about.label          "Otras notificaciones">
+<!ENTITY  settings.notificationother.upload.label         "Las cargas han concluido.">
+
+<!-- Appearance -->
+<!ENTITY  settings.notification.type.label                "¿Cómo son las notificaciones?">
+<!ENTITY  settings.notification.native.label              "Usar la ventana de notificaciones de la barra de herramientas de Facebook">
+<!ENTITY  settings.notification.firefox.label             "Usar las notificaciones de Firefox (en Mac OS X se utiliza Growl)">

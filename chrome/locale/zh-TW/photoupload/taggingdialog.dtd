@@ -1,0 +1,5 @@
+﻿<!ENTITY  window.title              "輸入標籤">
+
+<!ENTITY  tagText.label             "輸入名字或標籤：">
+<!ENTITY  choosePerson.label        "或選擇一個人：">
+

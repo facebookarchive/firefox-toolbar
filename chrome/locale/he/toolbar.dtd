@@ -1,0 +1,38 @@
+﻿<!ENTITY  toolbar.facebook.label                    "פייסבוק">
+
+<!ENTITY  toolbar.facebook.name                     "סרגל הכלים של פייסבוק">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "סרגל הכלים של החברים בפייסבוק">
+<!ENTITY  toolbar.search.label                      "חפש בפייסבוק">
+<!ENTITY  toolbar.button.home.tooltip               "עבור אל פייסבוק">
+<!ENTITY  toolbar.button.share.tooltip              "שתף בדף הנוכחי בפייסבוק">
+<!ENTITY  toolbar.button.upload.tooltip             "העלה תמונות לפייסבוק">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "נדנודים חדשים">
+<!ENTITY  toolbar.button.friends.tooltip            "בקשות של חברויות חדשות">
+<!ENTITY  toolbar.button.groups.tooltip             "הזמנות של קבוצות חדשות">
+<!ENTITY  toolbar.button.events.tooltip             "הזמנות של אירועים חדשים">
+<!ENTITY  toolbar.button.messages.tooltip           "הודעות חדשות">
+
+<!ENTITY  toolbar.button.links.label                "קישורים מהירים">
+<!ENTITY  toolbar.links.profile.label               "פרופיל">
+<!ENTITY  toolbar.links.friends.label               "חברים">
+<!ENTITY  toolbar.links.inbox.label                 "תיבת דואר נכנס">
+<!ENTITY  toolbar.links.photos.label                "תמונות">
+<!ENTITY  toolbar.links.notes.label                 "פתקים">
+<!ENTITY  toolbar.links.groups.label                "קבוצות">
+<!ENTITY  toolbar.links.events.label                "אירועים">
+<!ENTITY  toolbar.links.linkies.label               "קישורים">
+<!ENTITY  toolbar.links.videos.label                "סרטוני וידיאו">
+<!ENTITY  toolbar.settings.account.label            "הגדרות חשבון">
+<!ENTITY  toolbar.settings.privacy.label            "הגדרות פרטיות">
+<!ENTITY  toolbar.settings.application.label        "הגדרות יישום">
+<!ENTITY  toolbar.settings.toolbar.label            "הגדרות סרגל הכלים">
+
+<!ENTITY  toolbar.status.emptytext.label            "הגדר את הסטטוס שלך...">
+<!ENTITY  toolbar.status.emptytext.tooltip          "שנה את הסטטוס שלך בפייסבוק">
+
+<!ENTITY  toolbar.login.label                       "היכנס לפייסבוק">
+
+<!ENTITY  toolbar.sidebar.label                     "הסרגל הצידי של פייסבוק">
+

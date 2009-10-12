@@ -1,0 +1,11 @@
+﻿<!ENTITY  sidebar.title                     "Facebookサイドバー">
+
+<!ENTITY  sidebar.settings.label            "設定">
+<!ENTITY  sidebar.sortlast.label            "最終アップデート日時">
+<!ENTITY  sidebar.sortstatus.label          "近況アップデート日時">
+<!ENTITY  sidebar.sortprofile.label         "プロフィール更新日時">
+<!ENTITY  sidebar.sortname.label            "名前">
+
+<!ENTITY  sidebar.friendmessage.label       "メッセージ送信">
+<!ENTITY  sidebar.friendpoke.label          "あいさつ">
+<!ENTITY  sidebar.friendpost.label          "掲示板に書き込む">

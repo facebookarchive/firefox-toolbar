@@ -1,0 +1,34 @@
+﻿<!ENTITY  settings.window.title                           "הגדר את סרגל הכלים של פייסבוק">
+
+<!ENTITY  settings.panel.title                            "הגדר את הודעות סרגל הכלים של פייסבוק">
+
+<!ENTITY  settings.notificationmes.enable.label           "אפשר הודעות קופצות">
+
+<!-- Notifications about me section -->
+<!ENTITY  settings.notificationme.header.label            "אילו אירועים של פייסבוק יוצרים הודעה?">
+<!ENTITY  settings.notificationme.about.label             "הודעות עליי">
+<!ENTITY  settings.notificationme.friendreq.label         "בקשת חברות חדשה">
+<!ENTITY  settings.notificationme.message.label           "הודעה חדשה">
+<!ENTITY  settings.notificationme.poke.label              "נדנוד חדש">
+<!ENTITY  settings.notificationme.friend.label            "חבר חדש">
+<!ENTITY  settings.notificationme.event.label             "הזמנה לאירוע חדש">
+<!ENTITY  settings.notificationme.group.label             "הזמנה לקבוצה חדשה">
+<!ENTITY  settings.notificationme.share.label             "שיתוף חדש">
+<!ENTITY  settings.notificationme.other.label             "כל ההודעות האחרות (פרסומים על הקיר, תגובות, דברים שאהבתי וכו')">
+
+<!-- Notifications about my friends section -->
+<!ENTITY  settings.notificationfriend.about.label         "הודעות על חברים שלי">
+<!ENTITY  settings.notificationfriend.profile.label       "חבר מעדכן את הפרופיל">
+<!ENTITY  settings.notificationfriend.status.label        "חבר מעדכן את הסטטוס">
+<!ENTITY  settings.notificationfriend.albums.label        "חבר מעדכן את האלבומים">
+<!ENTITY  settings.notificationfriend.wall.label          "מישהו כותב על הקיר של חבר">
+<!ENTITY  settings.notificationfriend.note.label          "חבר כותב פתק">
+
+<!-- Other -->
+<!ENTITY  settings.notificationother.about.label          "הודעות אחרות">
+<!ENTITY  settings.notificationother.upload.label         "ההעלאה הושלמה">
+
+<!-- Appearance -->
+<!ENTITY  settings.notification.type.label                "איך נראות הודעות?">
+<!ENTITY  settings.notification.native.label              "השתמש בחלונות ההודעה של סרגל הכלים של פייסבוק">
+<!ENTITY  settings.notification.firefox.label             "השתמש בהודעות המובנות של Firefox (לגבי Mac OS X, נעשה שימוש ב-Growl)">

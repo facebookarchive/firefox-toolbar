@@ -1,0 +1,5 @@
+﻿<!ENTITY  window.title              "タグを入力">
+
+<!ENTITY  tagText.label             "名前またはタグを入力:">
+<!ENTITY  choosePerson.label        "または人物を選択:">
+

@@ -1,0 +1,34 @@
+﻿<!ENTITY  window.title                      "Fotos hochladen mit Facebook">
+
+<!ENTITY  upload.destination.label          "Neue Fotos hochladen zu:">
+<!ENTITY  upload.album.label                "Bestehendes Album">
+<!ENTITY  upload.newalbum.label             "Neues Album">
+<!ENTITY  upload.loadingalbums.label        "Alben werden geladen ...">
+
+<!ENTITY  upload.album.name.label           "Name:">
+<!ENTITY  upload.album.location.label       "Ort:">
+<!ENTITY  upload.album.description.label    "Beschreibung:">
+
+<!ENTITY  upload.privacy.label              "Wer kann das sehen?">
+<!ENTITY  upload.privacy.everyone.label     "Alle">
+<!ENTITY  upload.privacy.fof.label          "Freunde von Freunden">
+<!ENTITY  upload.privacy.friends.label      "Nur Freunde">
+<!ENTITY  upload.privacy.networks.label     "Netzwerke">
+
+<!ENTITY  upload.photo.detail.label         "Fotodetail:">
+<!ENTITY  upload.photo.name.label           "Dateiname:">
+<!ENTITY  upload.photo.size.label           "Größe:">
+<!ENTITY  upload.photo.caption.label        "Bildunterschrift:">
+
+<!ENTITY  upload.tag.start.label            "Auf diesem Foto:">
+<!ENTITY  upload.tag.click.label            "Klicke auf Personen in dem Foto, um sie zu markieren.">
+<!ENTITY  upload.tag.remove.label           "Ausgewählte Markierungen entfernen">
+
+<!ENTITY  upload.photos.add.label           "Fotos hinzufügen ...">
+<!ENTITY  upload.photos.remove.label        "Alle entfernen">
+
+<!ENTITY  upload.cancel.label               "Hochladen abbrechen">
+<!ENTITY  upload.all.label                  "Alle hochladen">
+
+<!ENTITY  upload.remove.label               "Entfernen">
+<!ENTITY  upload.drag.label                 "Klicke auf „Hinzufügen“ … oder ziehe die Fotos hierher.">

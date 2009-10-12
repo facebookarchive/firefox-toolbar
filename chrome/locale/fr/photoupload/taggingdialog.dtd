@@ -1,0 +1,4 @@
+<!ENTITY  window.title              "Entrer une identification">
+
+<!ENTITY  tagText.label             "Saisissez un nom ou une identification :">
+<!ENTITY  choosePerson.label        "ou choisissez une personne :">

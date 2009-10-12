@@ -1,0 +1,38 @@
+﻿<!ENTITY  toolbar.facebook.label                    "Facebook">
+
+<!ENTITY  toolbar.facebook.name                     "Facebook Toolbar">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "Facebook-vriendenvenster">
+<!ENTITY  toolbar.search.label                      "Zoeken op Facebook">
+<!ENTITY  toolbar.button.home.tooltip               "Ga naar Facebook">
+<!ENTITY  toolbar.button.share.tooltip              "Huidige pagina delen op Facebook">
+<!ENTITY  toolbar.button.upload.tooltip             "Foto's uploaden naar Facebook">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "Nieuwe porren">
+<!ENTITY  toolbar.button.friends.tooltip            "Nieuwe vriendschapsverzoeken">
+<!ENTITY  toolbar.button.groups.tooltip             "Nieuwe groepsuitnodigingen">
+<!ENTITY  toolbar.button.events.tooltip             "Nieuwe uitnodigingen voor evenementen">
+<!ENTITY  toolbar.button.messages.tooltip           "Nieuwe berichten">
+
+<!ENTITY  toolbar.button.links.label                "Snelkoppelingen">
+<!ENTITY  toolbar.links.profile.label               "Profiel">
+<!ENTITY  toolbar.links.friends.label               "Vrienden">
+<!ENTITY  toolbar.links.inbox.label                 "Postvak IN">
+<!ENTITY  toolbar.links.photos.label                "Foto's">
+<!ENTITY  toolbar.links.notes.label                 "Notities">
+<!ENTITY  toolbar.links.groups.label                "Groepen">
+<!ENTITY  toolbar.links.events.label                "Evenementen">
+<!ENTITY  toolbar.links.linkies.label               "Links">
+<!ENTITY  toolbar.links.videos.label                "Video's">
+<!ENTITY  toolbar.settings.account.label            "Accountinstellingen">
+<!ENTITY  toolbar.settings.privacy.label            "Privacy-instellingen">
+<!ENTITY  toolbar.settings.application.label        "Toepassingsinstellingen">
+<!ENTITY  toolbar.settings.toolbar.label            "Werkbalkinstellingen">
+
+<!ENTITY  toolbar.status.emptytext.label            "status instellen...">
+<!ENTITY  toolbar.status.emptytext.tooltip          "Je Facebook-status wijzigen">
+
+<!ENTITY  toolbar.login.label                       "Aanmelden op Facebook">
+
+<!ENTITY  toolbar.sidebar.label                     "Facebook-venster">
+

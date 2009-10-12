@@ -1,0 +1,34 @@
+﻿<!ENTITY  settings.window.title                           "Konfigurer Facebook-værktøjslinjen">
+
+<!ENTITY  settings.panel.title                            "Konfigurer Facebook-værktøjslinjenotifikationer">
+
+<!ENTITY  settings.notificationmes.enable.label           "Aktiver pop-up-notifikationer">
+
+<!-- Notifications about me section -->
+<!ENTITY  settings.notificationme.header.label            "Hvilke begivenheder på Facebook udløser en notifikation?">
+<!ENTITY  settings.notificationme.about.label             "Notifikationer om mig">
+<!ENTITY  settings.notificationme.friendreq.label         "Ny venneanmodning">
+<!ENTITY  settings.notificationme.message.label           "Ny besked">
+<!ENTITY  settings.notificationme.poke.label              "Nyt prik">
+<!ENTITY  settings.notificationme.friend.label            "Ny ven">
+<!ENTITY  settings.notificationme.event.label             "Ny invitation til begivenhed">
+<!ENTITY  settings.notificationme.group.label             "Ny invitation til gruppe">
+<!ENTITY  settings.notificationme.share.label             "Nyt delt indhold">
+<!ENTITY  settings.notificationme.other.label             "Alle andre notifikationer (vægopslag, kommentarer, "synes om", osv.)">
+
+<!-- Notifications about my friends section -->
+<!ENTITY  settings.notificationfriend.about.label         "Notifikationer om mine venner">
+<!ENTITY  settings.notificationfriend.profile.label       "En ven opdaterer hans/hendes profil">
+<!ENTITY  settings.notificationfriend.status.label        "En ven opdaterer hans/hendes status">
+<!ENTITY  settings.notificationfriend.albums.label        "En ven opdaterer hans/hendes album">
+<!ENTITY  settings.notificationfriend.wall.label          "Nogen skriver på en vens væg">
+<!ENTITY  settings.notificationfriend.note.label          "En ven skriver en note">
+
+<!-- Other -->
+<!ENTITY  settings.notificationother.about.label          "Andre notifikationer">
+<!ENTITY  settings.notificationother.upload.label         "Overførsler udført">
+
+<!-- Appearance -->
+<!ENTITY  settings.notification.type.label                "Hvordan ser notifikationer ud?">
+<!ENTITY  settings.notification.native.label              "Brug vinduet Facebook-værktøjslinjenotifikationer">
+<!ENTITY  settings.notification.firefox.label             "Brug indbyggede Firefox-notifikationer (på Mac OS X bruges Growl)">

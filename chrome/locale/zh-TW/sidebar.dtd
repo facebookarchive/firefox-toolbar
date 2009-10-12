@@ -1,0 +1,11 @@
+﻿<!ENTITY  sidebar.title                     "Facebook 側邊欄">
+
+<!ENTITY  sidebar.settings.label            "設定">
+<!ENTITY  sidebar.sortlast.label            "上次更新時間">
+<!ENTITY  sidebar.sortstatus.label          "近況更新時間">
+<!ENTITY  sidebar.sortprofile.label         "個人檔案更新時間">
+<!ENTITY  sidebar.sortname.label            "姓名">
+
+<!ENTITY  sidebar.friendmessage.label       "訊息">
+<!ENTITY  sidebar.friendpoke.label          "戳">
+<!ENTITY  sidebar.friendpost.label          "留言">

@@ -1,0 +1,11 @@
+﻿<!ENTITY  sidebar.title                     "Facebook 边栏">
+
+<!ENTITY  sidebar.settings.label            "设置">
+<!ENTITY  sidebar.sortlast.label            "上次更新时间">
+<!ENTITY  sidebar.sortstatus.label          "状态更新时间">
+<!ENTITY  sidebar.sortprofile.label         "个人主页更新时间">
+<!ENTITY  sidebar.sortname.label            "姓名">
+
+<!ENTITY  sidebar.friendmessage.label       "站内信">
+<!ENTITY  sidebar.friendpoke.label          "打招呼">
+<!ENTITY  sidebar.friendpost.label          "留言">

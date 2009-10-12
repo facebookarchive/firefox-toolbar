@@ -1,0 +1,38 @@
+﻿<!ENTITY  toolbar.facebook.label                    "Facebook">
+
+<!ENTITY  toolbar.facebook.name                     "Facebook-værktøjslinje">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "Sidepanelet Facebook-venner">
+<!ENTITY  toolbar.search.label                      "Søg på Facebook">
+<!ENTITY  toolbar.button.home.tooltip               "Gå til Facebook">
+<!ENTITY  toolbar.button.share.tooltip              "Del aktuelle side på Facebook">
+<!ENTITY  toolbar.button.upload.tooltip             "Overfør billeder til Facebook">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "Nye prik">
+<!ENTITY  toolbar.button.friends.tooltip            "Ny venneanmodninger">
+<!ENTITY  toolbar.button.groups.tooltip             "Nye grupperinvitationer">
+<!ENTITY  toolbar.button.events.tooltip             "Nye invitationer til begivenheder">
+<!ENTITY  toolbar.button.messages.tooltip           "Nye beskeder">
+
+<!ENTITY  toolbar.button.links.label                "Hurtige link">
+<!ENTITY  toolbar.links.profile.label               "Profil">
+<!ENTITY  toolbar.links.friends.label               "Venner">
+<!ENTITY  toolbar.links.inbox.label                 "Indbakke">
+<!ENTITY  toolbar.links.photos.label                "Billeder">
+<!ENTITY  toolbar.links.notes.label                 "Noter">
+<!ENTITY  toolbar.links.groups.label                "Grupper">
+<!ENTITY  toolbar.links.events.label                "Begivenheder">
+<!ENTITY  toolbar.links.linkies.label               "Links">
+<!ENTITY  toolbar.links.videos.label                "Videoer">
+<!ENTITY  toolbar.settings.account.label            "Kontoindstillinger">
+<!ENTITY  toolbar.settings.privacy.label            "Indstillinger for Beskyttelse af personlige oplysninger">
+<!ENTITY  toolbar.settings.application.label        "Applikationsindstillinger">
+<!ENTITY  toolbar.settings.toolbar.label            "Indstillinger for værktøjslinje">
+
+<!ENTITY  toolbar.status.emptytext.label            "angiv din status...">
+<!ENTITY  toolbar.status.emptytext.tooltip          "Skift din Facebook-status">
+
+<!ENTITY  toolbar.login.label                       "Log på Facebook">
+
+<!ENTITY  toolbar.sidebar.label                     "Facebook Sidebar">
+
