@@ -430,7 +430,7 @@ function getRelTimeWithinWeek(time, initialCap, isProfile) {
 
   var sbundle = GetFBStringBundle();
 
-  var mon, tues, weds, thurs, fri, sat, sun;
+  var mon, tues, wed, thurs, fri, sat, sun;
   if (isProfile) {
     mon = sbundle.getString('mondayInSentence');
     tues = sbundle.getString('tuesdayInSentence');
@@ -453,7 +453,7 @@ function getRelTimeWithinWeek(time, initialCap, isProfile) {
   var yesterdayic = sbundle.getString('yesterdayic');
   var today = sbundle.getString('today');
   var todayic = sbundle.getString('todayic');
-  var days = new Array(mon, tues, wed, thurs, fri, sat, sun);
+  var days = new Array(sun, mon, tues, wed, thurs, fri, sat);
   var day;
   var recently = true;
 
