@@ -1,11 +1,11 @@
-﻿<!ENTITY  settings.window.title                           "Facebookツールバーを設定">
+<!ENTITY  settings.window.title                           "Facebookツールバーを設定">
 
 <!ENTITY  settings.panel.title                            "Facebookツールバーのお知らせを設定">
 
 <!ENTITY  settings.notificationmes.enable.label           "ポップアップ通知を有効にする">
 
 <!-- Notifications about me section -->
-<!ENTITY  settings.notificationme.header.label            "Facebookのどのようなイベントでお知らせが表示されますか？">
+<!ENTITY  settings.notificationme.header.label            "次の場合にFacebookからのお知らせを表示する>
 <!ENTITY  settings.notificationme.about.label             "自分に関するお知らせ">
 <!ENTITY  settings.notificationme.friendreq.label         "新着友達リクエスト">
 <!ENTITY  settings.notificationme.message.label           "新着メッセージ">
@@ -29,6 +29,6 @@
 <!ENTITY  settings.notificationother.upload.label         "アップロード完了">
 
 <!-- Appearance -->
-<!ENTITY  settings.notification.type.label                "お知らせはどのように表示されますか？">
+<!ENTITY  settings.notification.type.label                "お知らせの表示方法">
 <!ENTITY  settings.notification.native.label              "Facebookツールバーのお知らせウィンドウを使用する">
 <!ENTITY  settings.notification.firefox.label             "Firefoxのお知らせを使用する(Mac OS XではGrowl)">

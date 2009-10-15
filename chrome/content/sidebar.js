@@ -101,7 +101,9 @@ function FriendSort( field, eltId, func){
     this.sortFunc = this.defaultSortFunc;
 }
 FriendSort.prototype.__defineGetter__( "label", function() {
-  return fbStringBundle.getFormattedString('sortingby', [this.field]);
+    var fld = (this.field == "last update") ? "lastupdate" : this.field;
+    var sortie = fbStringBundle.getString(fld);
+    return fbStringBundle.getFormattedString('sortingby', [sortie]);
 });
 FriendSort.prototype.callbackSortFunc =
 FriendSort.prototype.defaultSortFunc = NameCmp;
