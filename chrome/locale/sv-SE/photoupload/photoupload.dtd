@@ -31,4 +31,7 @@
 <!ENTITY  upload.all.label                  "Ladda upp alla">
 
 <!ENTITY  upload.remove.label               "Ta bort">
+<!-- XX Localization note to translators - The first part of the next string reads in English
+        "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
+        entity above -->
 <!ENTITY  upload.drag.label                 "Klicka pÂ L‰gg till ... eller dra fotona hit.">

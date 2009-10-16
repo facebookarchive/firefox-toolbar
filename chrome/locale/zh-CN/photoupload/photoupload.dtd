@@ -31,4 +31,7 @@
 <!ENTITY  upload.all.label                  "上传全部">
 
 <!ENTITY  upload.remove.label               "移除">
+<!-- XX Localization note to translators - The first part of the next string reads in English
+        "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
+        entity above -->
 <!ENTITY  upload.drag.label                 "点击“新增”或将照片拖放到此处。">

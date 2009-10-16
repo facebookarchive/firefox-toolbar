@@ -31,4 +31,7 @@
 <!ENTITY  upload.all.label                  "Overfør alle">
 
 <!ENTITY  upload.remove.label               "Fjern">
-<!ENTITY  upload.drag.label               "Klik Tilføj…eller træk billederne herhen.">
+<!-- XX Localization note to translators - The first part of the next string reads in English
+        "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
+        entity above -->
+<!ENTITY  upload.drag.label                 "Klik Tilføj…eller træk billederne herhen.">

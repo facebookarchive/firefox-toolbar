@@ -31,4 +31,7 @@
 <!ENTITY  upload.all.label                  "Tümünü Yükle">
 
 <!ENTITY  upload.remove.label               "Kaldır">
+<!-- XX Localization note to translators - The first part of the next string reads in English
+        "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
+        entity above -->
 <!ENTITY  upload.drag.label                 "Ekle… düğmesine tıkla veya fotoğrafları buraya sürükle.">

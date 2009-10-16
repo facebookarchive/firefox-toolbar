@@ -31,4 +31,7 @@
 <!ENTITY  upload.all.label                  "העלה הכול">
 
 <!ENTITY  upload.remove.label               "הסר">
+<!-- XX Localization note to translators - The first part of the next string reads in English
+        "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
+        entity above -->
 <!ENTITY  upload.drag.label                 "לחץ על 'הוסף'... או גרור תמונות לכאן.">
