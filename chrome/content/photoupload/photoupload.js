@@ -820,7 +820,8 @@ var EditPanel = {
       filename = filename.substring(0, MAX_FILENAME_SIZE) + "...";
     filenameField.value = filename;
     var sizeKb = selectedPhoto.sizeInBytes / 1024;
-    sizeField.value = sizeKb.toFixed(0) + " kb";
+    var sizeString = PhotoUpload._stringBundle.getFormattedString("sizekb", [sizeKb.toFixed(0)])
+    sizeField.value = sizeString;
     captionField.value = selectedPhoto.caption;
 
     if (selectedPhoto.tags.length == 0)
