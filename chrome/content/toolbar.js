@@ -68,6 +68,7 @@ var fbToolbarObserver = {
                 setAttributeById('facebook-name-info', 'userid', subject.id);
                 setAttributeById('facebook-menu-my-profile', 'userid', subject.id);
                 setAttributeById('facebook-login-status', 'label', fStrings.getString('logout'));
+                setAttributeById('facebook-login-status', 'tooltiptext', fStrings.getString('logout'));
                 var sb = GetFBSearchBox();
                 if (sb.value != fStrings.getString('searchplaceholder') && sb.value != '') {
                     sb.value = '';
@@ -78,6 +79,7 @@ var fbToolbarObserver = {
             case 'facebook-session-end':
                 debug('ending session...');
                 setAttributeById('facebook-login-status', 'label', fStrings.getString('login'));
+                setAttributeById('facebook-login-status', 'tooltiptext', fStrings.getString('login'));
                 setAttributeById('facebook-name-info', 'label', '');
                 var statusBox = document.getElementById('facebook-toolbar-status');
                 statusBox.style.display="none";
@@ -162,6 +164,7 @@ var facebook = {
             setAttributeById('facebook-name-info', 'userid', loggedInUser.id);
             setAttributeById('facebook-toolbar-status', 'value', loggedInUser.status);
             setAttributeById('facebook-login-status', 'label', facebook.fStringBundle.getString('logout'));
+            setAttributeById('facebook-login-status', 'tooltiptext', facebook.fStringBundle.getString('logout'));
             setAttributeById('facebook-menu-my-profile', 'userid', loggedInUser.id);
             setAttributeById('facebook-notification-msgs', 'label', fbSvc.numMsgs);
             setAttributeById('facebook-notification-poke', 'label', fbSvc.numPokes);
