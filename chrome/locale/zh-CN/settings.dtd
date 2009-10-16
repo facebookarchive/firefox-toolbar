@@ -1,32 +1,34 @@
-﻿<!ENTITY  window.title                      "Facebook 照片上传">
+﻿<!ENTITY  settings.window.title                           "Configure the Facebook Toolbar">
 
-<!ENTITY  upload.destination.label          "上传新照片至∶">
-<!ENTITY  upload.album.label                "已存在的相册">
-<!ENTITY  upload.newalbum.label             "新相册">
-<!ENTITY  upload.loadingalbums.label        "相册加载中……">
+<!ENTITY  settings.panel.title                            "Configure Facebook Toolbar Notifications">
 
-<!ENTITY  upload.album.name.label           "名称∶">
-<!ENTITY  upload.album.location.label       "地点∶">
-<!ENTITY  upload.album.description.label    "说明∶">
+<!ENTITY  settings.notificationmes.enable.label           "Enable Pop-up Notifications">
 
-<!ENTITY  upload.privacy.label              "谁可以看见这？">
-<!ENTITY  upload.privacy.everyone.label     "所有人">
-<!ENTITY  upload.privacy.fof.label          "朋友的朋友">
-<!ENTITY  upload.privacy.friends.label      "仅限朋友">
-<!ENTITY  upload.privacy.networks.label     "网络">
+<!-- Notifications about me section -->
+<!ENTITY  settings.notificationme.header.label            "What Facebook happenings prompt a notification?">
+<!ENTITY  settings.notificationme.about.label             "Notifications about me">
+<!ENTITY  settings.notificationme.friendreq.label         "New friend request">
+<!ENTITY  settings.notificationme.message.label           "New message">
+<!ENTITY  settings.notificationme.poke.label              "New poke">
+<!ENTITY  settings.notificationme.friend.label            "New friend">
+<!ENTITY  settings.notificationme.event.label             "New event invite">
+<!ENTITY  settings.notificationme.group.label             "New group invite">
+<!ENTITY  settings.notificationme.share.label             "New share">
+<!ENTITY  settings.notificationme.other.label             "All other notifications (wall posts, comments, likes, etc.)">
 
-<!ENTITY  upload.photo.detail.label         "照片细节∶">
-<!ENTITY  upload.photo.name.label           "档案名称∶">
-<!ENTITY  upload.photo.size.label           "大小∶">
-<!ENTITY  upload.photo.caption.label        "注释∶">
+<!-- Notifications about my friends section -->
+<!ENTITY  settings.notificationfriend.about.label         "Notifications about my friends">
+<!ENTITY  settings.notificationfriend.profile.label       "A friend updates his/her profile">
+<!ENTITY  settings.notificationfriend.status.label        "A friend updates his/her status">
+<!ENTITY  settings.notificationfriend.albums.label        "A friend updates his/her albums">
+<!ENTITY  settings.notificationfriend.wall.label          "Someone writes on a friend's wall">
+<!ENTITY  settings.notificationfriend.note.label          "A friend writes a note">
 
-<!ENTITY  upload.tag.start.label            "在这照片中有∶">
-<!ENTITY  upload.tag.click.label            "点击照片中的人贴姓名标签。">
-<!ENTITY  upload.tag.remove.label           "移除所选的标签">
+<!-- Other -->
+<!ENTITY  settings.notificationother.about.label          "Other notifications">
+<!ENTITY  settings.notificationother.upload.label         "Uploads Complete">
 
-<!ENTITY  upload.photos.add.label           "新增照片……">
-<!ENTITY  upload.photos.remove.label        "移除全部">
-
-<!ENTITY  upload.cancel.label               "取消上传">
-<!ENTITY  upload.all.label                  "上传全部">
-
+<!-- Appearance -->
+<!ENTITY  settings.notification.type.label                "What do notifications look like?">
+<!ENTITY  settings.notification.native.label              "Use Facebook Toolbar notification windows">
+<!ENTITY  settings.notification.firefox.label             "Use built-in Firefox notifications (on Mac OS X, Growl is used)">
