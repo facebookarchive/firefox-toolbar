@@ -1,5 +1,7 @@
 ﻿<!ENTITY  window.title              "הזן תג">
 
+<!ENTITY  tag.label                 "Tag">
+<!ENTITY  cancel.label              "Cancel">
 <!ENTITY  tagText.label             "הקלד שם או תג כלשהם:">
 <!ENTITY  choosePerson.label        "או בחר מישהו:">
 

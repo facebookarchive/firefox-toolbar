@@ -1,5 +1,7 @@
 ﻿<!ENTITY  window.title              "أدخِل إشارةً">
 
+<!ENTITY  tag.label                 "Tag">
+<!ENTITY  cancel.label              "Cancel">
 <!ENTITY  tagText.label             "اكتب أي اسم أو إشارة:">
 <!ENTITY  choosePerson.label        "أو اختر شخصاً:">
 

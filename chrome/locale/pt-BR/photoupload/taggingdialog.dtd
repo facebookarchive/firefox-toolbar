@@ -1,5 +1,7 @@
 ﻿<!ENTITY  window.title              "Inserir uma marca">
 
+<!ENTITY  tag.label                 "Tag">
+<!ENTITY  cancel.label              "Cancel">
 <!ENTITY  tagText.label             "Digite um nome ou uma marca:">
 <!ENTITY  choosePerson.label        "Ou escolha uma pessoa:">
 
