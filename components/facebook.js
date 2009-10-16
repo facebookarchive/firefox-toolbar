@@ -165,6 +165,10 @@ function facebookService() {
     this._apiKey = '8d7be0a45c164647647602a27106cc65';
     this._secret = 'c9646e8dccec4c2726c65f6f5eeca86a';
 
+    this.stringBundle = Components.classes["@mozilla.org/intl/stringbundle;1"]
+                              .getService(Components.interfaces.nsIStringBundleService)
+                              .createBundle("chrome://facebook/locale/facebook.properties");
+
     this.initValues();
 
     fbSvc = this;
@@ -1119,11 +1123,12 @@ facebookService.prototype = {
             if (!this._alertService)
                 this._alertService = Cc["@mozilla.org/alerts-service;1"].getService(Ci.nsIAlertsService);
             if (this._prefService.getBoolPref('extensions.facebook.notifications.growl')) {
+                var notifyTitle = this.stringBundle.GetStringFromName("notificationtitle");
                 if (url) {
-                    this._alertService.showAlertNotification(pic, "Facebook Notification", label,
+                    this._alertService.showAlertNotification(pic, notifyTitle, label,
                                                              true, url, new AlertObserver() );
                 } else {
-                    this._alertService.showAlertNotification(pic, "Facebook Notification", label);
+                    this._alertService.showAlertNotification(pic, notifyTitle, label);
                 }
                 return true;
             }
