@@ -1,6 +1,6 @@
 <!ENTITY  window.title              "Entrer une identification">
 
-<!ENTITY  tag.label                 "Tag">
-<!ENTITY  cancel.label              "Cancel">
+<!ENTITY  tag.label                 "Identification">
+<!ENTITY  cancel.label              "Annuler">
 <!ENTITY  tagText.label             "Saisissez un nom ou une identification :">
 <!ENTITY  choosePerson.label        "ou choisissez une personne :">

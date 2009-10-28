@@ -1,11 +1,11 @@
-﻿<!ENTITY  settings.window.title                           "設定 Facebook 工具列">
+﻿<!ENTITY  settings.window.title                           "Facebook 工具列設定">
 
 <!ENTITY  settings.panel.title                            "設定 Facebook 工具列通知">
 
 <!ENTITY  settings.notificationmes.enable.label           "允許跳出視窗通知">
 
 <!-- Notifications about me section -->
-<!ENTITY  settings.notificationme.header.label            "什麼情況下會跳出 Facebook 通知視窗?">
+<!ENTITY  settings.notificationme.header.label            "什麼情況下 Facebook 通知會跳出？">
 <!ENTITY  settings.notificationme.about.label             "跟我有關的通知">
 <!ENTITY  settings.notificationme.friendreq.label         "新收到的交友邀請">
 <!ENTITY  settings.notificationme.message.label           "新信">
@@ -29,6 +29,7 @@
 <!ENTITY  settings.notificationother.upload.label         "上傳已完成">
 
 <!-- Appearance -->
-<!ENTITY  settings.notification.type.label                "選擇哪個通知模式呢？">
-<!ENTITY  settings.notification.native.label              "使用 Facebook 工具列通知視窗">
+<!ENTITY  settings.notification.type.label                "請選擇通知顯示模式：">
+<!ENTITY  settings.notification.native.label              "使用 Facebook 工具列的通知視窗">
 <!ENTITY  settings.notification.firefox.label             "使用 Firefox 內建的通知 (Max OS X 使用 Growl)">
+

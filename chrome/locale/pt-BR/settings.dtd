@@ -1,4 +1,4 @@
-﻿<!ENTITY  settings.window.title                           "Configurar a Barra de ferramentas do Facebook">
+﻿<!ENTITY  settings.window.title                           "Configurar Barra de ferramentas do Facebook">
 
 <!ENTITY  settings.panel.title                            "Configurar as notificações da Barra de ferramentas do Facebook">
 
@@ -32,3 +32,4 @@
 <!ENTITY  settings.notification.type.label                "Como são as notificações?">
 <!ENTITY  settings.notification.native.label              "Usar janelas de notificação da Barra de ferramentas do Facebook">
 <!ENTITY  settings.notification.firefox.label             "Usar notificações incorporadas do Firefox (no Mac OS X, o Growl é usado)">
+

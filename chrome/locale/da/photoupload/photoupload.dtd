@@ -21,7 +21,7 @@
 <!ENTITY  upload.photo.caption.label        "Billedtekst:">
 
 <!ENTITY  upload.tag.start.label            "På billedet:">
-<!ENTITY  upload.tag.click.label            "Klik på personen i billedet for at tagge dem.">
+<!ENTITY  upload.tag.click.label            "Klik på personer i billedet for at tagge dem.">
 <!ENTITY  upload.tag.remove.label           "Fjern markerede tags">
 
 <!ENTITY  upload.photos.add.label           "Tilføj billeder...">
@@ -34,4 +34,5 @@
 <!-- XX Localization note to translators - The first part of the next string reads in English
         "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
         entity above -->
-<!ENTITY  upload.drag.label                 "Klik Tilføj…eller træk billederne herhen.">
+<!ENTITY  upload.drag.label                 "Klik på 'Tilføj billeder'... eller træk billeder hertil.">
+

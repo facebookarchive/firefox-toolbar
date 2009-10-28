@@ -1,13 +1,13 @@
-﻿<!ENTITY  settings.window.title                           "Konfigurasikan Bilah Alat Facebook">
+﻿<!ENTITY  settings.window.title                           "Konfigurasi Bilah Alat Facebook">
 
-<!ENTITY  settings.panel.title                            "Konfigurasikan Pemberitahuan Bilah Alat Facebook">
+<!ENTITY  settings.panel.title                            "Konfigurasi Pemberitahuan Bilah Alat Facebook">
 
 <!ENTITY  settings.notificationmes.enable.label           "Aktifkan Pemberitahuan Pop-up">
 
 <!-- Notifications about me section -->
-<!ENTITY  settings.notificationme.header.label            "Kirim pemberitahuan tentang hal yang sedang seru di Facebook?">
+<!ENTITY  settings.notificationme.header.label            "Pemberitahuan apa yang dikirimkan langsung dari Facebook?">
 <!ENTITY  settings.notificationme.about.label             "Pemberitahuan tentang saya">
-<!ENTITY  settings.notificationme.friendreq.label         "Permintaan pertemanan baru">
+<!ENTITY  settings.notificationme.friendreq.label         "Pemintaan pertemanan baru">
 <!ENTITY  settings.notificationme.message.label           "Pesan baru">
 <!ENTITY  settings.notificationme.poke.label              "Colekan baru">
 <!ENTITY  settings.notificationme.friend.label            "Teman baru">
@@ -31,4 +31,5 @@
 <!-- Appearance -->
 <!ENTITY  settings.notification.type.label                "Bagaimana bentuk pemberitahuannya?">
 <!ENTITY  settings.notification.native.label              "Gunakan jendela pemberitahuan Bilah Alat Facebook">
-<!ENTITY  settings.notification.firefox.label             "Gunakan pemberitahuan Firefox built-in (pada Mac OS X, gunakan Growl)">
+<!ENTITY  settings.notification.firefox.label             "Gunakan pemberitahuan tertanam pada Firefox (pada Mac OS X, gunakan Growl)">
+

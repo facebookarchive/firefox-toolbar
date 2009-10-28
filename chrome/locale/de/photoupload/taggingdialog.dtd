@@ -1,7 +1,8 @@
 ﻿<!ENTITY  window.title              "Markierung eingeben">
 
-<!ENTITY  tag.label                 "Tag">
-<!ENTITY  cancel.label              "Cancel">
+<!ENTITY  tag.label                 "Markierung">
+<!ENTITY  cancel.label              "Abbrechen">
 <!ENTITY  tagText.label             "Namen oder Markierung eingeben: ">
 <!ENTITY  choosePerson.label        "oder wähle eine Person aus:">
+
 

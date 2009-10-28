@@ -25,7 +25,7 @@
 <!ENTITY  toolbar.links.linkies.label               "Liens">
 <!ENTITY  toolbar.links.videos.label                "Vidéos">
 <!ENTITY  toolbar.settings.account.label            "Paramètres du compte">
-<!ENTITY  toolbar.settings.privacy.label            "Confidentialité">
+<!ENTITY  toolbar.settings.privacy.label            "Paramètres de confidentialité">
 <!ENTITY  toolbar.settings.application.label        "Paramètres des applications">
 <!ENTITY  toolbar.settings.toolbar.label            "Paramètres de la barre d'outils">
 
@@ -35,3 +35,4 @@
 <!ENTITY  toolbar.login.label                       "Connexion à Facebook">
 
 <!ENTITY  toolbar.sidebar.label                     "Barre latérale Facebook">
+

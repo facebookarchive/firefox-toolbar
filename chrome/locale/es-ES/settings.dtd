@@ -32,3 +32,4 @@
 <!ENTITY  settings.notification.type.label                "¿Dónde quieres ver las notificaciones?">
 <!ENTITY  settings.notification.native.label              "Usar la ventana de notificaciones de la barra de herramientas de Facebook">
 <!ENTITY  settings.notification.firefox.label             "Usar las notificaciones de Firefox (en Mac OS X se utiliza Growl)">
+

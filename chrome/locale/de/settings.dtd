@@ -32,3 +32,4 @@
 <!ENTITY  settings.notification.type.label                "Wie sehen Benachrichtigungen aus?">
 <!ENTITY  settings.notification.native.label              "Benachrichtigungsfenster der Facebook-Symbolleiste verwenden">
 <!ENTITY  settings.notification.firefox.label             "Firefox-Benachrichtigungen verwenden (Mac OS X verwendet Growl)">
+

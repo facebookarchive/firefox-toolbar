@@ -1,7 +1,8 @@
-﻿<!ENTITY  window.title              "輸入標籤">
+﻿<!ENTITY  window.title              "貼標籤">
 
-<!ENTITY  tag.label                 "Tag">
-<!ENTITY  cancel.label              "Cancel">
+<!ENTITY  tag.label                 "標籤">
+<!ENTITY  cancel.label              "取消">
 <!ENTITY  tagText.label             "輸入名字或標籤：">
 <!ENTITY  choosePerson.label        "或選擇一個人：">
+
 

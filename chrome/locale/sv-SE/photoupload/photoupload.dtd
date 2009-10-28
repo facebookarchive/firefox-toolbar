@@ -1,6 +1,8 @@
-<!ENTITY  window.title                      "Fotouppladdning på Facebook">
+<!ENTITY  window.title                      "Fotouppladdning på 
+Facebook">
 
-<!ENTITY  upload.destination.label          "Ladda upp nya foton till:">
+<!ENTITY  upload.destination.label          "Ladda upp nya foton 
+till:">
 <!ENTITY  upload.album.label                "Befintligt album">
 <!ENTITY  upload.newalbum.label             "Nytt album">
 <!ENTITY  upload.loadingalbums.label        "Laddar album...">
@@ -9,7 +11,8 @@
 <!ENTITY  upload.album.location.label       "Plats:">
 <!ENTITY  upload.album.description.label    "Beskrivning:">
 
-<!ENTITY  upload.privacy.label              "Vem ska få se det här?">
+<!ENTITY  upload.privacy.label              "Vem ska få se det 
+här?">
 <!ENTITY  upload.privacy.everyone.label     "Alla">
 <!ENTITY  upload.privacy.fof.label          "Vänners vänner">
 <!ENTITY  upload.privacy.friends.label      "Endast vänner">
@@ -21,8 +24,10 @@
 <!ENTITY  upload.photo.caption.label        "Bildtext:">
 
 <!ENTITY  upload.tag.start.label            "I det här fotot:">
-<!ENTITY  upload.tag.click.label            "Klicka på personerna i fotot om du vill tagga dem.">
-<!ENTITY  upload.tag.remove.label           "Ta bort valda taggar">
+<!ENTITY  upload.tag.click.label            "Klicka på personerna 
+i fotot om du vill tagga dem.">
+<!ENTITY  upload.tag.remove.label           "Ta bort valda 
+taggar">
 
 <!ENTITY  upload.photos.add.label           "Lägg till foton...">
 <!ENTITY  upload.photos.remove.label        "Ta bort alla">
@@ -31,7 +36,11 @@
 <!ENTITY  upload.all.label                  "Ladda upp alla">
 
 <!ENTITY  upload.remove.label               "Ta bort">
-<!-- XX Localization note to translators - The first part of the next string reads in English
-        "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
+<!-- XX Localization note to translators - The first part of the 
+next string reads in English
+        "Click 'Add Photos'...". The value in '' should match the 
+value of the upload.photos.add.label
         entity above -->
-<!ENTITY  upload.drag.label                 "Klicka pÂ L‰gg till ... eller dra fotona hit.">
+<!ENTITY  upload.drag.label                 "Klicka på Lägg till 
+foton... eller dra fotona hit.">
+

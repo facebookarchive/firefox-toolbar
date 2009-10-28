@@ -21,7 +21,7 @@
 <!ENTITY  upload.photo.caption.label        "الشرح:">
 
 <!ENTITY  upload.tag.start.label            "في هذه الصورة:">
-<!ENTITY  upload.tag.click.label            "اضغط على الأشخاص في الصورة للإشارة إليهم.">
+<!ENTITY  upload.tag.click.label            " اضغط على الأشخاص في الصورة للإشارة إليهم. ">
 <!ENTITY  upload.tag.remove.label           "إزالة الإشارات المحددة">
 
 <!ENTITY  upload.photos.add.label           "إضافة صور...">
@@ -34,4 +34,5 @@
 <!-- XX Localization note to translators - The first part of the next string reads in English
         "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
         entity above -->
-<!ENTITY  upload.drag.label                 "اضغط على إضافة... أو اسحب الصور إلى هنا. ">
+<!ENTITY  upload.drag.label                 "Foo">
+

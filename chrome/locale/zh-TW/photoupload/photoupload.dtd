@@ -3,7 +3,7 @@
 <!ENTITY  upload.destination.label          "上傳新相片到：">
 <!ENTITY  upload.album.label                "已有的相簿">
 <!ENTITY  upload.newalbum.label             "新相簿">
-<!ENTITY  upload.loadingalbums.label        "相簿載入中......">
+<!ENTITY  upload.loadingalbums.label        "相簿載入中‧‧‧‧‧‧">
 
 <!ENTITY  upload.album.name.label           "名稱：">
 <!ENTITY  upload.album.location.label       "地點：">
@@ -24,8 +24,8 @@
 <!ENTITY  upload.tag.click.label            "點取相片中的人貼姓名標籤。">
 <!ENTITY  upload.tag.remove.label           "刪除所選的標籤">
 
-<!ENTITY  upload.photos.add.label           "新添相片......">
-<!ENTITY  upload.photos.remove.label        "移除全部">
+<!ENTITY  upload.photos.add.label           "新添相片‧‧‧‧‧‧">
+<!ENTITY  upload.photos.remove.label        "刪除全部">
 
 <!ENTITY  upload.cancel.label               "取消上傳">
 <!ENTITY  upload.all.label                  "上傳全部">
@@ -35,3 +35,4 @@
         "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
         entity above -->
 <!ENTITY  upload.drag.label                 "按「新增」或將相片拖到這裡。">
+

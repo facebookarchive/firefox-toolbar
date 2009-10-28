@@ -1,4 +1,4 @@
-﻿<!ENTITY  window.title                      "Carregar fotos no Facebook">
+﻿<!ENTITY  window.title                      "Envio de fotos do Facebook">
 
 <!ENTITY  upload.destination.label          "Carregar novas fotos para:">
 <!ENTITY  upload.album.label                "Álbum existente">
@@ -34,4 +34,5 @@
 <!-- XX Localization note to translators - The first part of the next string reads in English
         "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
         entity above -->
-<!ENTITY  upload.drag.label                 "Clique em Adicionar... ou arraste as fotos para este local.">
+<!ENTITY  upload.drag.label                 "Clique em 'Adicionar fotos... ' ou arraste as fotos para este local.">
+

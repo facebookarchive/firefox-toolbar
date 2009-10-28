@@ -1,34 +1,59 @@
-<!ENTITY  settings.window.title                           "Konfigurera Facebook-verktygsfältet">
+<!ENTITY  settings.window.title                           
+"Konfigurera Facebook-verktygsfältet">
 
-<!ENTITY  settings.panel.title                            "Konfigurera meddelanden för Facebook-verktygsfältet">
+<!ENTITY  settings.panel.title                            
+"Konfigurera meddelanden för Facebook-verktygsfältet">
 
-<!ENTITY  settings.notificationmes.enable.label           "Aktivera popup-meddelanden">
+<!ENTITY  settings.notificationmes.enable.label           
+"Aktivera popup-meddelanden">
 
 <!-- Notifications about me section -->
-<!ENTITY  settings.notificationme.header.label            "Vilka Facebook-händelser leder till att ett meddelande visas?">
-<!ENTITY  settings.notificationme.about.label             "Meddelanden om mig">
-<!ENTITY  settings.notificationme.friendreq.label         "Ny vänförfrågan">
-<!ENTITY  settings.notificationme.message.label           "Nytt meddelande">
-<!ENTITY  settings.notificationme.poke.label              "Ny puff">
-<!ENTITY  settings.notificationme.friend.label            "Ny vän">
-<!ENTITY  settings.notificationme.event.label             "Ny evenemangsinbjudan">
-<!ENTITY  settings.notificationme.group.label             "Ny gruppinbjudan">
-<!ENTITY  settings.notificationme.share.label             "Ny delning">
-<!ENTITY  settings.notificationme.other.label             "Alla andra meddelanden (logginlägg, kommentarer, gillar etc.)">
+<!ENTITY  settings.notificationme.header.label            "Vilka 
+Facebook-händelser leder till att ett meddelande visas?">
+<!ENTITY  settings.notificationme.about.label             
+"Meddelanden om mig">
+<!ENTITY  settings.notificationme.friendreq.label         "Ny 
+vänförfrågan">
+<!ENTITY  settings.notificationme.message.label           "Nytt 
+meddelande">
+<!ENTITY  settings.notificationme.poke.label              "Ny 
+puff">
+<!ENTITY  settings.notificationme.friend.label            "Ny 
+vän">
+<!ENTITY  settings.notificationme.event.label             "Ny 
+evenemangsinbjudan">
+<!ENTITY  settings.notificationme.group.label             "Ny 
+gruppinbjudan">
+<!ENTITY  settings.notificationme.share.label             "Ny 
+delning">
+<!ENTITY  settings.notificationme.other.label             "Alla 
+andra meddelanden (logginlägg, kommentarer, gillar etc.)">
 
 <!-- Notifications about my friends section -->
-<!ENTITY  settings.notificationfriend.about.label         "Meddelande om mina vänner">
-<!ENTITY  settings.notificationfriend.profile.label       "En vän uppdaterar sin profil">
-<!ENTITY  settings.notificationfriend.status.label        "En vän uppdaterar sin status">
-<!ENTITY  settings.notificationfriend.albums.label        "En vän uppdaterar sina album">
-<!ENTITY  settings.notificationfriend.wall.label          "Någon skriver i en väns logg">
-<!ENTITY  settings.notificationfriend.note.label          "En vän skriver en anteckning">
+<!ENTITY  settings.notificationfriend.about.label         
+"Meddelande om mina vänner">
+<!ENTITY  settings.notificationfriend.profile.label       "En vän 
+uppdaterar sin profil">
+<!ENTITY  settings.notificationfriend.status.label        "En vän 
+uppdaterar sin status">
+<!ENTITY  settings.notificationfriend.albums.label        "En vän 
+uppdaterar sina album">
+<!ENTITY  settings.notificationfriend.wall.label          "Någon 
+skriver i en väns logg">
+<!ENTITY  settings.notificationfriend.note.label          "En vän 
+skriver en anteckning">
 
 <!-- Other -->
-<!ENTITY  settings.notificationother.about.label          "Andra meddelanden">
-<!ENTITY  settings.notificationother.upload.label         "Uppladdningarna är klara">
+<!ENTITY  settings.notificationother.about.label          "Andra 
+meddelanden">
+<!ENTITY  settings.notificationother.upload.label         
+"Uppladdningarna är klara">
 
 <!-- Appearance -->
-<!ENTITY  settings.notification.type.label                "Hur ser meddelandena ut?">
-<!ENTITY  settings.notification.native.label              "Använd meddelandefönstren för Facebook-verktygsfältet">
-<!ENTITY  settings.notification.firefox.label             "Använd inbyggda Firefox-meddelanden (på Mac OS X används Growl)">
+<!ENTITY  settings.notification.type.label                "Hur ser 
+meddelandena ut?">
+<!ENTITY  settings.notification.native.label              "Använd 
+meddelandefönstren för Facebook-verktygsfältet">
+<!ENTITY  settings.notification.firefox.label             "Använd 
+inbyggda Firefox-meddelanden (på Mac OS X används Growl)">
+

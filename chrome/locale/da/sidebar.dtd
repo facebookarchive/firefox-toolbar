@@ -8,4 +8,5 @@
 
 <!ENTITY  sidebar.friendmessage.label       "besked">
 <!ENTITY  sidebar.friendpoke.label          "prik">
-<!ENTITY  sidebar.friendpost.label          "Vægopslag">
+<!ENTITY  sidebar.friendpost.label          "vægbesked">
+

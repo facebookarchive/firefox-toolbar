@@ -1,34 +1,35 @@
-﻿<!ENTITY  settings.window.title                           "تكوين شريط أدوات فيس بوك">
+﻿<!ENTITY  settings.window.title                           " تكوين شريط أدوات فيس بوك">
 
-<!ENTITY  settings.panel.title                            "تكوين إشعارات شريط أدوات فيس بوك">
+<!ENTITY  settings.panel.title                            " تكوين إشعارات شريط أدوات فيس بوك">
 
-<!ENTITY  settings.notificationmes.enable.label           "تفعيل الإشعارات المنبثقة">
+<!ENTITY  settings.notificationmes.enable.label           " تفعيل الإشعارات المنبثقة">
 
 <!-- Notifications about me section -->
-<!ENTITY  settings.notificationme.header.label            "أي إجراءات في فيس بوك تتطلب إشعاراً؟">
-<!ENTITY  settings.notificationme.about.label             "إشعارات عني">
-<!ENTITY  settings.notificationme.friendreq.label         "طلب صداقة جديد">
-<!ENTITY  settings.notificationme.message.label           "رسالة جديدة">
-<!ENTITY  settings.notificationme.poke.label              "نكزة جديدة">
-<!ENTITY  settings.notificationme.friend.label            "صديق جديد">
-<!ENTITY  settings.notificationme.event.label             "دعوة جديدة إلى مناسبة">
-<!ENTITY  settings.notificationme.group.label             "دعوة جديدة إلى مجموعة">
-<!ENTITY  settings.notificationme.share.label             "مشاركة جديدة">
-<!ENTITY  settings.notificationme.other.label             "(كل الإشعارات الأخرى (منشورات الحائط، التعليقات، الإعجاب وغيرها">
+<!ENTITY  settings.notificationme.header.label            " أي إجراءات في فيس بوك تتطلب إشعاراً؟">
+<!ENTITY  settings.notificationme.about.label             " إشعارات عني">
+<!ENTITY  settings.notificationme.friendreq.label         " طلب صداقة جديد">
+<!ENTITY  settings.notificationme.message.label           " رسالة جديدة">
+<!ENTITY  settings.notificationme.poke.label              " نكزة جديدة">
+<!ENTITY  settings.notificationme.friend.label            "صديق جديد ">
+<!ENTITY  settings.notificationme.event.label             " دعوة جديدة إلى مناسبة">
+<!ENTITY  settings.notificationme.group.label             " دعوة جديدة إلى مجموعة">
+<!ENTITY  settings.notificationme.share.label             " مشاركة جديدة">
+<!ENTITY  settings.notificationme.other.label             " كل الإشعارات الأخرى (منشورات الحائط، التعليقات، الإعجاب وغيرها)">
 
 <!-- Notifications about my friends section -->
-<!ENTITY  settings.notificationfriend.about.label         "إشعارات حول أصدقائي">
-<!ENTITY  settings.notificationfriend.profile.label       "قام صديق/صديقة بتحديث صفحته/صفحته الشخصية">
-<!ENTITY  settings.notificationfriend.status.label        "قام صديق/صديقة بتحديث حالته/حالتها">
-<!ENTITY  settings.notificationfriend.albums.label        "قام صديق/صديقة بتحديث ألبومه/ألبومها">
-<!ENTITY  settings.notificationfriend.wall.label          "كتب شخص ما على حائط صديق">
-<!ENTITY  settings.notificationfriend.note.label          "كتب صديق ملاحظةً">
+<!ENTITY  settings.notificationfriend.about.label         " إشعارات حول أصدقائي ">
+<!ENTITY  settings.notificationfriend.profile.label       " قام صديق/صديقة بتحديث صفحته/صفحته الشخصية">
+<!ENTITY  settings.notificationfriend.status.label        " قام صديق/صديقة بتحديث حالته/حالتها">
+<!ENTITY  settings.notificationfriend.albums.label        " قام صديق/صديقة بتحديث ألبومه/ألبومها">
+<!ENTITY  settings.notificationfriend.wall.label          " كتب شخص ما على حائط صديق">
+<!ENTITY  settings.notificationfriend.note.label          " كتب صديق ملاحظةً">
 
 <!-- Other -->
-<!ENTITY  settings.notificationother.about.label          "إشعارات أخرى">
-<!ENTITY  settings.notificationother.upload.label         "إكتمال عمليات التحميل">
+<!ENTITY  settings.notificationother.about.label          " إشعارات أخرى">
+<!ENTITY  settings.notificationother.upload.label         " اكتمال عمليات التحميل ">
 
 <!-- Appearance -->
-<!ENTITY  settings.notification.type.label                "كيف هو شكل الإشعارات؟">
-<!ENTITY  settings.notification.native.label              "استخدام إطارات إشعار شريط أدوات فيس بوك">
-<!ENTITY  settings.notification.firefox.label             "استخدام إشعارات Firefox المضمنة (مع نظام التشغيل Mac OS X، يتم استخدام Growl‏)">
+<!ENTITY  settings.notification.type.label " ما هو شكل الإشعارات؟">
+<!ENTITY  settings.notification.native.label              " استخدام إطارات إشعار شريط أدوات فيس بوك">
+<!ENTITY  settings.notification.firefox.label             " استخدام إشعارات Firefox المضمنة (مع نظام التشغيل Mac OS X، يتم استخدام Growl‏)">
+

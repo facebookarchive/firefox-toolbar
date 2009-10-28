@@ -1,34 +1,35 @@
-﻿<!ENTITY  settings.window.title                           "Configure the Facebook Toolbar">
+﻿<!ENTITY  settings.window.title                           "Facebook 工具条配置管理">
 
-<!ENTITY  settings.panel.title                            "Configure Facebook Toolbar Notifications">
+<!ENTITY  settings.panel.title                            "Facebook 工具条通知设置">
 
-<!ENTITY  settings.notificationmes.enable.label           "Enable Pop-up Notifications">
+<!ENTITY  settings.notificationmes.enable.label           "允许弹出式窗口通知">
 
 <!-- Notifications about me section -->
-<!ENTITY  settings.notificationme.header.label            "What Facebook happenings prompt a notification?">
-<!ENTITY  settings.notificationme.about.label             "Notifications about me">
-<!ENTITY  settings.notificationme.friendreq.label         "New friend request">
-<!ENTITY  settings.notificationme.message.label           "New message">
-<!ENTITY  settings.notificationme.poke.label              "New poke">
-<!ENTITY  settings.notificationme.friend.label            "New friend">
-<!ENTITY  settings.notificationme.event.label             "New event invite">
-<!ENTITY  settings.notificationme.group.label             "New group invite">
-<!ENTITY  settings.notificationme.share.label             "New share">
-<!ENTITY  settings.notificationme.other.label             "All other notifications (wall posts, comments, likes, etc.)">
+<!ENTITY  settings.notificationme.header.label            "何种情况下会出现 Facebook 通知？">
+<!ENTITY  settings.notificationme.about.label             "与我有关的通知">
+<!ENTITY  settings.notificationme.friendreq.label         "有新的朋友请求">
+<!ENTITY  settings.notificationme.message.label           "有新的站内信">
+<!ENTITY  settings.notificationme.poke.label              "有人向我打招呼">
+<!ENTITY  settings.notificationme.friend.label            "新增的朋友">
+<!ENTITY  settings.notificationme.event.label             "新的活动邀请">
+<!ENTITY  settings.notificationme.group.label             "新的圈子加入邀请">
+<!ENTITY  settings.notificationme.share.label             "新的分享">
+<!ENTITY  settings.notificationme.other.label             "所有其他类别的通知（如墙上留言、评论、赞等等）">
 
 <!-- Notifications about my friends section -->
-<!ENTITY  settings.notificationfriend.about.label         "Notifications about my friends">
-<!ENTITY  settings.notificationfriend.profile.label       "A friend updates his/her profile">
-<!ENTITY  settings.notificationfriend.status.label        "A friend updates his/her status">
-<!ENTITY  settings.notificationfriend.albums.label        "A friend updates his/her albums">
-<!ENTITY  settings.notificationfriend.wall.label          "Someone writes on a friend's wall">
-<!ENTITY  settings.notificationfriend.note.label          "A friend writes a note">
+<!ENTITY  settings.notificationfriend.about.label         "与我朋友有关的通知">
+<!ENTITY  settings.notificationfriend.profile.label       "有朋友更新了个人主页">
+<!ENTITY  settings.notificationfriend.status.label        "有朋友更新了他的状态">
+<!ENTITY  settings.notificationfriend.albums.label        "有朋友更新了他的相册">
+<!ENTITY  settings.notificationfriend.wall.label          "有人在朋友的墙上写了东西">
+<!ENTITY  settings.notificationfriend.note.label          "有朋友发布了新文章">
 
 <!-- Other -->
-<!ENTITY  settings.notificationother.about.label          "Other notifications">
-<!ENTITY  settings.notificationother.upload.label         "Uploads Complete">
+<!ENTITY  settings.notificationother.about.label          "其他通知">
+<!ENTITY  settings.notificationother.upload.label         "上传完成">
 
 <!-- Appearance -->
-<!ENTITY  settings.notification.type.label                "What do notifications look like?">
-<!ENTITY  settings.notification.native.label              "Use Facebook Toolbar notification windows">
-<!ENTITY  settings.notification.firefox.label             "Use built-in Firefox notifications (on Mac OS X, Growl is used)">
+<!ENTITY  settings.notification.type.label                "选择通知的样板？">
+<!ENTITY  settings.notification.native.label              "使用 Facebook 工具条通知窗口模板">
+<!ENTITY  settings.notification.firefox.label             "使用Firefox 内置的通知 (在Mac OS X 上使用 Growl)模板">
+

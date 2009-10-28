@@ -7,6 +7,8 @@ locale facebook da     chrome/locale/da/
 locale facebook de     chrome/locale/de/
 locale facebook en-US  chrome/locale/en-US/
 locale facebook es-MX  chrome/locale/es-MX/
+locale facebook es-CL  chrome/locale/es-MX/
+locale facebook es-AR  chrome/locale/es-MX/
 locale facebook es-ES  chrome/locale/es-ES/
 locale facebook fr     chrome/locale/fr/
 locale facebook he     chrome/locale/he/

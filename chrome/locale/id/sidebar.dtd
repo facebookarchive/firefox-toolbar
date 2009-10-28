@@ -1,4 +1,4 @@
-﻿<!ENTITY  sidebar.title                     "Sidebar Facebook">
+﻿<!ENTITY  sidebar.title                     "Bilah Sisi Facebook">
 
 <!ENTITY  sidebar.settings.label            "Pengaturan">
 <!ENTITY  sidebar.sortlast.label            "Waktu pembaruan terakhir">
@@ -9,3 +9,4 @@
 <!ENTITY  sidebar.friendmessage.label       "pesan">
 <!ENTITY  sidebar.friendpoke.label          "colek">
 <!ENTITY  sidebar.friendpost.label          "kiriman dinding">
+

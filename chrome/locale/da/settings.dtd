@@ -32,3 +32,4 @@
 <!ENTITY  settings.notification.type.label                "Hvordan ser notifikationer ud?">
 <!ENTITY  settings.notification.native.label              "Brug vinduet Facebook-værktøjslinjenotifikationer">
 <!ENTITY  settings.notification.firefox.label             "Brug indbyggede Firefox-notifikationer (på Mac OS X bruges Growl)">
+

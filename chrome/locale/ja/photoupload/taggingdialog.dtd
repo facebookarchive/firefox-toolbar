@@ -1,7 +1,8 @@
 ﻿<!ENTITY  window.title              "タグを入力">
 
-<!ENTITY  tag.label                 "Tag">
-<!ENTITY  cancel.label              "Cancel">
+<!ENTITY  tag.label                 "タグ">
+<!ENTITY  cancel.label              "キャンセル">
 <!ENTITY  tagText.label             "名前またはタグを入力:">
 <!ENTITY  choosePerson.label        "または人物を選択:">
+
 

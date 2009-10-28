@@ -1,5 +1,7 @@
 <!ENTITY  login.window.title              "Logga in på Facebook">
 
-<!ENTITY  login.wait                      "Vänta medan vi förbereder din inloggning...">
-<!ENTITY  login.close                     "Stäng inloggningsfönstret">
+<!ENTITY  login.wait                      "Vänta medan vi 
+förbereder din inloggning...">
+<!ENTITY  login.close                     "Stäng 
+inloggningsfönstret">
 

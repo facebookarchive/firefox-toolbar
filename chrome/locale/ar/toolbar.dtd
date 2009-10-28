@@ -1,21 +1,21 @@
 ﻿<!ENTITY  toolbar.facebook.label                    "فيس بوك">
 
-<!ENTITY  toolbar.facebook.name                     "شريط أدوات فيس بوك">
+<!ENTITY  toolbar.facebook.name                     " شريط أدوات فيس بوك">
 
-<!ENTITY  toolbar.button.sidebar.tooltip            "شريط الأصدقاء الجانبي الخاص بفيس بوك">
+<!ENTITY  toolbar.button.sidebar.tooltip            " شريط الأصدقاء الجانبي الخاص بفيس بوك">
 <!ENTITY  toolbar.search.label                      "بحث في فيس بوك">
-<!ENTITY  toolbar.button.home.tooltip               "اذهب إلى فيس بوك">
-<!ENTITY  toolbar.button.share.tooltip              "مشاركة الصفحة الحالية في فيس بوك">
-<!ENTITY  toolbar.button.upload.tooltip             "تحميل صور إلى فيس بوك">
+<!ENTITY  toolbar.button.home.tooltip               " اذهب إلى فيس بوك">
+<!ENTITY  toolbar.button.share.tooltip              " مشاركة الصفحة الحالية في فيس بوك">
+<!ENTITY  toolbar.button.upload.tooltip             " تحميل صور إلى فيس بوك">
 
 <!ENTITY  toolbar.button.pokes.tooltip              "نكزات جديدة">
-<!ENTITY  toolbar.button.friends.tooltip            "طلبات صداقة جديدة">
-<!ENTITY  toolbar.button.groups.tooltip             "دعوات جديدة إلى مجموعات">
-<!ENTITY  toolbar.button.events.tooltip             "دعوات جديدة إلى مناسبات">
+<!ENTITY  toolbar.button.friends.tooltip            " طلبات صداقة جديدة">
+<!ENTITY  toolbar.button.groups.tooltip             " دعوات جديدة إلى مجموعات">
+<!ENTITY  toolbar.button.events.tooltip             " دعوات جديدة إلى مناسبات">
 <!ENTITY  toolbar.button.messages.tooltip           "رسائل جديدة">
 
 <!ENTITY  toolbar.button.links.label                "الروابط السريعة">
-<!ENTITY  toolbar.links.profile.label               "الصفحة الشخصية">
+<!ENTITY  toolbar.links.profile.label               "الصفحة الشخصية ">
 <!ENTITY  toolbar.links.friends.label               "الأصدقاء">
 <!ENTITY  toolbar.links.inbox.label                 "البريد الوارد">
 <!ENTITY  toolbar.links.photos.label                "الصور">
@@ -24,15 +24,15 @@
 <!ENTITY  toolbar.links.events.label                "المناسبات">
 <!ENTITY  toolbar.links.linkies.label               "الروابط">
 <!ENTITY  toolbar.links.videos.label                "مقاطع الفيديو">
-<!ENTITY  toolbar.settings.account.label            "إعدادات الحساب">
-<!ENTITY  toolbar.settings.privacy.label            "إعدادات الخصوصية">
-<!ENTITY  toolbar.settings.application.label        "إعدادات التطبيق">
+<!ENTITY  toolbar.settings.account.label            "إعدادات الحساب ">
+<!ENTITY  toolbar.settings.privacy.label            "إعدادات الخصوصية ">
+<!ENTITY  toolbar.settings.application.label        "إعدادات التطبيق ">
 <!ENTITY  toolbar.settings.toolbar.label            "إعدادات شريط الأدوات">
 
 <!ENTITY  toolbar.status.emptytext.label            "تحديد حالتك...">
-<!ENTITY  toolbar.status.emptytext.tooltip          "تغيير حالتك في فيس بوك">
+<!ENTITY  toolbar.status.emptytext.tooltip          " تغيير حالتك في فيس بوك">
 
-<!ENTITY  toolbar.login.label                       "تسجيل الدخول إلى فيس بوك">
+<!ENTITY  toolbar.login.label                       " تسجيل الدخول إلى فيس بوك">
 
-<!ENTITY  toolbar.sidebar.label                     "شريط فيس بوك الجانبي">
+<!ENTITY  toolbar.sidebar.label                     " شريط فيس بوك الجانبي">
 

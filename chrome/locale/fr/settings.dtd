@@ -5,7 +5,7 @@
 <!ENTITY  settings.notificationmes.enable.label           "Activer les notifications">
 
 <!-- Notifications about me section -->
-<!ENTITY  settings.notificationme.header.label            "Sources de notifications">
+<!ENTITY  settings.notificationme.header.label            "Quelles doivent-être les sources de notifications ?">
 <!ENTITY  settings.notificationme.about.label             "Notifications à propos de moi">
 <!ENTITY  settings.notificationme.friendreq.label         "Nouvelle demande d'ajout d'ami(e)">
 <!ENTITY  settings.notificationme.message.label           "Nouveau message">
@@ -32,3 +32,4 @@
 <!ENTITY  settings.notification.type.label                "Apparence des notifications">
 <!ENTITY  settings.notification.native.label              "Utiliser les fenêtres de notification de la barre d'outils Facebook">
 <!ENTITY  settings.notification.firefox.label             "Utiliser la fonction de notification intégrée à Firefox (sur Mac OS X, c'est Growl qui est utilisé)">
+

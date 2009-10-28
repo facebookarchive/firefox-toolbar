@@ -1,7 +1,8 @@
 ﻿<!ENTITY  window.title              "Bir Etiket Gir">
 
-<!ENTITY  tag.label                 "Tag">
-<!ENTITY  cancel.label              "Cancel">
+<!ENTITY  tag.label                 "Etiketle">
+<!ENTITY  cancel.label              "İptal">
 <!ENTITY  tagText.label             "Herhangi bir ad veya etiket yaz:">
 <!ENTITY  choosePerson.label        "veya bir kişiyi seç:">
+
 

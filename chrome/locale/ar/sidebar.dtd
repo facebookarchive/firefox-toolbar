@@ -3,9 +3,10 @@
 <!ENTITY  sidebar.settings.label            "الإعدادات">
 <!ENTITY  sidebar.sortlast.label            "وقت التحديث الأخير">
 <!ENTITY  sidebar.sortstatus.label          "وقت تحديث الحالة">
-<!ENTITY  sidebar.sortprofile.label         "وقت تحديث الصفحة الشخصية">
-<!ENTITY  sidebar.sortname.label            "الاسم">
+<!ENTITY  sidebar.sortprofile.label         " وقت تحديث الصفحة الشخصية">
+<!ENTITY  sidebar.sortname.label            "اسم">
 
 <!ENTITY  sidebar.friendmessage.label       "رسالة">
 <!ENTITY  sidebar.friendpoke.label          "نكزة">
 <!ENTITY  sidebar.friendpost.label          "منشور حائط">
+

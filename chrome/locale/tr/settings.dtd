@@ -32,3 +32,4 @@
 <!ENTITY  settings.notification.type.label                "Bildirimler nasıl gözükecek?">
 <!ENTITY  settings.notification.native.label              "Facebook Araç Çubuğu bildirim pencerelerini kullan">
 <!ENTITY  settings.notification.firefox.label             "Yerleşik Firefox bildirimlerini kullan (Mac OS X için Growl kullanılır)">
+

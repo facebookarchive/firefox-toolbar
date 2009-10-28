@@ -2,7 +2,7 @@
 
 <!ENTITY  toolbar.facebook.name                     "Bilah Alat Facebook">
 
-<!ENTITY  toolbar.button.sidebar.tooltip            "Sidebar Teman Facebook">
+<!ENTITY  toolbar.button.sidebar.tooltip            "Bilah Sisi Teman Facebook">
 <!ENTITY  toolbar.search.label                      "Cari di Facebook">
 <!ENTITY  toolbar.button.home.tooltip               "Buka Facebook">
 <!ENTITY  toolbar.button.share.tooltip              "Berbagi halaman yang sedang dilihat di Facebook">
@@ -30,9 +30,9 @@
 <!ENTITY  toolbar.settings.toolbar.label            "Pengaturan Bilah Alat">
 
 <!ENTITY  toolbar.status.emptytext.label            "setel status Anda...">
-<!ENTITY  toolbar.status.emptytext.tooltip          "Ubah status Facebool Anda">
+<!ENTITY  toolbar.status.emptytext.tooltip          "Ubah status Facebook Anda">
 
 <!ENTITY  toolbar.login.label                       "Masuk ke Facebook">
 
-<!ENTITY  toolbar.sidebar.label                     "Sidebar Facebook">
+<!ENTITY  toolbar.sidebar.label                     "Bilah Sisi Facebook">
 

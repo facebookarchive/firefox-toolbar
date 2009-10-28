@@ -1,4 +1,4 @@
-<!ENTITY  window.title                      "Facebookに写真をアップロード">
+﻿<!ENTITY  window.title                      "Facebookに写真をアップロード">
 
 <!ENTITY  upload.destination.label          "写真のアップロード先:">
 <!ENTITY  upload.album.label                "すでにあるアルバム">
@@ -34,4 +34,5 @@
 <!-- XX Localization note to translators - The first part of the next string reads in English
         "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
         entity above -->
-<!ENTITY  upload.drag.label                 "[写真を追加]をクリックするか、写真をこちらにドラッグしてください。">
+<!ENTITY  upload.drag.label                 "[写真を追加...]をクリックするか、写真をここにドラッグしてください。">
+
