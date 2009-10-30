@@ -2,7 +2,7 @@
 
 <!ENTITY  tag.label                 "إشارة">
 <!ENTITY  cancel.label              "إلغاء">
-<!ENTITY  tagText.label             "اكتب أي اسم أو إشارة:">
-<!ENTITY  choosePerson.label        "أو اختر شخصاً:">
+<!ENTITY  tagText.label             ":اكتب أي اسم أو إشارة">
+<!ENTITY  choosePerson.label        ":أو اختر شخصاً">
 
 

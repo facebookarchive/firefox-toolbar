@@ -42,7 +42,6 @@ function debug() {
 
 /* Log message to error console if enableLogging preference is true */
 function logConsole (logMessage) {
-    var myExtId = "wussap@wussap.com";
     var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
     var debug = prefSvc.getBoolPref('extensions.facebook.debug');
     if (debug) {

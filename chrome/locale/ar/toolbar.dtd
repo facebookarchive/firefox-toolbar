@@ -29,7 +29,7 @@
 <!ENTITY  toolbar.settings.application.label        "إعدادات التطبيق ">
 <!ENTITY  toolbar.settings.toolbar.label            "إعدادات شريط الأدوات">
 
-<!ENTITY  toolbar.status.emptytext.label            "تحديد حالتك...">
+<!ENTITY  toolbar.status.emptytext.label            "...تحديد حالتك">
 <!ENTITY  toolbar.status.emptytext.tooltip          " تغيير حالتك في فيس بوك">
 
 <!ENTITY  toolbar.login.label                       " تسجيل الدخول إلى فيس بوك">

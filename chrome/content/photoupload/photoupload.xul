@@ -23,10 +23,8 @@
   <script type="application/x-javascript" src="chrome://facebook/content/photoupload/jsbn/jsbn2.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/photoupload/photoupload.js"/>
 
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="facebookStringBundle"
-                  src="chrome://facebook/locale/photoupload/photoupload.properties"/>
-  </stringbundleset>
+  <stringbundle id="facebookStringBundle"
+                src="chrome://facebook/locale/photoupload/photoupload.properties"/>
 
   <broadcaster id="uploadBroadcaster"/>
 

@@ -1292,7 +1292,15 @@ var PhotoUpload = {
   addPhotos: function() {
     var fp = Cc["@mozilla.org/filepicker;1"].
              createInstance(Ci.nsIFilePicker);
-    fp.init(window, this._stringBundle.getString("filePickerTitle"),
+    var aTitle = "";
+    try {
+      aTitle = this._stringBundle.getString("filePickerTitle");
+    }
+    catch(e) {
+      aTitle = "Select Photos";
+      //LOG("Filepicker title failure: "+e);
+    }
+    fp.init(window, aTitle,
             Ci.nsIFilePicker.modeOpenMultiple);
     fp.appendFilters(Ci.nsIFilePicker.filterImages);
     if (fp.show() != Ci.nsIFilePicker.returnCancel) {
