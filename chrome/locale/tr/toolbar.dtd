@@ -5,6 +5,7 @@
 <!ENTITY  toolbar.button.sidebar.tooltip            "Facebook Arkadaşlar Kenar Çubuğu">
 <!ENTITY  toolbar.search.label                      "Facebook'ta Ara">
 <!ENTITY  toolbar.button.home.tooltip               "Facebook'a git">
+<!ENTITY  toolbar.button.share.label                "Paylaş">
 <!ENTITY  toolbar.button.share.tooltip              "Bu sayfayı Facebook'ta paylaş">
 <!ENTITY  toolbar.button.upload.tooltip             "Facebook’a fotoğraflar yükle">
 

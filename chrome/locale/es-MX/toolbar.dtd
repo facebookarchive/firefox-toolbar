@@ -5,6 +5,7 @@
 <!ENTITY  toolbar.button.sidebar.tooltip            "Barra de amigos de Facebook">
 <!ENTITY  toolbar.search.label                      "Buscar en Facebook">
 <!ENTITY  toolbar.button.home.tooltip               "Ir a Facebook">
+<!ENTITY  toolbar.button.share.label                "Compartir">
 <!ENTITY  toolbar.button.share.tooltip              "Compartir esta página en Facebook">
 <!ENTITY  toolbar.button.upload.tooltip             "Cargar fotos en Facebook">
 

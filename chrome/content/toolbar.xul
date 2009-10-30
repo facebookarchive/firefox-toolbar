@@ -44,7 +44,8 @@
                      />
 
       <toolbarbutton id="facebook-share"
-                     class="facebook-icon-share facebook-share"
+                     class="button"
+                     label="&toolbar.button.share.label;"
                      tooltiptext="&toolbar.button.share.tooltip;"
                      oncommand="if (!fbSvc.loggedIn) FacebookLogin(); facebook.share()"/>
 

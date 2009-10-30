@@ -5,6 +5,7 @@
 <!ENTITY  toolbar.button.sidebar.tooltip            "סרגל הכלים של החברים בפייסבוק">
 <!ENTITY  toolbar.search.label                      "חפש בפייסבוק">
 <!ENTITY  toolbar.button.home.tooltip               "עבור אל פייסבוק">
+<!ENTITY  toolbar.button.share.label                "שיתוף">
 <!ENTITY  toolbar.button.share.tooltip              "שתף בדף הנוכחי בפייסבוק">
 <!ENTITY  toolbar.button.upload.tooltip             "העלה תמונות לפייסבוק">
 

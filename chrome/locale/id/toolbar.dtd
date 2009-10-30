@@ -5,6 +5,7 @@
 <!ENTITY  toolbar.button.sidebar.tooltip            "Bilah Sisi Teman Facebook">
 <!ENTITY  toolbar.search.label                      "Cari di Facebook">
 <!ENTITY  toolbar.button.home.tooltip               "Buka Facebook">
+<!ENTITY  toolbar.button.share.label                "Bagikan">
 <!ENTITY  toolbar.button.share.tooltip              "Berbagi halaman yang sedang dilihat di Facebook">
 <!ENTITY  toolbar.button.upload.tooltip             "Unggah foto ke Facebook">
 

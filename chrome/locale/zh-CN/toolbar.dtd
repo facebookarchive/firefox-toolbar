@@ -5,6 +5,7 @@
 <!ENTITY  toolbar.button.sidebar.tooltip            "Facebook 朋友边栏">
 <!ENTITY  toolbar.search.label                      "搜索 Facebook">
 <!ENTITY  toolbar.button.home.tooltip               "访问 Facebook">
+<!ENTITY  toolbar.button.share.label                "分享">
 <!ENTITY  toolbar.button.share.tooltip              "在 Facebook 上分享此页面">
 <!ENTITY  toolbar.button.upload.tooltip             "上传照片至 Facebook ">
 

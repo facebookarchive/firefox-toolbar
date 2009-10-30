@@ -5,6 +5,7 @@
 <!ENTITY  toolbar.button.sidebar.tooltip            "Facebook友達サイドバー">
 <!ENTITY  toolbar.search.label                      "Facebookを検索">
 <!ENTITY  toolbar.button.home.tooltip               "Facebookへ移動">
+<!ENTITY  toolbar.button.share.label                "シェア">
 <!ENTITY  toolbar.button.share.tooltip              "現在のページをFacebookでシェア">
 <!ENTITY  toolbar.button.upload.tooltip             "Facebookに写真をアップロード">
 

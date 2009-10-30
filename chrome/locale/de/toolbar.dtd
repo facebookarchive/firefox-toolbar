@@ -5,6 +5,7 @@
 <!ENTITY  toolbar.button.sidebar.tooltip            "Facebook-Freunde Seitenleiste">
 <!ENTITY  toolbar.search.label                      "Facebook durchsuchen">
 <!ENTITY  toolbar.button.home.tooltip               "Zu Facebook">
+<!ENTITY  toolbar.button.share.label                "Teilen">
 <!ENTITY  toolbar.button.share.tooltip              "Aktuelle Seite auf Facebook teilen">
 <!ENTITY  toolbar.button.upload.tooltip             "Fotos zu Facebook hochladen">
 
