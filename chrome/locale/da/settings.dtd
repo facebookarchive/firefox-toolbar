@@ -14,7 +14,7 @@
 <!ENTITY  settings.notificationme.event.label             "Ny invitation til begivenhed">
 <!ENTITY  settings.notificationme.group.label             "Ny invitation til gruppe">
 <!ENTITY  settings.notificationme.share.label             "Nyt delt indhold">
-<!ENTITY  settings.notificationme.other.label             "Alle andre notifikationer (vægopslag, kommentarer, "synes om", osv.)">
+<!ENTITY  settings.notificationme.other.label             "Alle andre notifikationer (vægopslag, kommentarer, 'synes om', osv.)">
 
 <!-- Notifications about my friends section -->
 <!ENTITY  settings.notificationfriend.about.label         "Notifikationer om mine venner">
