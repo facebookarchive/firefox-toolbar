@@ -9,7 +9,7 @@
 <!ENTITY  upload.album.location.label       "地點：">
 <!ENTITY  upload.album.description.label    "說明：">
 
-<!ENTITY  upload.privacy.label              "誰可以看得見這？">
+<!ENTITY  upload.privacy.label              "誰可以看得見這相簿？">
 <!ENTITY  upload.privacy.everyone.label     "所有人">
 <!ENTITY  upload.privacy.fof.label          "朋友的朋友">
 <!ENTITY  upload.privacy.friends.label      "僅限朋友">
@@ -24,7 +24,7 @@
 <!ENTITY  upload.tag.click.label            "點取相片中的人貼姓名標籤。">
 <!ENTITY  upload.tag.remove.label           "刪除所選的標籤">
 
-<!ENTITY  upload.photos.add.label           "新添相片‧‧‧‧‧‧">
+<!ENTITY  upload.photos.add.label           "新增相片‧‧‧‧‧‧">
 <!ENTITY  upload.photos.remove.label        "刪除全部">
 
 <!ENTITY  upload.cancel.label               "取消上傳">

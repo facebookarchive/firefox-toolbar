@@ -31,7 +31,7 @@ andra meddelanden (logginlägg, kommentarer, gillar etc.)">
 
 <!-- Notifications about my friends section -->
 <!ENTITY  settings.notificationfriend.about.label         
-"Meddelande om mina vänner">
+"Meddelanden om mina vänner">
 <!ENTITY  settings.notificationfriend.profile.label       "En vän 
 uppdaterar sin profil">
 <!ENTITY  settings.notificationfriend.status.label        "En vän 

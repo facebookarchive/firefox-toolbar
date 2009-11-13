@@ -6,7 +6,7 @@
 <!ENTITY  sidebar.sortprofile.label         "个人主页更新时间">
 <!ENTITY  sidebar.sortname.label            "姓名">
 
-<!ENTITY  sidebar.friendmessage.label       "站内信">
+<!ENTITY  sidebar.friendmessage.label       "发消息">
 <!ENTITY  sidebar.friendpoke.label          "打招呼">
 <!ENTITY  sidebar.friendpost.label          "留言">
 

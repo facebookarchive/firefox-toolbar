@@ -5,7 +5,7 @@
 <!ENTITY  toolbar.button.sidebar.tooltip            " شريط الأصدقاء الجانبي الخاص بفيس بوك">
 <!ENTITY  toolbar.search.label                      "بحث في فيس بوك">
 <!ENTITY  toolbar.button.home.tooltip               " اذهب إلى فيس بوك">
-<!ENTITY  toolbar.button.share.label                "مشاركة">
+<!ENTITY  toolbar.button.share.label                " مشاركة">
 <!ENTITY  toolbar.button.share.tooltip              " مشاركة الصفحة الحالية في فيس بوك">
 <!ENTITY  toolbar.button.upload.tooltip             " تحميل صور إلى فيس بوك">
 
@@ -30,7 +30,7 @@
 <!ENTITY  toolbar.settings.application.label        "إعدادات التطبيق ">
 <!ENTITY  toolbar.settings.toolbar.label            "إعدادات شريط الأدوات">
 
-<!ENTITY  toolbar.status.emptytext.label            "...تحديد حالتك">
+<!ENTITY  toolbar.status.emptytext.label            "تحديد حالتك...">
 <!ENTITY  toolbar.status.emptytext.tooltip          " تغيير حالتك في فيس بوك">
 
 <!ENTITY  toolbar.login.label                       " تسجيل الدخول إلى فيس بوك">

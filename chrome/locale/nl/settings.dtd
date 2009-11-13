@@ -31,5 +31,5 @@
 <!-- Appearance -->
 <!ENTITY  settings.notification.type.label                "Hoe zien meldingen eruit?">
 <!ENTITY  settings.notification.native.label              "Meldingsvensters van de Facebook Toolbar gebruiken">
-<!ENTITY  settings.notification.firefox.label             "Ingebouwde Firefox-meldingen gebruiken (op Mac OS wordt Growl gebruikt)">
+<!ENTITY  settings.notification.firefox.label             "Geïntegreerde Firefox-meldingen gebruiken (op Mac OS wordt Growl gebruikt)">
 

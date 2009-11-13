@@ -12,7 +12,7 @@
 <!ENTITY  upload.privacy.label              "Chi può vederlo?">
 <!ENTITY  upload.privacy.everyone.label     "Tutti">
 <!ENTITY  upload.privacy.fof.label          "Amici di amici">
-<!ENTITY  upload.privacy.friends.label      "Solo amigi">
+<!ENTITY  upload.privacy.friends.label      "Solo amici">
 <!ENTITY  upload.privacy.networks.label     "Reti">
 
 <!ENTITY  upload.photo.detail.label         "Dettagli foto:">
@@ -34,5 +34,5 @@
 <!-- XX Localization note to translators - The first part of the next string reads in English
         "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
         entity above -->
-<!ENTITY  upload.drag.label                 "Clicca su 'Aggiungi foto...' o trascina le foto qui.">
+<!ENTITY  upload.drag.label                 "Clicca su &quot;Aggiungi foto...&quot; o trascina le foto qui.">
 

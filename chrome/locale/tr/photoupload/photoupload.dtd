@@ -13,7 +13,7 @@
 <!ENTITY  upload.privacy.everyone.label     "Herkes">
 <!ENTITY  upload.privacy.fof.label          "Arkadaşlarımın Arkadaşları">
 <!ENTITY  upload.privacy.friends.label      "Sadece Arkadaşlarım">
-<!ENTITY  upload.privacy.networks.label     "Ağlar">
+<!ENTITY  upload.privacy.networks.label     "Ağlarım">
 
 <!ENTITY  upload.photo.detail.label         "Fotoğraf detayı:">
 <!ENTITY  upload.photo.name.label           "Dosya adı:">

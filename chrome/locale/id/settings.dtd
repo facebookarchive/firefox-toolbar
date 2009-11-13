@@ -2,7 +2,7 @@
 
 <!ENTITY  settings.panel.title                            "Konfigurasi Pemberitahuan Bilah Alat Facebook">
 
-<!ENTITY  settings.notificationmes.enable.label           "Aktifkan Pemberitahuan Pop-up">
+<!ENTITY  settings.notificationmes.enable.label           "Aktifkan Pemberitahuan Sembul">
 
 <!-- Notifications about me section -->
 <!ENTITY  settings.notificationme.header.label            "Pemberitahuan apa yang dikirimkan langsung dari Facebook?">

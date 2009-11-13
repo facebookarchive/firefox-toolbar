@@ -5,7 +5,7 @@
 <!ENTITY  settings.notificationmes.enable.label           "Açılır Pencere Bildirimlerini Etkinleştir">
 
 <!-- Notifications about me section -->
-<!ENTITY  settings.notificationme.header.label            "Facebook’taki hangi olaylar için bildirim gönderilir?">
+<!ENTITY  settings.notificationme.header.label            "Facebook’taki hangi olaylar için bildirim gönderilsin?">
 <!ENTITY  settings.notificationme.about.label             "Hakkımdaki bildirimler">
 <!ENTITY  settings.notificationme.friendreq.label         "Yeni arkadaşlık isteği">
 <!ENTITY  settings.notificationme.message.label           "Yeni mesaj">
@@ -26,10 +26,10 @@
 
 <!-- Other -->
 <!ENTITY  settings.notificationother.about.label          "Diğer bildirimler">
-<!ENTITY  settings.notificationother.upload.label         "Yüklemeler Tamamlandı">
+<!ENTITY  settings.notificationother.upload.label         "Tamamlanan Yüklemeler">
 
 <!-- Appearance -->
-<!ENTITY  settings.notification.type.label                "Bildirimler nasıl gözükecek?">
+<!ENTITY  settings.notification.type.label                "Bildirimler nasıl gözüksün?">
 <!ENTITY  settings.notification.native.label              "Facebook Araç Çubuğu bildirim pencerelerini kullan">
 <!ENTITY  settings.notification.firefox.label             "Yerleşik Firefox bildirimlerini kullan (Mac OS X için Growl kullanılır)">
 

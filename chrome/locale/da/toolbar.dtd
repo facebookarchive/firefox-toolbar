@@ -10,7 +10,7 @@
 <!ENTITY  toolbar.button.upload.tooltip             "Overfør billeder til Facebook">
 
 <!ENTITY  toolbar.button.pokes.tooltip              "Nye prik">
-<!ENTITY  toolbar.button.friends.tooltip            "Ny venneanmodninger">
+<!ENTITY  toolbar.button.friends.tooltip            "Nye venneanmodninger">
 <!ENTITY  toolbar.button.groups.tooltip             "Nye gruppeinvitationer">
 <!ENTITY  toolbar.button.events.tooltip             "Nye invitationer til begivenheder">
 <!ENTITY  toolbar.button.messages.tooltip           "Nye beskeder">

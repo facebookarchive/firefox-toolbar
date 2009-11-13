@@ -4,7 +4,7 @@
 
 <!ENTITY  toolbar.button.sidebar.tooltip            "Facebook Arkadaşlar Kenar Çubuğu">
 <!ENTITY  toolbar.search.label                      "Facebook'ta Ara">
-<!ENTITY  toolbar.button.home.tooltip               "Facebook'a git">
+<!ENTITY  toolbar.button.home.tooltip               "Facebook'a Git">
 <!ENTITY  toolbar.button.share.label                "Paylaş">
 <!ENTITY  toolbar.button.share.tooltip              "Bu sayfayı Facebook'ta paylaş">
 <!ENTITY  toolbar.button.upload.tooltip             "Facebook’a fotoğraflar yükle">
@@ -18,7 +18,7 @@
 <!ENTITY  toolbar.button.links.label                "Hızlı Bağlantılar">
 <!ENTITY  toolbar.links.profile.label               "Profil">
 <!ENTITY  toolbar.links.friends.label               "Arkadaşlar">
-<!ENTITY  toolbar.links.inbox.label                 "Gelen kutusu">
+<!ENTITY  toolbar.links.inbox.label                 "Gelen Kutusu">
 <!ENTITY  toolbar.links.photos.label                "Fotoğraflar">
 <!ENTITY  toolbar.links.notes.label                 "Notlar">
 <!ENTITY  toolbar.links.groups.label                "Gruplar">

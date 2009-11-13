@@ -17,7 +17,7 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>firefox@facebook.com</em:id>
-    <em:version>1.4.2.3</em:version>
+    <em:version>1.4.2.4</em:version>
     <em:type>2</em:type>
 
     <!-- Front End MetaData -->
@@ -296,7 +296,7 @@
       <Description>
         <em:locale>sv-SE</em:locale>
         <em:name>Facebook-verktygsflt</em:name>
-        <em:description>Integrera ditt Facebook-liv i din webblsare.</em:description>
+        <em:description>Integrera ditt Facebook-liv i din webblŠsare.</em:description>
         <em:creator>&creator;</em:creator>
         <em:contributor>&contributor;</em:contributor>
         <em:developer>&developer1;</em:developer>

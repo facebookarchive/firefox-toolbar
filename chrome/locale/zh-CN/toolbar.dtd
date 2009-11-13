@@ -30,8 +30,8 @@
 <!ENTITY  toolbar.settings.application.label        "应用程序设置">
 <!ENTITY  toolbar.settings.toolbar.label            "工具条设置">
 
-<!ENTITY  toolbar.status.emptytext.label            "设置你的状态......">
-<!ENTITY  toolbar.status.emptytext.tooltip          "更改你的状态......">
+<!ENTITY  toolbar.status.emptytext.label            "设置你的状态······">
+<!ENTITY  toolbar.status.emptytext.tooltip          "更改你的状态······">
 
 <!ENTITY  toolbar.login.label                       "Facebook 登录">
 
