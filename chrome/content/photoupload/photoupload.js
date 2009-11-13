@@ -1075,9 +1075,11 @@ var PhotoUpload = {
     this._observerService.addObserver(QuitObserver, "quit-application-requested", false);
 
     // New album default name
+    /*
     var defaultAlbumName = this._stringBundle.getString("defaultAlbumName");
     defaultAlbumName = defaultAlbumName.replace("%DATE%", new Date().toLocaleDateString());
     document.getElementById("albumName").value = defaultAlbumName;
+   */
 
     // When closing the login dialog, the loggedInUser property is not set
     // immediatly. Wait a few moment before asking the user to log in.
