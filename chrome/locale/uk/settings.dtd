@@ -1,0 +1,34 @@
+﻿<!ENTITY  settings.window.title                           "Налаштування Фейсбук тулбару">
+
+<!ENTITY  settings.panel.title                            "Налаштування сповіщень Фейсбук тулбару">
+
+<!ENTITY  settings.notificationmes.enable.label           "Дозволити спливаючі сповіщення">
+
+<!-- Notifications about me section -->
+<!ENTITY  settings.notificationme.header.label            "Які події Фейсбуку спонукають на вспливаючі повідомлення?">
+<!ENTITY  settings.notificationme.about.label             "Сповіщення про мене">
+<!ENTITY  settings.notificationme.friendreq.label         "Новий запит дружби">
+<!ENTITY  settings.notificationme.message.label           "Нове повідомлення">
+<!ENTITY  settings.notificationme.poke.label              "Нове штурхання">
+<!ENTITY  settings.notificationme.friend.label            "Новий друг">
+<!ENTITY  settings.notificationme.event.label             "Нове запрошення на подію">
+<!ENTITY  settings.notificationme.group.label             "Нове запрошення в групу">
+<!ENTITY  settings.notificationme.share.label             "Нові об'єкти">
+<!ENTITY  settings.notificationme.other.label             "Всі інші сповіщення (напис на стіні, коментарі, вподобання і т.д.)">
+
+<!-- Notifications about my friends section -->
+<!ENTITY  settings.notificationfriend.about.label         "Сповіщення про моїх друзів">
+<!ENTITY  settings.notificationfriend.profile.label       "Друг оновив свій обліковий запис">
+<!ENTITY  settings.notificationfriend.status.label        "Друг оновив свій статус">
+<!ENTITY  settings.notificationfriend.albums.label        "Друг оновив свої альбоми">
+<!ENTITY  settings.notificationfriend.wall.label          "Хтось написав на стіні друга">
+<!ENTITY  settings.notificationfriend.note.label          "Друг написав нотатку">
+
+<!-- Other -->
+<!ENTITY  settings.notificationother.about.label          "Інші сповіщення">
+<!ENTITY  settings.notificationother.upload.label         "Завантаження завершенно">
+
+<!-- Appearance -->
+<!ENTITY  settings.notification.type.label                "На що подібне сповіщення?">
+<!ENTITY  settings.notification.native.label              "Використовувати вікно сповіщень Фейсбук Тулбару">
+<!ENTITY  settings.notification.firefox.label             "Використовувати вікно сповіщень вбудованого у Firefox (Mac OS X, Growl використовується)">

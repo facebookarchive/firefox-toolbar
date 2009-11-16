@@ -1,0 +1,37 @@
+﻿<!ENTITY  window.title                      "Завантаження світлин до Фейсбуку">
+
+<!ENTITY  upload.destination.label          "Завантажити світлини до:">
+<!ENTITY  upload.album.label                "Існуючі альбоми">
+<!ENTITY  upload.newalbum.label             "Новий альбом">
+<!ENTITY  upload.loadingalbums.label        "Завантаження альбомів...">
+
+<!ENTITY  upload.album.name.label           "Ім'я:">
+<!ENTITY  upload.album.location.label       "Місцеположення:">
+<!ENTITY  upload.album.description.label    "Опис:">
+
+<!ENTITY  upload.privacy.label              "Хто це може бачити?">
+<!ENTITY  upload.privacy.everyone.label     "Усі">
+<!ENTITY  upload.privacy.fof.label          "Друзі друзів">
+<!ENTITY  upload.privacy.friends.label      "Тільки друзі">
+<!ENTITY  upload.privacy.networks.label     "Мережі">
+
+<!ENTITY  upload.photo.detail.label         "Деталі світлини:">
+<!ENTITY  upload.photo.name.label           "Ім'я файлу:">
+<!ENTITY  upload.photo.size.label           "Розмір:">
+<!ENTITY  upload.photo.caption.label        "Заголовок:">
+
+<!ENTITY  upload.tag.start.label            "На цій світлині:">
+<!ENTITY  upload.tag.click.label            "Натисніть на людей на світлині, щоб помітити їх.">
+<!ENTITY  upload.tag.remove.label           "Видалити виділені помітки">
+
+<!ENTITY  upload.photos.add.label           "Додати світлини...">
+<!ENTITY  upload.photos.remove.label        "Видалити всі">
+
+<!ENTITY  upload.cancel.label               "Відміна Завантаження">
+<!ENTITY  upload.all.label                  "Завантажити усі">
+
+<!ENTITY  upload.remove.label               "Видалити">
+<!-- XX Localization note to translators - The first part of the next string reads in English
+        "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
+        entity above -->
+<!ENTITY  upload.drag.label                 "Натисніть 'Додати світлини'... або перетягніть сюди світлини.">

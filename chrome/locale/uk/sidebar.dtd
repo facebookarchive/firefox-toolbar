@@ -1,0 +1,11 @@
+﻿<!ENTITY  sidebar.title                     "Бокова панель Фейсбуку">
+
+<!ENTITY  sidebar.settings.label            "Налаштування">
+<!ENTITY  sidebar.sortlast.label            "Час останньої зміни">
+<!ENTITY  sidebar.sortstatus.label          "Час зміни статусу">
+<!ENTITY  sidebar.sortprofile.label         "Час зміни запису">
+<!ENTITY  sidebar.sortname.label            "Ім'я">
+
+<!ENTITY  sidebar.friendmessage.label       "повідомлення">
+<!ENTITY  sidebar.friendpoke.label          "штурхнути">
+<!ENTITY  sidebar.friendpost.label          "напис на стіні">

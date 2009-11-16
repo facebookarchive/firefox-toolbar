@@ -1,0 +1,38 @@
+﻿<!ENTITY  toolbar.facebook.label                    "Фейсбук">
+
+<!ENTITY  toolbar.facebook.name                     "Фейсбук Тулбар">
+
+<!ENTITY  toolbar.button.sidebar.tooltip            "Бокова панель Фейсбуку">
+<!ENTITY  toolbar.search.label                      "Пошук у Фейсбуку">
+<!ENTITY  toolbar.button.home.tooltip               "Перейти до Фейсбуку">
+<!ENTITY  toolbar.button.share.label                "Поділитися">
+<!ENTITY  toolbar.button.share.tooltip              "Поділитись поточною сторінкою у Фейсбуці">
+<!ENTITY  toolbar.button.upload.tooltip             "Завантажити світлини до Фейсбуку">
+
+<!ENTITY  toolbar.button.pokes.tooltip              "Нові штурхання">
+<!ENTITY  toolbar.button.friends.tooltip            "Нові запити дружби">
+<!ENTITY  toolbar.button.groups.tooltip             "Нові запрошення в групу">
+<!ENTITY  toolbar.button.events.tooltip             "Нові запрошення на подію">
+<!ENTITY  toolbar.button.messages.tooltip           "Нові повідомлення">
+
+<!ENTITY  toolbar.button.links.label                "Швидкі закладки">
+<!ENTITY  toolbar.links.profile.label               "Обліковий запис">
+<!ENTITY  toolbar.links.friends.label               "Друзі">
+<!ENTITY  toolbar.links.inbox.label                 "Вхідна скринька">
+<!ENTITY  toolbar.links.photos.label                "Фотографії">
+<!ENTITY  toolbar.links.notes.label                 "Нотатки">
+<!ENTITY  toolbar.links.groups.label                "Групи">
+<!ENTITY  toolbar.links.events.label                "Події">
+<!ENTITY  toolbar.links.linkies.label               "Закладки">
+<!ENTITY  toolbar.links.videos.label                "Відео">
+<!ENTITY  toolbar.settings.account.label            "Налаштування рахунку">
+<!ENTITY  toolbar.settings.privacy.label            "Налаштування конфіденційності">
+<!ENTITY  toolbar.settings.application.label        "Налаштування програми">
+<!ENTITY  toolbar.settings.toolbar.label            "Налаштування тулбару">
+
+<!ENTITY  toolbar.status.emptytext.label            "вкажіть статус...">
+<!ENTITY  toolbar.status.emptytext.tooltip          "Замініть свій Фейсбук статус">
+
+<!ENTITY  toolbar.login.label                       "Залогуватися до Фейсбуку">
+
+<!ENTITY  toolbar.sidebar.label                     "Бокова панель Фейсбуку">

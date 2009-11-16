@@ -1,0 +1,6 @@
+﻿<!ENTITY  window.title              "Введіть мітку">
+
+<!ENTITY  tag.label                 "Мітка">
+<!ENTITY  cancel.label              "Відміна">
+<!ENTITY  tagText.label             "Надрукуйте будь-яке ім'я чи мітку:">
+<!ENTITY  choosePerson.label        "або виберіть персону:">
