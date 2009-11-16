@@ -285,23 +285,19 @@ var facebook = {
     }
   },
   isEmptyStatusText: function (text) {
-    return ('' == text || 'is ' == text || 'is' == text);
+    return '' == text.trim();
   },
   onStatusBoxFocus: function(statusBox) {
     if (this.isEmptyStatusText(statusBox.value)) {
       statusBox.value = '';
     }
     statusBox.style.color = '#000000';
-    if (statusBox.value.substring(0,3) == 'is ') {
-      statusBox.setSelectionRange(3, statusBox.value.length);
-    } else {
-      statusBox.select();
-    }
+    statusBox.select();
   },
   onStatusBoxBlur: function(statusBox) {
     if (this.isEmptyStatusText(statusBox.value)) {
-      statusBox.style.color = '#808080';
       statusBox.value = ''; // rely on the emptyText attribute
+      statusBox.style.color = '#808080';
     } else {
       statusBox.style.color = '#000000';
     }
