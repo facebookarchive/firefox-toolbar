@@ -40,6 +40,8 @@ function debug() {
   dump('\n');
 }
 
+var SIDEBAR_AVAILABLE = !!window.toggleSidebar;
+
 /* Log message to error console if enableLogging preference is true */
 function logConsole (logMessage) {
     var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
@@ -104,21 +106,20 @@ function OpenFBUrl(page, uid, e, params) {
 }
 
 function IsSidebarOpen() {
-  return (top.document.getElementById('viewFacebookSidebar').getAttribute('checked') == 'true');
+  return SIDEBAR_AVAILABLE &&
+    (top.document.getElementById('viewFacebookSidebar').getAttribute('checked') == 'true');
 }
 
 function GetFriendsListElement() {
   var list = IsSidebarOpen()
       ? top.document.getElementById('sidebar').contentDocument.getElementById('SidebarFriendsList')
       : null;
-  if( !list )
-    list = top.document.getElementById('PopupFacebookFriendsList');
-  return list;
+  return list || top.document.getElementById('PopupFacebookFriendsList');
 }
 
 function GetFBSearchBox() {
   var box = top.document.getElementById('facebook-search');
-  if (!box) {
+  if (!box && SIDEBAR_AVAILABLE) {
     box = top.document.getElementById('sidebar').contentDocument.getElementById('facebook-search-sidebar');
   }
   return box;
@@ -508,10 +509,9 @@ function facebook_toggleToolbar()
     document.persist("facebook-toolbar", "collapsed");
 }
 
-function GetFBStringBundle()
-{
+function GetFBStringBundle() {
   var sb = document.getElementById('facebook-strings');
-  if (!sb) {
+  if (!sb && SIDEBAR_AVAILABLE) {
     debug( "getting bundle from sidebar..." );
     sb = document.getElementById('sidebar').contentDocument.getElementById('facebook-strings');
   }

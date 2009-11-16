@@ -64,7 +64,6 @@ var fbToolbarObserver = {
                 setAttributeById('facebook-name-info', 'label', subject.name);
                 statusBox = document.getElementById('facebook-toolbar-status');
                 statusBox.style.display="block";
-                debug("*********************"+subject.status+"*************************");
                 statusBox.value = subject.status;
                 facebook.onStatusBoxBlur(statusBox); // change color for emptyText
                 setAttributeById('facebook-name-info', 'userid', subject.id);
@@ -262,7 +261,7 @@ var facebook = {
       searchBox.value='';
       searchBox.style.color='#000000';
     }
-    if (!this.ignoreBlur && document.getElementById('viewFacebookSidebar').getAttribute('checked') != 'true') {
+    if (!this.ignoreBlur && !IsSidebarOpen()) {
       var popupElt = document.getElementById('PopupFacebookFriends');
       if (popupElt.openPopup) {
         popupElt.openPopup(searchBox, 'after_start', 0, 0, false, true);
