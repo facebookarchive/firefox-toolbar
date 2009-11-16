@@ -510,7 +510,6 @@ function facebook_toggleToolbar()
 
 function GetFBStringBundle()
 {
-  debug( "GetFBStringBundle..." );
   var sb = document.getElementById('facebook-strings');
   if (!sb) {
     debug( "getting bundle from sidebar..." );

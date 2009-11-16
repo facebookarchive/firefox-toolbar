@@ -63,6 +63,7 @@ var fbToolbarObserver = {
                 setAttributeById('facebook-name-info', 'label', subject.name);
                 var statusBox = document.getElementById('facebook-toolbar-status');
                 statusBox.style.display="block";
+                debug("*********************"+subject.status+"*************************");
                 statusBox.value = subject.status;
                 facebook.onStatusBoxBlur(statusBox); // change color for emptyText
                 setAttributeById('facebook-name-info', 'userid', subject.id);
@@ -92,7 +93,7 @@ var fbToolbarObserver = {
                 break;
             case 'facebook-new-friend':
             case 'facebook-friend-updated':
-                debug( 'friend update...' )
+                debug( 'friend update...' );
                 subject = subject.QueryInterface(Ci.fbIFacebookUser);
                 facebook.updateFriend(subject);
                 break;
@@ -210,7 +211,7 @@ var facebook = {
       var lfLoad = facebook.fStringBundle.getString('loadFriends');
       SetHint(true, lfLoad, 'FacebookLogin()');
     } else if (!count.value) {
-      SetHint(true, facebook.fStringBundle.getString('loadingFriends'), '');
+      SetHint(true, facebook.fStringBundle.getString('loadingfriends'), '');
     } else {
       friends.sort(this.sortFriends);
       for each (var friend in friends) {

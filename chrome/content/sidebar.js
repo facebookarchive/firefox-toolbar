@@ -149,7 +149,7 @@ function ClearFriends(sessionEnded) {
         list.removeChild(list.firstChild);
     }
     if (sessionEnded) {
-        SetHint(true, fbStringBundle.String('loadFriends'), 'FacebookLogin()');
+        SetHint(true, fbStringBundle.getString('loadFriends'), 'FacebookLogin()');
     }
 }
 
@@ -159,9 +159,9 @@ function LoadFriends() {
     var friends = fbSvc.getFriends(count);
     debug('Loading friends', count.value);
     if (!fbSvc.loggedIn) {
-        SetHint(true, fbStringBundle.String('loadFriends'), 'FacebookLogin()');
+        SetHint(true, fbStringBundle.getString('loadFriends'), 'FacebookLogin()');
     } else if (!count.value) {
-        SetHint(true, fbStringBundle.String('loadingFriends'), '');
+        SetHint(true, fbStringBundle.getString('loadingfriends'), '');
     } else {
         var friendSort = GetFriendSort();
         debug( "Sorting friends", friendSort.field );
@@ -174,7 +174,7 @@ function LoadFriends() {
             CreateFriendNode(list, friend, hint);
         }
         var searchTerm = GetFBSearchBox().value;
-        if (searchTerm != fbStringBundle.String('searchplaceholder')) {
+        if (searchTerm != fbStringBundle.getString('searchplaceholder')) {
             SearchFriends(searchTerm);
         } else {
             SetHint(false, '', '');
@@ -206,7 +206,7 @@ function UpdateFriends() {
     }
     friendsToUpdate = [];
     var searchTerm = GetFBSearchBox().value;
-    if (searchTerm != fbStringBundle.String('searchplaceholder')) {
+    if (searchTerm != fbStringBundle.getString('searchplaceholder')) {
         SearchFriends(searchTerm);
     }
 }

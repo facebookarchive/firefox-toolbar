@@ -760,19 +760,20 @@ facebookService.prototype = {
             // the decodeURIComponent(escape(s)) trick - thanks
             // http://ecmanaut.blogspot.com/2006/07/encoding-decoding-utf8-in-javascript.html
             var name   = user.name, // decodeURIComponent(escape(user.name)),
-                id     = String(user.uid),
-                status = user.status ? user.status.message // decodeURIComponent(escape(user.status.message))
-                                     : null,
-                stime  = user.status && user.status.time ? user.status.time : 0,
-                ptime  = Number(user.profile_update_time),
-                notes  = Number(user.notes_count),
-                wall   = Number(user.wall_count),
-                pic    = user.pic_small  ? String(decodeURI(user.pic_small)) : null,
-                pic_sq = user.pic_square ? String(decodeURI(user.pic_square)) : null
-                ;
+            id     = String(user.uid),
+            status = user.status ? user.status.message // decodeURIComponent(escape(user.status.message))
+                                 : null,
+            stime  = user.status && user.status.time ? user.status.time : 0,
+            ptime  = Number(user.profile_update_time),
+            notes  = Number(user.notes_count),
+            wall   = Number(user.wall_count),
+            pic    = user.pic_small  ? String(decodeURI(user.pic_small)) : null,
+            pic_sq = user.pic_square ? String(decodeURI(user.pic_square)) : null
+            ;
             if (!pic) {
                 pic = pic_sq = 'chrome://facebook/content/t_default.jpg';
             }
+            debug ("User status = "+status);
             users[id] = new facebookUser(id, name, pic, pic_sq, status, stime, ptime, notes, wall);
         }
         return users;
@@ -853,7 +854,7 @@ facebookService.prototype = {
 
             var loggedInUser = friendDict[fbSvc._uid];
             if (loggedInUser) {
-              debug("loggedInUser", loggedInUser.name );
+              debug("loggedInUser", loggedInUser.name);
               delete friendDict[fbSvc._uid];
             }
 
