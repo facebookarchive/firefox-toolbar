@@ -57,11 +57,12 @@ var fbToolbarObserver = {
             checkSeparator(data);
         }
         else {
+            var statusBox;
             switch (topic) {
             case 'facebook-session-start':
                 subject = subject.QueryInterface(Ci.fbIFacebookUser);
                 setAttributeById('facebook-name-info', 'label', subject.name);
-                var statusBox = document.getElementById('facebook-toolbar-status');
+                statusBox = document.getElementById('facebook-toolbar-status');
                 statusBox.style.display="block";
                 debug("*********************"+subject.status+"*************************");
                 statusBox.value = subject.status;
@@ -82,7 +83,7 @@ var fbToolbarObserver = {
                 setAttributeById('facebook-login-status', 'label', fStrings.getString('login'));
                 setAttributeById('facebook-login-status', 'tooltiptext', fStrings.getString('login'));
                 setAttributeById('facebook-name-info', 'label', '');
-                var statusBox = document.getElementById('facebook-toolbar-status');
+                statusBox = document.getElementById('facebook-toolbar-status');
                 statusBox.style.display="none";
                 for each( var top in topicToXulId )
                     setAttributeById( top, 'label', '?');
@@ -98,7 +99,7 @@ var fbToolbarObserver = {
                 facebook.updateFriend(subject);
                 break;
             case 'facebook-status-updated':
-                var statusBox = document.getElementById('facebook-toolbar-status');
+                statusBox = document.getElementById('facebook-toolbar-status');
                 statusBox.value = data;
                 facebook.onStatusBoxBlur(statusBox);
                 break;
@@ -288,7 +289,7 @@ var facebook = {
   },
   onStatusBoxFocus: function(statusBox) {
     if (this.isEmptyStatusText(statusBox.value)) {
-      statusBox.value = 'is ';
+      statusBox.value = '';
     }
     statusBox.style.color = '#000000';
     if (statusBox.value.substring(0,3) == 'is ') {
@@ -310,7 +311,7 @@ var facebook = {
     // we are putting this into a string to evaluate (as opposed to evaluating it directly)
     var enc = function(str) {
       return encodeURIComponent(str).replace("'", "\\'", 'g');
-    }
+    };
     var p = '.php?src=tb&v=4&u=' + enc(content.document.location.href) + '&t=' + enc(document.title);
     var openCmd = "window.open('http://www.facebook.com/sharer" + p
       + "', 'sharer','toolbar=no,status=yes,resizable=yes,width=626,height=436');";
