@@ -308,8 +308,10 @@ var facebook = {
       return encodeURIComponent(str).replace("'", "\\'", 'g');
     };
     var p = '.php?src=tb&v=4&u=' + enc(content.document.location.href) + '&t=' + enc(document.title);
-    var openCmd = "window.open('http://www.facebook.com/sharer" + p
-      + "', 'sharer','toolbar=no,status=yes,resizable=yes,width=626,height=436');";
+    var window_url = "http://www.facebook.com/sharer" + p;
+    var window_options = "toolbar=no,status=yes,resizable=yes,width=626,height=436";
+
+    var openCmd = "window.open('" + window_url + "', 'sharer','" + window_options + "');";
     try {
       // If we're not on a facebook page, just jump down to the catch block and open the popup...
       if (!IsFacebookLocation(content.document.location))
@@ -327,7 +329,7 @@ var facebook = {
         '"); } catch (e) { setTimeout("' + openCmd + '", 0); } void(0);';
     } catch(e) {
       debug('title is: ' + document.title, 'url: ' + content.document.location.href, openCmd);
-      eval(openCmd);
+      window.open(window_url, "sharer", window_options);
     }
   },
   photoupload: function() {
