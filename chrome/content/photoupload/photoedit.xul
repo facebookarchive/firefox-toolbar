@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://facebook/skin/photoupload/photoupload.css" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://facebook/locale/photoupload/photoupload.dtd">
+
+<window id="facebook-photoupload"
+        title="&window.title;"
+        windowtype="facebook:photoupload"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        width="800"
+        height="800"
+        onload="PhotoEdit.init()"
+        onunload="PhotoEdit.uninit()"
+        onclose="return PhotoEdit.onClose();"
+        persist="screenX screenY width height">
+
+  <script type="application/x-javascript" src="chrome://global/content/nsDragAndDrop.js"/>
+  <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
+  <script type="application/x-javascript" src="chrome://facebook/content/photoupload/jsbn/jsbn.js"/>
+  <script type="application/x-javascript" src="chrome://facebook/content/photoupload/jsbn/jsbn2.js"/>
+  <script type="application/x-javascript" src="chrome://facebook/content/photoupload/photoedit.js"/>
+
+  <stringbundle id="facebookStringBundle"
+                src="chrome://facebook/locale/photoupload/photoupload.properties"/>
+
+  <vbox flex="1">
+
+    <hbox flex="1">
+      <vbox id="editPanel">
+        <caption label="&upload.photo.detail.label;"/>
+        <vbox id="editImageContainer" align="center">
+          <!-- width/max-width as a CSS property or XUL attribute has no effect on the image width.
+               That's why a <browser> is used instead. -->
+          <browser id="editImageFrame" src="editimage.html"/>
+        </vbox>
+        <spacer flex="1"/>
+        <hbox>
+            <label value="&upload.photo.name.label;"/>
+            <label id="editFilenameField"/>
+        </hbox>
+        <hbox>
+            <label value="&upload.photo.size.label;"/>
+            <label id="editSizeField"/>
+        </hbox>
+        <label value="&upload.photo.caption.label;"/>
+        <textbox id="editCaptionField" multiline="true" disabled="true"
+                 oninput="EditPanel.onCaptionInput(event)"/>
+        <hbox>
+          <label value="&upload.tag.start.label;"/>
+        </hbox>
+        <stack flex="1">
+          <listbox flex="1"
+                   id="editTagList"
+                   seltype="multiple"
+                   onselect="EditPanel.onTagSelect(event);"
+                   onmouseover="EditPanel.onMouseOver(event);"
+                   onmouseout="EditPanel.onMouseOut(event);">
+          </listbox>
+          <!-- I wanted to put this help message below the listbox and make
+               the listbox transparent. It turns out setting background-color
+               to transparent on the listbox has no effect: it is always opaque.
+               The workaround is to put that box on top and collapse it when
+               there are list items to show -->
+          <vbox id="editTagHelpBox" flex="1">
+            <spacer flex="1"/>
+            <hbox>
+              <spacer flex="1"/>
+              <label value="&upload.tag.click.label;"
+                     style="color: gray"/>
+              <spacer flex="1"/>
+            </hbox>
+            <spacer flex="1"/>
+          </vbox>
+        </stack>
+        <hbox>
+          <button id="editRemoveTagsButton"
+                  oncommand="EditPanel.onRemoveSelectedTags(event)"
+                  label="&upload.tag.remove.label;"/>
+        </hbox>
+      </vbox>
+    </hbox>
+
+  </vbox>
+
+</window>

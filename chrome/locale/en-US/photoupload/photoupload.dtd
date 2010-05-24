@@ -35,3 +35,12 @@
         "Click 'Add Photos'...". The value in '' should match the value of the upload.photos.add.label
         entity above -->
 <!ENTITY  upload.drag.label                 "Click 'Add Photos'... or drag photos here.">
+
+<!ENTITY  upload.addtoalbum.label           "Add to Album:">
+<!ENTITY  upload.createnewalbum.label       "Create New Album...">
+<!ENTITY  upload.albumname.label            "Album Name:">
+<!ENTITY  upload.visibleto.label            "Visible to:">
+<!ENTITY  upload.clickonphoto.label         "Click on the photo to tag a friend:">
+<!ENTITY  upload.createnewalbumdialogok.label       "Create New Album">
+<!ENTITY  upload.cancel2.label              "Cancel">
+

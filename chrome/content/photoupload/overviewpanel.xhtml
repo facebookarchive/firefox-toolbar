@@ -13,17 +13,24 @@
   // wrappedJSObject is used when the document is loaded in a content window.
   // (useful for debugging, but note that other things may fail in that situation).
   var OverviewPanel = parent.OverviewPanel || parent.wrappedJSObject.OverviewPanel;
+  var PhotoUpload = parent.PhotoUpload || parent.wrappedJSObject.PhotoUpload;
   </script>
 </head>
 <body>
   <div id="photo-container">
+    <div class="photobox" id="photobox-add"
+         onclick="PhotoUpload.addPhotos();">
+      <img class="addimg"/>
+      <div class="addtxt">&upload.photos.add.label;</div>
+    </div>
     <div class="photobox" id="photobox-template"
          onclick="OverviewPanel.selectPhoto(event);">
       <img/>
-      <div class="filename">&#160;</div>
-      <div class="remove" onclick="OverviewPanel.removePhoto(event);">&upload.remove.label;</div>
+      <!--<div class="filename">&#160;</div>-->
+      <!-- l10n note - upload.remove.label removed -->
+      <div class="remove" onclick="OverviewPanel.removePhoto(event);">&#8722;</div>
     </div>
-    <div id="help-message">&upload.drag.label;</div>
+    <!-- l10n note - upload.drag.label removed -->
   </div>
 </body>
 </html>

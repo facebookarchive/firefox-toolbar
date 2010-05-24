@@ -29,6 +29,32 @@
   <broadcaster id="uploadBroadcaster"/>
 
   <vbox flex="1">
+
+    <hbox flex="1">
+      <vbox id="overviewPanelContainer" flex="1"
+            ondragdrop="nsDragAndDrop.drop(event, PhotoDNDObserver);">
+          <browser flex="1" id="overviewPanel"
+                   src="chrome://facebook/content/photoupload/overviewpanel.xhtml"/>
+      </vbox>
+
+    </hbox>
+
+    <hbox align="center">
+
+          <hbox align="center" flex="1">
+            <label id="loadingAlbumsLabel" value="&upload.addtoalbum.label;"/>
+            <menulist id="albumsList"
+                      observes="uploadBroadcaster">
+              <menupopup id="albumsPopup">
+                <menuitem id="albumsPopupPlaceHolder" collapsed="true"/>
+                <menuseparator/>
+                <menuitem label="&upload.createnewalbum.label;" oncommand="PhotoUpload.doOpenCreateNewAlbumDialog();"/>
+              </menupopup>
+            </menulist>
+            <spacer flex="1"/>
+          </hbox>
+
+    <!--
     <label value="&upload.destination.label;"/>
     <hbox>
       <radiogroup id="albumSelectionGroup"
@@ -41,15 +67,9 @@
       </radiogroup>
       <deck id="albumSelectionDeck" flex="1">
         <vbox id="existingAlbumPanel" class="loading-albums">
-          <hbox>
-            <separator/>
-            <label id="loadingAlbumsLabel" value="&upload.loadingalbums.label;"/>
-            <menulist id="albumsList"
-                      observes="uploadBroadcaster">
-              <menupopup id="albumsPopup"/>
-            </menulist>
-            <spacer flex="1"/>
-          </hbox>
+
+
+
           <spacer flex="1"/>
         </vbox>
         <hbox flex="1" id="newAlbumPanel">
@@ -84,7 +104,6 @@
                                   value="friends-of-friends"/>
                         <menuitem label="&upload.privacy.friends.label;"
                                   value="friends"/>
-                        <!-- XXX more descriptive label? -->
                         <menuitem label="&upload.privacy.networks.label;"
                                   value="networks"/>
                      </menupopup>
@@ -96,74 +115,12 @@
         </hbox>
       </deck>
     </hbox>
+    -->
 
-    <hbox flex="1">
-      <vbox id="overviewPanelContainer" flex="1"
-            ondragdrop="nsDragAndDrop.drop(event, PhotoDNDObserver);">
-          <browser flex="1" id="overviewPanel"
-                   src="chrome://facebook/content/photoupload/overviewpanel.xhtml"/>
-      </vbox>
-      <vbox id="editPanel">
-        <caption label="&upload.photo.detail.label;"/>
-        <vbox id="editImageContainer" align="center">
-          <!-- width/max-width as a CSS property or XUL attribute has no effect on the image width.
-               That's why a <browser> is used instead. -->
-          <browser id="editImageFrame" src="editimage.html"/>
-        </vbox>
-        <spacer flex="1"/>
-        <hbox>
-            <label value="&upload.photo.name.label;"/>
-            <label id="editFilenameField"/>
-        </hbox>
-        <hbox>
-            <label value="&upload.photo.size.label;"/>
-            <label id="editSizeField"/>
-        </hbox>
-        <label value="&upload.photo.caption.label;"/>
-        <textbox id="editCaptionField" multiline="true" disabled="true"
-                 oninput="EditPanel.onCaptionInput(event)"/>
-        <hbox>
-          <label value="&upload.tag.start.label;"/>
-        </hbox>
-        <stack flex="1">
-          <listbox flex="1"
-                   id="editTagList"
-                   seltype="multiple"
-                   onselect="EditPanel.onTagSelect(event);"
-                   onmouseover="EditPanel.onMouseOver(event);"
-                   onmouseout="EditPanel.onMouseOut(event);">
-          </listbox>
-          <!-- I wanted to put this help message below the listbox and make
-               the listbox transparent. It turns out setting background-color
-               to transparent on the listbox has no effect: it is always opaque.
-               The workaround is to put that box on top and collapse it when
-               there are list items to show -->
-          <vbox id="editTagHelpBox" flex="1">
-            <spacer flex="1"/>
-            <hbox>
-              <spacer flex="1"/>
-              <label value="&upload.tag.click.label;"
-                     style="color: gray"/>
-              <spacer flex="1"/>
-            </hbox>
-            <spacer flex="1"/>
-          </vbox>
-        </stack>
-        <hbox>
-          <button id="editRemoveTagsButton"
-                  oncommand="EditPanel.onRemoveSelectedTags(event)"
-                  label="&upload.tag.remove.label;"/>
-        </hbox>
-      </vbox>
-    </hbox>
-
-    <hbox align="center">
       <deck id="uploadStatusDeck" flex="1">
         <hbox align="center">
-          <button label="&upload.photos.add.label;" icon="add" id="addPhotosButton"
-                  oncommand="PhotoUpload.addPhotos();"
-                  observes="uploadBroadcaster"/>
           <button label="&upload.photos.remove.label;" icon="clear" id="removeAllButton"
+                  hidden="true"
                   disabled="true"
                   oncommand="PhotoUpload.removeAllPhotos();"
                   observes="uploadBroadcaster"/>
@@ -183,5 +140,6 @@
               oncommand="PhotoUpload.upload();"
               observes="uploadBroadcaster"/>
     </hbox>
+
   </vbox>
 </window>

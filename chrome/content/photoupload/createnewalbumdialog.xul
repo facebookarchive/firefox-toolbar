@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://facebook/locale/photoupload/photoupload.dtd">
+
+<dialog
+   id="createNewAlbumDialog"
+   title="&upload.createnewalbum.label;"
+   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+   buttons="accept,cancel"
+   buttonlabelcancel="&upload.cancel2.label;"
+   buttonlabelaccept="&upload.createnewalbumdialogok.label;"
+   ondialogaccept="return CreateNewAlbumDialog.doOK();"
+   buttondisabledaccept="true">
+    
+   <script src="chrome://facebook/content/photoupload/createnewalbumdialog.js"/>
+
+   <grid>
+    <columns>
+      <column flex="1"/>
+      <column flex="4"/>
+    </columns>
+    <rows>
+      <row>
+        <label value="&upload.albumname.label;"/>
+        <textbox id="name" onchange="CreateNewAlbumDialog.invalidate();"/>
+      </row>
+      <row>
+        <label value="&upload.album.description.label;"/>
+        <textbox id="description" multiline="true"/>
+      </row>
+      <row>
+        <label value="&upload.album.location.label;"/>
+        <textbox id="location"/>
+      </row>
+      <row>
+        <label value="&upload.visibleto.label;"/>
+        <menulist id="visibility">
+          <menupopup>
+            <menuitem label="&upload.privacy.everyone.label;" value="everyone" selected="true"/>
+            <menuitem label="&upload.privacy.fof.label;" value="friends-of-friends"/>
+            <menuitem label="&upload.privacy.friends.label;" value="friends"/>
+            <menuitem label="&upload.privacy.networks.label;" value="networks"/>
+          </menupopup>
+        </menulist>
+      </row>
+    </rows>
+  </grid>
+
+</dialog>
+
