@@ -44,4 +44,5 @@
 <!ENTITY  upload.createnewalbumdialogok.label       "Create New Album">
 <!ENTITY  upload.cancel2.label              "Cancel">
 <!ENTITY  upload.dragtoaddphotos.label      "Drag to Add Photos">
+<!ENTITY  upload.tagandcaption.label        "Add Tags and a Caption to Photo">
 

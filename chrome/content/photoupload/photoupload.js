@@ -640,6 +640,7 @@ var OverviewPanel = {
         //var filenameDiv = newBox.getElementsByClassName("filename")[0];
         //filenameDiv.firstChild.data = photo.filename;
         newBox.getElementsByTagName("div")[0].addEventListener("click", function() { OverviewPanel.removePhoto(photo); }, false);
+        newBox.getElementsByTagName("img")[0].addEventListener("click", function() { OverviewPanel.editPhoto(photo); }, false);
 
         photoboxTemplate.parentNode.insertBefore(newBox, photoboxTemplate);
       });
@@ -671,11 +672,18 @@ var OverviewPanel = {
   removePhoto: function(photo) {
     //var photo = this._photoFromEvent(event);
     if (!photo) {
-    alert('no photo');
       LOG("Error, photo not found");
       return;
     }
     PhotoSet.remove(photo);
+  },
+
+  editPhoto: function(photo) {
+    if (!photo) {
+      LOG("Error, photo not found");
+      return;
+    }
+    window.openDialog('chrome://facebook/content/photoupload/photoedit.xul', 'facebook:photoedit', 'chrome,modal,centerscreen,titlebar,dialog=yes', photo, PhotoUpload, PhotoSet);
   }
 };
 

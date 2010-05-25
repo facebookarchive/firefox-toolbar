@@ -5,17 +5,19 @@
 
 <!DOCTYPE window SYSTEM "chrome://facebook/locale/photoupload/photoupload.dtd">
 
-<window id="facebook-photoupload"
-        title="&window.title;"
-        windowtype="facebook:photoupload"
+<dialog id="facebook-photoupload"
+        title="&upload.tagandcaption.label;"
+        windowtype="facebook:photoedit"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         xmlns:html="http://www.w3.org/1999/xhtml"
-        width="800"
-        height="800"
         onload="PhotoEdit.init()"
+        buttons="accept,cancel"
+        ondialogaccept="return PhotoEdit.doOK();">
+ 
+        <!--
         onunload="PhotoEdit.uninit()"
         onclose="return PhotoEdit.onClose();"
-        persist="screenX screenY width height">
+        -->
 
   <script type="application/x-javascript" src="chrome://global/content/nsDragAndDrop.js"/>
   <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
@@ -30,28 +32,30 @@
 
     <hbox flex="1">
       <vbox id="editPanel">
-        <caption label="&upload.photo.detail.label;"/>
+        <caption label="&upload.clickonphoto.label;"/>
         <vbox id="editImageContainer" align="center">
           <!-- width/max-width as a CSS property or XUL attribute has no effect on the image width.
                That's why a <browser> is used instead. -->
           <browser id="editImageFrame" src="editimage.html"/>
         </vbox>
-        <spacer flex="1"/>
-        <hbox>
+        <hbox collapsed="true">
             <label value="&upload.photo.name.label;"/>
             <label id="editFilenameField"/>
         </hbox>
-        <hbox>
+        <hbox collapsed="true">
             <label value="&upload.photo.size.label;"/>
             <label id="editSizeField"/>
         </hbox>
-        <label value="&upload.photo.caption.label;"/>
-        <textbox id="editCaptionField" multiline="true" disabled="true"
-                 oninput="EditPanel.onCaptionInput(event)"/>
-        <hbox>
+        <hbox flex="1">
+            <label value="&upload.photo.caption.label;"/>
+            <textbox id="editCaptionField" multiline="false" disabled="true"
+                     oninput="EditPanel.onCaptionInput(event)" size="50"/>
+        </hbox>
+        <spacer flex="1"/>
+        <hbox collapsed="true">
           <label value="&upload.tag.start.label;"/>
         </hbox>
-        <stack flex="1">
+        <stack flex="1" collapsed="true">
           <listbox flex="1"
                    id="editTagList"
                    seltype="multiple"
@@ -75,7 +79,7 @@
             <spacer flex="1"/>
           </vbox>
         </stack>
-        <hbox>
+        <hbox collapsed="true">
           <button id="editRemoveTagsButton"
                   oncommand="EditPanel.onRemoveSelectedTags(event)"
                   label="&upload.tag.remove.label;"/>
@@ -85,4 +89,4 @@
 
   </vbox>
 
-</window>
+</dialog>

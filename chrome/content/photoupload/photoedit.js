@@ -25,6 +25,39 @@ const Ci = Components.interfaces;
 const CC = Components.Constructor;
 const Cu = Components.utils;
 
+// All photos are removed. No parameter.
+const CHANGE_REMOVE_ALL = "removeAll";
+// A photo is removed. Parameter is the removed photo.
+const CHANGE_REMOVE = "remove";
+// A photo is added. Parameter is the added photo.
+const CHANGE_ADD = "add";
+// A photo is updated. Parameter is the updated photo
+const CHANGE_UPDATE = "update";
+// The selected photo changes. Parameter is the new selected photo.
+const CHANGE_SELECTED = "selected";
+
+const DEBUG = true;
+
+// Debugging.
+function LOG(s) {
+  if (DEBUG)
+    dump(s + "\n");
+}
+
+// JavaScript semantics is required for some member access, that's why
+// we use wrappedJSObject instead of going throught the .idl.
+var gFacebookService =  Cc['@facebook.com/facebook-service;1'].
+                        getService(Ci.fbIFacebookService).
+                        wrappedJSObject;
+// Unwrapped version.
+var gFacebookServiceUnwrapped =  Cc['@facebook.com/facebook-service;1'].
+                                 getService(Ci.fbIFacebookService);
+
+
+
+PhotoUpload = window.arguments[1];
+PhotoSet = window.arguments[2];
+
 /**
  * Base class for representing a photo tag.
  */
@@ -105,7 +138,7 @@ var EditPanel = {
   IMAGE_BORDER_SIZE: 1,
 
   init: function() {
-    PhotoSet.addChangedListener(this.photosChanged, EditPanel);
+    //PhotoSet.addChangedListener(this.photosChanged, EditPanel);
     this._editImageFrame = document.getElementById("editImageFrame");
     this._imageElement = this._editImageFrame.contentDocument
                              .getElementById("image");
@@ -117,6 +150,8 @@ var EditPanel = {
                              .getElementById("tagHighlight");
     this._highlightDivInside = this._editImageFrame.contentDocument
                                    .getElementById("tagHighlightInside");
+
+    this.photosChanged(CHANGE_UPDATE, window.arguments[0]);
   },
 
   uninit: function() {

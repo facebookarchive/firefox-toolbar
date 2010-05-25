@@ -13,10 +13,11 @@
 }
 
 #overviewPanelContainer {
-  padding: 10px 10px 10px 0px;
+  margin: 10px 10px 10px 0px;
   /* the minimum width should show just one thumbnail. make sure this is in
      sync with the .photobox size overviewpanel.html */
   min-width: 260px;
+  border: 1px solid #BBBBBB;
 }
 
 #editPanel {
@@ -30,10 +31,10 @@
 #editImageFrame {
   /* Keep the size of the frame in sync with the max-width/max-height properties
      of the img element in editimage.css */
-  width: 400px;
-  height: 250px;
-  -moz-box-shadow: gray 10px 10px 10px;
-  border: 3px solid #CCCCCC;
+  width: 420px;
+  height: 270px;
+  /*-moz-box-shadow: gray 10px 10px 10px;
+  border: 3px solid #CCCCCC;*/
 }
 
 #addPhotosButton {
@@ -68,3 +69,4 @@
     width: 6em;
     margin-top: 1em;
 }
+
