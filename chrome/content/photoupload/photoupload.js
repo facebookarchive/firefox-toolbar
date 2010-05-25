@@ -639,6 +639,8 @@ var OverviewPanel = {
         newBox.getElementsByTagName("img")[0].src = photo.url;
         //var filenameDiv = newBox.getElementsByClassName("filename")[0];
         //filenameDiv.firstChild.data = photo.filename;
+        newBox.getElementsByTagName("div")[0].addEventListener("click", function() { OverviewPanel.removePhoto(photo); }, false);
+
         photoboxTemplate.parentNode.insertBefore(newBox, photoboxTemplate);
       });
       return;
@@ -665,9 +667,11 @@ var OverviewPanel = {
     PhotoSet.selected = photo;
   },
 
-  removePhoto: function(event) {
-    var photo = this._photoFromEvent(event);
+  //removePhoto: function(event) {
+  removePhoto: function(photo) {
+    //var photo = this._photoFromEvent(event);
     if (!photo) {
+    alert('no photo');
       LOG("Error, photo not found");
       return;
     }
@@ -676,48 +680,42 @@ var OverviewPanel = {
 };
 
 var PhotoDNDObserver = {
-  getSupportedFlavours : function () {
-    var flavours = new FlavourSet();
-    flavours.appendFlavour("text/x-moz-url");
-    flavours.appendFlavour("application/x-moz-file",  "nsIFile");
-    return flavours;
+  checkDrag : function (event) {
+      return event.dataTransfer.types.contains("text/x-moz-url") || 
+        event.dataTransfer.types.contains("application/x-moz-file");
   },
 
-  _getFileFromDragSession: function (session, position) {
-    var fileData = { };
-    var ios = Cc["@mozilla.org/network/io-service;1"].
-              getService(Ci.nsIIOService);
-    // if this fails we do not have valid data to drop
-    try {
-      var xfer = Cc["@mozilla.org/widget/transferable;1"].
-                 createInstance(Ci.nsITransferable);
-      xfer.addDataFlavor("text/x-moz-url");
-      xfer.addDataFlavor("application/x-moz-file", "nsIFile");
-      session.getData(xfer, position);
+  _getFileFromDragSession: function (dt, pos)
+  {
+      var types = dt.mozTypesAt(pos);
 
-      var flavour = { }, data = { }, length = { };
-      xfer.getAnyTransferData(flavour, data, length);
-      var selectedFlavour = this.getSupportedFlavours().flavourTable[flavour.value];
-      var xferData = new FlavourData(data.value, length.value, selectedFlavour);
-
-      var fileURL = transferUtils.retrieveURLFromData(xferData.data,
-                                                      xferData.flavour.contentType);
-      var file = ios.newURI(fileURL, null, null).QueryInterface(Ci.nsIFileURL).file;
-    } catch (e) {
-      LOG("Exception while getting drag data: " + e);
-      return null;
-    }
-    return file;
+      for (var i=0; i<types.length; i++)
+      {
+          if (types[i] == "application/x-moz-file")
+          {
+              return dt.mozGetDataAt("application/x-moz-file", pos);
+          }
+          else if (types[i] == "text/x-moz-url")
+          {
+              // TODO
+          }
+          else
+          {
+              // unsupported
+          }
+      }
   },
 
-  onDrop: function (event, dropdata, session) {
-    var count = session.numDropItems;
+  onDrop: function (event) {
+    event.preventDefault(); event.stopPropagation();
+
     var files = [];
-    for (var i = 0; i < count; ++i) {
-      var file = this._getFileFromDragSession(session, i);
+    for (var i = 0; i < event.dataTransfer.mozItemCount; ++i) {
+      var file = PhotoDNDObserver._getFileFromDragSession(event.dataTransfer, i);
       if (file)
         files.push(file);
     }
+
     PhotoSet.add([new Photo(f) for each (f in files)]);
   }
 };
@@ -760,6 +758,8 @@ var PhotoUpload = {
 
   init: function() {
     var self = this;
+
+    window.addEventListener("dragdrop", function(event) { alert('ook');event.stopPropagation(); }, false);
 
     OverviewPanel.init();
     PhotoSet.addChangedListener(this.photosChanged, PhotoUpload);
@@ -809,6 +809,7 @@ var PhotoUpload = {
     }
 
     checkIfLoggedIn();
+
   },
 
   uninit: function() {
@@ -971,6 +972,8 @@ var PhotoUpload = {
   photosChanged: function(changeType, parameter) {
     document.getElementById("uploadButton").disabled = PhotoSet.photos.length == 0;
     //document.getElementById("removeAllButton").disabled = PhotoSet.photos.length == 0;
+
+    document.getElementById("overviewPanelContainer").selectedIndex = (PhotoSet.photos.length==0?0:1);
   },
 
   getAlbumSelectionMode: function() {

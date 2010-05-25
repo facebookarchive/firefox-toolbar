@@ -48,3 +48,23 @@
 #editTagList {
   min-height: 60px;
 }
+
+#dragpanel {
+    width: 100%;
+    background-color: AppWorkspace;
+}
+
+#dragpanel > vbox > vbox {
+    border: 4px dashed #BBBBBB;
+    -moz-border-radius: 1.5em;
+    padding: 1.5em 3em;
+    text-align: center;
+    margin-top: 5em;
+}
+
+#dragpanel > vbox > vbox > description {
+    font-size: large;
+    color: #BBBBBB;
+    width: 6em;
+    margin-top: 1em;
+}

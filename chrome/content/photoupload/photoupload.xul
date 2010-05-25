@@ -31,11 +31,22 @@
   <vbox flex="1">
 
     <hbox flex="1">
-      <vbox id="overviewPanelContainer" flex="1"
-            ondragdrop="nsDragAndDrop.drop(event, PhotoDNDObserver);">
+      <deck id="overviewPanelContainer" flex="1"
+            ondragenter="PhotoDNDObserver.checkDrag(event)"
+            ondragover="PhotoDNDObserver.checkDrag(event)"
+            ondrop="PhotoDNDObserver.onDrop(event)">
+          <hbox flex="1" id="dragpanel" pack="center">
+            <vbox align="center">
+              <vbox align="center">
+                <image src="chrome://facebook/skin/photoupload/add.png"/>
+                <description>&upload.dragtoaddphotos.label;</description>
+              </vbox>
+              <spacer flex="1"/>
+            </vbox>
+          </hbox>
           <browser flex="1" id="overviewPanel"
                    src="chrome://facebook/content/photoupload/overviewpanel.xhtml"/>
-      </vbox>
+      </deck>
 
     </hbox>
 

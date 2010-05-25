@@ -14,11 +14,14 @@
   // (useful for debugging, but note that other things may fail in that situation).
   var OverviewPanel = parent.OverviewPanel || parent.wrappedJSObject.OverviewPanel;
   var PhotoUpload = parent.PhotoUpload || parent.wrappedJSObject.PhotoUpload;
+  var PhotoDNDObserver = parent.PhotoDNDObserver || parent.wrappedJSObject.PhotoDNDObserver;
+  window.addEventListener("drag", PhotoDNDObserver.checkDrag, false);
+  window.addEventListener("drop", PhotoDNDObserver.onDrop, false);
   </script>
 </head>
 <body>
   <div id="photo-container">
-    <div class="photobox" id="photobox-add"
+    <div class="photobox" id="photobox-add" style="display:none;"
          onclick="PhotoUpload.addPhotos();">
       <img class="addimg"/>
       <div class="addtxt">&upload.photos.add.label;</div>

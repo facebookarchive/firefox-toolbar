@@ -1020,7 +1020,7 @@ facebookService.prototype = {
         }
         var message = paramsEncoded.join('&');
 
-        dump("api message: " + message + " \n");
+        //dump("api message: " + message + " \n");
 
         try {
             // Yuck...xmlhttprequest doesn't always work so we have to do this
