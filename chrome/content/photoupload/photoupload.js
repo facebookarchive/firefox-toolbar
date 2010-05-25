@@ -976,6 +976,7 @@ var PhotoUpload = {
     document.getElementById("overviewPanelContainer").selectedIndex = (PhotoSet.photos.length==0?0:1);
   },
 
+  /*
   getAlbumSelectionMode: function() {
     var albumSelectionGroup = document.getElementById("albumSelectionGroup");
     var existingAlbumRadio = document.getElementById("existingAlbumRadio");
@@ -1001,6 +1002,7 @@ var PhotoUpload = {
         document.getElementById("newAlbumPanel");
     }
   },
+    */
 
   addPhotos: function() {
     var fp = Cc["@mozilla.org/filepicker;1"].
@@ -1153,19 +1155,12 @@ var PhotoUpload = {
     this._uploadStatus.className = "upload-status";
     this._uploadStatus.value = "";
 
-    var selectionMode = this.getAlbumSelectionMode();
-    if (selectionMode == NEW_ALBUM) {
-      this._createAlbum();
-    } else if (selectionMode == EXISTING_ALBUM) {
       var albumsList = document.getElementById("albumsList");
       if (!albumsList.selectedItem) {
           this._uploadComplete(UPLOAD_ERROR, null, "Unexpected state");
         return;
       }
       this._uploadToAlbum(albumsList.selectedItem.getAttribute("albumid"));
-    } else {
-      throw "Unexpected selection mode";
-    }
   },
 
   /**
