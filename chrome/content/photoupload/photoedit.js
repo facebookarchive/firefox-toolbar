@@ -55,6 +55,7 @@ var gFacebookServiceUnwrapped =  Cc['@facebook.com/facebook-service;1'].
 
 
 
+Photo = window.arguments[0];
 PhotoUpload = window.arguments[1];
 PhotoSet = window.arguments[2];
 
@@ -388,6 +389,14 @@ var PhotoEdit = {
   },
 
   onClose: function() {
+    return true;
+  },
+
+  doOK: function() {
+
+    Photo.caption = document.getElementById("editCaptionField").value;
+    Photo.tags = PhotoSet.selected.tags;
+
     return true;
   }
 };
