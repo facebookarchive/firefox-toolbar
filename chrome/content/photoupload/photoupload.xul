@@ -31,7 +31,7 @@
   <vbox flex="1">
 
     <hbox flex="1">
-      <deck id="overviewPanelContainer" flex="1"
+      <stack id="overviewPanelContainer" flex="1"
             ondragenter="PhotoDNDObserver.checkDrag(event)"
             ondragover="PhotoDNDObserver.checkDrag(event)"
             ondrop="PhotoDNDObserver.onDrop(event)">
@@ -46,7 +46,7 @@
           </hbox>
           <browser flex="1" id="overviewPanel"
                    src="chrome://facebook/content/photoupload/overviewpanel.xhtml"/>
-      </deck>
+      </stack>
 
     </hbox>
 

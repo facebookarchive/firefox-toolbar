@@ -1,5 +1,4 @@
 body {
-  background-color: white;
   font-family: sans-serif;
 }
 
@@ -14,7 +13,6 @@ body {
   margin: 10px;
   overflow: hidden;
   border: 3px solid #CCCCCC;
-  background-color: white;
 }
 
 .photobox:hover {

@@ -979,9 +979,8 @@ var PhotoUpload = {
 
   photosChanged: function(changeType, parameter) {
     document.getElementById("uploadButton").disabled = PhotoSet.photos.length == 0;
-    //document.getElementById("removeAllButton").disabled = PhotoSet.photos.length == 0;
 
-    document.getElementById("overviewPanelContainer").selectedIndex = (PhotoSet.photos.length==0?0:1);
+    document.getElementById("dragpanel").collapsed = (PhotoSet.photos.length>0);
   },
 
   /*

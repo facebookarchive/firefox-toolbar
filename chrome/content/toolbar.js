@@ -341,9 +341,9 @@ var facebook = {
     }
     else
     {
-        /*window.openDialog('chrome://facebook/content/photoupload/photoupload.xul',
-                          'facebook:photoupload', 'chrome,titlebar,toolbar,dialog=no,resizable');*/
-        gBrowser.selectedTab = gBrowser.addTab("chrome://facebook/content/photoupload/photoupload.xul");
+        window.openDialog('chrome://facebook/content/photoupload/photoupload.xul',
+		'facebook:photoupload',
+		'menubar=no,toolbar=no,location=no,resizable=yes,chrome=yes,dialog=no');
     }
   },
   clearFriends: function(sessionEnded) {
