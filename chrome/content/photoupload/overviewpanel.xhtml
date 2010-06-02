@@ -14,9 +14,10 @@
   // (useful for debugging, but note that other things may fail in that situation).
   var OverviewPanel = parent.OverviewPanel || parent.wrappedJSObject.OverviewPanel;
   var PhotoUpload = parent.PhotoUpload || parent.wrappedJSObject.PhotoUpload;
-  var PhotoDNDObserver = parent.PhotoDNDObserver || parent.wrappedJSObject.PhotoDNDObserver;
-  window.addEventListener("drag", PhotoDNDObserver.checkDrag, false);
-  window.addEventListener("drop", PhotoDNDObserver.onDrop, false);
+  var PhotoDNDObserverFF30 = parent.PhotoDNDObserverFF30 || parent.wrappedJSObject.PhotoDNDObserverFF30;
+  //var PhotoDNDObserver = parent.PhotoDNDObserver || parent.wrappedJSObject.PhotoDNDObserver;
+  //window.addEventListener("drag", PhotoDNDObserver.checkDrag, false);
+  //window.addEventListener("drop", PhotoDNDObserver.onDrop, false);
   </script>
 </head>
 <body>

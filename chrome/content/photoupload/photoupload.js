@@ -687,6 +687,68 @@ var OverviewPanel = {
   }
 };
 
+var PhotoDNDObserverFF30 = {
+  getSupportedFlavours : function () {
+    var flavours = new FlavourSet();
+    flavours.appendFlavour("text/x-moz-url");
+    flavours.appendFlavour("application/x-moz-file",  "nsIFile");
+    return flavours;
+  },
+
+  _getFileFromDragSession: function (session, position) {
+    var tmpfile;
+    var fileData = { };
+    var ios = Cc["@mozilla.org/network/io-service;1"].
+              getService(Ci.nsIIOService);
+    // if this fails we do not have valid data to drop
+    try {
+      var xfer = Cc["@mozilla.org/widget/transferable;1"].
+                 createInstance(Ci.nsITransferable);
+      xfer.addDataFlavor("text/x-moz-url");
+      xfer.addDataFlavor("application/x-moz-file", "nsIFile");
+      session.getData(xfer, position);
+
+      var flavour = { }, data = { }, length = { };
+      xfer.getAnyTransferData(flavour, data, length);
+      var selectedFlavour = this.getSupportedFlavours().flavourTable[flavour.value];
+      var xferData = new FlavourData(data.value, length.value, selectedFlavour);
+
+      var fileURL = transferUtils.retrieveURLFromData(xferData.data,
+                                                      xferData.flavour.contentType);
+      var urlObj = ios.newURI(fileURL, null, null);
+
+      tmpfile = Components.classes["@mozilla.org/file/directory_service;1"].
+          getService(Components.interfaces.nsIProperties).
+          get("TmpD", Components.interfaces.nsIFile);
+      tmpfile.append("facebookphoto.jpg");
+      tmpfile.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
+
+      var wbp = Components.classes['@mozilla.org/embedding/browser/nsWebBrowserPersist;1']
+          .createInstance(Components.interfaces.nsIWebBrowserPersist);
+      wbp.persistFlags &= ~Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_NO_CONVERSION; // don't save gzipped
+      wbp.saveURI(urlObj, null, null, null, null, tmpfile);
+
+    } catch (e) {
+      LOG("Exception while getting drag data: " + e);
+      return null;
+    }
+    return tmpfile;
+  },
+
+  onDrop: function (event, dropdata, session) {
+    var count = session.numDropItems;
+    var files = [];
+    for (var i = 0; i < count; ++i) {
+      var file = this._getFileFromDragSession(session, i);
+      if (file)
+        files.push(file);
+    }
+    PhotoSet.add([new Photo(f) for each (f in files)]);
+  }
+};
+
+
+/*
 var PhotoDNDObserver = {
   checkDrag : function (event) {
       return event.dataTransfer.types.contains("text/x-moz-url") || 
@@ -701,10 +763,12 @@ var PhotoDNDObserver = {
       {
           if (types[i] == "application/x-moz-file")
           {
+alert('have file');
               return dt.mozGetDataAt("application/x-moz-file", pos);
           }
           else if (types[i] == "text/x-moz-url")
           {
+alert('TODO');
               // TODO
           }
           else
@@ -727,6 +791,7 @@ var PhotoDNDObserver = {
     PhotoSet.add([new Photo(f) for each (f in files)]);
   }
 };
+*/
 
 const NEW_ALBUM = 0;
 const EXISTING_ALBUM = 1;
@@ -767,7 +832,7 @@ var PhotoUpload = {
   init: function() {
     var self = this;
 
-    window.addEventListener("dragdrop", function(event) { alert('ook');event.stopPropagation(); }, false);
+    //window.addEventListener("dragdrop", function(event) { PhotoDNDObserverFF30.onDrop(event); }, false);
 
     OverviewPanel.init();
     PhotoSet.addChangedListener(this.photosChanged, PhotoUpload);

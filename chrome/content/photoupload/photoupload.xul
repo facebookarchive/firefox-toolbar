@@ -32,9 +32,12 @@
 
     <hbox flex="1">
       <stack id="overviewPanelContainer" flex="1"
+            ondragdrop="nsDragAndDrop.drop(event, PhotoDNDObserverFF30);">
+            <!--
             ondragenter="PhotoDNDObserver.checkDrag(event)"
             ondragover="PhotoDNDObserver.checkDrag(event)"
             ondrop="PhotoDNDObserver.onDrop(event)">
+            -->
           <hbox flex="1" id="dragpanel" pack="center">
             <vbox align="center">
               <vbox align="center">
