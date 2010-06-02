@@ -1,5 +1,27 @@
 <?xml version="1.0"?>
 
+<!--
+/**
+ *
+ * The source code included in this file is licensed to you by Facebook under
+ * the Apache License, Version 2.0.  Accordingly, the following notice
+ * applies to the source code included in this file:
+ *
+ * Copyright © 2009 Facebook, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ *
+ */
+-->
+
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://facebook/skin/photoupload/photoupload.css" type="text/css"?>
 
@@ -67,69 +89,6 @@
             </menulist>
             <spacer flex="1"/>
           </hbox>
-
-    <!--
-    <label value="&upload.destination.label;"/>
-    <hbox>
-      <radiogroup id="albumSelectionGroup"
-                  oncommand="PhotoUpload.onAlbumSelectionModeChange()"
-                  observes="uploadBroadcaster">
-        <radio label="&upload.album.label;" id="existingAlbumRadio"
-               observes="uploadBroadcaster"/>
-        <radio label="&upload.newalbum.label;" id="newAlbumRadio"
-               observes="uploadBroadcaster"/>
-      </radiogroup>
-      <deck id="albumSelectionDeck" flex="1">
-        <vbox id="existingAlbumPanel" class="loading-albums">
-
-
-
-          <spacer flex="1"/>
-        </vbox>
-        <hbox flex="1" id="newAlbumPanel">
-          <separator class="groove"/>
-          <grid flex="1">
-            <columns>
-              <column/>
-              <column flex="1"/>
-            </columns>
-            <rows>
-              <row align="center">
-                <label value="&upload.album.name.label;"/>
-                <hbox align="center">
-                  <textbox id="albumName" flex="1"
-                           observes="uploadBroadcaster"/>
-                  <label value="&upload.album.location.label;"/>
-                  <textbox id="albumLocation" flex="1"
-                           observes="uploadBroadcaster"/>
-                </hbox>
-              </row>
-              <row align="center">
-                <label value="&upload.album.description.label;"/>
-                <hbox align="center">
-                  <textbox id="albumDescription" flex="1"
-                           observes="uploadBroadcaster"/>
-                  <label value="&upload.privacy.label;"/>
-                  <menulist id="albumVisibility">
-                     <menupopup>
-                        <menuitem label="&upload.privacy.everyone.label;"
-                                  value="everyone"/>
-                        <menuitem label="&upload.privacy.fof.label;"
-                                  value="friends-of-friends"/>
-                        <menuitem label="&upload.privacy.friends.label;"
-                                  value="friends"/>
-                        <menuitem label="&upload.privacy.networks.label;"
-                                  value="networks"/>
-                     </menupopup>
-                   </menulist>
-                </hbox>
-              </row>
-            </rows>
-          </grid>
-        </hbox>
-      </deck>
-    </hbox>
-    -->
 
       <deck id="uploadStatusDeck" flex="1">
         <hbox align="center">

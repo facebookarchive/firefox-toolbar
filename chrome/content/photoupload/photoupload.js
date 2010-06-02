@@ -629,6 +629,16 @@ var OverviewPanel = {
       this._photoContainer.removeChild(photoNode);
       return;
     }
+
+    if (changeType == CHANGE_UPDATE) {
+      var imgs = OverviewPanel._photoContainer.getElementsByTagName("img");
+      
+      for (var i=0; i<imgs.length; i++)
+      {
+          imgs[i].setAttribute("src", imgs[i].getAttribute("src"));
+      }
+    }
+
     if (changeType == CHANGE_ADD) {
       var toAddPhotos = parameter;
       var photoboxTemplate = this._panelDoc.getElementById("photobox-template");
@@ -717,17 +727,34 @@ var PhotoDNDObserverFF30 = {
                                                       xferData.flavour.contentType);
       var urlObj = ios.newURI(fileURL, null, null);
 
-      tmpfile = Components.classes["@mozilla.org/file/directory_service;1"].
-          getService(Components.interfaces.nsIProperties).
-          get("TmpD", Components.interfaces.nsIFile);
-      tmpfile.append("facebookphoto.jpg");
-      tmpfile.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
+      if (xferData.flavour.contentType == "application/x-moz-file")
+      {
+          tmpfile = ios.newURI(fileURL, null, null).QueryInterface(Ci.nsIFileURL).file;
+      }
+      else
+      {
+          tmpfile = Components.classes["@mozilla.org/file/directory_service;1"].
+              getService(Components.interfaces.nsIProperties).
+              get("TmpD", Components.interfaces.nsIFile);
+          tmpfile.append("facebookphoto.jpg");
+          tmpfile.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
 
-      var wbp = Components.classes['@mozilla.org/embedding/browser/nsWebBrowserPersist;1']
-          .createInstance(Components.interfaces.nsIWebBrowserPersist);
-      wbp.persistFlags &= ~Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_NO_CONVERSION; // don't save gzipped
-      wbp.saveURI(urlObj, null, null, null, null, tmpfile);
-
+          var wbp = Components.classes['@mozilla.org/embedding/browser/nsWebBrowserPersist;1']
+              .createInstance(Components.interfaces.nsIWebBrowserPersist);
+          wbp.persistFlags &= ~Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_NO_CONVERSION; // don't save gzipped
+          wbp.progressListener = {
+            onProgressChange: function(aWebProgress, aRequest, aCurSelfProgress, aMaxSelfProgress, aCurTotalProgress, aMaxTotalProgress) {
+                //
+            },
+            onStateChange: function(aWebProgress, aRequest, aFlag, aStatus) {
+                if(aFlag & Components.interfaces.nsIWebProgressListener.STATE_STOP)  
+                {
+                    PhotoSet._notifyChanged(CHANGE_UPDATE);
+                }
+            }
+          };
+          wbp.saveURI(urlObj, null, null, null, null, tmpfile);
+      }
     } catch (e) {
       LOG("Exception while getting drag data: " + e);
       return null;
