@@ -60,15 +60,15 @@
                That's why a <browser> is used instead. -->
           <browser id="editImageFrame" src="editimage.html"/>
         </vbox>
-        <hbox collapsed="true">
+        <hbox align="center" collapsed="true">
             <label value="&upload.photo.name.label;"/>
             <label id="editFilenameField"/>
         </hbox>
-        <hbox collapsed="true">
+        <hbox align="center" collapsed="true">
             <label value="&upload.photo.size.label;"/>
             <label id="editSizeField"/>
         </hbox>
-        <hbox flex="1">
+        <hbox align="center">
             <label value="&upload.photo.caption.label;"/>
             <textbox id="editCaptionField" multiline="false" disabled="true"
                      oninput="EditPanel.onCaptionInput(event)" size="50"/>

@@ -53,7 +53,7 @@
 
 #dragpanel {
     width: 100%;
-    background-color: AppWorkspace;
+    background-color: #ffffff;
 }
 
 #dragpanel > vbox > vbox {
