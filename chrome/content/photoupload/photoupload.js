@@ -1312,6 +1312,7 @@ var PhotoUpload = {
   },
 
   doOpenCreateNewAlbumDialog: function() {
+    document.getElementById("albumsList").selectedIndex = 0;
     window.openDialog('chrome://facebook/content/photoupload/createnewalbumdialog.xul', 'facebook:createnewalbum', 'chrome,modal,centerscreen,titlebar,dialog=yes');
   }
 
