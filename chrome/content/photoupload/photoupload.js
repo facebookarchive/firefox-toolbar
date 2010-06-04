@@ -158,8 +158,8 @@ function Photo(/* nsIFile */ file) {
 };
 
 Photo.prototype = {
-  MAX_WIDTH: 604,
-  MAX_HEIGHT: 604,
+  MAX_WIDTH:  720,
+  MAX_HEIGHT: 720,
 
   get url() {
     var ios = Cc["@mozilla.org/network/io-service;1"].

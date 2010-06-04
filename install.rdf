@@ -17,7 +17,7 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>firefox@facebook.com</em:id>
-    <em:version>1.4.4</em:version>
+    <em:version>1.4.6</em:version>
     <em:type>2</em:type>
 
     <!-- Front End MetaData -->
