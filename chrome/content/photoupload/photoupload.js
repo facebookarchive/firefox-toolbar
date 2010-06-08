@@ -77,6 +77,8 @@ var QuitObserver = {
   }
 };
 
+var validImageFileSuffixes = ["jpg", "jpeg", "png", "gif"];
+
 /**
  * This objects represents a photo that is going to be uploaded.
  */
@@ -705,7 +707,8 @@ var PhotoDNDObserverFF30 = {
     return flavours;
   },
 
-  _getFileFromDragSession: function (session, position) {
+  _getFilesFromDragSession: function (session, position) {
+    var theseFiles = [];
     var tmpfile;
     var fileData = { };
     var ios = Cc["@mozilla.org/network/io-service;1"].
@@ -730,6 +733,48 @@ var PhotoDNDObserverFF30 = {
       if (xferData.flavour.contentType == "application/x-moz-file")
       {
           tmpfile = ios.newURI(fileURL, null, null).QueryInterface(Ci.nsIFileURL).file;
+
+          var isValidImageFile = function(f)
+          {
+              var ext = f.path.substring(f.path.lastIndexOf(".")+1);
+
+              return (validImageFileSuffixes.indexOf(ext) != -1);
+          };
+
+          if (tmpfile.isDirectory())
+          {
+              var getFilesInDirectory = function(dir)
+              {
+                  var files = [];
+                  var entries = dir.directoryEntries;
+
+                  while (entries.hasMoreElements())
+                  {
+                      var entry = entries.getNext();
+                      entry.QueryInterface(Components.interfaces.nsIFile);
+
+                      if (entry.isDirectory())
+                      {
+                          files = files.concat(getFilesInDirectory(entry));
+                      }
+                      else
+                      {
+                          if (isValidImageFile(entry))
+                              files.push(entry);
+                      }
+                  }
+
+                  return files;
+              };
+    
+              theseFiles = getFilesInDirectory(tmpfile);
+              tmpfile = null;
+          }
+          else
+          {
+              if (!isValidImageFile(tmpfile))
+                  return null;
+          }
       }
       else
       {
@@ -755,20 +800,26 @@ var PhotoDNDObserverFF30 = {
           };
           wbp.saveURI(urlObj, null, null, null, null, tmpfile);
       }
+
+      if (tmpfile)
+          theseFiles.push(tmpfile);
     } catch (e) {
       LOG("Exception while getting drag data: " + e);
       return null;
     }
-    return tmpfile;
+
+    return theseFiles;
   },
 
   onDrop: function (event, dropdata, session) {
     var count = session.numDropItems;
     var files = [];
     for (var i = 0; i < count; ++i) {
-      var file = this._getFileFromDragSession(session, i);
-      if (file)
-        files.push(file);
+      var theseFiles = this._getFilesFromDragSession(session, i);
+      if (theseFiles)
+      {
+        theseFiles.forEach(function(file) { files.push(file); });
+      }
     }
     PhotoSet.add([new Photo(f) for each (f in files)]);
   }
