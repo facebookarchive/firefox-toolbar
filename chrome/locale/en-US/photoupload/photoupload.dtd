@@ -24,7 +24,7 @@
 <!ENTITY  upload.tag.click.label            "Click on people in the photo to tag them.">
 <!ENTITY  upload.tag.remove.label           "Remove selected tags">
 
-<!ENTITY  upload.photos.add.label           "Add Photos...">
+<!ENTITY  upload.photos.add.label           "Add Photos">
 <!ENTITY  upload.photos.remove.label        "Remove All">
 
 <!ENTITY  upload.cancel.label               "Cancel Upload">

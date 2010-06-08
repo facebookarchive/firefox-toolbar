@@ -1073,6 +1073,7 @@ var PhotoUpload = {
     document.getElementById("uploadButton").disabled = PhotoSet.photos.length == 0;
 
     document.getElementById("dragpanel").collapsed = (PhotoSet.photos.length>0);
+    document.getElementById("overviewPanel").contentDocument.getElementById("photobox-add").style.display = (PhotoSet.photos.length==0?"none":"inline-block");
   },
 
   /*

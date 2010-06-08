@@ -54,7 +54,8 @@
 
     <hbox flex="1">
       <stack id="overviewPanelContainer" flex="1"
-            ondragdrop="nsDragAndDrop.drop(event, PhotoDNDObserverFF30);">
+            ondragdrop="nsDragAndDrop.drop(event, PhotoDNDObserverFF30);"
+            onclick="PhotoUpload.addPhotos();">
             <!--
             ondragenter="PhotoDNDObserver.checkDrag(event)"
             ondragover="PhotoDNDObserver.checkDrag(event)"

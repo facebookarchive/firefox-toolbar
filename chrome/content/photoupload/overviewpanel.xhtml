@@ -45,11 +45,6 @@
 </head>
 <body>
   <div id="photo-container">
-    <div class="photobox" id="photobox-add" style="display:none;"
-         onclick="PhotoUpload.addPhotos();">
-      <img class="addimg"/>
-      <div class="addtxt">&upload.photos.add.label;</div>
-    </div>
     <div class="photobox" id="photobox-template"
          onclick="OverviewPanel.selectPhoto(event);">
       <img/>
@@ -58,6 +53,10 @@
       <div class="remove" onclick="OverviewPanel.removePhoto(event);">&#8722;</div>
     </div>
     <!-- l10n note - upload.drag.label removed -->
+    <div class="photobox" id="photobox-add" style="display:none;">
+      <img class="addimg" src="chrome://facebook/skin/photoupload/add.png"/>
+      <div class="addtxt">&upload.photos.add.label;</div>
+    </div>
   </div>
 </body>
 </html>

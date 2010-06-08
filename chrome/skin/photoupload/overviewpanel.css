@@ -15,6 +15,13 @@ body {
   border: 3px solid #CCCCCC;
 }
 
+#photobox-add {
+  border: 2px groove white;
+  -moz-border-radius: 5px;
+  background-color: #EEE;
+  text-align: center;
+}
+
 .photobox:hover {
   /*-moz-box-shadow: black 10px 10px 10px;*/
   border-color: black;
@@ -34,20 +41,16 @@ body {
 }
 
 .photobox > .addimg {
-  position: absolute;
-  margin: auto;
-  list-style-image: url('chrome://facebook/skin/toolbar.png');
-  -moz-image-region: rect(0 456px 16px 440px);
+    width: 50%;
+    margin: auto;
+  position: static;
+  margin-top: 20px;
 }
 
 .photobox > .addtxt {
-  font-size: 12px;
-  color: #333;
-  left: 5px;
-  bottom: 5px;
-  white-space: pre;
-  position: absolute;
-  margin: auto;
+  font-size: 10pt;
+  color: black;
+  position: static;
 }
 
 .photobox > .filename {
