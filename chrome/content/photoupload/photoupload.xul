@@ -100,7 +100,9 @@
     <hbox flex="1">
       <vbox id="overviewPanelContainer" flex="1"
             ondragdrop="nsDragAndDrop.drop(event, PhotoDNDObserver);">
-          <browser flex="1" id="overviewPanel"
+          <browser flex="1" 
+		   id="overviewPanel"
+		   type="chrome"
                    src="chrome://facebook/content/photoupload/overviewpanel.xhtml"/>
       </vbox>
       <vbox id="editPanel">
@@ -108,7 +110,9 @@
         <vbox id="editImageContainer" align="center">
           <!-- width/max-width as a CSS property or XUL attribute has no effect on the image width.
                That's why a <browser> is used instead. -->
-          <browser id="editImageFrame" src="editimage.html"/>
+          <browser id="editImageFrame" 
+		   src="editimage.html"
+		   type="chrome"/>
         </vbox>
         <spacer flex="1"/>
         <hbox>

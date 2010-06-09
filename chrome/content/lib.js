@@ -294,11 +294,19 @@ function MoveInList(dir) {
 function FacebookLogin() {
   if (fbSvc.loggedIn) {
     dump('logging out\n');
-    fbSvc.sessionEnd();
+
+    // Some methods require us to get the wrapped object (namely getCommonParams())
+    var facebookSvc =  Cc['@facebook.com/facebook-service;1'].
+                 	getService(Ci.fbIFacebookService).
+                	wrappedJSObject;
+
     var req = new XMLHttpRequest();
-    req.open('post', 'http://www.facebook.com/logout.php');
+    req.open('post', 'http://www.facebook.com/toolbar_logout.php');
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    req.send('confirm=1');
+    req.send('api_key=' + facebookSvc.apiKey + 
+	     '&uid=' + facebookSvc.loggedInUser.id + 
+	     '&session_key=' + facebookSvc.getCommonParams().session_key);
+    fbSvc.sessionEnd();
   } else {
     // popup login page height is at most 500, but add 20 pixels for the
     // button we show at the bottom of the page
