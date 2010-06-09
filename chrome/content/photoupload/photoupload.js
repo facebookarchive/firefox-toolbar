@@ -55,6 +55,7 @@ const DEBUG = false;
 
 // Debugging.
 function LOG(s) {
+  //Components.utils.reportError(s);
   if (DEBUG)
     dump(s + "\n");
 }
@@ -1124,7 +1125,10 @@ var PhotoUpload = {
     document.getElementById("uploadButton").disabled = PhotoSet.photos.length == 0;
 
     document.getElementById("dragpanel").collapsed = (PhotoSet.photos.length>0);
-    document.getElementById("overviewPanel").contentDocument.getElementById("photobox-add").style.display = (PhotoSet.photos.length==0?"none":"inline-block");
+
+    if (document.getElementById("overviewPanel").contentDocument
+        && document.getElementById("overviewPanel").contentDocument.getElementById("photobox-add"))
+        document.getElementById("overviewPanel").contentDocument.getElementById("photobox-add").style.display = (PhotoSet.photos.length==0?"none":"inline-block");
   },
 
   /*
