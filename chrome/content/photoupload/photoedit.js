@@ -40,6 +40,7 @@ const DEBUG = true;
 
 // Debugging.
 function LOG(s) {
+  //Components.utils.reportError(s);
   if (DEBUG)
     dump(s + "\n");
 }
@@ -299,6 +300,7 @@ var EditPanel = {
       selectedPhoto.removeTag(tag);
     }
     PhotoSet.update(selectedPhoto);
+    EditPanel.photosChanged(CHANGE_UPDATE, selectedPhoto);
 
     this._updateRemoveTagsButton();
   },
@@ -358,6 +360,7 @@ var EditPanel = {
       return;
     selectedPhoto.addTag(dialogParams.tag);
     PhotoSet.update(selectedPhoto);
+    EditPanel.photosChanged(CHANGE_UPDATE, selectedPhoto);
   }
 };
 

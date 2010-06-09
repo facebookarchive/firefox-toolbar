@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-
 <!--
 /**
  *
@@ -68,17 +66,12 @@
             <label value="&upload.photo.size.label;"/>
             <label id="editSizeField"/>
         </hbox>
-        <hbox align="center">
-            <label value="&upload.photo.caption.label;"/>
-            <textbox id="editCaptionField" multiline="false" disabled="true"
-                     oninput="EditPanel.onCaptionInput(event)" size="50"/>
-        </hbox>
-        <spacer flex="1"/>
         <hbox collapsed="true">
           <label value="&upload.tag.start.label;"/>
         </hbox>
-        <stack flex="1" collapsed="true">
+        <stack flex="1">
           <listbox flex="1"
+                   rows="4"
                    id="editTagList"
                    seltype="multiple"
                    onselect="EditPanel.onTagSelect(event);"
@@ -101,10 +94,16 @@
             <spacer flex="1"/>
           </vbox>
         </stack>
-        <hbox collapsed="true">
+        <hbox>
           <button id="editRemoveTagsButton"
                   oncommand="EditPanel.onRemoveSelectedTags(event)"
                   label="&upload.tag.remove.label;"/>
+        </hbox>
+        <spacer flex="1"/>
+        <hbox align="center">
+            <label value="&upload.photo.caption.label;"/>
+            <textbox id="editCaptionField" multiline="false" disabled="true"
+                     oninput="EditPanel.onCaptionInput(event)" size="50"/>
         </hbox>
       </vbox>
     </hbox>
