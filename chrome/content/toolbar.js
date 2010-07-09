@@ -342,8 +342,8 @@ var facebook = {
     else
     {
         window.openDialog('chrome://facebook/content/photoupload/photoupload.xul',
-		'facebook:photoupload',
-		'menubar=no,toolbar=no,location=no,resizable=yes,chrome=yes,dialog=no');
+               'facebook:photoupload',
+               'chrome,dialog=no,all');
     }
   },
   clearFriends: function(sessionEnded) {
