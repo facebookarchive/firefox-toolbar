@@ -2,8 +2,6 @@ body {
   font-family: sans-serif;
 }
 
-/* If you change the .photobox size, update the
-   #overviewPanelContainer.min-width in photoupload.css */
 .photobox {
   display: inline-block;
   position: relative;
@@ -20,6 +18,7 @@ body {
   -moz-border-radius: 5px;
   background-color: #EEE;
   text-align: center;
+  cursor: pointer;
 }
 
 .photobox:hover {
@@ -41,8 +40,8 @@ body {
 }
 
 .photobox > .addimg {
-    width: 50%;
-    margin: auto;
+  width: 50%;
+  margin: auto;
   position: static;
   margin-top: 20px;
 }
@@ -85,4 +84,29 @@ body {
 
 #photobox-template {
   display: none;
+}
+
+#dragpanel {
+  width: 200px;
+  text-align: center;
+  margin: auto;
+  background-color: #ffffff;
+}
+
+#dragpanel > div > div {
+  border: 4px dashed #BBBBBB;
+  -moz-border-radius: 1.5em;
+  padding: 1.5em 3em;
+  text-align: center;
+  margin-top: 5em;
+  cursor: pointer;
+}
+
+#dragpanel > div > div > div {
+  font-size: large;
+  color: #BBBBBB;
+  width: 6em;
+  margin-top: 1em;
+  margin-left: auto;
+  margin-right: auto;
 }

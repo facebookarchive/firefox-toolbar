@@ -1124,11 +1124,10 @@ var PhotoUpload = {
   photosChanged: function(changeType, parameter) {
     document.getElementById("uploadButton").disabled = PhotoSet.photos.length == 0;
 
-    document.getElementById("dragpanel").collapsed = (PhotoSet.photos.length>0);
-
-    if (document.getElementById("overviewPanel").contentDocument
-        && document.getElementById("overviewPanel").contentDocument.getElementById("photobox-add"))
-        document.getElementById("overviewPanel").contentDocument.getElementById("photobox-add").style.display = (PhotoSet.photos.length==0?"none":"inline-block");
+    if (document.getElementById("overviewPanel").contentDocument) {
+        document.getElementById("overviewPanel").contentDocument.getElementById("dragpanel").style.display = (PhotoSet.photos.length==0?"block":"none");
+        document.getElementById("overviewPanel").contentDocument.getElementById("photo-container").style.display = (PhotoSet.photos.length==0?"none":"inline-block");
+    }
   },
 
   /*

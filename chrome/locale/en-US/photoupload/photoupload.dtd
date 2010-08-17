@@ -30,8 +30,6 @@
 <!ENTITY  upload.cancel.label               "Cancel Upload">
 <!ENTITY  upload.all.label                  "Upload All">
 
-<!ENTITY  upload.remove.label               "Remove">
-
 <!ENTITY  upload.addtoalbum.label           "Add to Album:">
 <!ENTITY  upload.createnewalbum.label       "Create New Album...">
 <!ENTITY  upload.albumname.label            "Album Name:">

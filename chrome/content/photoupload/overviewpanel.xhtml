@@ -44,16 +44,23 @@
   </script>
 </head>
 <body>
-  <div id="photo-container">
+  <div id="dragpanel" onclick="PhotoUpload.addPhotos();">
+    <div align="center">
+      <div id="dragpanel-inner" align="center">
+        <img src="chrome://facebook/skin/photoupload/add.png"/>
+        <div align="center">&upload.dragtoaddphotos.label;</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="photo-container" style="display:none;">
     <div class="photobox" id="photobox-template"
          onclick="OverviewPanel.selectPhoto(event);">
       <img/>
       <!--<div class="filename">&#160;</div>-->
-      <!-- l10n note - upload.remove.label removed -->
       <div class="remove" onclick="OverviewPanel.removePhoto(event);">&#8722;</div>
     </div>
-    <!-- l10n note - upload.drag.label removed -->
-    <div class="photobox" id="photobox-add" style="display:none;">
+    <div id="photobox-add" class="photobox" onclick="PhotoUpload.addPhotos();">
       <img class="addimg" src="chrome://facebook/skin/photoupload/add.png"/>
       <div class="addtxt">&upload.photos.add.label;</div>
     </div>

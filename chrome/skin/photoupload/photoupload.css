@@ -12,15 +12,6 @@
   display: none;
 }
 
-#overviewPanelContainer {
-  margin: 10px 10px 10px 0px;
-  /* the minimum width should show just one thumbnail. make sure this is in
-     sync with the .photobox size overviewpanel.html */
-  min-width: 260px;
-  border: 1px solid #BBBBBB;
-  background-color: white;
-}
-
 #editPanel {
   padding: 10px;
 }
@@ -51,23 +42,9 @@
   min-height: 60px;
 }
 
-#dragpanel {
-    width: 100%;
-    background-color: #ffffff;
+#picBox {
+  margin: 10px 10px 10px 0px;
+  min-width: 260px;
+  border: 1px solid #BBBBBB;
+  background-color: #ffffff;
 }
-
-#dragpanel > vbox > vbox {
-    border: 4px dashed #BBBBBB;
-    -moz-border-radius: 1.5em;
-    padding: 1.5em 3em;
-    text-align: center;
-    margin-top: 5em;
-}
-
-#dragpanel > vbox > vbox > description {
-    font-size: large;
-    color: #BBBBBB;
-    width: 6em;
-    margin-top: 1em;
-}
-
