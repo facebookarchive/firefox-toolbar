@@ -731,7 +731,8 @@ var PhotoDNDObserverFF30 = {
                                                       xferData.flavour.contentType);
       var urlObj = ios.newURI(fileURL, null, null);
 
-      if (xferData.flavour.contentType == "application/x-moz-file")
+      if (xferData.flavour.contentType == "application/x-moz-file"
+          || xferData.flavour.contentType == "text/x-moz-url")
       {
           tmpfile = ios.newURI(fileURL, null, null).QueryInterface(Ci.nsIFileURL).file;
 
