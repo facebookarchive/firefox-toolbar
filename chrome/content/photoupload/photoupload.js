@@ -739,7 +739,7 @@ var PhotoDNDObserverFF30 = {
           {
               var ext = f.path.substring(f.path.lastIndexOf(".")+1);
 
-              return (validImageFileSuffixes.indexOf(ext) != -1);
+              return (validImageFileSuffixes.indexOf(ext.toLowerCase()) != -1);
           };
 
           if (tmpfile.isDirectory())
