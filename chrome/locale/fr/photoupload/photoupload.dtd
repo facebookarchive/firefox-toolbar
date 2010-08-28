@@ -11,8 +11,8 @@
 
 <!ENTITY  upload.privacy.label              "Qui peut y accéder ?">
 <!ENTITY  upload.privacy.everyone.label     "Tout le monde">
-<!ENTITY  upload.privacy.fof.label          "Amis de mes amis">
-<!ENTITY  upload.privacy.friends.label      "Mes amis uniquement">
+<!ENTITY  upload.privacy.fof.label          "Amis et leurs amis">
+<!ENTITY  upload.privacy.friends.label      "Amis uniquement">
 <!ENTITY  upload.privacy.networks.label     "Réseaux">
 
 <!ENTITY  upload.photo.detail.label         "Détails de la photo :">
@@ -30,12 +30,12 @@
 <!ENTITY  upload.cancel.label               "Annuler le téléchargement">
 <!ENTITY  upload.all.label                  "Télécharger tout">
 
-<!ENTITY  upload.addtoalbum.label           "Add to Album:">
-<!ENTITY  upload.createnewalbum.label       "Create New Album...">
-<!ENTITY  upload.albumname.label            "Album Name:">
-<!ENTITY  upload.visibleto.label            "Visible to:">
-<!ENTITY  upload.clickonphoto.label         "Click on the photo to tag a friend:">
-<!ENTITY  upload.createnewalbumdialogok.label       "Create New Album">
-<!ENTITY  upload.cancel2.label              "Cancel">
-<!ENTITY  upload.dragtoaddphotos.label      "Click or Drag to Here to Add Photos">
-<!ENTITY  upload.tagandcaption.label        "Add Tags and a Caption to Photo">
+<!ENTITY  upload.addtoalbum.label           "Ajouter à l'album :">
+<!ENTITY  upload.createnewalbum.label       "Créer un album...">
+<!ENTITY  upload.albumname.label            "Nom de l'album :">
+<!ENTITY  upload.visibleto.label            "Visibilité :">
+<!ENTITY  upload.clickonphoto.label         "Cliquez sur la photo pour identifier un(e) ami(e) :">
+<!ENTITY  upload.createnewalbumdialogok.label       "Créer un album">
+<!ENTITY  upload.cancel2.label              "Annuler">
+<!ENTITY  upload.dragtoaddphotos.label      "Cliquer ou déplacer ici pour ajouter des photos">
+<!ENTITY  upload.tagandcaption.label        "Identifier et ajouter une légende">

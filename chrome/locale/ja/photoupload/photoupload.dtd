@@ -30,12 +30,13 @@
 <!ENTITY  upload.cancel.label               "アップロードをキャンセル">
 <!ENTITY  upload.all.label                  "すべてアップロード">
 
-<!ENTITY  upload.addtoalbum.label           "Add to Album:">
-<!ENTITY  upload.createnewalbum.label       "Create New Album...">
-<!ENTITY  upload.albumname.label            "Album Name:">
-<!ENTITY  upload.visibleto.label            "Visible to:">
-<!ENTITY  upload.clickonphoto.label         "Click on the photo to tag a friend:">
-<!ENTITY  upload.createnewalbumdialogok.label       "Create New Album">
-<!ENTITY  upload.cancel2.label              "Cancel">
-<!ENTITY  upload.dragtoaddphotos.label      "Click or Drag to Here to Add Photos">
-<!ENTITY  upload.tagandcaption.label        "Add Tags and a Caption to Photo">
+<!ENTITY  upload.addtoalbum.label           "アルバムに追加:">
+<!ENTITY  upload.createnewalbum.label       "新しいアルバムを作成…">
+<!ENTITY  upload.albumname.label            "アルバム名:">
+<!ENTITY  upload.visibleto.label            "公開範囲:">
+<!ENTITY  upload.clickonphoto.label         "写真をクリックして友達をタグ付け:">
+<!ENTITY  upload.createnewalbumdialogok.label       "新しいアルバムを作成">
+<!ENTITY  upload.cancel2.label              "キャンセル">
+<!ENTITY  upload.dragtoaddphotos.label      "写真をクリックまたはこちらにドラッグして追加">
+<!ENTITY  upload.tagandcaption.label        "写真にタグやキャプションを追加">
+

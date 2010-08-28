@@ -30,12 +30,13 @@
 <!ENTITY  upload.cancel.label               "取消上傳">
 <!ENTITY  upload.all.label                  "上傳全部">
 
-<!ENTITY  upload.addtoalbum.label           "Add to Album:">
-<!ENTITY  upload.createnewalbum.label       "Create New Album...">
-<!ENTITY  upload.albumname.label            "Album Name:">
-<!ENTITY  upload.visibleto.label            "Visible to:">
-<!ENTITY  upload.clickonphoto.label         "Click on the photo to tag a friend:">
-<!ENTITY  upload.createnewalbumdialogok.label       "Create New Album">
-<!ENTITY  upload.cancel2.label              "Cancel">
-<!ENTITY  upload.dragtoaddphotos.label      "Click or Drag to Here to Add Photos">
-<!ENTITY  upload.tagandcaption.label        "Add Tags and a Caption to Photo">
+<!ENTITY  upload.addtoalbum.label           "新增至相簿：">
+<!ENTITY  upload.createnewalbum.label       "設立新相簿⋯⋯">
+<!ENTITY  upload.albumname.label            "相簿名稱：">
+<!ENTITY  upload.visibleto.label            "瀏覽權限：">
+<!ENTITY  upload.clickonphoto.label         "點擊相片貼上朋友姓名標籤：">
+<!ENTITY  upload.createnewalbumdialogok.label       "設立新相簿">
+<!ENTITY  upload.cancel2.label              "取消">
+<!ENTITY  upload.dragtoaddphotos.label      "點擊或將相片拖拉至這裡上傳">
+<!ENTITY  upload.tagandcaption.label        "在相片上貼標籤或輸入描述說明">
+

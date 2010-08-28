@@ -35,12 +35,13 @@ taggar">
 <!ENTITY  upload.cancel.label               "Avbryt uppladdning">
 <!ENTITY  upload.all.label                  "Ladda upp alla">
 
-<!ENTITY  upload.addtoalbum.label           "Add to Album:">
-<!ENTITY  upload.createnewalbum.label       "Create New Album...">
-<!ENTITY  upload.albumname.label            "Album Name:">
-<!ENTITY  upload.visibleto.label            "Visible to:">
-<!ENTITY  upload.clickonphoto.label         "Click on the photo to tag a friend:">
-<!ENTITY  upload.createnewalbumdialogok.label       "Create New Album">
-<!ENTITY  upload.cancel2.label              "Cancel">
-<!ENTITY  upload.dragtoaddphotos.label      "Click or Drag to Here to Add Photos">
-<!ENTITY  upload.tagandcaption.label        "Add Tags and a Caption to Photo">
+<!ENTITY  upload.addtoalbum.label           "Lägg till i album:">
+<!ENTITY  upload.createnewalbum.label       "Skapa nytt album...">
+<!ENTITY  upload.albumname.label            "Namn på album:">
+<!ENTITY  upload.visibleto.label            "Synligt för:">
+<!ENTITY  upload.clickonphoto.label         "Klicka på fotot för att tagga en vän:">
+<!ENTITY  upload.createnewalbumdialogok.label       "Skapa nytt album">
+<!ENTITY  upload.cancel2.label              "Avbryt">
+<!ENTITY  upload.dragtoaddphotos.label      "Klicka eller dra och släpp här för att lägga till foton">
+<!ENTITY  upload.tagandcaption.label        "Lägg till taggar och en rubrik till fotot">
+
