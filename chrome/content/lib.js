@@ -93,6 +93,8 @@ function SetFacebookStatus(status) {
 
 function OpenFBUrl(page, uid, e, params) {
   var url = 'http://www.facebook.com/' + page + '?id=' + uid + '&src=fftb';
+  if (uid == "events")
+    url = 'http://www.facebook.com/?sk=events&src=fftb';
   if( params ) {
     for ( var param in params ) {
         url += '&' + param + '=';

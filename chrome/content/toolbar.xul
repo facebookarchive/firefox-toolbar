@@ -77,7 +77,7 @@
                      label="?"
                      tooltiptext="&toolbar.button.events.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/reqs.php?src=fftb#event', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/?sk=events&amp;src=fftb', event)"/>
       <toolbarbutton id="facebook-notification-msgs"
                      class="facebook-icon-msgs facebook-notification button"
                      label="?"
@@ -126,7 +126,7 @@
                     />
           <menuitem label="&toolbar.links.events.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/events.php?src=fftb', event)"
+                    oncommand="openUILink('http://www.facebook.com/?sk=events&amp;src=fftb', event)"
                     />
           <menuitem label="&toolbar.links.linkies.label;"
                     onclick="checkForMiddleClick(this, event);"
