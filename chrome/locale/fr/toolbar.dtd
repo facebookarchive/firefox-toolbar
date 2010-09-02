@@ -18,11 +18,11 @@
 <!ENTITY  toolbar.button.links.label                "Raccourcis">
 <!ENTITY  toolbar.links.profile.label               "Profil">
 <!ENTITY  toolbar.links.friends.label               "Amis">
-<!ENTITY  toolbar.links.inbox.label                 "Boîte de réception">
+<!ENTITY  toolbar.links.inbox.label                 "Messages">
 <!ENTITY  toolbar.links.photos.label                "Photos">
 <!ENTITY  toolbar.links.notes.label                 "Articles">
 <!ENTITY  toolbar.links.groups.label                "Groupes">
-<!ENTITY  toolbar.links.events.label                "Événements">
+<!ENTITY  toolbar.links.events.label                "Évènements">
 <!ENTITY  toolbar.links.linkies.label               "Liens">
 <!ENTITY  toolbar.links.videos.label                "Vidéos">
 <!ENTITY  toolbar.settings.account.label            "Paramètres du compte">
