@@ -21,7 +21,7 @@
 <!ENTITY  settings.notificationfriend.profile.label       "Profielupdates van vrienden">
 <!ENTITY  settings.notificationfriend.status.label        "Statusupdates van vrienden">
 <!ENTITY  settings.notificationfriend.albums.label        "Albumupdates van vrienden">
-<!ENTITY  settings.notificationfriend.wall.label          "Iemand hangt iets aan het prikbord van een vriend">
+<!ENTITY  settings.notificationfriend.wall.label          "Iemand schrijft iets op het prikbord van een vriend">
 <!ENTITY  settings.notificationfriend.note.label          "Iemand schrijft een notitie">
 
 <!-- Other -->

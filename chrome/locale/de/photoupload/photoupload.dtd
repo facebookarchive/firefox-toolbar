@@ -30,12 +30,12 @@
 <!ENTITY  upload.cancel.label               "Hochladen abbrechen">
 <!ENTITY  upload.all.label                  "Alle hochladen">
 
-<!ENTITY  upload.addtoalbum.label           "Zum Album hinzufügen:">
+<!ENTITY  upload.addtoalbum.label           "Zu folgendem Album hinzufügen:">
 <!ENTITY  upload.createnewalbum.label       "Neues Album erstellen ...">
 <!ENTITY  upload.albumname.label            "Name des Albums:">
 <!ENTITY  upload.visibleto.label            "Sichtbar für:">
 <!ENTITY  upload.clickonphoto.label         "Klicke auf das Foto, um eine/n FreundIn zu markieren:">
 <!ENTITY  upload.createnewalbumdialogok.label       "Neues Album erstellen">
 <!ENTITY  upload.cancel2.label              "Abbrechen">
-<!ENTITY  upload.dragtoaddphotos.label      "Hier klicken oder hierher ziehen, um Fotos hinzuzufügen">
+<!ENTITY  upload.dragtoaddphotos.label      "Hier klicken oder Fotos hierher ziehen, um Fotos hinzuzufügen">
 <!ENTITY  upload.tagandcaption.label        "Markierungen und Bildunterschrift zum Foto hinzufügen">

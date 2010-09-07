@@ -22,7 +22,7 @@
 
 <!ENTITY  upload.tag.start.label            "På billedet:">
 <!ENTITY  upload.tag.click.label            "Klik på personer i billedet for at tagge dem.">
-<!ENTITY  upload.tag.remove.label           "Fjern markerede tags">
+<!ENTITY  upload.tag.remove.label           "Fjern de valgte tags">
 
 <!ENTITY  upload.photos.add.label           "Tilføj billeder...">
 <!ENTITY  upload.photos.remove.label        "Fjern alle">

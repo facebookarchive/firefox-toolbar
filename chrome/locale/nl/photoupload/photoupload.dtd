@@ -21,7 +21,7 @@
 <!ENTITY  upload.photo.caption.label        "Onderschrift:">
 
 <!ENTITY  upload.tag.start.label            "Op deze foto:">
-<!ENTITY  upload.tag.click.label            "Klik op mensen op deze foto om ze te taggen.">
+<!ENTITY  upload.tag.click.label            "Klik op mensen in deze foto om ze te taggen.">
 <!ENTITY  upload.tag.remove.label           "Geselecteerde tags verwijderen">
 
 <!ENTITY  upload.photos.add.label           "Foto's toevoegen...">

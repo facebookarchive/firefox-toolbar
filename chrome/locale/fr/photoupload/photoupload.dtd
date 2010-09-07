@@ -37,5 +37,5 @@
 <!ENTITY  upload.clickonphoto.label         "Cliquez sur la photo pour identifier un(e) ami(e) :">
 <!ENTITY  upload.createnewalbumdialogok.label       "Créer un album">
 <!ENTITY  upload.cancel2.label              "Annuler">
-<!ENTITY  upload.dragtoaddphotos.label      "Cliquer ou déplacer ici pour ajouter des photos">
+<!ENTITY  upload.dragtoaddphotos.label      "Cliquez ici pour ajouter des photos (ou déplacez-les ici)">
 <!ENTITY  upload.tagandcaption.label        "Identifier et ajouter une légende">

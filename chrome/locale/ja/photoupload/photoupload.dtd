@@ -1,4 +1,4 @@
-﻿<!ENTITY  window.title                      "Facebookに写真をアップロード">
+<!ENTITY  window.title                      "Facebookに写真をアップロード">
 
 <!ENTITY  upload.destination.label          "写真のアップロード先:">
 <!ENTITY  upload.album.label                "すでにあるアルバム">
@@ -37,6 +37,6 @@
 <!ENTITY  upload.clickonphoto.label         "写真をクリックして友達をタグ付け:">
 <!ENTITY  upload.createnewalbumdialogok.label       "新しいアルバムを作成">
 <!ENTITY  upload.cancel2.label              "キャンセル">
-<!ENTITY  upload.dragtoaddphotos.label      "写真をクリックまたはこちらにドラッグして追加">
+<!ENTITY  upload.dragtoaddphotos.label      "写真アイコンをクリックして写真を選択するか、こちらにドラッグ">
 <!ENTITY  upload.tagandcaption.label        "写真にタグやキャプションを追加">
 
