@@ -962,7 +962,6 @@ var PhotoUpload = {
     }
 
     checkIfLoggedIn();
-
   },
 
   uninit: function() {
@@ -1035,13 +1034,14 @@ var PhotoUpload = {
   },
 
   _fillAlbumList: function(onComplete) {
+    var self = this;
     gFacebookService.callMethod('facebook.photos.getAlbums',
       ["uid=" + gFacebookServiceUnwrapped.loggedInUser.id],
       function(albums) {
         // Remove the "Profile Pictures" album from the list, it's a special
         // album and uploading to this album generates errors.
         albums = albums.filter(function(a) {
-          var urlAlbumId = PhotoUpload._albumIdToUrlAlbumId(a.aid);
+          var urlAlbumId = self._albumIdToUrlAlbumId(a.aid);
           return urlAlbumId != PROFILE_PICTURES_URL_ALBUM_ID;
         });
 
@@ -1049,7 +1049,7 @@ var PhotoUpload = {
           LOG("No albums");
           var newAlbumRadio = document.getElementById("newAlbumRadio");
           document.getElementById("albumSelectionGroup").selectedItem = newAlbumRadio;
-          PhotoUpload.onAlbumSelectionModeChange()
+          self.onAlbumSelectionModeChange()
           document.getElementById("existingAlbumRadio").disabled = true;
           return;
         }
