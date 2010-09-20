@@ -56,7 +56,7 @@
         <vbox id="editImageContainer" align="center">
           <!-- width/max-width as a CSS property or XUL attribute has no effect on the image width.
                That's why a <browser> is used instead. -->
-          <browser id="editImageFrame" src="editimage.html"/>
+          <browser id="editImageFrame" src="editimage.html" disablehistory="true"/>
         </vbox>
         <hbox align="center" collapsed="true">
             <label value="&upload.photo.name.label;"/>

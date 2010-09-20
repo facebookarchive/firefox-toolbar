@@ -59,7 +59,8 @@
             ondrop="PhotoDNDObserver.onDrop(event)">
             -->
           <browser flex="1" id="overviewPanel"
-                   src="chrome://facebook/content/photoupload/overviewpanel.xhtml"/>
+                   src="chrome://facebook/content/photoupload/overviewpanel.xhtml"
+                   disablehistory="true"/>
     </hbox>
 
     <hbox align="center">
