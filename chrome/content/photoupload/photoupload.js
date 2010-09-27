@@ -4,7 +4,7 @@
  * the Apache License, Version 2.0.  Accordingly, the following notice
  * applies to the source code included in this file:
  *
- * Copyright © 2009 Facebook, Inc.
+ * Copyright © 2009-2010 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
@@ -56,8 +56,13 @@ const DEBUG = false;
 // Debugging.
 function LOG(s) {
   //Components.utils.reportError(s);
-  if (DEBUG)
+  if (DEBUG) {
     dump(s + "\n");
+    var logString = "Facebook Upload : " + s;
+    var consoleService = Cc['@mozilla.org/consoleservice;1'].
+                getService(Ci.nsIConsoleService);
+    consoleService.logStringMessage(logString);
+  }
 }
 
 var QuitObserver = {

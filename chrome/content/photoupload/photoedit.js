@@ -4,7 +4,7 @@
  * the Apache License, Version 2.0.  Accordingly, the following notice
  * applies to the source code included in this file:
  *
- * Copyright © 2009 Facebook, Inc.
+ * Copyright © 2009-2010 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
@@ -25,24 +25,18 @@ const Ci = Components.interfaces;
 const CC = Components.Constructor;
 const Cu = Components.utils;
 
-// All photos are removed. No parameter.
-const CHANGE_REMOVE_ALL = "removeAll";
-// A photo is removed. Parameter is the removed photo.
-const CHANGE_REMOVE = "remove";
-// A photo is added. Parameter is the added photo.
-const CHANGE_ADD = "add";
-// A photo is updated. Parameter is the updated photo
-const CHANGE_UPDATE = "update";
-// The selected photo changes. Parameter is the new selected photo.
-const CHANGE_SELECTED = "selected";
-
-const DEBUG = true;
+const DEBUG = false;
 
 // Debugging.
 function LOG(s) {
   //Components.utils.reportError(s);
-  if (DEBUG)
+  if (DEBUG) {
     dump(s + "\n");
+    var logString = "Facebook Upload Edit : " + s;
+    var consoleService = Cc['@mozilla.org/consoleservice;1'].
+                getService(Ci.nsIConsoleService);
+    consoleService.logStringMessage(logString);
+  }
 }
 
 // JavaScript semantics is required for some member access, that's why
@@ -53,8 +47,6 @@ var gFacebookService =  Cc['@facebook.com/facebook-service;1'].
 // Unwrapped version.
 var gFacebookServiceUnwrapped =  Cc['@facebook.com/facebook-service;1'].
                                  getService(Ci.fbIFacebookService);
-
-
 
 Photo = window.arguments[0];
 PhotoUpload = window.arguments[1];
@@ -138,9 +130,12 @@ var EditPanel = {
   _imageWidth: null,
   // Keep this in sync with the css in editimage.html
   IMAGE_BORDER_SIZE: 1,
+  caption: "",
+  tags: [],
 
   init: function() {
-    //PhotoSet.addChangedListener(this.photosChanged, EditPanel);
+    this.tags = Photo.tags;
+    this.caption = Photo.caption;
     this._editImageFrame = document.getElementById("editImageFrame");
     this._imageElement = this._editImageFrame.contentDocument
                              .getElementById("image");
@@ -153,26 +148,15 @@ var EditPanel = {
     this._highlightDivInside = this._editImageFrame.contentDocument
                                    .getElementById("tagHighlightInside");
 
-    this.photosChanged(CHANGE_UPDATE, window.arguments[0]);
-  },
-
-  uninit: function() {
-    PhotoSet.removeChangedListener(this.photosChanged, EditPanel);
+    this.photosChanged();
   },
 
   _onImageLoaded: function(event) {
     this._imageWidth = event.target.width;
   },
 
-  photosChanged: function(changeType, parameter) {
-    LOG("EditPanel::PhotosChanged " + changeType);
-
-    // Only care about update and selection change. If a photo is removed, we'll
-    // always be notified of a selection change.
-    if (changeType != CHANGE_UPDATE && changeType != CHANGE_SELECTED)
-      return;
-
-    var selectedPhoto = parameter;
+  photosChanged: function() {
+    LOG("EditPanel::PhotosChanged");
 
     var filenameField = document.getElementById("editFilenameField");
     var sizeField = document.getElementById("editSizeField");
@@ -189,7 +173,7 @@ var EditPanel = {
     while (tagList.hasChildNodes())
       tagList.removeChild(tagList.firstChild);
 
-    if (!selectedPhoto) {
+    if (!Photo) {
       this._imageWidth = null;
       this._imageElement.setAttribute("hidden", "true");
       this._imageElement.setAttribute("src", "about:blank");
@@ -200,23 +184,23 @@ var EditPanel = {
       return;
     }
 
-    this._imageElement.setAttribute("src", selectedPhoto.url);
-    var filename = selectedPhoto.filename;
+    this._imageElement.setAttribute("src", Photo.url);
+    var filename = Photo.filename;
     const MAX_FILENAME_SIZE = 30;
     if (filename.length > MAX_FILENAME_SIZE)
       filename = filename.substring(0, MAX_FILENAME_SIZE) + "...";
     filenameField.value = filename;
-    var sizeKb = selectedPhoto.sizeInBytes / 1024;
+    var sizeKb = Photo.sizeInBytes / 1024;
     var sizeString = PhotoUpload._stringBundle.getFormattedString("sizekb", [sizeKb.toFixed(0)])
     sizeField.value = sizeString;
-    captionField.value = selectedPhoto.caption;
+    captionField.value = this.caption;
 
-    if (selectedPhoto.tags.length == 0)
+    if (this.tags.length == 0)
       return;
 
     tagHelpBox.collapsed = true;
 
-    for each (let tag in selectedPhoto.tags) {
+    for each (let tag in this.tags) {
       var item = document.createElement("listitem");
       item.setAttribute("label", tag.label);
       item.tag = tag;
@@ -242,7 +226,7 @@ var EditPanel = {
 
     var highlightSize = [166, 166];
     if (this._imageWidth) {
-      var ratio = this._imageWidth / PhotoSet.selected.facebookSize[0];
+      var ratio = this._imageWidth / Photo.facebookSize[0];
       highlightSize[0] *= ratio;
       highlightSize[1] *= ratio;
     }
@@ -291,32 +275,27 @@ var EditPanel = {
 
   onRemoveSelectedTags: function(event) {
     var tagList = document.getElementById("editTagList");
-    var selectedPhoto = PhotoSet.selected;
-    if (tagList.selectedCount == 0 || !selectedPhoto)
+    if (tagList.selectedCount == 0 || !Photo)
       return;
 
     for each (let item in tagList.selectedItems) {
       var tag = item.tag;
-      selectedPhoto.removeTag(tag);
+      this.tags = this.tags.filter(function(p) p != tag);
     }
-    PhotoSet.update(selectedPhoto);
-    EditPanel.photosChanged(CHANGE_UPDATE, selectedPhoto);
+    EditPanel.photosChanged();
 
     this._updateRemoveTagsButton();
   },
 
   onCaptionInput: function(event) {
-    var selectedPhoto = PhotoSet.selected;
-    if (!selectedPhoto)
+    if (!Photo)
       return;
 
-    selectedPhoto.caption = event.target.value;
-    PhotoSet.update(selectedPhoto);
+    this.caption = event.target.value;
   },
 
   onPhotoClick: function(event) {
-    var selectedPhoto = PhotoSet.selected;
-    if (!selectedPhoto)
+    if (!Photo)
       return;
 
     var offsetXInImage = event.clientX - this._imageElement.offsetLeft - this.IMAGE_BORDER_SIZE;
@@ -355,12 +334,10 @@ var EditPanel = {
     if (!dialogParams.tag)
       return;
 
-    var selectedPhoto = PhotoSet.selected;
-    if (!selectedPhoto)
+    if (!Photo)
       return;
-    selectedPhoto.addTag(dialogParams.tag);
-    PhotoSet.update(selectedPhoto);
-    EditPanel.photosChanged(CHANGE_UPDATE, selectedPhoto);
+    this.tags.push(dialogParams.tag);
+    EditPanel.photosChanged();
   }
 };
 
@@ -382,13 +359,7 @@ var PhotoEdit = {
 
   init: function() {
     var self = this;
-
     EditPanel.init();
-  },
-
-  uninit: function() {
-    var self = this;
-    EditPanel.uninit();
   },
 
   onClose: function() {
@@ -398,7 +369,8 @@ var PhotoEdit = {
   doOK: function() {
 
     Photo.caption = document.getElementById("editCaptionField").value;
-    Photo.tags = PhotoSet.selected.tags;
+    Photo.tags = EditPanel.tags;
+    PhotoSet.update(Photo)
 
     return true;
   }
