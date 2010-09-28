@@ -49,8 +49,7 @@ var gFacebookServiceUnwrapped =  Cc['@facebook.com/facebook-service;1'].
                                  getService(Ci.fbIFacebookService);
 
 Photo = window.arguments[0];
-PhotoUpload = window.arguments[1];
-PhotoSet = window.arguments[2];
+PhotoSet = window.arguments[1];
 
 /**
  * Base class for representing a photo tag.
@@ -134,7 +133,7 @@ var EditPanel = {
   tags: [],
 
   init: function() {
-    this.tags = Photo.tags;
+    this.tags = Photo.tags.slice(0);
     this.caption = Photo.caption;
     this._editImageFrame = document.getElementById("editImageFrame");
     this._imageElement = this._editImageFrame.contentDocument
@@ -156,8 +155,6 @@ var EditPanel = {
   },
 
   photosChanged: function() {
-    LOG("EditPanel::PhotosChanged");
-
     var filenameField = document.getElementById("editFilenameField");
     var sizeField = document.getElementById("editSizeField");
     var captionField = document.getElementById("editCaptionField");
@@ -191,7 +188,7 @@ var EditPanel = {
       filename = filename.substring(0, MAX_FILENAME_SIZE) + "...";
     filenameField.value = filename;
     var sizeKb = Photo.sizeInBytes / 1024;
-    var sizeString = PhotoUpload._stringBundle.getFormattedString("sizekb", [sizeKb.toFixed(0)])
+    var sizeString = PhotoEdit._stringBundle.getFormattedString("sizekb", [sizeKb.toFixed(0)])
     sizeField.value = sizeString;
     captionField.value = this.caption;
 
@@ -312,7 +309,7 @@ var EditPanel = {
     var fbUsers = gFacebookService.getFriends({});
     var friends = [];
     // Add logged in user so she can tag herself.
-    var ownUserName = PhotoUpload._stringBundle.getString("ownUserName");
+    var ownUserName = PhotoEdit._stringBundle.getString("ownUserName");
     ownUserName = ownUserName.replace("%USERNAME%",
                                       gFacebookService.loggedInUser.name);
     friends.push(new Friend(ownUserName, gFacebookService.loggedInUser.id));
@@ -328,14 +325,15 @@ var EditPanel = {
       TextTag: TextTag,
       PeopleTag: PeopleTag
     };
-    openDialog("chrome://facebook/content/photoupload/taggingdialog.xul", null,
-               "chrome,modal,centerscreen,titlebar,dialog=yes", dialogParams);
+    openDialog("chrome://facebook/content/photoupload/taggingdialog.xul",
+               null,
+               "chrome,modal,centerscreen,titlebar,dialog=yes",
+               dialogParams);
     this._hideTagHighlight();
-    if (!dialogParams.tag)
+
+    if (!Photo || !dialogParams.tag)
       return;
 
-    if (!Photo)
-      return;
     this.tags.push(dialogParams.tag);
     EditPanel.photosChanged();
   }
@@ -348,7 +346,7 @@ var PhotoEdit = {
 
   get _stringBundle() {
     delete this._stringBundle;
-    return this._stringBundle = document.getElementById("facebookStringBundle");
+    return this._stringBundle = document.getElementById("photouploadBundle");
   },
 
   _url: function(spec) {
@@ -358,7 +356,6 @@ var PhotoEdit = {
   },
 
   init: function() {
-    var self = this;
     EditPanel.init();
   },
 
@@ -367,11 +364,9 @@ var PhotoEdit = {
   },
 
   doOK: function() {
-
     Photo.caption = document.getElementById("editCaptionField").value;
     Photo.tags = EditPanel.tags;
     PhotoSet.update(Photo)
-
     return true;
   }
 };

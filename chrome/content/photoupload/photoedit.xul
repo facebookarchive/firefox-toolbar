@@ -40,7 +40,7 @@
   <script type="application/x-javascript" src="chrome://facebook/content/photoupload/jsbn/jsbn2.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/photoupload/photoedit.js"/>
 
-  <stringbundle id="facebookStringBundle"
+  <stringbundle id="photouploadBundle"
                 src="chrome://facebook/locale/photoupload/photoupload.properties"/>
 
   <vbox flex="1">

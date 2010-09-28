@@ -701,7 +701,11 @@ var OverviewPanel = {
       LOG("Error, photo not found");
       return;
     }
-    window.openDialog('chrome://facebook/content/photoupload/photoedit.xul', 'facebook:photoedit', 'chrome,modal,centerscreen,titlebar,dialog=yes', photo, PhotoUpload, PhotoSet);
+    window.openDialog('chrome://facebook/content/photoupload/photoedit.xul',
+                      'facebook:photoedit',
+                      'chrome,modal,centerscreen,titlebar,dialog=yes',
+                      photo,
+                      PhotoSet);
   }
 };
 
@@ -905,7 +909,7 @@ var PhotoUpload = {
 
   get _stringBundle() {
     delete this._stringBundle;
-    return this._stringBundle = document.getElementById("facebookStringBundle");
+    return this._stringBundle = document.getElementById("photouploadBundle");
   },
 
   _url: function(spec) {
