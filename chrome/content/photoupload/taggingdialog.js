@@ -41,12 +41,22 @@ var TaggingDialog = {
     }
     this._params.tag = null;
     for each (var friend in this._params.friends) {
-      var item = document.createElement("listitem");
-      item.setAttribute("label", friend.name);
-      item.setAttribute("type", "checkbox");
-      item.friend = friend;
-      this._friendList.appendChild(item);
+      if (!this.contains(this._params.tags, friend.name)) {
+        var item = document.createElement("listitem");
+        item.setAttribute("label", friend.name);
+        item.setAttribute("type", "checkbox");
+        item.friend = friend;
+        this._friendList.appendChild(item);
+      }
     }
+  },
+
+  contains: function(arr, value) {
+    var i = arr.length;
+    while (i--) {
+        if (arr[i].label === value) return true;
+    }
+    return false;
   },
 
   _getCheckedFriend: function() {

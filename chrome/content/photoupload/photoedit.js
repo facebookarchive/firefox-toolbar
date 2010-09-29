@@ -323,7 +323,8 @@ var EditPanel = {
       offsetYPercent: offsetYPercent,
       friends: friends,
       TextTag: TextTag,
-      PeopleTag: PeopleTag
+      PeopleTag: PeopleTag,
+      tags: this.tags
     };
     openDialog("chrome://facebook/content/photoupload/taggingdialog.xul",
                null,
