@@ -22,7 +22,7 @@
 
   <hbox>
     <textbox id="facebook-search-sidebar"
-             oninput="SearchFriends(this.value)"
+             oninput="fbLib.SearchFriends(this.value)"
              flex="1"
              style="display: none;"/>
   </hbox>

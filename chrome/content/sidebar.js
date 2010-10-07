@@ -28,7 +28,7 @@ var fbStringBundle = null;
 
 var observer = {
     observe: function(subject, topic, data) {
-        debug('OBSERVING SOMETHING: ', topic);
+        fbLib.debug('OBSERVING SOMETHING: ', topic);
         var panel = document.getElementById('facebook-panel');
         topicSwitch:
         switch (topic) {
@@ -41,7 +41,7 @@ var observer = {
             case 'facebook-friend-updated':
                 if( data == 'status-delete' ) {
                   subject = subject.QueryInterface(Ci.fbIFacebookUser);
-                  SetStatus(document.getElementById('sidebar-' + subject.id), null, 0);
+                  fbLib.SetStatus(document.getElementById('sidebar-' + subject.id), null, 0);
                 }
                 else if(  data == 'status'
                        || data == 'profile' ) {
@@ -49,19 +49,19 @@ var observer = {
                   var elt = document.getElementById('sidebar-' + subject.id);
                   var selSort = document.getElementById('fbSidebarSorter').getAttribute('selectedsort');
                   if( data == 'status' ) {
-                    SetStatus( elt, subject.status, subject.stime);
+                    fbLib.SetStatus( elt, subject.status, subject.stime);
                     if( selSort == 'name' || selSort == 'profile' )
                       break;
                   }
                   else {
-                    SetProfileTime(elt, subject.ptime);
+                    fbLib.SetProfileTime(elt, subject.ptime);
                     if( selSort == 'name' || selSort == 'status' )
                       break;
                   }
                   friendsToUpdate.push(subject);
                 }
                 else
-                  debug( 'ignoring', topic, data );
+                  fbLib.debug( 'ignoring', topic, data );
                 break;
             case 'facebook-new-friend':
                 friendsToUpdate.push(subject.QueryInterface(Ci.fbIFacebookUser));
@@ -87,7 +87,7 @@ function NameCmp(friend1,friend2) {
  * Encapsulates a sort order for a list of facebook friends.
  */
 function FriendSort( field, eltId, func){
-  debug("Constructor", typeof func);
+  fbLib.debug("Constructor", typeof func);
   this.field = field;
   this.eltId = eltId;
   if( 'function' == typeof func ) {
@@ -128,28 +128,28 @@ var _friend_sorts = {
 function GetFriendSort() {
   var selSort = document.getElementById('fbSidebarSorter').getAttribute('selectedsort');
   var friendSorter  = _friend_sorts[selSort];
-  debug( "FriendSort", selSort, friendSorter );
+  fbLib.debug( "FriendSort", selSort, friendSorter );
   return friendSorter;
 }
 
 function SortBy(selSort) {
-    debug( "Sorting by...", selSort)
+    fbLib.debug( "Sorting by...", selSort)
     var sorter = document.getElementById('fbSidebarSorter');
     sorter.setAttribute('selectedsort', selSort);
     sorter.setAttribute('label', _friend_sorts[selSort].label );
     ClearFriends(false);
-    debug( "Sort call to LoadFriends" );
+    fbLib.debug( "Sort call to LoadFriends" );
     LoadFriends();
 }
 
 function ClearFriends(sessionEnded) {
-    debug( "ClearFriends" );
+    fbLib.debug( "ClearFriends" );
     var list = document.getElementById('SidebarFriendsList');
     while (list.firstChild && list.firstChild.id != 'FacebookHint') {
         list.removeChild(list.firstChild);
     }
     if (sessionEnded) {
-        SetHint(true, fbStringBundle.getString('loadFriends'), 'FacebookLogin()');
+        fbLib.SetHint(true, fbStringBundle.getString('loadFriends'), 'fbLib.FacebookLogin()');
     }
 }
 
@@ -157,15 +157,15 @@ function LoadFriends() {
     var list = document.getElementById('SidebarFriendsList');
     var count = {};
     var friends = fbSvc.getFriends(count);
-    debug('Loading friends', count.value);
+    fbLib.debug('Loading friends', count.value);
     if (!fbSvc.loggedIn) {
-        SetHint(true, fbStringBundle.getString('loadFriends'), 'FacebookLogin()');
+        fbLib.SetHint(true, fbStringBundle.getString('loadFriends'), 'fbLib.FacebookLogin()');
     } else if (!count.value) {
-        SetHint(true, fbStringBundle.getString('loadingfriends'), '');
+        fbLib.SetHint(true, fbStringBundle.getString('loadingfriends'), '');
     } else {
         var friendSort = GetFriendSort();
-        debug( "Sorting friends", friendSort.field );
-        debug( NameCmp == friendSort.defaultSortFunc );
+        fbLib.debug( "Sorting friends", friendSort.field );
+        fbLib.debug( NameCmp == friendSort.defaultSortFunc );
         friends.sort( friendSort.sortFunc );
         // friends.sort(NameCmp);
 
@@ -173,18 +173,18 @@ function LoadFriends() {
         for each (var friend in friends) {
             CreateFriendNode(list, friend, hint);
         }
-        var searchTerm = GetFBSearchBox().value;
+        var searchTerm = fbLib.GetFBSearchBox().value;
         if (searchTerm != fbStringBundle.getString('searchplaceholder')) {
-            SearchFriends(searchTerm);
+            fbLib.SearchFriends(searchTerm);
         } else {
-            SetHint(false, '', '');
+            fbLib.SetHint(false, '', '');
         }
     }
 }
 
 var friendsToUpdate = [];
 function UpdateFriends() {
-    debug('UpdateFriends');
+    fbLib.debug('UpdateFriends');
     var list = document.getElementById('SidebarFriendsList');
     if (!list.firstChild || list.firstChild.id == 'FacebookHint') {
         return LoadFriends();
@@ -194,7 +194,7 @@ function UpdateFriends() {
     var first = list.firstChild;
     for each (var friend in friendsToUpdate) {
         var toRemove = document.getElementById('sidebar-' + friend.id);
-        debug('remove:', toRemove, friend.id, friend.name);
+        fbLib.debug('remove:', toRemove, friend.id, friend.name);
         if (toRemove) {
             if (toRemove == first) {
                 // fixes the problem where the first person in your list updates their status
@@ -205,9 +205,9 @@ function UpdateFriends() {
         CreateFriendNode(list, friend, first);
     }
     friendsToUpdate = [];
-    var searchTerm = GetFBSearchBox().value;
+    var searchTerm = fbLib.GetFBSearchBox().value;
     if (searchTerm != fbStringBundle.getString('searchplaceholder')) {
-        SearchFriends(searchTerm);
+        fbLib.SearchFriends(searchTerm);
     }
 }
 
@@ -222,21 +222,21 @@ function CreateFriendNode(list, friend, insertBefore) {
     var firstName = friend.name.substr(0, friend.name.indexOf(' '));
     if (!firstName) firstName = friend.name;
     item.setAttribute('firstname', firstName);
-    SetStatus(item, friend.status, friend.stime);
-    item.setAttribute('ptime', getProfileTime(friend.ptime) );
-    item.setAttribute('oncommand', "OpenFBUrl('profile.php', '" + friend.id + "', event, null )");
-    item.setAttribute('viewUpdCmd', "OpenFBUrl('profile.php', '" + friend.id + "', event, {highlight: null} ); return false;");
-    item.setAttribute('msgCmd', "OpenFBUrl('message.php', '" + friend.id + "', event, null )");
-    item.setAttribute('pokeCmd', "OpenFBUrl('poke.php', '" + friend.id + "', event, null )");
-    item.setAttribute('postCmd', "OpenFBUrl('wallpost.php', '" + friend.id + "', event, null )");
-    //item.setAttribute('wallCmd', "OpenFBUrl('wall.php', '" + friend.id + "', event)");
-    //item.setAttribute('notesCmd', "OpenFBUrl('notes.php', '" + friend.id + "', event)");
+    fbLib.SetStatus(item, friend.status, friend.stime);
+    item.setAttribute('ptime', fbLib.getProfileTime(friend.ptime) );
+    item.setAttribute('oncommand', "fbLib.OpenFBUrl('profile.php', '" + friend.id + "', event, null )");
+    item.setAttribute('viewUpdCmd', "fbLib.OpenFBUrl('profile.php', '" + friend.id + "', event, {highlight: null} ); return false;");
+    item.setAttribute('msgCmd', "fbLib.OpenFBUrl('message.php', '" + friend.id + "', event, null )");
+    item.setAttribute('pokeCmd', "fbLib.OpenFBUrl('poke.php', '" + friend.id + "', event, null )");
+    item.setAttribute('postCmd', "fbLib.OpenFBUrl('wallpost.php', '" + friend.id + "', event, null )");
+    //item.setAttribute('wallCmd', "fbLib.OpenFBUrl('wall.php', '" + friend.id + "', event)");
+    //item.setAttribute('notesCmd', "fbLib.OpenFBUrl('notes.php', '" + friend.id + "', event)");
     item.setAttribute('pic', friend.pic);
     list.insertBefore(item, insertBefore);
 }
 
 function OpenSettings() { /* modified from optionsmenu extension */
-    debug("OpenSettings()");
+    fbLib.debug("OpenSettings()");
     var url = "chrome://facebook/content/settings.xul";
     var features = "chrome,titlebar,toolbar,centerscreen";
     try {
@@ -256,28 +256,28 @@ var _sidebar_topics = ['facebook-new-friend',
                        'facebook-session-end',
                        'facebook-new-day' ];
 function SidebarLoad() {
-    debug('SidebarLoad');
-    fbStringBundle = GetFBStringBundle()
+    fbLib.debug('SidebarLoad');
+    fbStringBundle = fbLib.GetFBStringBundle()
     top.document.getElementById('facebook-sidebar-toggle').checked = true;
     top.document.getElementById('PopupFacebookFriends').hidePopup(); // just in case it was still showing
 
     var sorter = document.getElementById('fbSidebarSorter');
     var selSort = sorter.getAttribute('selectedsort');
     var friendSort = _friend_sorts[selSort];
-    debug( "selSort", selSort, friendSort.label, friendSort.eltId );
+    fbLib.debug( "selSort", selSort, friendSort.label, friendSort.eltId );
     sorter.setAttribute('label', friendSort.label );
     document.getElementById(friendSort.eltId).setAttribute('checked', 'true');
 
     LoadFriends();
     for each( var topic in _sidebar_topics )
       obsSvc.addObserver(observer, topic, false);
-    // document.getElementById('SidebarFriendsList').addEventListener('keypress', HandleKeyPress, true);
+    // document.getElementById('SidebarFriendsList').addEventListener('keypress', fbLib.HandleKeyPress, true);
     if (!top.document.getElementById('facebook-search')) {
         // XXX for some reason even if the toolbar is hidden we can still see
         // the search-box, so this never happens...we'll keep the code in case
         // we get a chance to figure it out later, though.
         document.getElementById('facebook-search-sidebar').style.display = '';
-        document.getElementById('facebook-search-sidebar').addEventListener('keypress', HandleKeyPress, true);
+        document.getElementById('facebook-search-sidebar').addEventListener('keypress', fbLib.HandleKeyPress, true);
     } else {
         document.getElementById('facebook-search-sidebar').style.display = 'none';
     }
@@ -285,7 +285,7 @@ function SidebarLoad() {
     // SidebarResize();
 }
 function SidebarUnload() {
-    debug('SidebarUnload');
+    fbLib.debug('SidebarUnload');
     top.document.getElementById('facebook-sidebar-toggle').checked = false;
     for each( var topic in _sidebar_topics )
       obsSvc.removeObserver(observer, topic);
@@ -295,10 +295,10 @@ function SidebarUnload() {
 /*
 var statusWidthStyleRule = false;
 function SidebarResize() {
-    debug('setting status width', window.innerWidth);
+    fbLib.debug('setting status width', window.innerWidth);
     var sheet = document.styleSheets[0];
     if (false !== statusWidthStyleRule) {
-        debug('deleting', statusWidthStyleRule, sheet.cssRules.length);
+        fbLib.debug('deleting', statusWidthStyleRule, sheet.cssRules.length);
         sheet.deleteRule(statusWidthStyleRule);
     }
     statusWidthStyleRule = sheet.cssRules.length;
@@ -307,4 +307,4 @@ function SidebarResize() {
 */
 var facebook=null; // for some reason lib.js can't seem to handle not having something named facebook defined
 
-debug('loaded sidebar.js');
+fbLib.debug('loaded sidebar.js');
