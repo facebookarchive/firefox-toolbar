@@ -18,7 +18,7 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>firefox@facebook.com</em:id>
-    <em:version>1.5</em:version>
+    <em:version>1.5.1</em:version>
     <em:type>2</em:type>
 
     <!-- Front End MetaData -->
@@ -29,6 +29,7 @@
     <em:developer>Julie Zhuo</em:developer>
     <em:developer>Sylvain Pasche</em:developer>
     <em:developer>Brian King</em:developer>
+    <em:developer>David McNamara</em:developer>
     <em:iconURL>chrome://facebook/skin/fb32.png</em:iconURL>
     <em:optionsURL>chrome://facebook/content/settings.xul</em:optionsURL>
     <em:homepageURL>http://developers.facebook.com/toolbar/</em:homepageURL>
@@ -65,6 +66,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -81,6 +83,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -97,6 +100,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -113,6 +117,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -129,6 +134,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -145,6 +151,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -161,6 +168,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -177,6 +185,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -193,6 +202,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -209,6 +219,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -225,6 +236,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -241,6 +253,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -257,6 +270,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -273,6 +287,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -289,6 +304,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -305,6 +321,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -321,6 +338,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -337,6 +355,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
@@ -353,6 +372,7 @@
         <em:developer>&developer3;</em:developer>
         <em:developer>&developer4;</em:developer>
         <em:developer>&developer5;</em:developer>
+        <em:developer>&developer6;</em:developer>
         <em:homepageURL>&homepageURL;</em:homepageURL>
       </Description>
     </em:localized>
