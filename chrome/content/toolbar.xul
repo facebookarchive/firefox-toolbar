@@ -18,7 +18,7 @@
     <toolbarpalette id="BrowserToolbarPalette">
       <toolbarbutton label="&toolbar.facebook.label;"
             class="chromeclass-toolbar-additional toolbarbutton-1"
-            id="facebook-toolbar-toggle" tooltiptext="&toolbar.facebook.name;" oncommand="facebook_toggleToolbar()" />
+            id="facebook-toolbar-toggle" tooltiptext="&toolbar.facebook.name;" oncommand="fbLib.facebook_toggleToolbar()" />
       <toolbarbutton id="facebook-sidebar-toggle"
                      class="facebook-sidebar-icon"
                      tooltiptext="&toolbar.button.sidebar.tooltip;"
@@ -32,7 +32,7 @@
                  style="color: #808080"
                  onfocus="facebook.searchBoxFocus(this);"
                  onblur="facebook.searchBoxBlur(this);"
-                 oninput="SearchFriends(this.value);"/>
+                 oninput="fbLib.SearchFriends(this.value);"/>
       </toolbaritem>
 
       <toolbarbutton id="facebook-home"
@@ -47,56 +47,56 @@
                      class="button"
                      label="&toolbar.button.share.label;"
                      tooltiptext="&toolbar.button.share.tooltip;"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); facebook.share()"/>
+                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); facebook.share()"/>
 
       <toolbarbutton id="facebook-photoupload"
                      class="facebook-icon-photoupload button"
                      tooltiptext="&toolbar.button.upload.tooltip;"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); facebook.photoupload()"/>
+                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); facebook.photoupload()"/>
 
       <toolbarbutton id="facebook-notification-poke"
                      class="facebook-icon-poke facebook-notification button"
                      label="?"
                      tooltiptext="&toolbar.button.pokes.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/home.php?src=fftb', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); openUILink('http://www.facebook.com/home.php?src=fftb', event)"/>
       <toolbarbutton id="facebook-notification-reqs"
                      class="facebook-icon-reqs facebook-notification button"
                      label="?"
                      tooltiptext="&toolbar.button.friends.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/reqs.php?src=fftb#friend', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); openUILink('http://www.facebook.com/reqs.php?src=fftb#friend', event)"/>
       <toolbarbutton id="facebook-notification-group-invs"
                      class="facebook-icon-grps facebook-notification button"
                      label="?"
                      tooltiptext="&toolbar.button.groups.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/reqs.php?src=fftb#group', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); openUILink('http://www.facebook.com/reqs.php?src=fftb#group', event)"/>
       <toolbarbutton id="facebook-notification-event-invs"
                      class="facebook-icon-evts facebook-notification button"
                      label="?"
                      tooltiptext="&toolbar.button.events.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/?sk=events&amp;src=fftb', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); openUILink('http://www.facebook.com/?sk=events&amp;src=fftb', event)"/>
       <toolbarbutton id="facebook-notification-msgs"
                      class="facebook-icon-msgs facebook-notification button"
                      label="?"
                      tooltiptext="&toolbar.button.messages.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) FacebookLogin(); openUILink('http://www.facebook.com/inbox/?src=fftb', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); openUILink('http://www.facebook.com/inbox/?src=fftb', event)"/>
       <toolbaritem id = "facebook-notification-separator">
         <toolbarseparator />
       </toolbaritem>
       <toolbarbutton id="facebook-link-menu"
                      label="&toolbar.button.links.label;"
-                     onmousedown="if (!fbSvc.loggedIn) FacebookLogin();"
+                     onmousedown="if (!fbSvc.loggedIn) fbLib.FacebookLogin();"
                      type="menu">
         <menupopup id="facebook-link-popup">
 
           <!-- The Top Nav -->
           <menuitem label="&toolbar.links.profile.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="OpenFBUrl('profile.php', this.getAttribute('userid'), event)"
+                    oncommand="fbLib.OpenFBUrl('profile.php', this.getAttribute('userid'), event)"
                     id="facebook-menu-my-profile"
                     />
           <menuitem label="&toolbar.links.friends.label;"
@@ -166,12 +166,12 @@
         <toolbarbutton id="facebook-name-info"
                        class="button"
                        onclick="checkForMiddleClick(this, event);"
-                       oncommand="if (this.label!='') OpenFBUrl('profile.php', this.getAttribute('userid'), event)" />
+                       oncommand="if (this.label!='') fbLib.OpenFBUrl('profile.php', this.getAttribute('userid'), event)" />
         <textbox id="facebook-toolbar-status"
                  type="timed" timeout="5000" flex="10"
                  onfocus="facebook.onStatusBoxFocus(this);"
                  onblur="facebook.onStatusBoxBlur(this);"
-                 oncommand="return SetFacebookStatus(this);"
+                 oncommand="return fbLib.SetFacebookStatus(this);"
                  emptytext="&toolbar.status.emptytext.label;"
                  tooltiptext="&toolbar.status.emptytext.tooltip;"
                  spellcheck="true"
@@ -182,7 +182,7 @@
                        class="button"
                        label="&toolbar.login.label;"
                        tooltiptext="&toolbar.login.label;"
-                       oncommand="FacebookLogin()" />
+                       oncommand="fbLib.FacebookLogin()" />
       </toolbaritem>
     </toolbarpalette>
     <toolbar id="facebook-toolbar"
@@ -205,27 +205,27 @@
           <richlistbox id="PopupFacebookFriendsList">
             <richlistitem id="FacebookHint"
                           onmousedown="this.doCommand()"
-                          onmouseover="SelectItemInList(this, this.parentNode)">
+                          onmouseover="fbLib.SelectItemInList(this, this.parentNode)">
               <label id="FacebookHintText"/>
             </richlistitem>
             <richlistitem id="PopupMessager"
                           class="facebook-friendlinks"
                           style="display: none;"
                           onmousedown="this.doCommand()"
-                          onmouseover="SelectItemInList(this, this.parentNode)"
-                          oncommand="OpenFBUrl('message.php', this.getAttribute('userid'), event)"/>
+                          onmouseover="fbLib.SelectItemInList(this, this.parentNode)"
+                          oncommand="fbLib.OpenFBUrl('message.php', this.getAttribute('userid'), event)"/>
             <richlistitem id="PopupPoker"
                           class="facebook-friendlinks"
                           style="display: none;"
                           onmousedown="this.doCommand()"
-                          onmouseover="SelectItemInList(this, this.parentNode)"
-                          oncommand="OpenFBUrl('poke.php', this.getAttribute('userid'), event)"/>
+                          onmouseover="fbLib.SelectItemInList(this, this.parentNode)"
+                          oncommand="fbLib.OpenFBUrl('poke.php', this.getAttribute('userid'), event)"/>
             <richlistitem id="PopupPoster"
                           class="facebook-friendlinks"
                           style="display: none;"
                           onmousedown="this.doCommand()"
-                          onmouseover="SelectItemInList(this, this.parentNode)"
-                          oncommand="OpenFBUrl('wallpost.php', this.getAttribute('userid'), event)"/>
+                          onmouseover="fbLib.SelectItemInList(this, this.parentNode)"
+                          oncommand="fbLib.OpenFBUrl('wallpost.php', this.getAttribute('userid'), event)"/>
           </richlistbox>
         </popup>
     </popupset>

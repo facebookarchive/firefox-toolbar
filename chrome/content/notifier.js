@@ -27,14 +27,14 @@ var _winService = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.ns
     _prefService = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
 
 function NotifierLoad() {
-    debug('NotifierLoad', _label, _url);
+    fbLib.debug('NotifierLoad', _label, _url);
     document.getElementById('pic').setAttribute('src', _src );
     document.getElementById('label').appendChild(document.createTextNode(_label));
     window.setTimeout('window.close();', 10000);
     window.addEventListener('mouseup', NotifierClick, false);
 }
 function NotifierClick() {
-    debug('NotifierClick', _label, _url );
+    fbLib.debug('NotifierClick', _label, _url );
     window.close();
 
     if (_url) { // open
@@ -56,7 +56,7 @@ function NotifierClick() {
     }
 }
 function NotifierUnload() {
-    debug('NotifierUnload', _label);
+    fbLib.debug('NotifierUnload', _label);
     if( _count )
       _count.value--;
 }
@@ -64,4 +64,4 @@ function NotifierUnload() {
 // opening mulitple windows at a time.  Need to use DOMContentLoaded instead.
 document.addEventListener("DOMContentLoaded", NotifierLoad, false);
 window.addEventListener('unload', NotifierUnload, false);
-debug('loaded notifier.js', window.arguments.length);
+fbLib.debug('loaded notifier.js', window.arguments.length);
