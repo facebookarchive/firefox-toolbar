@@ -56,11 +56,13 @@ var vdebug = ( VERBOSITY < 2 ) ? function() {} : debug;
 
 const CONTRACT_ID  = '@facebook.com/facebook-service;1';
 const CLASS_ID     = Components.ID('{e983db0e-05fc-46e7-9fba-a22041c894ac}');
-const CLASS_NAME   = 'Facebook API Connector';
+const CLASS_DESCRIPTION   = 'Facebook API Connector';
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 const PASSWORD_URL = 'chrome://facebook/';
+
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 // Load MD5 code...
 Cc['@mozilla.org/moz/jssubscript-loader;1']
@@ -311,7 +313,20 @@ AlertObserver.prototype = { // see https://developer.mozilla.org/en/nsIAlertsSer
 };
 
 facebookService.prototype = {
+    classID: CLASS_ID,
+    classDescription: CLASS_DESCRIPTION,
+    contractID: CONTRACT_ID,
+
+    QueryInterface: XPCOMUtils.generateQI([
+        Ci.fbIFacebookService,
+        Ci.nsIObserver,
+        Ci.nsISupports,
+        Ci.nsISupportsWeakReference,
+        Ci.nsIWeakReference
+        ]),
+
     // nsISupports implementation
+    /*
     QueryInterface: function (iid) {
         if (iid.equals(Ci.fbIFacebookService) ||
             iid.equals(Ci.nsIObserver) ||
@@ -323,6 +338,7 @@ facebookService.prototype = {
         }
         throw Components.results.NS_ERROR_NO_INTERFACE;
     },
+    */
 
     // nsIWeakReference
     QueryReferent: function(iid) {
@@ -1152,58 +1168,14 @@ facebookService.prototype = {
     }
 };
 
-// boilerplate stuff
-var facebookFactory = {
-    createInstance: function (aOuter, aIID) {
-        debug('createInstance');
-        if (aOuter != null) {
-            throw Components.results.NS_ERROR_NO_AGGREGATION;
-        }
-        return (new facebookService()).QueryInterface (aIID);
+// just copied from lib.js, lame but i don't feel like including the whole
+// file in here for this one function.
+function RenderStatusMsg(msg) {
+    msg = msg.replace(/\s*$/g, '');
+    if (msg && '.?!\'"'.indexOf(msg[msg.length-1]) == -1) {
+        msg = msg.concat('.');
     }
-};
-var facebookModule = {
-    registerSelf: function (aCompMgr, aFileSpec, aLocation, aType) {
-        debug('registerSelf');
-        aCompMgr = aCompMgr.QueryInterface(Ci.nsIComponentRegistrar);
-        aCompMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, aFileSpec, aLocation, aType);
-
-        // Adding app-startup category in order to get the final-ui-startup
-        // notification.
-        this.getCategoryManager().addCategoryEntry("app-startup", "FB-startup",
-                                                   "service," + CONTRACT_ID, true, true);
-    },
-    unregisterSelf: function(aCompMgr, aLocation, aType) {
-        debug('unregisterSelf');
-        aCompMgr = aCompMgr.QueryInterface(Ci.nsIComponentRegistrar);
-        aCompMgr.unregisterFactoryLocation(CLASS_ID, aLocation);
-
-        this.getCategoryManager().deleteCategoryEntry("app-startup", "FB-startup", true);
-    },
-
-    getCategoryManager: function() {
-      return Cc["@mozilla.org/categorymanager;1"].
-               getService(Ci.nsICategoryManager);
-    },
-
-    getClassObject: function (aCompMgr, aCID, aIID) {
-        debug('getClassObject');
-        if (!aIID.equals (Ci.nsIFactory))
-            throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
-
-        if (aCID.equals (CLASS_ID))
-            return facebookFactory;
-
-        throw Components.results.NS_ERROR_NO_INTERFACE;
-    },
-    canUnload: function(compMgr) {
-        debug('canUnload');
-        return true;
-    }
-};
-function NSGetModule(compMgr, fileSpec) {
-    debug('NSGetModule');
-    return facebookModule;
+    return msg;
 }
 
 function facebookUser(id, name, pic, pic_sq, status, stime, ptime, notes, wall) {
@@ -1227,14 +1199,13 @@ facebookUser.prototype = {
     }
 };
 
-// just copied from lib.js, lame but i don't feel like including the whole
-// file in here for this one function.
-function RenderStatusMsg(msg) {
-    msg = msg.replace(/\s*$/g, '');
-    if (msg && '.?!\'"'.indexOf(msg[msg.length-1]) == -1) {
-        msg = msg.concat('.');
-    }
-    return msg;
-}
+/**
+* XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
+* XPCOMUtils.generateNSGetModule is for Mozilla 1.9.2 (Firefox 3.6).
+*/
+if (XPCOMUtils.generateNSGetFactory)
+    var NSGetFactory = XPCOMUtils.generateNSGetFactory([facebookService]);
+else
+    var NSGetModule = XPCOMUtils.generateNSGetModule([facebookService]);
 
 debug('loaded facebook.js');

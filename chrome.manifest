@@ -22,3 +22,9 @@ locale facebook tr     chrome/locale/tr/
 locale facebook uk     chrome/locale/uk/
 locale facebook zh-CN  chrome/locale/zh-CN/
 locale facebook zh-TW  chrome/locale/zh-TW/
+
+interfaces components/facebook.xpt
+component {e983db0e-05fc-46e7-9fba-a22041c894ac} components/facebook.js
+contract @facebook.com/facebook-service;1 {e983db0e-05fc-46e7-9fba-a22041c894ac}
+category profile-after-change Facebook @facebook.com/facebook-service;1
+
