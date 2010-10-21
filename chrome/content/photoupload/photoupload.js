@@ -51,7 +51,7 @@ if (typeof(JSON) == "undefined") {
   JSON.stringify = JSON.toString;
 }
 
-const DEBUG = true;
+const DEBUG = false;
 
 // Debugging.
 function LOG(s) {
@@ -1003,21 +1003,18 @@ var PhotoUpload = {
   usesLegacyDND: function() {
      var appInfo = Cc["@mozilla.org/xre/app-info;1"].getService(Ci.nsIXULAppInfo);
      var versionChecker = Cc["@mozilla.org/xpcom/version-comparator;1"].getService(Ci.nsIVersionComparator);
-     return (versionChecker.compare(appInfo.version, "4.0") < 0);
+     return (versionChecker.compare(appInfo.version, "4.0b1") < 0);
   },
 
   init: function() {
     var self = this;
 
-    //window.addEventListener("dragdrop", function(event) { PhotoDNDObserverFF30.onDrop(event); }, false);
-    /*
     if (PhotoUpload.usesLegacyDND())
     {
         LOG("Switching to legacy DND");
         document.getElementById("picBox").setAttribute("ondragdrop", "nsDragAndDrop.drop(event, PhotoDNDObserverLegacy)");
         document.getElementById("overviewPanel").removeAttribute("ondrop");
     }
-*/
 
     OverviewPanel.init();
     PhotoSet.addChangedListener(this.photosChanged, PhotoUpload);
