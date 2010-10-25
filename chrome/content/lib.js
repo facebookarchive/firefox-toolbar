@@ -211,25 +211,28 @@ var fbLib = {
         fbLib.SetHint(false, '', '');
       }
       if (!sidebar) {
-          var msger = document.getElementById('PopupMessager'),
-              poker = document.getElementById('PopupPoker'),
-              poster = document.getElementById('PopupPoster');
-          if (1 == numMatched) {
-              var uid = lastDisplayed.getAttribute('userid'),
-                  firstname = lastDisplayed.getAttribute('firstname');
-              msger.setAttribute('userid', uid );
-              msger.setAttribute('value', 'Send ' + firstname + ' a message');
+          try
+          {
+              var msger = document.getElementById('PopupMessager'),
+                  poker = document.getElementById('PopupPoker'),
+                  poster = document.getElementById('PopupPoster');
+              if (1 == numMatched) {
+                  var uid = lastDisplayed.getAttribute('userid'),
+                      firstname = lastDisplayed.getAttribute('firstname');
+                  msger.setAttribute('userid', uid );
+                  msger.setAttribute('value', 'Send ' + firstname + ' a message');
 
-              poker.setAttribute('userid', uid );
-              poker.setAttribute('value', 'Poke ' + firstname );
+                  poker.setAttribute('userid', uid );
+                  poker.setAttribute('value', 'Poke ' + firstname );
 
-              poster.setAttribute('userid', uid);
-              poster.setAttribute('value', 'Write on ' + firstname + "'s wall");
+                  poster.setAttribute('userid', uid);
+                  poster.setAttribute('value', 'Write on ' + firstname + "'s wall");
 
-              msger.style.display = poker.style.display = poster.style.display = '';
-          } else {
-              msger.style.display = poker.style.display = poster.style.display = 'none';
-          }
+                  msger.style.display = poker.style.display = poster.style.display = '';
+              } else {
+                  msger.style.display = poker.style.display = poster.style.display = 'none';
+              }
+          } catch (e) {}
       }
       var item = list.selectedItem;
       if (item) {

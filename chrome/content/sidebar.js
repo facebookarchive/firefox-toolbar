@@ -288,7 +288,12 @@ function SidebarUnload() {
     fbLib.debug('SidebarUnload');
     top.document.getElementById('facebook-sidebar-toggle').checked = false;
     for each( var topic in _sidebar_topics )
-      obsSvc.removeObserver(observer, topic);
+    {
+      try
+      {
+          obsSvc.removeObserver(observer, topic);
+      } catch (e) {}
+    }
     // top.document.getElementById('sidebar-splitter').removeEventListener('mouseup', SidebarResize, false);
 }
 
