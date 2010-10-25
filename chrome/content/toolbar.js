@@ -335,6 +335,19 @@ var facebook = {
     }
   },
   photoupload: function() {
+    if (!fbSvc.loggedIn) {
+        fbLib.FacebookLogin();
+
+        if (!fbSvc.loggedIn) {
+            let stringBundle = Components.classes["@mozilla.org/intl/stringbundle;1"]
+                .getService(Components.interfaces.nsIStringBundleService)
+                .createBundle("chrome://facebook/locale/photoupload/photoupload.properties");
+
+            alert(stringBundle.GetStringFromName("mustLoginDialog"));
+            return;
+        }
+    }
+
     var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                    .getService(Components.interfaces.nsIWindowMediator);
     var win = wm.getMostRecentWindow("facebook:photoupload");

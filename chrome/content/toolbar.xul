@@ -52,7 +52,7 @@
       <toolbarbutton id="facebook-photoupload"
                      class="facebook-icon-photoupload button"
                      tooltiptext="&toolbar.button.upload.tooltip;"
-                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); if (fbSvc.loggedIn) facebook.photoupload();"/>
+                     oncommand="facebook.photoupload();"/>
 
       <toolbarbutton id="facebook-notification-poke"
                      class="facebook-icon-poke facebook-notification button"
