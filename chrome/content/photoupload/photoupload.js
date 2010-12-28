@@ -1058,8 +1058,9 @@ var PhotoUpload = {
         return;
       }
       LOG("logged in");
-      self._fillAlbumList(function() { // onComplete callback
-        self._checkPhotoUploadPermission();
+      self._checkPhotoUploadPermission(function() {
+          LOG("photo permissions ok - filling album list");
+          self._fillAlbumList();
       });
     }
 
@@ -1182,46 +1183,64 @@ var PhotoUpload = {
           albumsList.selectedIndex = 0;
         }
         //document.getElementById("existingAlbumPanel").className = "";
-        onComplete();
+        if (onComplete)
+            onComplete();
       }
     );
   },
 
-  _checkPhotoUploadPermission: function() {
-    LOG("Checking photo upload permission");
-    const PERM = "photo_upload";
-
+  _checkPhotoUploadPermission: function(callback) {
     var self = this;
-    gFacebookService.callMethod('facebook.users.hasAppPermission',
-      ['ext_perm=' + PERM],
-      function(data) {
-        LOG("facebook.users.hasAppPermission returns: " + data + " ts " + data.toString());
-        // It previously returned the '1' string, but this changed to 'true'
-        // in mid April 2009. Check both in case it changes again.
-        if ('1' == data.toString() || 'true' == data.toString()) {
-          LOG("photo upload is authorized");
-          return;
-        }
 
-        let promptTitle = self._stringBundle.getString("allowUploadTitle");
-        let promptMessage = self._stringBundle.getString("allowUploadMessage");
-        let openAuthorize = self._stringBundle.getString("openAuthorizePage");
+    var checkAppPermission = function(perm, internalCallback) {
+        LOG("Checking photo upload permission '"+perm+"'");
 
-        const IPS = Ci.nsIPromptService;
-        let ps = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(IPS);
-        let rv = ps.confirmEx(window, promptTitle, promptMessage,
-                              (IPS.BUTTON_TITLE_IS_STRING * IPS.BUTTON_POS_0) +
-                              (IPS.BUTTON_TITLE_CANCEL * IPS.BUTTON_POS_1),
-                              openAuthorize, null, null, null, {value: 0});
+        gFacebookService.callMethod('facebook.users.hasAppPermission',
+          ['ext_perm=' + perm],
+          function(data) {
+            LOG("facebook.users.hasAppPermission[" + perm + "] returns: "
+                + data + " ts " + data.toString());
+            // It previously returned the '1' string, but this changed to 'true'
+            // in mid April 2009. Check both in case it changes again.
+            if ('1' == data.toString() || 'true' == data.toString()) {
+              LOG("photo upload ['" + perm + "'] is authorized");
+              internalCallback();
+              return;
+            }
 
-        if (rv != 0)
-          return;
-        var authorizeUrl = "http://www.facebook.com/authorize.php?api_key=" +
-                           gFacebookService.apiKey +"&v=1.0&ext_perm=" + PERM;
-        Application.activeWindow.open(self._url(authorizeUrl)).focus();
-        window.close();
-      }
-    );
+            let promptTitle = self._stringBundle.getString("allowUploadTitle");
+            let promptMessage = self._stringBundle.getString("allowUploadMessage");
+            let openAuthorize = self._stringBundle.getString("openAuthorizePage");
+
+            const IPS = Ci.nsIPromptService;
+            let ps = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(IPS);
+            let rv = ps.confirmEx(window, promptTitle, promptMessage,
+                                  (IPS.BUTTON_TITLE_IS_STRING * IPS.BUTTON_POS_0) +
+                                  (IPS.BUTTON_TITLE_CANCEL * IPS.BUTTON_POS_1),
+                                  openAuthorize, null, null, null, {value: 0});
+
+            if (rv != 0)
+            {
+              internalCallback();
+              return;
+            }
+
+            var authorizeUrl = "http://www.facebook.com/authorize.php?api_key=" +
+                               gFacebookService.apiKey +"&v=1.0&ext_perm=" + perm;
+            Application.activeWindow.open(self._url(authorizeUrl)).focus();
+            window.close();
+          }
+        );
+    };
+
+    checkAppPermission("photo_upload", function()
+    {
+        checkAppPermission("user_photos", function()
+        {
+            if (callback)
+                callback();
+        });
+    });
   },
 
   photosChanged: function(changeType, parameter) {
