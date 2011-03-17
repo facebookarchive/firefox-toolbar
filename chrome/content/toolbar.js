@@ -141,8 +141,35 @@ var facebook = {
                             , 'facebook-status-updated'
                             ],
 
+
+    onPageLoad: function(event)
+    {
+        try
+        {
+            if (event.originalTarget.location.hostname == "www.facebook.com" && event.originalTarget.location.href.indexOf("access_token") > 0)
+            {
+                var bits = event.originalTarget.location.hash.substring(1).split('&');
+
+                for (var i=0; i<bits.length; i++)
+                {
+                    var tup = bits[i].split('=');
+
+                    if (tup[0] == "access_token")
+                    {
+                        event.originalTarget.defaultView.close();
+                        fbSvc.sessionStart(tup[1]);
+                    }
+                }
+            }
+        }
+        catch (e) {  alert(e);}
+    },
+ 
     load: function() {
         fbLib.debug( "loading toolbar..." );
+
+        gBrowser.addEventListener("DOMContentLoaded", facebook.onPageLoad, true);
+
         facebook.fStringBundle = fbLib.GetFBStringBundle();
         fbLib.debug(facebook.fStringBundle.src);
         var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
@@ -186,6 +213,8 @@ var facebook = {
         fbLib.debug('facebook toolbar loaded.');
         },
     unload: function() {
+        gBrowser.removeEventListener("DOMContentLoaded", facebook.onPageLoad, true);
+
         for each (var topic in facebook.topics_of_interest)
             facebook.obsSvc.removeObserver(facebook.fbToolbarObserver, topic);
         if( fbSvc.loggedInUser )

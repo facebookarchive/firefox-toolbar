@@ -31,7 +31,23 @@ Cc['@mozilla.org/moz/jssubscript-loader;1']
 
 var client = new FacebookLoginClient();
 var fbns   = new Namespace( "http://api.facebook.com/1.0/" );
+
+var onPageLoad = function(event) 
+{
+    var doc = event.originalTarget; // doc is document that triggered "onload" event
+
+    if (doc.location.href.indexOf("access_token") > 0)
+    {
+        accessToken = doc.location.hash.substring(1);
+
+        alert(accessToken);
+    }
+}
+
 function startup() {
+        var browser = document.getElementById('facebook-login-body');
+        browser.addEventListener("DOMContentLoaded", onPageLoad, true);
+
     if (client.fbSvc.loggedIn) {
         debug('already logged in!');
         window.close();
@@ -49,10 +65,16 @@ function startup() {
             debug('exception: ' + e);
         }
     } else {
-        var browser = document.getElementById('facebook-login-body');
+
+var login_base = 'https://www.facebook.com/dialog/oauth?client_id=117949738281674&redirect_uri=http://www.facebook.com/&scope=user_photos,&response_type=token';
+browser.setAttribute('src', login_base);
+
+        /*
         var login_base = 'http://www.facebook.com/login.php?popup&v=1.0&api_key=';
         browser.setAttribute('src', login_base +
                              client.fbSvc.apiKey + '&auth_token=' + client.authToken);
+        */
+
         browser.style.display = '';
         document.getElementById('throbber-box').style.display = 'none';
         debug('loading login page');

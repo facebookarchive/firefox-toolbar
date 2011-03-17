@@ -19,7 +19,7 @@
  */
 
 const BASE_CHECK_INTERVAL = 5*60*1000; // 5 minutes
-const DEBUG     = false;
+const DEBUG     = true;
 const VERBOSITY = 0; // 0: no dumping, 1: normal dumping, 2: massive dumping
 
 var debug = ( VERBOSITY < 1 )
@@ -166,6 +166,8 @@ function facebookService() {
 
     this._apiKey = '8d7be0a45c164647647602a27106cc65';
     this._secret = 'c9646e8dccec4c2726c65f6f5eeca86a';
+
+    this._accessToken = "";
 
     this.stringBundle = Components.classes["@mozilla.org/intl/stringbundle;1"]
                               .getService(Components.interfaces.nsIStringBundleService)
@@ -504,7 +506,22 @@ facebookService.prototype = {
           this.sessionStart( session_key.value, session_secret.value, uid, true );
         }
     },
-    sessionStart: function(sessionKey, sessionSecret, uid, saved) {
+    sessionStart: function(accessToken) {
+        debug('sessionStart2');
+
+        this._accessToken   = accessToken;
+        this._loggedIn      = true;
+
+        this._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
+        this._timer.initWithCallback(this._checker, BASE_CHECK_INTERVAL/5, Ci.nsITimer.TYPE_REPEATING_SLACK);
+
+        // fire off another thread to get things started
+        this._oneShotTimer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
+        this._oneShotTimer.initWithCallback(this._initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
+
+        this.checkCanSetStatus();
+    },
+    sessionStartOLD: function(sessionKey, sessionSecret, uid, saved) {
         debug( 'sessionStart', sessionKey, sessionSecret, uid );
         if (!sessionKey || !sessionSecret || !uid) {
           debug('sessionStart called with invalid values, aborting');
@@ -1015,13 +1032,15 @@ facebookService.prototype = {
         if (!this._loggedIn) return null;
 
         var origParams = params.slice(0); // easy way to make a deep copy of the array
-        params.push('method=' + method);
+        //params.push('method=' + method);
+
+        params.push('access_token=' + this._accessToken);
 
         for (let [name, value] in Iterator(this.getCommonParams())) {
             params.push(name + "=" + value);
         }
 
-        params.push('sig=' + this.generateSig(params));
+        //params.push('sig=' + this.generateSig(params));
 
         var paramsEncoded = [];
         for each (var param in params) {
@@ -1041,7 +1060,7 @@ facebookService.prototype = {
         try {
             // Yuck...xmlhttprequest doesn't always work so we have to do this
             // the hard way.  Thanks to Manish from Flock for the tip!
-            var restserver = 'http://api.facebook.com/restserver.php';
+            var restserver = 'http://api.facebook.com/method/'+method;
             var channel = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService)
                                .newChannel(restserver, null, null)
                                .QueryInterface(Ci.nsIHttpChannel);

@@ -299,6 +299,12 @@ var fbLib = {
     },
 
     FacebookLogin: function() {
+
+
+       gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=117949738281674&redirect_uri=http://www.facebook.com/&scope=user_photos,&response_type=token");
+
+        return;
+
       if (fbSvc.loggedIn) {
         dump('logging out\n');
 
