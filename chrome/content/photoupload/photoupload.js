@@ -954,8 +954,15 @@ var PhotoDNDObserver = {
       return theseFiles;
   },
 
+  onDragOver: function(event) {
+      event.dataTransfer.dropEffect = "copy";
+      event.preventDefault();
+      return false;
+  },
+
   onDrop: function (event) {
     LOG("In drop handler");
+
     event.preventDefault(); event.stopPropagation();
 
     var files = [];
@@ -968,6 +975,8 @@ var PhotoDNDObserver = {
     }
 
     PhotoSet.add([new Photo(f) for each (f in files)]);
+
+    return false;
   }
 };
 
@@ -1020,7 +1029,11 @@ var PhotoUpload = {
     {
         LOG("Switching to legacy DND");
         document.getElementById("picBox").setAttribute("ondragdrop", "nsDragAndDrop.drop(event, PhotoDNDObserverLegacy)");
-        document.getElementById("overviewPanel").removeAttribute("ondrop");
+    }
+    else
+    {
+        document.getElementById("overviewPanel").addEventListener("drop", PhotoDNDObserver.onDrop, true);
+        document.getElementById("overviewPanel").addEventListener("dragover", PhotoDNDObserver.onDragOver, true);
     }
 
     OverviewPanel.init();

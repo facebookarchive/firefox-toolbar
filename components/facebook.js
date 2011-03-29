@@ -1083,7 +1083,6 @@ facebookService.prototype = {
 
                 if (req.status != 200)
                 {
-                    //TODO
                     return;
                 }
 
@@ -1093,7 +1092,6 @@ facebookService.prototype = {
             }
             catch (e)
             {
-                // TODO
                 debug("graph error: " + e);
                 return;
             }
