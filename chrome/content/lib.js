@@ -301,13 +301,10 @@ var fbLib = {
     FacebookLogin: function() {
 
 
-       gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=117949738281674&redirect_uri=http://www.facebook.com/&scope=user_photos,&response_type=token");
-
-        return;
-
       if (fbSvc.loggedIn) {
         dump('logging out\n');
 
+        /*
         // Some methods require us to get the wrapped object (namely getCommonParams())
         var facebookSvc =  Cc['@facebook.com/facebook-service;1'].
                         getService(Ci.fbIFacebookService).
@@ -319,12 +316,16 @@ var fbLib = {
         req.send('api_key=' + facebookSvc.apiKey + 
              '&uid=' + facebookSvc.loggedInUser.id + 
              '&session_key=' + facebookSvc.getCommonParams().session_key);
+        */
+
         fbSvc.sessionEnd();
       } else {
+
+       gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=117949738281674&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
+
         // popup login page height is at most 500, but add 20 pixels for the
         // button we show at the bottom of the page
-        window.open('chrome://facebook/content/login.xul', '',
-                    'chrome,centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes');
+        //window.open('chrome://facebook/content/login.xul', '','chrome,centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes');
       }
     },
 

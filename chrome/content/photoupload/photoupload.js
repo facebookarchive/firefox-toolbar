@@ -51,7 +51,7 @@ if (typeof(JSON) == "undefined") {
   JSON.stringify = JSON.toString;
 }
 
-const DEBUG = false;
+const DEBUG = true;
 
 // Debugging.
 function LOG(s) {
@@ -404,11 +404,12 @@ var PhotoSet = {
     return mis;
   },
 
-  _uploadPhoto: function(albumId, photo, onProgress, onComplete, onError) {
+  _uploadPhoto: function(albumId, objectId, photo, onProgress, onComplete, onError) {
     LOG("Uploading photo: " + photo);
 
     var params = {};
 
+    /*
     // method specific:
     params.method = "facebook.photos.upload";
     params.aid = albumId;
@@ -425,8 +426,9 @@ var PhotoSet = {
       paramsForSig.push(name + "=" + value);
     }
     params.sig = gFacebookService.generateSig(paramsForSig);
+    */
 
-    const RESTSERVER = 'http://api.facebook.com/restserver.php';
+    //const RESTSERVER = 'http://api.facebook.com/restserver.php';
 
     var xhr = new XMLHttpRequest();
 
@@ -444,7 +446,10 @@ var PhotoSet = {
       xhr.upload.onprogress = updateProgress;
     }
 
-    xhr.open("POST", RESTSERVER);
+    var postURL = "https://graph.facebook.com/" + objectId + "/photos?access_token=" + gFacebookService.accessToken;
+    LOG("post url = " + postURL);
+
+    xhr.open("POST", postURL);
     xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
     xhr.setRequestHeader("MIME-version", "1.0");
 
@@ -452,6 +457,8 @@ var PhotoSet = {
       LOG("onreadstatechange " + xhr.readyState)
       if (xhr.readyState != 4)
         return;
+
+      LOG("upload api response: " + xhr.responseText);
 
       try {
         var data = JSON.parse(xhr.responseText);
@@ -496,15 +503,15 @@ var PhotoSet = {
     );
   },
 
-  _uploadAndTagPhoto: function(albumId, photo, onProgress, onComplete, onError) {
-    this._uploadPhoto(albumId, photo, onProgress,
+  _uploadAndTagPhoto: function(albumId, objectId, photo, onProgress, onComplete, onError) {
+    this._uploadPhoto(albumId, objectId, photo, onProgress,
       function(photoId) { // onComplete callback
         PhotoSet._tagPhoto(photo, photoId, onComplete, onError);
       },
     onError);
   },
 
-  upload: function(albumId, onProgress, onComplete, onError) {
+  upload: function(albumId, objectId, onProgress, onComplete, onError) {
     this._cancelled = false;
     var toUpload = this._photos;
     var total = toUpload.length;
@@ -533,7 +540,7 @@ var PhotoSet = {
       var photoSize = photo.sizeInBytes;
 
       try {
-        self._uploadAndTagPhoto(albumId, photo,
+        self._uploadAndTagPhoto(albumId, objectId, photo,
           function(photoPercent) { // onProgress callback
             LOG("on progress from photo upload " + photoPercent);
             var donePercent = (uploadedBytes / totalSizeBytes) * 100;
@@ -1171,9 +1178,10 @@ var PhotoUpload = {
           var menuitem = document.createElement("menuitem");
           menuitem.setAttribute("label", album.name);
           menuitem.setAttribute("albumid", album.aid);
+          menuitem.setAttribute("objectid", album.object_id);
           if (album.aid == lastAlbumId)
             selectedItem = menuitem;
-          LOG("Album name: " + album.name + " album id: " + album.aid);
+          LOG("Album name: " + album.name + " object id: " + album.object_id + " album id: " + album.aid);
           albumsPopup.insertBefore(menuitem, albumsPopupPlaceHolder);
         }
         var albumsList = document.getElementById("albumsList");
@@ -1436,7 +1444,7 @@ var PhotoUpload = {
           this._uploadComplete(UPLOAD_ERROR, null, "Unexpected state");
         return;
       }
-      this._uploadToAlbum(albumsList.selectedItem.getAttribute("albumid"));
+      this._uploadToAlbum(albumsList.selectedItem.getAttribute("albumid"), albumsList.selectedItem.getAttribute("objectid"));
   },
 
   /**
@@ -1470,14 +1478,14 @@ var PhotoUpload = {
    * in a separate method in order to be called asynchronously when creating
    * a new album
    */
-  _uploadToAlbum: function(albumId) {
+  _uploadToAlbum: function(albumId, objectId) {
     if (this._uploadCancelled) {
       this._uploadComplete(UPLOAD_CANCELLED, albumId);
       return;
     }
 
     var self = this;
-    PhotoSet.upload(albumId,
+    PhotoSet.upload(albumId, objectId,
       function(percent) { // onProgress callback
         LOG("Got progress " + percent);
         self._uploadProgress.value = percent;

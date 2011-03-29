@@ -20,7 +20,7 @@
 
 const BASE_CHECK_INTERVAL = 5*60*1000; // 5 minutes
 const DEBUG     = true;
-const VERBOSITY = 0; // 0: no dumping, 1: normal dumping, 2: massive dumping
+const VERBOSITY = 2; // 0: no dumping, 1: normal dumping, 2: massive dumping
 
 var debug = ( VERBOSITY < 1 )
   ? function() {}
@@ -459,6 +459,9 @@ facebookService.prototype = {
     get numGroupInvs()  { return this._groupInvs.count; },
     // ----------- End Notifications -----------------//
 
+    get accessToken() {
+        return this._accessToken;
+    },
     get apiKey() {
         return this._apiKey;
     },
@@ -476,6 +479,17 @@ facebookService.prototype = {
         return Boolean(this._canSetStatus);
     },
     savedSessionStart: function() {
+        var accessToken = this._prefService.getCharPref('extensions.facebook.access_token');
+
+        debug("saved access token: " + accessToken);
+    
+        if (accessToken)
+        {
+            this.sessionStartOAuth(accessToken);
+        }
+
+        return;
+
         var uid = this._prefService.getCharPref('extensions.facebook.uid');
         if (!uid) {return;}
         debug( 'SAVED SESSION', uid );
@@ -506,22 +520,39 @@ facebookService.prototype = {
           this.sessionStart( session_key.value, session_secret.value, uid, true );
         }
     },
-    sessionStart: function(accessToken) {
+    sessionStartOAuth: function(accessToken) {
         debug('sessionStart2');
 
         this._accessToken   = accessToken;
-        this._loggedIn      = true;
 
-        this._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this._timer.initWithCallback(this._checker, BASE_CHECK_INTERVAL/5, Ci.nsITimer.TYPE_REPEATING_SLACK);
+        var fbSvc = this;
 
-        // fire off another thread to get things started
-        this._oneShotTimer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this._oneShotTimer.initWithCallback(this._initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
+        this.fetchGraphObject("me", function(response)
+        {
+            if (response.id)
+            {
+                fbSvc._uid = response.id;
+                fbSvc._loggedIn      = true;
+                fbSvc._prefService.setCharPref('extensions.facebook.access_token', accessToken)
+                fbSvc._prefService.setCharPref('extensions.facebook.uid', response.id)
+            }
+            else
+            {
+                debug("missing id in 'me' graph call :(");
+                return;
+            }
 
-        this.checkCanSetStatus();
+            fbSvc._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
+            fbSvc._timer.initWithCallback(fbSvc._checker, BASE_CHECK_INTERVAL/5, Ci.nsITimer.TYPE_REPEATING_SLACK);
+
+            // fire off another thread to get things started
+            fbSvc._oneShotTimer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
+            fbSvc._oneShotTimer.initWithCallback(fbSvc._initialize, 1, Ci.nsITimer.TYPE_ONE_SHOT);
+
+            fbSvc.checkCanSetStatus();
+        });
     },
-    sessionStartOLD: function(sessionKey, sessionSecret, uid, saved) {
+    sessionStart: function(sessionKey, sessionSecret, uid, saved) {
         debug( 'sessionStart', sessionKey, sessionSecret, uid );
         if (!sessionKey || !sessionSecret || !uid) {
           debug('sessionStart called with invalid values, aborting');
@@ -579,6 +610,7 @@ facebookService.prototype = {
         // remove session info from prefs because of explicit logout
         // or because they didn't work
         this.savePref( 'extensions.facebook.uid', '' );
+        this.savePref( 'extensions.facebook.access_token', '' );
         if (this._ff3Login) { // Clear out saved information for this extension
           var hostname = PASSWORD_URL;
           var formSubmitURL = PASSWORD_URL;
@@ -664,6 +696,10 @@ facebookService.prototype = {
     },
     checkCanSetStatus: function() {
       if (null != this._canSetStatus) {return;}
+
+      fbSvc._canSetStatus = 1;
+
+      return;
 
       this.callMethod('facebook.users.hasAppPermission', ['ext_perm=status_update'], function(data){
           vdebug('data:', data);
@@ -1017,13 +1053,56 @@ facebookService.prototype = {
         }
         this._lastCallId = callId;
         return {
-            'session_key': this._sessionKey,
-            'api_key': this._apiKey,
-            'v': '1.0',
-            'call_id': callId,
+            //'session_key': this._sessionKey,
+            //'api_key': this._apiKey,
+            //'v': '1.0',
+            //'call_id': callId,
             'format': 'json'
         };
     },
+
+
+    fetchGraphObject: function(obj, callback)
+    {
+        if (!this._accessToken)
+        {
+            debug("Can't fetch graph object: missing access token");
+            return;
+        }
+
+        var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
+            .createInstance(Components.interfaces.nsIXMLHttpRequest);
+        req.onreadystatechange = function(e)
+        {
+            try
+            {
+                if (req.readyState != 4) { return; }
+        
+                debug("finished graph call, status = " + req.status);
+                debug("graph response: " + req.responseText);
+
+                if (req.status != 200)
+                {
+                    //TODO
+                    return;
+                }
+
+                var jsObject = JSON.parse(req.responseText);
+
+                callback(jsObject);
+            }
+            catch (e)
+            {
+                // TODO
+                debug("graph error: " + e);
+                return;
+            }
+
+        };
+        req.open("GET", "https://graph.facebook.com/" + obj + "?access_token=" + this._accessToken, true);
+        req.send(null);
+    },
+
     // Note that this is intended to call non-login related Facebook API
     // functions - ie things other than facebook.auth.*.  The login-related
     // calls are done in the chrome layer because they are in direct response to user actions.
@@ -1055,12 +1134,12 @@ facebookService.prototype = {
         }
         var message = paramsEncoded.join('&');
 
-        //dump("api message: " + message + " \n");
+        dump("api message: " + message + " \n");
 
         try {
             // Yuck...xmlhttprequest doesn't always work so we have to do this
             // the hard way.  Thanks to Manish from Flock for the tip!
-            var restserver = 'http://api.facebook.com/method/'+method;
+            var restserver = 'https://api.facebook.com/method/'+method;
             var channel = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService)
                                .newChannel(restserver, null, null)
                                .QueryInterface(Ci.nsIHttpChannel);
@@ -1087,6 +1166,7 @@ facebookService.prototype = {
                 onStopRequest: function(request, context, statusCode) {
                     if (statusCode == Components.results.NS_OK) {
                         var data = null;
+                        vdebug("raw response from callMethod: '" + this.resultTxt + "'");
                         // native JSON seems to have problems parsing
                         // primitives like "true", "1", etc. as of FF3.1b2
                         try {

@@ -18,6 +18,7 @@ pref("extensions.facebook.notifications.upload.complete", true);
 pref("extensions.facebook.notifications.growl", false);
 // populated on login
 pref("extensions.facebook.uid", "" );
+pref("extensions.facebook.access_token", "" );
 // What to do after a photo upload:
 //  0: ask user
 //  1: open album page

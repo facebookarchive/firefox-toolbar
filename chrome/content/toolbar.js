@@ -157,7 +157,9 @@ var facebook = {
                     if (tup[0] == "access_token")
                     {
                         event.originalTarget.defaultView.close();
-                        fbSvc.sessionStart(tup[1]);
+                        fbLib.debug( "have access token : "  + tup[1]);
+                        fbSvc.sessionStartOAuth(tup[1]);
+                        fbLib.debug( "finished session start");
                     }
                 }
             }
