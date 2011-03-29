@@ -51,7 +51,7 @@ if (typeof(JSON) == "undefined") {
   JSON.stringify = JSON.toString;
 }
 
-const DEBUG = true;
+const DEBUG = false;
 
 // Debugging.
 function LOG(s) {
@@ -1165,6 +1165,9 @@ var PhotoUpload = {
         // album and uploading to this album generates errors.
         albums = albums.filter(function(a) {
           var urlAlbumId = self._albumIdToUrlAlbumId(a.aid);
+
+          //LOG("album '" + a.name + "' has a urlAlbumId of '" + urlAlbumId + "'");
+
           return urlAlbumId != PROFILE_PICTURES_URL_ALBUM_ID;
         });
 
