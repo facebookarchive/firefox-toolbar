@@ -19,8 +19,8 @@
  */
 
 const BASE_CHECK_INTERVAL = 5*60*1000; // 5 minutes
-const DEBUG     = false;
-const VERBOSITY = 0; // 0: no dumping, 1: normal dumping, 2: massive dumping
+const DEBUG     = true;
+const VERBOSITY = 2; // 0: no dumping, 1: normal dumping, 2: massive dumping
 
 var debug = ( VERBOSITY < 1 )
   ? function() {}
@@ -521,7 +521,7 @@ facebookService.prototype = {
         }
     },
     sessionStartOAuth: function(accessToken) {
-        debug('sessionStart2');
+        debug('sessionStartOAuth: ' + accessToken);
 
         this._accessToken   = accessToken;
 
@@ -1080,6 +1080,11 @@ facebookService.prototype = {
         
                 debug("finished graph call, status = " + req.status);
                 debug("graph response: " + req.responseText);
+
+                if (req.status == 400)
+                {
+                    fbSvc.sessionEnd();
+                }
 
                 if (req.status != 200)
                 {

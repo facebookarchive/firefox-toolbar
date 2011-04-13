@@ -72,6 +72,7 @@ var facebook = {
                     fbLib.setAttributeById('facebook-name-info', 'userid', subject.id);
                     fbLib.setAttributeById('facebook-menu-my-profile', 'userid', subject.id);
                     fbLib.setAttributeById('facebook-login-status', 'label', fStrings.getString('logout'));
+                    fbLib.setAttributeById('facebook-login-status', 'status', '');
                     fbLib.setAttributeById('facebook-login-status', 'tooltiptext', fStrings.getString('logout'));
                     var sb = fbLib.GetFBSearchBox();
                     if (sb.value != fStrings.getString('searchplaceholder') && sb.value != '') {
@@ -156,6 +157,14 @@ var facebook = {
 
                     if (tup[0] == "access_token")
                     {
+                        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                            .getService(Components.interfaces.nsIWindowMediator);
+                        var enumerator = wm.getEnumerator(null);
+                        while(enumerator.hasMoreElements()) {
+                            var win = enumerator.getNext();
+                            win.clearTimeout(Application.storage.get("authWindowCloseTimeout", null));
+                        }
+
                         event.originalTarget.defaultView.close();
                         fbLib.debug( "have access token : "  + tup[1]);
                         fbSvc.sessionStartOAuth(tup[1]);

@@ -31,6 +31,10 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   padding: 0px;
 }
 
+#facebook-login-status[status="waiting"] {
+  list-style-image: url('chrome://facebook/skin/throbber.gif');
+}
+
 .facebook-friendlinks toolbarbutton {
   border: 0px;
   list-style-image: url('chrome://facebook/skin/toolbar.png');

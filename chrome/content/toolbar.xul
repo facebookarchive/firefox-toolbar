@@ -179,6 +179,7 @@
         />
         <toolbarseparator/>
         <toolbarbutton id="facebook-login-status"
+                       status=""
                        class="button"
                        label="&toolbar.login.label;"
                        tooltiptext="&toolbar.login.label;"
