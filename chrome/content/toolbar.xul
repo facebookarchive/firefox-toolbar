@@ -47,7 +47,12 @@
                      class="button"
                      label="&toolbar.button.share.label;"
                      tooltiptext="&toolbar.button.share.tooltip;"
-                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); facebook.share()"/>
+                     oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { facebook.share() }"/>
+
+      <toolbarbutton id="facebook-like"
+                     class="facebook-icon-like facebook-notification button"
+                     label="&toolbar.button.like.label;"
+                     oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin();  } else { facebook.like() }"/>
 
       <toolbarbutton id="facebook-photoupload"
                      class="facebook-icon-photoupload button"
@@ -195,7 +200,7 @@
              context="toolbar-context-menu"
              toolbarname="&toolbar.facebook.name;"
              crop="end"
-            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-event-invs,facebook-notification-group-invs,facebook-notification-separator,facebook-share,facebook-photoupload,spring,facebook-login-info">
+            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-event-invs,facebook-notification-group-invs,facebook-notification-separator,facebook-like,facebook-photoupload,spring,facebook-login-info">
     </toolbar>
     <popupset>
         <popup position="after_start"

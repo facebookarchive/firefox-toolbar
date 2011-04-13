@@ -119,6 +119,10 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   -moz-image-region: rect(0px 16px 14px 0px);
 }
 
+.facebook-icon-like {
+  -moz-image-region: rect(0px 489px 14px 473px);
+}
+
 /* -- Friend Reqs -- */
 .facebook-icon-reqs:hover {
   -moz-image-region: rect(0px 204px 14px 188px);

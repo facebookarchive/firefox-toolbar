@@ -486,9 +486,10 @@ facebookService.prototype = {
         if (accessToken)
         {
             this.sessionStartOAuth(accessToken);
+            return true;
         }
 
-        return;
+        return false;
 
         var uid = this._prefService.getCharPref('extensions.facebook.uid');
         if (!uid) {return;}

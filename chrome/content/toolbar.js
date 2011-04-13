@@ -80,6 +80,9 @@ var facebook = {
                         facebook.searchBoxBlur(sb);
                     }
                     fbLib.SetHint(true, fStrings.getString('loadingfriends'), '');
+
+                    //fbLib.debug("currentURI is '" + gBrowser.currentURI.spec  + "'");
+                    facebook.updateLikeCount(gBrowser.currentURI.spec);
                     break;
                 case 'facebook-session-end':
                     fbLib.debug('ending session...');
@@ -142,7 +145,6 @@ var facebook = {
                             , 'facebook-status-updated'
                             ],
 
-
     onPageLoad: function(event)
     {
         try
@@ -172,10 +174,40 @@ var facebook = {
                     }
                 }
             }
+
+            // get # likes for this link
+
+            if (fbSvc.loggedIn
+                && event.originalTarget.defaultView.parent == event.originalTarget.defaultView
+                && event.originalTarget instanceof HTMLDocument
+                && event.originalTarget.location.toString().substring(0,4) == "http"
+                ) {
+
+                facebook.updateLikeCount(event.originalTarget.location.toString());
+            }
         }
-        catch (e) {  alert(e);}
+        catch (e) {  fbLib.debug(e);}
     },
- 
+
+    updateLikeCount: function(url) {
+        fbLib.setAttributeById('facebook-like', 'tooltiptext', '');
+
+        fbLib.debug("GETTING LIKES FOR URL '" + url + "'");
+
+        var query = "SELECT like_count, normalized_url FROM link_stat WHERE url = '" + url + "'";
+        
+        fbSvc.wrappedJSObject.callMethod('facebook.fql.query', ['query='+query], function(data) {
+            for each(var row in data) {
+                like_count = Number(row.like_count);
+                fbLib.debug("facebook's #likes for the url '" + row.normalized_url + "' is : " + like_count);
+
+                fbLib.setAttributeById('facebook-like', 'tooltiptext', facebook.fStringBundle.getFormattedString('likethis', [like_count]));
+
+                break;
+            }
+        });
+    },
+
     load: function() {
         fbLib.debug( "loading toolbar..." );
 
@@ -217,7 +249,8 @@ var facebook = {
             statusBox.style.display="block";
             facebook.onStatusBoxBlur(statusBox); // change color for emptyText
         } else {
-          fbSvc.savedSessionStart();
+          var hasSavedSession = fbSvc.savedSessionStart();
+          fbLib.setAttributeById('facebook-login-status', 'status', hasSavedSession?'waiting':'');
         }
         facebook.loadFriends();
         getBrowser().addProgressListener(facebook.progListener);
@@ -342,6 +375,9 @@ var facebook = {
     } else {
       statusBox.style.color = '#000000';
     }
+  },
+  like: function() {
+      alert('TODO');
   },
   share: function() {
     // not only do we need to encodeURIComponent on the string, we also need to escape quotes since
