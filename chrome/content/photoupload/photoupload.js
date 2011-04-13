@@ -983,7 +983,7 @@ var PhotoDNDObserver = {
 const NEW_ALBUM = 0;
 const EXISTING_ALBUM = 1;
 
-const PROFILE_PICTURES_URL_ALBUM_ID = "4294967293"; // -3 in two's complement 32bit integer.
+//const PROFILE_PICTURES_URL_ALBUM_ID = "4294967293"; // -3 in two's complement 32bit integer.
 
 const POST_UPLOAD_ASKUSER = 0;
 const POST_UPLOAD_OPENALBUM = 1;
@@ -1158,59 +1158,77 @@ var PhotoUpload = {
 
   _fillAlbumList: function(onComplete) {
     var self = this;
-    gFacebookService.callMethod('facebook.photos.getAlbums',
-      ["uid=" + gFacebookServiceUnwrapped.loggedInUser.id],
-      function(albums) {
-        // Remove the "Profile Pictures" album from the list, it's a special
-        // album and uploading to this album generates errors.
-        albums = albums.filter(function(a) {
-          var urlAlbumId = self._albumIdToUrlAlbumId(a.aid);
 
-          //LOG("album '" + a.name + "' has a urlAlbumId of '" + urlAlbumId + "'");
+    var getAlbums = function(ignoreAID) {
+        gFacebookService.callMethod('facebook.photos.getAlbums',
+          ["uid=" + gFacebookServiceUnwrapped.loggedInUser.id],
+          function(albums) {
+            // Remove the "Profile Pictures" album from the list, it's a special
+            // album and uploading to this album generates errors.
+            albums = albums.filter(function(a) {
+              //LOG("album '" + a.name + "' has a aid of '" + a.aid + "'; will ignore albums with aid = " + ignoreAID);
+              /*
+              var urlAlbumId = self._albumIdToUrlAlbumId(a.aid);
 
-          return urlAlbumId != PROFILE_PICTURES_URL_ALBUM_ID;
-        });
+              //LOG("album '" + a.name + "' has a urlAlbumId of '" + urlAlbumId + "'");
 
-        if (albums.length == 0) {
-          LOG("No albums");
-          var newAlbumRadio = document.getElementById("newAlbumRadio");
-          document.getElementById("albumSelectionGroup").selectedItem = newAlbumRadio;
-          self.onAlbumSelectionModeChange()
-          document.getElementById("existingAlbumRadio").disabled = true;
-          return;
+              return urlAlbumId != PROFILE_PICTURES_URL_ALBUM_ID;
+              */
+              return a.aid != ignoreAID;
+            });
+
+            if (albums.length == 0) {
+              LOG("No albums");
+              var newAlbumRadio = document.getElementById("newAlbumRadio");
+              document.getElementById("albumSelectionGroup").selectedItem = newAlbumRadio;
+              self.onAlbumSelectionModeChange()
+              document.getElementById("existingAlbumRadio").disabled = true;
+              return;
+            }
+            var albumsPopup = document.getElementById("albumsPopup");
+            var albumsPopupPlaceHolder = document.getElementById("albumsPopupPlaceHolder");
+            var lastAlbumId = document.getElementById("albumsList")
+                                      .getAttribute("lastalbumid");
+
+            while (albumsPopup.getElementsByTagName("menuitem").length > 2)
+            {
+                albumsPopup.removeChild(albumsPopup.firstChild);
+            }
+
+            var selectedItem;
+            for each (var album in albums) {
+              var menuitem = document.createElement("menuitem");
+              menuitem.setAttribute("label", album.name);
+              menuitem.setAttribute("albumid", album.aid);
+              menuitem.setAttribute("objectid", album.object_id);
+              if (album.aid == lastAlbumId)
+                selectedItem = menuitem;
+              LOG("Album name: " + album.name + " object id: " + album.object_id + " album id: " + album.aid);
+              albumsPopup.insertBefore(menuitem, albumsPopupPlaceHolder);
+            }
+            var albumsList = document.getElementById("albumsList");
+            if (selectedItem) {
+              albumsList.selectedItem = selectedItem;
+            } else {
+              albumsList.selectedIndex = 0;
+            }
+            //document.getElementById("existingAlbumPanel").className = "";
+            if (onComplete)
+                onComplete();
+          }
+        );
+    };
+
+    var query = "SELECT aid FROM album WHERE owner = :user AND type = 'profile'";
+    query = query.replace( /:user/g, gFacebookServiceUnwrapped.loggedInUser.id);
+
+    gFacebookService.callMethod('facebook.fql.query', ['query='+query], function(data) {
+        for each( var album in data) {
+            profilePicturesAID = Number(album.aid);
         }
-        var albumsPopup = document.getElementById("albumsPopup");
-        var albumsPopupPlaceHolder = document.getElementById("albumsPopupPlaceHolder");
-        var lastAlbumId = document.getElementById("albumsList")
-                                  .getAttribute("lastalbumid");
 
-        while (albumsPopup.getElementsByTagName("menuitem").length > 2)
-        {
-            albumsPopup.removeChild(albumsPopup.firstChild);
-        }
-
-        var selectedItem;
-        for each (var album in albums) {
-          var menuitem = document.createElement("menuitem");
-          menuitem.setAttribute("label", album.name);
-          menuitem.setAttribute("albumid", album.aid);
-          menuitem.setAttribute("objectid", album.object_id);
-          if (album.aid == lastAlbumId)
-            selectedItem = menuitem;
-          LOG("Album name: " + album.name + " object id: " + album.object_id + " album id: " + album.aid);
-          albumsPopup.insertBefore(menuitem, albumsPopupPlaceHolder);
-        }
-        var albumsList = document.getElementById("albumsList");
-        if (selectedItem) {
-          albumsList.selectedItem = selectedItem;
-        } else {
-          albumsList.selectedIndex = 0;
-        }
-        //document.getElementById("existingAlbumPanel").className = "";
-        if (onComplete)
-            onComplete();
-      }
-    );
+        getAlbums(profilePicturesAID);
+    });
   },
 
   _checkPhotoUploadPermission: function(callback) {
