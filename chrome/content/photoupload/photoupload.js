@@ -1416,7 +1416,7 @@ var PhotoUpload = {
       var aid = "";
       aid = "aid=" + this._albumIdToUrlAlbumId(albumId) + "&";
       Application.activeWindow.open(
-        this._url("http://www.facebook.com/editalbum.php?" + aid + "org=1")).focus();
+        this._url("http://www.facebook.com/editphoto.php?" + aid + "org=1")).focus();
       window.close();
     }
   },
