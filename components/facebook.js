@@ -1062,8 +1062,56 @@ facebookService.prototype = {
         };
     },
 
+    postGraphObject: function(method, callback)
+    {
+        if (!this._accessToken)
+        {
+            debug("Can't post graph object: missing access token");
+            return;
+        }
 
-    fetchGraphObject: function(obj, callback)
+        var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
+            .createInstance(Components.interfaces.nsIXMLHttpRequest);
+        req.onreadystatechange = function(e)
+        {
+            try
+            {
+                if (req.readyState != 4) { return; }
+        
+                debug("finished graph post, status = " + req.status);
+                debug("graph response: " + req.responseText);
+
+                /*if (req.status == 400)
+                {
+                    fbSvc.sessionEnd();
+                }*/
+
+                if (req.status != 200)
+                {
+                    return;
+                }
+
+                var jsObject = JSON.parse(req.responseText);
+
+                callback(jsObject);
+            }
+            catch (e)
+            {
+                debug("graph error: " + e);
+                return;
+            }
+
+        };
+
+        var url = "https://graph.facebook.com/" + method;
+        var data = "access_token=" + this._accessToken;
+        debug("going to POST to '" + url + "' with data = '" + data  + "'");
+
+        req.open("POST", url, true);
+        req.send(data);
+    },
+
+    fetchGraphObject: function(method, callback)
     {
         if (!this._accessToken)
         {
@@ -1103,7 +1151,7 @@ facebookService.prototype = {
             }
 
         };
-        req.open("GET", "https://graph.facebook.com/" + obj + "?access_token=" + this._accessToken, true);
+        req.open("GET", "https://graph.facebook.com/" + method + "?access_token=" + this._accessToken, true);
         req.send(null);
     },
 

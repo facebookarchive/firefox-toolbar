@@ -82,7 +82,7 @@ var facebook = {
                     fbLib.SetHint(true, fStrings.getString('loadingfriends'), '');
 
                     //fbLib.debug("currentURI is '" + gBrowser.currentURI.spec  + "'");
-                    facebook.updateLikeCount(gBrowser.currentURI.spec);
+                    facebook.updateLikeCount(gBrowser.currentURI.spec, gBrowser.contentDocument);
                     break;
                 case 'facebook-session-end':
                     fbLib.debug('ending session...');
@@ -183,25 +183,58 @@ var facebook = {
                 && event.originalTarget.location.toString().substring(0,4) == "http"
                 ) {
 
-                facebook.updateLikeCount(event.originalTarget.location.toString());
+                facebook.updateLikeCount(event.originalTarget.location.toString(), event.originalTarget);
             }
         }
         catch (e) {  fbLib.debug(e);}
     },
 
-    updateLikeCount: function(url) {
+    onTabSelect: function(e) {
+        //fbLib.debug("on tab select, like count =  " + gBrowser.contentDocument._fbLikeCount);
+
+        if (gBrowser.contentDocument._fbLikeCount)
+        {
+            fbLib.setAttributeById('facebook-like', 'tooltiptext', facebook.fStringBundle.getFormattedString('likethis', [gBrowser.contentDocument._fbLikeCount]));
+        }
+        else
+        {
+            fbLib.setAttributeById('facebook-like', 'tooltiptext', '');
+        }
+    },
+
+    updateLikeCount: function(url, doc) {
         fbLib.setAttributeById('facebook-like', 'tooltiptext', '');
 
-        fbLib.debug("GETTING LIKES FOR URL '" + url + "'");
+        //fbLib.debug("GETTING LIKES FOR URL '" + url + "'");
 
         var query = "SELECT like_count, normalized_url FROM link_stat WHERE url = '" + url + "'";
         
         fbSvc.wrappedJSObject.callMethod('facebook.fql.query', ['query='+query], function(data) {
             for each(var row in data) {
                 like_count = Number(row.like_count);
-                fbLib.debug("facebook's #likes for the url '" + row.normalized_url + "' is : " + like_count);
+                //fbLib.debug("facebook's #likes for the url '" + row.normalized_url + "' is : " + like_count);
 
                 fbLib.setAttributeById('facebook-like', 'tooltiptext', facebook.fStringBundle.getFormattedString('likethis', [like_count]));
+                doc._fbLikeCount = like_count;
+
+                query = "SELECT id FROM object_url WHERE url = '" + row.normalized_url + "'";
+
+                fbSvc.wrappedJSObject.callMethod('facebook.fql.query', ['query='+query], function(data) {
+                    for each(var row2 in data) {
+                        link_id = Number(row2.id);
+                        fbLib.debug("facebook's #likes for the url '" + row.normalized_url + "' is : " + like_count + " ; id is : " + link_id);
+
+                        query = "SELECT user_id FROM like WHERE object_id = " + link_id;
+
+                        fbSvc.wrappedJSObject.callMethod('facebook.fql.query', ['query='+query], function(data) {
+                            for each(var row3 in data) {
+                                fbLib.debug("user #" + row3.user_id + " likes this link");
+                            }
+                        });
+
+                        break;
+                    }
+                });
 
                 break;
             }
@@ -212,6 +245,7 @@ var facebook = {
         fbLib.debug( "loading toolbar..." );
 
         gBrowser.addEventListener("DOMContentLoaded", facebook.onPageLoad, true);
+        gBrowser.tabContainer.addEventListener("TabSelect", facebook.onTabSelect, false);
 
         facebook.fStringBundle = fbLib.GetFBStringBundle();
         fbLib.debug(facebook.fStringBundle.src);
@@ -258,6 +292,7 @@ var facebook = {
         },
     unload: function() {
         gBrowser.removeEventListener("DOMContentLoaded", facebook.onPageLoad, true);
+        gBrowser.tabContainer.removeEventListener("TabSelect", facebook.onTabSelect, false);
 
         for each (var topic in facebook.topics_of_interest)
             facebook.obsSvc.removeObserver(facebook.fbToolbarObserver, topic);
@@ -377,7 +412,9 @@ var facebook = {
     }
   },
   like: function() {
-      alert('TODO');
+      fbSvc.wrappedJSObject.postGraphObject(link_id + "/likes", function(data) {
+          fbLib.debug("have liked this link, in callback: " + data);
+      });
   },
   share: function() {
     // not only do we need to encodeURIComponent on the string, we also need to escape quotes since
