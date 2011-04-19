@@ -82,7 +82,7 @@ var facebook = {
                     fbLib.SetHint(true, fStrings.getString('loadingfriends'), '');
 
                     //fbLib.debug("currentURI is '" + gBrowser.currentURI.spec  + "'");
-                    facebook.updateLikeCount(gBrowser.currentURI.spec, gBrowser.contentDocument);
+                    facebook.updateLikeCount2(gBrowser.currentURI.spec, gBrowser.contentDocument);
                     break;
                 case 'facebook-session-end':
                     fbLib.debug('ending session...');
@@ -94,6 +94,7 @@ var facebook = {
                     for each( var top in facebook.topicToXulId )
                         fbLib.setAttributeById( top, 'label', '?');
                     facebook.clearFriends(true);
+                    facebook.updateLikeCount2(null, gBrowser.contentDocument);
                     break;
                 case 'facebook-friends-updated':
                     facebook.loadFriends();
@@ -183,10 +184,10 @@ var facebook = {
                 && event.originalTarget.location.toString().substring(0,4) == "http"
                 ) {
 
-                facebook.updateLikeCount(event.originalTarget.location.toString(), event.originalTarget);
+                facebook.updateLikeCount2(event.originalTarget.location.toString(), event.originalTarget);
             }
         }
-        catch (e) {  fbLib.debug(e);}
+        catch (e) {  fbLib.debug("pageload error: " + e);}
     },
 
     onTabSelect: function(e) {
@@ -200,6 +201,18 @@ var facebook = {
         {
             fbLib.setAttributeById('facebook-like', 'tooltiptext', '');
         }
+    },
+
+    onTabSelect2: function(e) {
+        facebook.updateLikeCount2(gBrowser.currentURI.spec, null);
+    },
+
+    updateLikeCount2: function(url, doc) {
+
+        //fbLib.debug("in updateLikeCount2 with url = '" + url + "'");
+
+        fbLib.setAttributeById('facebook-like-iframe', 'src',
+            (url?'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb':'about:blank'));
     },
 
     updateLikeCount: function(url, doc) {
@@ -245,7 +258,27 @@ var facebook = {
         fbLib.debug( "loading toolbar..." );
 
         gBrowser.addEventListener("DOMContentLoaded", facebook.onPageLoad, true);
-        gBrowser.tabContainer.addEventListener("TabSelect", facebook.onTabSelect, false);
+        gBrowser.tabContainer.addEventListener("TabSelect", facebook.onTabSelect2, false);
+
+        /*
+        document.getElementById('facebook-like2').addEventListener('click', function(e) {
+            fbLib.debug("intercepted like2 click");
+
+            var evt = document.createEvent("MouseEvents");
+            evt.initMouseEvent("click", true, true, window, 0,
+                //0, 0, 0, 0,
+                e.screenX, e.screenY, 10, 10, //e.clientX, e.clientY,
+                false, false, false, false, 0, null);
+            var cb = document.getElementById("facebook-like-iframe").contentWindow; 
+            var canceled = !cb.dispatchEvent(evt);
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            return true;
+
+        }, true);
+        */
 
         facebook.fStringBundle = fbLib.GetFBStringBundle();
         fbLib.debug(facebook.fStringBundle.src);
@@ -292,7 +325,7 @@ var facebook = {
         },
     unload: function() {
         gBrowser.removeEventListener("DOMContentLoaded", facebook.onPageLoad, true);
-        gBrowser.tabContainer.removeEventListener("TabSelect", facebook.onTabSelect, false);
+        gBrowser.tabContainer.removeEventListener("TabSelect", facebook.onTabSelect2, false);
 
         for each (var topic in facebook.topics_of_interest)
             facebook.obsSvc.removeObserver(facebook.fbToolbarObserver, topic);

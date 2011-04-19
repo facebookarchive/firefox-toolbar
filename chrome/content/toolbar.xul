@@ -54,6 +54,11 @@
                      label="&toolbar.button.like.label;"
                      oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin();  } else { facebook.like() }"/>
 
+      <toolbarbutton id="facebook-like2">
+            <iframe id="facebook-like-iframe" src="about:blank" 
+                height="20" style="overflow: hidden;"/>
+      </toolbarbutton>
+
       <toolbarbutton id="facebook-photoupload"
                      class="facebook-icon-photoupload button"
                      tooltiptext="&toolbar.button.upload.tooltip;"
@@ -200,7 +205,7 @@
              context="toolbar-context-menu"
              toolbarname="&toolbar.facebook.name;"
              crop="end"
-            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-event-invs,facebook-notification-group-invs,facebook-notification-separator,facebook-like,facebook-photoupload,spring,facebook-login-info">
+            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-event-invs,facebook-notification-group-invs,facebook-notification-separator,facebook-like2,facebook-photoupload,spring,facebook-login-info">
     </toolbar>
     <popupset>
         <popup position="after_start"
