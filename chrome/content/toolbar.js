@@ -131,6 +131,18 @@ var facebook = {
         onStatusChange: function(webProgress, request, status, message) {  }
     },
 
+    likeProgListener: {
+        onLocationChange: function(webProgress, request, location) {
+            var x = document.getElementById("facebook-like-iframe");
+            var y = x.contentDocument;
+            y.body.setAttribute("style", "background-color: blue !important;");
+        },
+        onProgressChange: function(webProgress, request, curSelfProg, maxSelfProg, curTotalProg, maxTotalProg) {  },
+        onSecurityChange: function(webProgress, request, state) {  },
+        onStateChange: function(webProgress, request, stateFlags, status) {  },
+        onStatusChange: function(webProgress, request, status, message) {  }
+    },
+
      topics_of_interest:    [ 'facebook-session-start'
                             , 'facebook-friends-updated'
                             , 'facebook-friend-updated'
@@ -213,6 +225,7 @@ var facebook = {
 
         fbLib.setAttributeById('facebook-like-iframe', 'src',
             (url?'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb':'about:blank'));
+        //document.getElementById('facebook-like-iframe').addProgressListener(facebook.likeProgListener);
     },
 
     updateLikeCount: function(url, doc) {
@@ -259,26 +272,6 @@ var facebook = {
 
         gBrowser.addEventListener("DOMContentLoaded", facebook.onPageLoad, true);
         gBrowser.tabContainer.addEventListener("TabSelect", facebook.onTabSelect2, false);
-
-        /*
-        document.getElementById('facebook-like2').addEventListener('click', function(e) {
-            fbLib.debug("intercepted like2 click");
-
-            var evt = document.createEvent("MouseEvents");
-            evt.initMouseEvent("click", true, true, window, 0,
-                //0, 0, 0, 0,
-                e.screenX, e.screenY, 10, 10, //e.clientX, e.clientY,
-                false, false, false, false, 0, null);
-            var cb = document.getElementById("facebook-like-iframe").contentWindow; 
-            var canceled = !cb.dispatchEvent(evt);
-
-            e.stopPropagation();
-            e.preventDefault();
-
-            return true;
-
-        }, true);
-        */
 
         facebook.fStringBundle = fbLib.GetFBStringBundle();
         fbLib.debug(facebook.fStringBundle.src);

@@ -54,10 +54,10 @@
                      label="&toolbar.button.like.label;"
                      oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin();  } else { facebook.like() }"/>
 
-      <toolbarbutton id="facebook-like2">
-            <iframe id="facebook-like-iframe" src="about:blank" 
-                height="20" style="overflow: hidden;"/>
-      </toolbarbutton>
+      <toolbaritem id="facebook-like2" align="center" pack="center">
+        <iframe id="facebook-like-iframe" src="about:blank" type="content"
+                height="20" flex="1"/>
+      </toolbaritem>
 
       <toolbarbutton id="facebook-photoupload"
                      class="facebook-icon-photoupload button"
