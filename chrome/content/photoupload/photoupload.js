@@ -21,8 +21,6 @@
 
 // Constants
 
-const Cc = Components.classes;
-const Ci = Components.interfaces;
 const CC = Components.Constructor;
 const Cu = Components.utils;
 
@@ -51,20 +49,6 @@ if (typeof(JSON) == "undefined") {
   JSON.stringify = JSON.toString;
 }
 
-const DEBUG = false;
-
-// Debugging.
-function LOG(s) {
-  //Components.utils.reportError(s);
-  if (DEBUG) {
-    dump(s + "\n");
-    var logString = "Facebook Upload : " + s;
-    var consoleService = Cc['@mozilla.org/consoleservice;1'].
-                getService(Ci.nsIConsoleService);
-    consoleService.logStringMessage(logString);
-  }
-}
-
 var QuitObserver = {
   observe: function(subject, topic, data) {
     switch (topic) {
@@ -75,7 +59,7 @@ var QuitObserver = {
             let cancelQuit = subject.QueryInterface(Components.interfaces.nsISupportsPRBool);
             cancelQuit.data = true;
           } catch (ex) {
-            LOG("cannot cancel quit: " + ex);
+            fbLib.debug("cannot cancel quit: " + ex);
           }
         }
       break;
@@ -139,7 +123,7 @@ Photo.prototype = {
 
     var imgTools = Cc["@mozilla.org/image/tools;1"].
                    getService(Ci.imgITools);
-    LOG("Found mime: " + this._mimeType + " for file " + this.filename);
+    fbLib.debug("Found mime: " + this._mimeType + " for file " + this.filename);
     var outParam = { value: null };
     imgTools.decodeImageData(this._inputStream, this._mimeType, outParam);
     return this.__container = outParam.value;
@@ -160,7 +144,7 @@ Photo.prototype = {
       return this._facebookSize = this.size;
     }
     var [oldWidth, oldHeight] = this.size;
-    LOG("resizing image. Original size: " + oldWidth + " x " + oldHeight);
+    fbLib.debug("resizing image. Original size: " + oldWidth + " x " + oldHeight);
     var newWidth, newHeight;
     var ratio = oldHeight / oldWidth;
     if (oldWidth > this.MAX_WIDTH) {
@@ -170,9 +154,9 @@ Photo.prototype = {
       newHeight = this.MAX_HEIGHT;
       newWidth = oldWidth * (this.MAX_HEIGHT / oldHeight);
     } else {
-      LOG("Unexpected state");
+      fbLib.debug("Unexpected state");
     }
-    LOG("new size: " + [newWidth, newHeight]);
+    fbLib.debug("new size: " + [newWidth, newHeight]);
     return this._facebookSize = [newWidth, newHeight];
   },
 
@@ -196,7 +180,7 @@ Photo.prototype = {
     var fbSize = this.facebookSize;
     if (this.size[0] == fbSize[0] &&
         this.size[1] == fbSize[1]) {
-      LOG("no resizing needed");
+      fbLib.debug("no resizing needed");
       return this._inputStream;
     }
     var imgTools = Cc["@mozilla.org/image/tools;1"].
@@ -245,7 +229,7 @@ var PhotoSet = {
     outer: for (var i=0; i<photos.length; i++) {
       for (var j=0; j<this._photos.length; j++) {
         if (this._photos[j].file && this._photos[j].file.equals(photos[i].file)) {
-          LOG("will not add duplicate image");
+          fbLib.debug("will not add duplicate image");
           //delete photos[i];
           continue outer;
         }
@@ -271,11 +255,11 @@ var PhotoSet = {
   _updateSelected: function() {
     var p = this._photos.filter(function(p) p == this._selected, this);
     if (p.length > 1) {
-      LOG("ERROR: more that one selected photo?");
+      fbLib.debug("ERROR: more that one selected photo?");
       return;
     }
     if (p.length == 0) {
-      LOG("No selected photo");
+      fbLib.debug("No selected photo");
       this._selected = null;
     }
     this._notifyChanged(CHANGE_SELECTED, this._selected);
@@ -290,7 +274,7 @@ var PhotoSet = {
   remove: function(photo) {
     var photoIndex = this._photos.indexOf(photo);
     if (photoIndex == -1) {
-      LOG("Warning: trying to remove a photo not in set");
+      fbLib.debug("Warning: trying to remove a photo not in set");
       return;
     }
     this._photos.splice(photoIndex, 1);
@@ -305,11 +289,11 @@ var PhotoSet = {
   _ensurePhotoExists: function(photo) {
     var p = this._photos.filter(function(p) p == photo);
     if (p.length == 0) {
-      LOG("ERROR: photo does not exist in set");
+      fbLib.debug("ERROR: photo does not exist in set");
       return false;
     }
     if (p.length > 1) {
-      LOG("ERROR: more than one photo matching?");
+      fbLib.debug("ERROR: more than one photo matching?");
       return false;
     }
     return true;
@@ -405,7 +389,7 @@ var PhotoSet = {
   },
 
   _uploadPhoto: function(albumId, objectId, photo, onProgress, onComplete, onError) {
-    LOG("Uploading photo: " + photo);
+    fbLib.debug("Uploading photo: " + photo);
 
     var params = {};
 
@@ -447,18 +431,18 @@ var PhotoSet = {
     }
 
     var postURL = "https://graph.facebook.com/" + objectId + "/photos?access_token=" + gFacebookService.accessToken;
-    LOG("post url = " + postURL);
+    fbLib.debug("post url = " + postURL);
 
     xhr.open("POST", postURL);
     xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
     xhr.setRequestHeader("MIME-version", "1.0");
 
     xhr.onreadystatechange = function(event) {
-      LOG("onreadstatechange " + xhr.readyState)
+      fbLib.debug("onreadstatechange " + xhr.readyState)
       if (xhr.readyState != 4)
         return;
 
-      LOG("upload api response: " + xhr.responseText);
+      fbLib.debug("upload api response: " + xhr.responseText);
 
       try {
         var data = JSON.parse(xhr.responseText);
@@ -524,17 +508,17 @@ var PhotoSet = {
 
     function doUpload() {
       if (self._cancelled) {
-        LOG("Upload cancelled");
+        fbLib.debug("Upload cancelled");
         onComplete(true);
         return;
       }
       if (index == total) {
-        LOG("PhotoSet.upload: index != total, How could that happen?");
+        fbLib.debug("PhotoSet.upload: index != total, How could that happen?");
         return;
       }
       var photo = toUpload[index];
       if (!photo) {
-        LOG("PhotoSet.upload: no photo to upload, How could that happen?");
+        fbLib.debug("PhotoSet.upload: no photo to upload, How could that happen?");
         return;
       }
       var photoSize = photo.sizeInBytes;
@@ -542,7 +526,7 @@ var PhotoSet = {
       try {
         self._uploadAndTagPhoto(albumId, objectId, photo,
           function(photoPercent) { // onProgress callback
-            LOG("on progress from photo upload " + photoPercent);
+            fbLib.debug("on progress from photo upload " + photoPercent);
             var donePercent = (uploadedBytes / totalSizeBytes) * 100;
             var photoRelativePercent = photoPercent * (photoSize / totalSizeBytes);
             onProgress(donePercent + photoRelativePercent);
@@ -621,7 +605,7 @@ var OverviewPanel = {
   },
 
   photosChanged: function(changeType, parameter) {
-    LOG("OverviewPanel::PhotosChanged " + changeType);
+    fbLib.debug("OverviewPanel::PhotosChanged " + changeType);
 
     if (changeType == CHANGE_SELECTED) {
       var selectedPhoto = parameter;
@@ -638,7 +622,7 @@ var OverviewPanel = {
       var toRemovePhoto = parameter;
       var photoNode = this._getNodeFromPhoto(toRemovePhoto);
       if (!photoNode) {
-        LOG("Warning: can't find node of the photo to remove");
+        fbLib.debug("Warning: can't find node of the photo to remove");
         return;
       }
       this._photoContainer.removeChild(photoNode);
@@ -687,7 +671,7 @@ var OverviewPanel = {
   selectPhoto: function(event) {
     var photo = this._photoFromEvent(event);
     if (!photo) {
-      LOG("Error, photo not found");
+      fbLib.debug("Error, photo not found");
       return;
     }
     PhotoSet.selected = photo;
@@ -697,7 +681,7 @@ var OverviewPanel = {
   removePhoto: function(photo) {
     //var photo = this._photoFromEvent(event);
     if (!photo) {
-      LOG("Error, photo not found");
+      fbLib.debug("Error, photo not found");
       return;
     }
     PhotoSet.remove(photo);
@@ -705,7 +689,7 @@ var OverviewPanel = {
 
   editPhoto: function(photo) {
     if (!photo) {
-      LOG("Error, photo not found");
+      fbLib.debug("Error, photo not found");
       return;
     }
     window.openDialog('chrome://facebook/content/photoupload/photoedit.xul',
@@ -822,7 +806,7 @@ var PhotoDNDObserverLegacy = {
       if (tmpfile)
           theseFiles.push(tmpfile);
     } catch (e) {
-      LOG("Exception while getting drag data: " + e);
+      fbLib.debug("Exception while getting drag data: " + e);
       return null;
     }
 
@@ -870,7 +854,7 @@ var PhotoDNDObserver = {
 
               if (tmpfile.isDirectory())
               {
-                  LOG("Dropped a directory; iterating");
+                  fbLib.debug("Dropped a directory; iterating");
 
                   var getFilesInDirectory = function(dir)
                   {
@@ -900,12 +884,12 @@ var PhotoDNDObserver = {
               }
               else if (isValidImageFile(tmpfile))
               {
-                  LOG("Dropped a valid image file");
+                  fbLib.debug("Dropped a valid image file");
                   theseFiles.push(tmpfile);
               }
               else
               {
-                  LOG("Unsupported file type dropped");
+                  fbLib.debug("Unsupported file type dropped");
               }
           }
           else if (types[i] == "text/x-moz-url")
@@ -934,7 +918,7 @@ var PhotoDNDObserver = {
                   };
 
                   var urldatabits = dt.mozGetDataAt("text/x-moz-url", pos).split(/\n/);
-                  LOG("Downloading image from: " + urldatabits[0]);
+                  fbLib.debug("Downloading image from: " + urldatabits[0]);
                   var urlObj = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService).newURI(urldatabits[0], null, null);
                   wbp.saveURI(urlObj, null, null, null, null, tmpfile);
 
@@ -942,12 +926,12 @@ var PhotoDNDObserver = {
               }
               catch (e)
               {
-                  LOG("Error downloading image: " + e);
+                  fbLib.debug("Error downloading image: " + e);
               }
           }
           else
           {
-              LOG("Unsupported drop type: " + types[i]);
+              fbLib.debug("Unsupported drop type: " + types[i]);
           }
       }
 
@@ -961,7 +945,7 @@ var PhotoDNDObserver = {
   },
 
   onDrop: function (event) {
-    LOG("In drop handler");
+    fbLib.debug("In drop handler");
 
     event.preventDefault(); event.stopPropagation();
 
@@ -1027,7 +1011,7 @@ var PhotoUpload = {
 
     if (PhotoUpload.usesLegacyDND())
     {
-        LOG("Switching to legacy DND");
+        fbLib.debug("Switching to legacy DND");
         document.getElementById("picBox").setAttribute("ondragdrop", "nsDragAndDrop.drop(event, PhotoDNDObserverLegacy)");
     }
     else
@@ -1065,7 +1049,7 @@ var PhotoUpload = {
     var tries = 0;
 
     function checkIfLoggedIn() {
-      LOG("Checking if user is logged in, try " + (tries + 1) + " / " + NUM_TRIES);
+      fbLib.debug("Checking if user is logged in, try " + (tries + 1) + " / " + NUM_TRIES);
       tries++;
       if (tries == NUM_TRIES) {
         alert(self._stringBundle.getString("mustLoginDialog"));
@@ -1073,13 +1057,13 @@ var PhotoUpload = {
         return;
       }
       if (!gFacebookServiceUnwrapped.loggedInUser) {
-        LOG("not logged in, retrying");
+        fbLib.debug("not logged in, retrying");
         setTimeout(checkIfLoggedIn, LOGGED_IN_POLL_TIMEOUT);
         return;
       }
-      LOG("logged in");
+      fbLib.debug("logged in");
       self._checkPhotoUploadPermission(function() {
-          LOG("photo permissions ok - filling album list");
+          fbLib.debug("photo permissions ok - filling album list");
           self._fillAlbumList();
       });
     }
@@ -1149,7 +1133,7 @@ var PhotoUpload = {
       return false;
     }
 
-    LOG("canClose() : user wants to continue with window close, will cancel uploads");
+    fbLib.debug("canClose() : user wants to continue with window close, will cancel uploads");
 
     self.cancelUpload();
 
@@ -1163,22 +1147,16 @@ var PhotoUpload = {
         gFacebookService.callMethod('facebook.photos.getAlbums',
           ["uid=" + gFacebookServiceUnwrapped.loggedInUser.id],
           function(albums) {
-            // Remove the "Profile Pictures" album from the list, it's a special
-            // album and uploading to this album generates errors.
+            // Remove albums not of type 'normal'
+            // This includes "Profile Pictures". "Mobile Uploads" and "Wall Photos"
+            // Uploading to some of these albums generates errors.
             albums = albums.filter(function(a) {
-              //LOG("album '" + a.name + "' has a aid of '" + a.aid + "'; will ignore albums with aid = " + ignoreAID);
-              /*
-              var urlAlbumId = self._albumIdToUrlAlbumId(a.aid);
-
-              //LOG("album '" + a.name + "' has a urlAlbumId of '" + urlAlbumId + "'");
-
-              return urlAlbumId != PROFILE_PICTURES_URL_ALBUM_ID;
-              */
-              return a.aid != ignoreAID;
+              fbLib.debug("album '" + a.name + "' has a aid of '" + a.aid + "'; album type = " + a.type);
+              return a.type == "normal";
             });
 
             if (albums.length == 0) {
-              LOG("No albums");
+              fbLib.debug("No albums");
               var newAlbumRadio = document.getElementById("newAlbumRadio");
               document.getElementById("albumSelectionGroup").selectedItem = newAlbumRadio;
               self.onAlbumSelectionModeChange()
@@ -1203,7 +1181,7 @@ var PhotoUpload = {
               menuitem.setAttribute("objectid", album.object_id);
               if (album.aid == lastAlbumId)
                 selectedItem = menuitem;
-              LOG("Album name: " + album.name + " object id: " + album.object_id + " album id: " + album.aid);
+              fbLib.debug("Album name: " + album.name + " object id: " + album.object_id + " album id: " + album.aid);
               albumsPopup.insertBefore(menuitem, albumsPopupPlaceHolder);
             }
             var albumsList = document.getElementById("albumsList");
@@ -1235,17 +1213,17 @@ var PhotoUpload = {
     var self = this;
 
     var checkAppPermission = function(perm, internalCallback) {
-        LOG("Checking photo upload permission '"+perm+"'");
+        fbLib.debug("Checking photo upload permission '"+perm+"'");
 
         gFacebookService.callMethod('facebook.users.hasAppPermission',
           ['ext_perm=' + perm],
           function(data) {
-            LOG("facebook.users.hasAppPermission[" + perm + "] returns: "
+            fbLib.debug("facebook.users.hasAppPermission[" + perm + "] returns: "
                 + data + " ts " + data.toString());
             // It previously returned the '1' string, but this changed to 'true'
             // in mid April 2009. Check both in case it changes again.
             if ('1' == data.toString() || 'true' == data.toString()) {
-              LOG("photo upload ['" + perm + "'] is authorized");
+              fbLib.debug("photo upload ['" + perm + "'] is authorized");
               internalCallback();
               return;
             }
@@ -1331,7 +1309,7 @@ var PhotoUpload = {
     }
     catch(e) {
       aTitle = "Select Photos";
-      //LOG("Filepicker title failure: "+e);
+      //fbLib.debug("Filepicker title failure: "+e);
     }
     fp.init(window, aTitle,
             Ci.nsIFilePicker.modeOpenMultiple);
@@ -1381,7 +1359,7 @@ var PhotoUpload = {
                                  upText, postUploadUrl);
     }
     catch(e) {
-      LOG("Error showing upload complete alert: " + e);
+      fbLib.debug("Error showing upload complete alert: " + e);
     }
   },
 
@@ -1448,7 +1426,7 @@ var PhotoUpload = {
       params,
       function(data) {
         if (!data.aid) {
-          LOG("Error while creating album");
+          fbLib.debug("Error while creating album");
           self._uploadComplete(UPLOAD_ERROR, null, "Error while creating album");
           return;
         }
@@ -1503,7 +1481,7 @@ var PhotoUpload = {
       this._uploadStatus.value = this._stringBundle.getString("uploadFailedStatus") +
                                  " " + errorMessage;
     } else {
-      LOG("Unknown upload status: " + status);
+      fbLib.debug("Unknown upload status: " + status);
     }
   },
 
@@ -1521,7 +1499,7 @@ var PhotoUpload = {
     var self = this;
     PhotoSet.upload(albumId, objectId,
       function(percent) { // onProgress callback
-        LOG("Got progress " + percent);
+        fbLib.debug("Got progress " + percent);
         self._uploadProgress.value = percent;
       }, function(cancelled) { // onComplete callback
         self._uploadComplete(cancelled ? UPLOAD_CANCELLED : UPLOAD_COMPLETE, albumId);
