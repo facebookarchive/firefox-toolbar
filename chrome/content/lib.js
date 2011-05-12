@@ -323,12 +323,12 @@ var fbLib = {
 
        //gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=117949738281674&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
 
-      fbLib.debug('opening auth window');
+      fbLib.debug('opening auth window, app id = ' + fbSvc.wrappedJSObject._appId);
 
       fbLib.setAttributeById('facebook-login-status', 'status', 'waiting');
 
        var authwin = window.open(
-        "https://www.facebook.com/dialog/oauth?client_id=117949738281674&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token",
+        "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token",
         "facebook-toolbar-login",
         "centerscreen,width=1024,height=600,modal=no,dialog=no,close=yes"
         );

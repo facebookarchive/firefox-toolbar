@@ -164,6 +164,7 @@ function facebookService() {
 
     debug('constructor');
 
+    this._appId = '2215974432';
     this._apiKey = '8d7be0a45c164647647602a27106cc65';
     this._secret = 'c9646e8dccec4c2726c65f6f5eeca86a';
 
@@ -623,6 +624,17 @@ facebookService.prototype = {
         } else if (this._sessionKey && this._sessionSecret) {
           debug('Removing sessionKey from passwords', this._sessionKey);
           this._pwdService.removeUser(PASSWORD_URL, this._sessionKey);
+        }
+
+        var cookieMgr = Components.classes["@mozilla.org/cookiemanager;1"]
+            .getService(Components.interfaces.nsICookieManager);
+
+        for (var e = cookieMgr.enumerator; e.hasMoreElements();) {
+            var cookie = e.getNext().QueryInterface(Components.interfaces.nsICookie); 
+            if ((cookie.host == ".facebook.com" || cookie.host == "facebook.com") && cookie.name == 'c_user')
+            {
+                cookieMgr.remove(cookie.host, cookie.name, cookie.path, false);
+            }
         }
 
         this.initValues();

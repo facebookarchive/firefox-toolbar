@@ -28,6 +28,8 @@ fbLib.debug( "toolbar.js" );
 
 var facebook = {
 
+    loggedOutTimeout: 0,
+
     obsSvc: Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService),
 
     topicToXulId: { 'facebook-msgs-updated':      'facebook-notification-msgs'
@@ -162,29 +164,46 @@ var facebook = {
     {
         try
         {
-            if (event.originalTarget.location.hostname == "www.facebook.com" && event.originalTarget.location.href.indexOf("access_token") > 0)
+            if (event.originalTarget.location.hostname == "www.facebook.com")
             {
-                var bits = event.originalTarget.location.hash.substring(1).split('&');
+                fbLib.debug('have facebook page load with url: ' + event.originalTarget.location.href);
 
-                for (var i=0; i<bits.length; i++)
+                if (event.originalTarget.location.href.indexOf("access_token") > 0)
                 {
-                    var tup = bits[i].split('=');
+                    var bits = event.originalTarget.location.hash.substring(1).split('&');
 
-                    if (tup[0] == "access_token")
+                    for (var i=0; i<bits.length; i++)
                     {
-                        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-                            .getService(Components.interfaces.nsIWindowMediator);
-                        var enumerator = wm.getEnumerator(null);
-                        while(enumerator.hasMoreElements()) {
-                            var win = enumerator.getNext();
-                            win.clearTimeout(Application.storage.get("authWindowCloseTimeout", null));
-                        }
+                        var tup = bits[i].split('=');
 
-                        event.originalTarget.defaultView.close();
-                        fbLib.debug( "have access token : "  + tup[1]);
-                        fbSvc.sessionStartOAuth(tup[1]);
-                        fbLib.debug( "finished session start");
+                        if (tup[0] == "access_token")
+                        {
+                            var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                                .getService(Components.interfaces.nsIWindowMediator);
+                            var enumerator = wm.getEnumerator(null);
+                            while(enumerator.hasMoreElements()) {
+                                var win = enumerator.getNext();
+                                win.clearTimeout(Application.storage.get("authWindowCloseTimeout", null));
+                            }
+
+                            event.originalTarget.defaultView.close();
+                            fbLib.debug( "have access token : "  + tup[1]);
+                            fbSvc.sessionStartOAuth(tup[1]);
+                            fbLib.debug( "finished session start");
+                        }
                     }
+                }
+                else if (!fbSvc.loggedIn)
+                {
+                    // check if user is logging in to facebook site
+                    facebook.checkForFBLogin();
+                }
+                else 
+                {
+                    // set a timeout to check if user is logged out of facebook.com site
+                    clearTimeout(facebook.loggedOutTimeout);
+
+                    facebook.loggedOutTimeout = setTimeout(facebook.checkForFBLogin, 1000 * 60 * 1);
                 }
             }
 
@@ -311,11 +330,72 @@ var facebook = {
         } else {
           var hasSavedSession = fbSvc.savedSessionStart();
           fbLib.setAttributeById('facebook-login-status', 'status', hasSavedSession?'waiting':'');
+
+          if (!hasSavedSession)
+          {
+              // try to get an auth token for currently logged in user.
+              facebook.checkForFBLogin();
+          }
         }
         facebook.loadFriends();
         getBrowser().addProgressListener(facebook.progListener);
         fbLib.debug('facebook toolbar loaded.');
         },
+
+    checkForFBLogin: function()
+    {
+          var requrl = "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token";
+
+          fbLib.debug('no saved session, checking facebook.com for currently logged in user: ' + requrl);
+
+          var req = new XMLHttpRequest();
+
+          req.mozBackgroundRequest = true;
+
+          req.onreadystatechange = function (event) {
+                if (req.readyState == 4) {
+                    var status;
+                    try {
+                        status = req.status;
+                    } catch (e) {
+                        status = 0;
+                    }
+
+                    if (status == 200) {
+
+                      var matches = req.responseText.match(/access_token=(.*)&/)
+
+                      if (!matches)
+                      {
+                          fbLib.debug('user is not logged into facebook');
+                          fbSvc.sessionEnd();
+                      }
+                      else
+                      {
+                          var myjson = '{"accessToken": "' + matches[1] + '"}';
+                          fbLib.debug('going to parse myjson "' + myjson + '"');
+
+                          try 
+                          {
+                              var obj = JSON.parse(myjson);
+
+                              fbLib.debug('user is logged into facebook, access_token = ' + obj.accessToken);
+
+                              fbSvc.sessionStartOAuth(obj.accessToken);
+                          }
+                          catch (e)
+                          {
+                              fbLib.debug('error parsing access token: ' + e);
+                          }
+                      }
+                    }
+                }
+            };
+     
+          req.open('get', requrl);
+          req.send();
+    },
+
     unload: function() {
         gBrowser.removeEventListener("DOMContentLoaded", facebook.onPageLoad, true);
         gBrowser.tabContainer.removeEventListener("TabSelect", facebook.onTabSelect2, false);
