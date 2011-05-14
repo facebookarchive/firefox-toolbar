@@ -178,6 +178,7 @@ var facebook = {
 
                         if (tup[0] == "access_token")
                         {
+                            /*
                             var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                                 .getService(Components.interfaces.nsIWindowMediator);
                             var enumerator = wm.getEnumerator(null);
@@ -187,6 +188,8 @@ var facebook = {
                             }
 
                             event.originalTarget.defaultView.close();
+                            */
+
                             fbLib.debug( "have access token : "  + tup[1]);
                             fbSvc.sessionStartOAuth(tup[1]);
                             fbLib.debug( "finished session start");
@@ -198,11 +201,11 @@ var facebook = {
                     // check if user is logging in to facebook site
                     facebook.checkForFBLogin();
                 }
-                else 
+
+                if (fbSvc.loggedIn)
                 {
                     // set a timeout to check if user is logged out of facebook.com site
                     clearTimeout(facebook.loggedOutTimeout);
-
                     facebook.loggedOutTimeout = setTimeout(facebook.checkForFBLogin, 1000 * 60 * 1);
                 }
             }

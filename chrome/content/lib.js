@@ -321,11 +321,13 @@ var fbLib = {
         fbSvc.sessionEnd();
       } else {
 
-       //gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=117949738281674&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
-
-      fbLib.debug('opening auth window, app id = ' + fbSvc.wrappedJSObject._appId);
+       gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
 
       fbLib.setAttributeById('facebook-login-status', 'status', 'waiting');
+
+      /*
+      fbLib.debug('opening auth window, app id = ' + fbSvc.wrappedJSObject._appId);
+
 
        var authwin = window.open(
         "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token",
@@ -346,6 +348,7 @@ var fbLib = {
        };
 
        Application.storage.set("authWindowCloseTimeout", setTimeout(cleanup, 1000));
+       */
 
         // popup login page height is at most 500, but add 20 pixels for the
         // button we show at the bottom of the page
