@@ -298,6 +298,16 @@ var fbLib = {
       }
     },
 
+    LikeIframeLoad: function()
+    {
+            fbLib.debug("in LikeIframeLoad");
+            var x = document.getElementById("facebook-like-iframe");
+            var y = x.contentDocument;
+            y.body.setAttribute("style", "background-color: blue !important;");
+
+            return true;
+    },
+
     FacebookLogin: function() {
 
 

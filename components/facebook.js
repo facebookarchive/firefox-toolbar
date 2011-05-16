@@ -533,6 +533,8 @@ facebookService.prototype = {
         {
             if (response.id)
             {
+                //debug("SAVING ACCESS TOKEN: " + accessToken);
+
                 fbSvc._uid = response.id;
                 fbSvc._loggedIn      = true;
                 fbSvc._prefService.setCharPref('extensions.facebook.access_token', accessToken)

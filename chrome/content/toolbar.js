@@ -133,8 +133,12 @@ var facebook = {
         onStatusChange: function(webProgress, request, status, message) {  }
     },
 
+    /*
     likeProgListener: {
+
         onLocationChange: function(webProgress, request, location) {
+        fbLib.debug("in likeProgListener");
+
             var x = document.getElementById("facebook-like-iframe");
             var y = x.contentDocument;
             y.body.setAttribute("style", "background-color: blue !important;");
@@ -144,6 +148,7 @@ var facebook = {
         onStateChange: function(webProgress, request, stateFlags, status) {  },
         onStatusChange: function(webProgress, request, status, message) {  }
     },
+    */
 
      topics_of_interest:    [ 'facebook-session-start'
                             , 'facebook-friends-updated'
@@ -245,9 +250,16 @@ var facebook = {
 
         //fbLib.debug("in updateLikeCount2 with url = '" + url + "'");
 
-        fbLib.setAttributeById('facebook-like-iframe', 'src',
-            (url?'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb':'about:blank'));
+        fbLib.setAttributeById('facebook-like-iframe', 'collapsed', 'true');
+
+        if (url != null && url.match(/^http/))
+        {
+            fbLib.setAttributeById('facebook-like-iframe', 'src',
+                (url?'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb':'about:blank'));
+        }
+
         //document.getElementById('facebook-like-iframe').addProgressListener(facebook.likeProgListener);
+        //document.getElementById('facebook-like-iframe').contentDocument.addProgressListener(facebook.likeProgListener);
     },
 
     updateLikeCount: function(url, doc) {
@@ -289,11 +301,87 @@ var facebook = {
         });
     },
 
+    onLikeIframeLoad: function(event) {
+
+        if (!fbSvc.loggedIn)
+        {
+            x.setAttribute("collapsed", "true");
+            return;
+        }
+
+        if (event.originalTarget.location.hostname == "www.facebook.com" &&
+                event.originalTarget.location.href.indexOf("plugins/like.php") > 0)
+        {
+            var x = document.getElementById("facebook-like-iframe");
+            var y = x.contentDocument;
+
+            x.setAttribute("collapsed", "true");
+            x.setAttribute("style", "width: 90px !important;");
+
+            var table = y.getElementsByTagName("table")[0];
+
+            if (!table)
+                return;
+
+            x.setAttribute("collapsed", "false");
+
+            var th = x.contentWindow.getComputedStyle(table,null).getPropertyValue("height");
+            //fbLib.debug("table height: " + th);
+
+            var widen = function(by)
+            {
+                //fbLib.debug("widening iframe from '" + parseFloat(x.boxObject.width) + "' to '" + (parseFloat(x.boxObject.width) + by) + "'");
+                x.setAttribute("style", "width: " + (parseFloat(x.boxObject.width) + by) + "px !important;");
+
+                var th = x.contentWindow.getComputedStyle(table,null).getPropertyValue("height");
+                //fbLib.debug("table height: " + th);
+
+                if (parseFloat(th) > 25 && by < 500)
+                    setTimeout(function() { widen(by*1.5); }, 100);
+            }
+
+            if (parseFloat(th) > 25)
+                setTimeout(function() { widen(20); }, 100);
+
+            /*
+            x.setAttribute("style", "width: 500px !important;");
+
+            var tw = x.contentWindow.getComputedStyle(y.getElementsByTagName("table")[0],null).getPropertyValue("width");
+            fbLib.debug("table width: " + tw);
+            //fbLib.debug("boxobject table width: " + y.getElementsByTagName("table")[0].boxObject.width);
+            //fbLib.debug("new table width: " + (parseFloat(tw)+10));
+
+            setTimeout(function() { 
+
+                var tw = x.contentWindow.getComputedStyle(y.getElementsByTagName("table")[0],null).getPropertyValue("width");
+                fbLib.debug("timeout table width: " + tw);
+                x.setAttribute("style", "width: " + (parseFloat(tw)+10) + "px !important;");
+               // fbLib.debug("timeout boxobject table width: " + y.getElementsByTagName("table")[0].boxObject.width);
+               // fbLib.debug("timeout new table width: " + (parseFloat(tw)+10));
+
+            x.setAttribute('collapsed', 'false');
+
+            }, 1000);
+
+            //x.setAttribute("width", (parseFloat(tw)+10) + "px");
+            //x.setAttribute("style", "width: 300px !important;");
+            y.body.setAttribute("style", "background-color: blue !important;");
+            */
+
+        }
+
+    },
+
     load: function() {
         fbLib.debug( "loading toolbar..." );
 
         gBrowser.addEventListener("DOMContentLoaded", facebook.onPageLoad, true);
         gBrowser.tabContainer.addEventListener("TabSelect", facebook.onTabSelect2, false);
+        gBrowser.tabContainer.addEventListener("TabOpen", facebook.onTabSelect2, false);
+        gBrowser.tabContainer.addEventListener("TabClose", facebook.onTabSelect2, false);
+        document.getElementById("facebook-like-iframe").addEventListener("DOMContentLoaded", facebook.onLikeIframeLoad, true);
+
+        facebook.updateLikeCount2(null, null);
 
         facebook.fStringBundle = fbLib.GetFBStringBundle();
         fbLib.debug(facebook.fStringBundle.src);
@@ -349,6 +437,9 @@ var facebook = {
     {
           var requrl = "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token";
 
+          //if (this._prefService.getCharPref('extensions.facebook.access_token'))
+          //    return;
+
           fbLib.debug('no saved session, checking facebook.com for currently logged in user: ' + requrl);
 
           var req = new XMLHttpRequest();
@@ -371,7 +462,7 @@ var facebook = {
                       if (!matches)
                       {
                           fbLib.debug('user is not logged into facebook');
-                          fbSvc.sessionEnd();
+                          //fbSvc.sessionEnd();
                       }
                       else
                       {
@@ -402,6 +493,9 @@ var facebook = {
     unload: function() {
         gBrowser.removeEventListener("DOMContentLoaded", facebook.onPageLoad, true);
         gBrowser.tabContainer.removeEventListener("TabSelect", facebook.onTabSelect2, false);
+        gBrowser.tabContainer.removeEventListener("TabOpen", facebook.onTabSelect2, false);
+        gBrowser.tabContainer.removeEventListener("TabClose", facebook.onTabSelect2, false);
+        document.getElementById("facebook-like-iframe").removeEventListener("DOMContentLoaded", facebook.onLikeIframeLoad, true);
 
         for each (var topic in facebook.topics_of_interest)
             facebook.obsSvc.removeObserver(facebook.fbToolbarObserver, topic);
