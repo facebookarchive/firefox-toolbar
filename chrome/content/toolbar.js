@@ -133,23 +133,6 @@ var facebook = {
         onStatusChange: function(webProgress, request, status, message) {  }
     },
 
-    /*
-    likeProgListener: {
-
-        onLocationChange: function(webProgress, request, location) {
-        fbLib.debug("in likeProgListener");
-
-            var x = document.getElementById("facebook-like-iframe");
-            var y = x.contentDocument;
-            y.body.setAttribute("style", "background-color: blue !important;");
-        },
-        onProgressChange: function(webProgress, request, curSelfProg, maxSelfProg, curTotalProg, maxTotalProg) {  },
-        onSecurityChange: function(webProgress, request, state) {  },
-        onStateChange: function(webProgress, request, stateFlags, status) {  },
-        onStatusChange: function(webProgress, request, status, message) {  }
-    },
-    */
-
      topics_of_interest:    [ 'facebook-session-start'
                             , 'facebook-friends-updated'
                             , 'facebook-friend-updated'
@@ -305,7 +288,7 @@ var facebook = {
 
         if (!fbSvc.loggedIn)
         {
-            x.setAttribute("collapsed", "true");
+            document.getElementById("facebook-like-iframe").setAttribute("collapsed", "true");
             return;
         }
 
@@ -316,57 +299,20 @@ var facebook = {
             var y = x.contentDocument;
 
             x.setAttribute("collapsed", "true");
-            x.setAttribute("style", "width: 90px !important;");
+            x.setAttribute("style", "width: 48px !important;");
+            //y.body.setAttribute("style", "background-color: blue !important;");
 
-            var table = y.getElementsByTagName("table")[0];
+            var countElt = y.getElementsByClassName('connect_widget_button_count_count')[0];
 
-            if (!table)
+            if (!countElt)
                 return;
 
-            x.setAttribute("collapsed", "false");
-
-            var th = x.contentWindow.getComputedStyle(table,null).getPropertyValue("height");
-            //fbLib.debug("table height: " + th);
-
-            var widen = function(by)
+            if (countElt.textContent.length > 1)
             {
-                //fbLib.debug("widening iframe from '" + parseFloat(x.boxObject.width) + "' to '" + (parseFloat(x.boxObject.width) + by) + "'");
-                x.setAttribute("style", "width: " + (parseFloat(x.boxObject.width) + by) + "px !important;");
-
-                var th = x.contentWindow.getComputedStyle(table,null).getPropertyValue("height");
-                //fbLib.debug("table height: " + th);
-
-                if (parseFloat(th) > 25 && by < 500)
-                    setTimeout(function() { widen(by*1.5); }, 100);
+                x.setAttribute("style", "width: " + (48 + (countElt.textContent.length * 12)) + "px !important;");
             }
 
-            if (parseFloat(th) > 25)
-                setTimeout(function() { widen(20); }, 100);
-
-            /*
-            x.setAttribute("style", "width: 500px !important;");
-
-            var tw = x.contentWindow.getComputedStyle(y.getElementsByTagName("table")[0],null).getPropertyValue("width");
-            fbLib.debug("table width: " + tw);
-            //fbLib.debug("boxobject table width: " + y.getElementsByTagName("table")[0].boxObject.width);
-            //fbLib.debug("new table width: " + (parseFloat(tw)+10));
-
-            setTimeout(function() { 
-
-                var tw = x.contentWindow.getComputedStyle(y.getElementsByTagName("table")[0],null).getPropertyValue("width");
-                fbLib.debug("timeout table width: " + tw);
-                x.setAttribute("style", "width: " + (parseFloat(tw)+10) + "px !important;");
-               // fbLib.debug("timeout boxobject table width: " + y.getElementsByTagName("table")[0].boxObject.width);
-               // fbLib.debug("timeout new table width: " + (parseFloat(tw)+10));
-
-            x.setAttribute('collapsed', 'false');
-
-            }, 1000);
-
-            //x.setAttribute("width", (parseFloat(tw)+10) + "px");
-            //x.setAttribute("style", "width: 300px !important;");
-            y.body.setAttribute("style", "background-color: blue !important;");
-            */
+            x.setAttribute("collapsed", "false");
 
         }
 
