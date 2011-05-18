@@ -19,8 +19,8 @@
  */
 
 const BASE_CHECK_INTERVAL = 5*60*1000; // 5 minutes
-const DEBUG     = true;
-const VERBOSITY = 2; // 0: no dumping, 1: normal dumping, 2: massive dumping
+const DEBUG     = false;
+const VERBOSITY = 0; // 0: no dumping, 1: normal dumping, 2: massive dumping
 
 var debug = ( VERBOSITY < 1 )
   ? function() {}
