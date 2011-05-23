@@ -181,6 +181,14 @@ function facebookService() {
       this._checker = {
         notify: function(timer) {
           var now = Date.now();
+
+          if (!fbSvc.hasSiteCookie())
+          {
+              debug('_checker.notify: missing fb site cookie: logging out');
+              fbSvc.sessionEnd();
+              return;
+          }
+
           // only do a check if either:
           //   1. we loaded an fb page in the last minute
           if ((fbSvc._lastFBLoad > fbSvc._lastChecked)
@@ -211,6 +219,14 @@ function facebookService() {
           var interval = now - fbSvc._lastChecked;
           fbSvc._lastChecked = now;
           debug('_checker.notify: checking', now, fbSvc._lastFBLoad, fbSvc._lastPageLoad, fbSvc._lastChecked);
+
+          if (!fbSvc.hasSiteCookie())
+          {
+              debug('_checker.notify: missing fb site cookie: logging out');
+              fbSvc.sessionEnd();
+              return;
+          }
+
           // note: suppress notifications if we haven't successfully checked for the last 30 minutes
           fbSvc.checkUsers(now > fbSvc._lastCheckedFriends + BASE_CHECK_INTERVAL * 6);
           fbSvc.checkNotifications(false, interval);
@@ -608,6 +624,19 @@ facebookService.prototype = {
         this._prefService.unlockPref( pref_name );
         this._prefService.setCharPref( pref_name, pref_val );
         this._prefService.lockPref( pref_name );
+    },
+    hasSiteCookie: function() {
+
+        var cookieMgr = Components.classes["@mozilla.org/cookiemanager;1"]
+            .getService(Components.interfaces.nsICookieManager);
+
+        for (var e = cookieMgr.enumerator; e.hasMoreElements();) {
+            var cookie = e.getNext().QueryInterface(Components.interfaces.nsICookie); 
+            if ((cookie.host == ".facebook.com" || cookie.host == "facebook.com") && cookie.name == 'c_user')
+                return true;
+        }
+
+        return false;
     },
     sessionEnd: function() {
         debug('sessionEnd');
@@ -1200,7 +1229,7 @@ facebookService.prototype = {
         }
         var message = paramsEncoded.join('&');
 
-        dump("api message: " + message + " \n");
+        debug("api message: " + message + " \n");
 
         try {
             // Yuck...xmlhttprequest doesn't always work so we have to do this
