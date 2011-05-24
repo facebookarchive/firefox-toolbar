@@ -6,6 +6,7 @@
 <!ENTITY  toolbar.search.label                      "Zoeken op Facebook">
 <!ENTITY  toolbar.button.home.tooltip               "Ga naar Facebook">
 <!ENTITY  toolbar.button.share.label                "Delen">
+<!ENTITY  toolbar.button.like.label                 "Like">
 <!ENTITY  toolbar.button.share.tooltip              "Huidige pagina delen op Facebook">
 <!ENTITY  toolbar.button.upload.tooltip             "Foto's uploaden naar Facebook">
 

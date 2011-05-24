@@ -6,6 +6,7 @@
 <!ENTITY  toolbar.search.label                      "Søg på Facebook">
 <!ENTITY  toolbar.button.home.tooltip               "Gå til Facebook">
 <!ENTITY  toolbar.button.share.label                "Del">
+<!ENTITY  toolbar.button.like.label                 "Like">
 <!ENTITY  toolbar.button.share.tooltip              "Del aktuelle side på Facebook">
 <!ENTITY  toolbar.button.upload.tooltip             "Overfør billeder til Facebook">
 

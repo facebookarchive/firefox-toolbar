@@ -6,6 +6,7 @@
 <!ENTITY  toolbar.search.label                      "Recherche sur Facebook">
 <!ENTITY  toolbar.button.home.tooltip               "Page d'accueil Facebook">
 <!ENTITY  toolbar.button.share.label                "Partager">
+<!ENTITY  toolbar.button.like.label                 "Like">
 <!ENTITY  toolbar.button.share.tooltip              "Partager la page actuelle sur Facebook">
 <!ENTITY  toolbar.button.upload.tooltip             "Télécharger des photos sur Facebook">
 
