@@ -1,5 +1,8 @@
 pref("extensions.facebook.debug", false);
 
+pref("extensions.firefox@facebook.com.name", "chrome://facebook/locale/facebook.properties");
+pref("extensions.firefox@facebook.com.description", "chrome://facebook/locale/facebook.properties");
+
 pref("extensions.facebook.notifications.toggle", true);
 pref("extensions.facebook.notifications.you.req", true);
 pref("extensions.facebook.notifications.you.msg", true);
