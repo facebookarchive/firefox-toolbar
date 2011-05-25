@@ -255,7 +255,7 @@ var PhotoSet = {
   _updateSelected: function() {
     var p = this._photos.filter(function(p) p == this._selected, this);
     if (p.length > 1) {
-      fbLib.debug("ERROR: more that one selected photo?");
+      fbLib.debug("ERROR: more than one selected photo?");
       return;
     }
     if (p.length == 0) {
@@ -834,10 +834,9 @@ var PhotoDNDObserver = {
         event.dataTransfer.types.contains("application/x-moz-file");
   },
 
-  _getFilesFromDragSession: function (dt, pos)
+  _getFilesFromDragSession: function (dt)
   {
       var theseFiles = [];
-      var types = dt.mozTypesAt(pos);
 
       var isValidImageFile = function(f)
       {
@@ -846,11 +845,12 @@ var PhotoDNDObserver = {
           return (validImageFileSuffixes.indexOf(ext.toLowerCase()) != -1);
       };
 
-      for (var i=0; i<types.length; i++)
+      for (var i=0; i<dt.mozItemCount; i++)
       {
-          if (types[i] == "application/x-moz-file")
+          var types = dt.mozTypesAt(i);
+          if (types.contains("application/x-moz-file"))
           {
-              var tmpfile = dt.mozGetDataAt("application/x-moz-file", pos).QueryInterface(Ci.nsIFile);
+              var tmpfile = dt.mozGetDataAt("application/x-moz-file", i).QueryInterface(Ci.nsIFile);
 
               if (tmpfile.isDirectory())
               {
@@ -892,7 +892,7 @@ var PhotoDNDObserver = {
                   fbLib.debug("Unsupported file type dropped");
               }
           }
-          else if (types[i] == "text/x-moz-url")
+          else if (types.contains("text/x-moz-url"))
           {
               try
               {
@@ -917,7 +917,7 @@ var PhotoDNDObserver = {
                     }
                   };
 
-                  var urldatabits = dt.mozGetDataAt("text/x-moz-url", pos).split(/\n/);
+                  var urldatabits = dt.mozGetDataAt("text/x-moz-url", i).split(/\n/);
                   fbLib.debug("Downloading image from: " + urldatabits[0]);
                   var urlObj = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService).newURI(urldatabits[0], null, null);
                   wbp.saveURI(urlObj, null, null, null, null, tmpfile);
@@ -950,12 +950,10 @@ var PhotoDNDObserver = {
     event.preventDefault(); event.stopPropagation();
 
     var files = [];
-    for (var i = 0; i < event.dataTransfer.mozItemCount; ++i) {
-        var theseFiles = PhotoDNDObserver._getFilesFromDragSession(event.dataTransfer, i);
-        if (theseFiles)
-        {
-            theseFiles.forEach(function(file) { files.push(file); });
-        }
+    var theseFiles = PhotoDNDObserver._getFilesFromDragSession(event.dataTransfer);
+    if (theseFiles)
+    {
+        theseFiles.forEach(function(file) { files.push(file); });
     }
 
     PhotoSet.add([new Photo(f) for each (f in files)]);
