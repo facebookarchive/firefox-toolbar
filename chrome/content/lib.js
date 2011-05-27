@@ -331,7 +331,8 @@ var fbLib = {
         fbSvc.sessionEnd();
       } else {
 
-       gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
+       //gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
+       gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/");
 
       fbLib.setAttributeById('facebook-login-status', 'status', 'waiting');
 

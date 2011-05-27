@@ -97,6 +97,21 @@ var facebook = {
                         fbLib.setAttributeById( top, 'label', '?');
                     facebook.clearFriends(true);
                     facebook.updateLikeCount2(null, gBrowser.contentDocument);
+
+                    // redirect all open facebook pages
+
+                    var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                        .getService(Components.interfaces.nsIWindowMediator);
+                    var browserEnumerator = wm.getEnumerator("navigator:browser");
+
+                    while (browserEnumerator.hasMoreElements())
+                    {
+                        var brow = browserEnumerator.getNext().gBrowser;
+                        var host = brow.currentURI.host;
+                        if (host == "www.facebook.com")
+                            brow.loadURI("http://www.facebook.com/");
+                    }
+
                     break;
                 case 'facebook-friends-updated':
                     facebook.loadFriends();
@@ -187,7 +202,17 @@ var facebook = {
                 else if (!fbSvc.loggedIn)
                 {
                     // check if user is logging in to facebook site
-                    facebook.checkForFBLogin();
+
+                    if (fbSvc.wrappedJSObject.hasSiteCookie())
+                    {
+                        // if we have a site cookie then check for api login, opening new tab to get perms if needed
+                        facebook.checkForFBLogin(true);
+                    }
+                    else
+                    {
+                        // if no site cookie, then don't open a new tab yet.
+                        facebook.checkForFBLogin();
+                    }
                 }
 
                 if (fbSvc.loggedIn)
@@ -379,7 +404,7 @@ var facebook = {
         fbLib.debug('facebook toolbar loaded.');
         },
 
-    checkForFBLogin: function()
+    checkForFBLogin: function(openPermsWin)
     {
           var requrl = "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token";
 
@@ -407,8 +432,27 @@ var facebook = {
 
                       if (!matches)
                       {
-                          fbLib.debug('user is not logged into facebook');
-                          //fbSvc.sessionEnd();
+                          fbLib.debug('user does not have auth permissions');
+
+                          if (openPermsWin)
+                          {
+                              // check that a perms window isn't already open
+                              var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                                  .getService(Components.interfaces.nsIWindowMediator);
+                              var browserEnumerator = wm.getEnumerator("navigator:browser");
+
+                              while (browserEnumerator.hasMoreElements())
+                              {
+                                  var brow = browserEnumerator.getNext().gBrowser;
+                                  var matches = brow.currentURI.spec.match(/(uiserver.php|oauth|dialog)/);
+
+                                  if (matches)
+                                      return;
+                              }
+
+                              gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
+                              //fbSvc.sessionEnd();
+                          }
                       }
                       else
                       {
