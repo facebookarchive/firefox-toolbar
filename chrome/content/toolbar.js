@@ -216,6 +216,16 @@ var facebook = {
                     }
                 }
 
+                if (event.originalTarget.location.href.indexOf("ai.php") > 0)
+                {
+                    // hack to observer history api type page changes on facebook 
+                    // popstate event not working for me
+                    setTimeout(function()
+                    {
+                        facebook.updateLikeCount2(gBrowser.currentURI.spec, null);
+                    }, 1000);
+                }
+
                 if (fbSvc.loggedIn)
                 {
                     // set a timeout to check if user is logged out of facebook.com site
