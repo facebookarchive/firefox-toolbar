@@ -29,6 +29,7 @@ fbLib.debug( "toolbar.js" );
 var facebook = {
 
     loggedOutTimeout: 0,
+    authTabTimeout: null,
 
     obsSvc: Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService),
 
@@ -436,22 +437,35 @@ var facebook = {
 
                           if (openPermsWin)
                           {
-                              // check that a perms window isn't already open
-                              var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-                                  .getService(Components.interfaces.nsIWindowMediator);
-                              var browserEnumerator = wm.getEnumerator("navigator:browser");
-
-                              while (browserEnumerator.hasMoreElements())
+                              if (facebook.authTabTimeout)
                               {
-                                  var brow = browserEnumerator.getNext().gBrowser;
-                                  var matches = brow.currentURI.spec.match(/(uiserver.php|oauth|dialog)/);
-
-                                  if (matches)
-                                      return;
+                                  return;
                               }
 
-                              gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
-                              //fbSvc.sessionEnd();
+                              facebook.authTabTimeout = setTimeout(function()
+                              {
+                                  // check that a perms window isn't already open
+                                  var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                                      .getService(Components.interfaces.nsIWindowMediator);
+                                  var browserEnumerator = wm.getEnumerator("navigator:browser");
+
+                                  while (browserEnumerator.hasMoreElements())
+                                  {
+                                      var brow = browserEnumerator.getNext().gBrowser;
+
+                                      var matches = brow.currentURI.spec.match(/(uiserver.php|oauth|dialog)/);
+
+                                      if (matches)
+                                      {
+                                          gBrowser.selectedTab = brow;
+                                          return;
+                                      }
+                                  }
+
+                                  gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
+
+                                  facebook.authTabTimeout = null;
+                              }, 2000);
                           }
                       }
                       else
