@@ -628,11 +628,13 @@ var facebook = {
       statusBox.style.color = '#000000';
     }
   },
+  /* XXX api-based like, not used for now.
   like: function() {
       fbSvc.wrappedJSObject.postGraphObject(link_id + "/likes", function(data) {
           fbLib.debug("have liked this link, in callback: " + data);
       });
   },
+  */
   share: function() {
     // not only do we need to encodeURIComponent on the string, we also need to escape quotes since
     // we are putting this into a string to evaluate (as opposed to evaluating it directly)
