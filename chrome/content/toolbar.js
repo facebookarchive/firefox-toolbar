@@ -85,7 +85,7 @@ var facebook = {
                     fbLib.SetHint(true, fStrings.getString('loadingfriends'), '');
 
                     //fbLib.debug("currentURI is '" + gBrowser.currentURI.spec  + "'");
-                    facebook.updateLikeCount2(gBrowser.currentURI.spec, gBrowser.contentDocument);
+                    facebook.updateLikeCount2(gBrowser.currentURI.spec);
                     break;
                 case 'facebook-session-end':
                     fbLib.debug('ending session...');
@@ -97,7 +97,7 @@ var facebook = {
                     for each( var top in facebook.topicToXulId )
                         fbLib.setAttributeById( top, 'label', '?');
                     facebook.clearFriends(true);
-                    facebook.updateLikeCount2(null, gBrowser.contentDocument);
+                    facebook.updateLikeCount2(null);
 
                     // redirect all open facebook pages
 
@@ -166,71 +166,34 @@ var facebook = {
 
     onPageLoad: function(event)
     {
+        //fbLib.debug("onPageLoad: event with url: " + event.originalTarget.location);
+
+        // here we are notified about any page load events in the main browser
+
         try
         {
             if (event.originalTarget.location.hostname == "www.facebook.com")
             {
-                fbLib.debug('have facebook page load with url: ' + event.originalTarget.location.href);
-
-                if (event.originalTarget.location.href.indexOf("access_token") > 0)
+                if (!fbSvc.loggedIn)
                 {
-                    var bits = event.originalTarget.location.hash.substring(1).split('&');
+                    // if this is a facebook page and we're not logged into the toolbar, then check can we get an access token now.
 
-                    for (var i=0; i<bits.length; i++)
+                    facebook.checkForFBLogin();
+                }
+                else
+                {
+                    if (event.originalTarget.location.href.indexOf("ai.php") > 0)
                     {
-                        var tup = bits[i].split('=');
+                        // hack to observer history api type page changes on facebook 
+                        // popstate event not working for me
 
-                        if (tup[0] == "access_token")
+                        //fbLib.debug("onPageLoad: have an 'ai.php' url, will get like count for new history item");
+
+                        setTimeout(function()
                         {
-                            /*
-                            var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-                                .getService(Components.interfaces.nsIWindowMediator);
-                            var enumerator = wm.getEnumerator(null);
-                            while(enumerator.hasMoreElements()) {
-                                var win = enumerator.getNext();
-                                win.clearTimeout(Application.storage.get("authWindowCloseTimeout", null));
-                            }
-
-                            event.originalTarget.defaultView.close();
-                            */
-
-                            fbLib.debug( "have access token : "  + tup[1]);
-                            fbSvc.sessionStartOAuth(tup[1]);
-                            fbLib.debug( "finished session start");
-                        }
+                            facebook.updateLikeCount2(gBrowser.currentURI.spec);
+                        }, 1000);
                     }
-                }
-                else if (!fbSvc.loggedIn)
-                {
-                    // check if user is logging in to facebook site
-
-                    if (fbSvc.wrappedJSObject.hasSiteCookie())
-                    {
-                        // if we have a site cookie then check for api login, opening new tab to get perms if needed
-                        facebook.checkForFBLogin(true);
-                    }
-                    else
-                    {
-                        // if no site cookie, then don't open a new tab yet.
-                        facebook.checkForFBLogin();
-                    }
-                }
-
-                if (event.originalTarget.location.href.indexOf("ai.php") > 0)
-                {
-                    // hack to observer history api type page changes on facebook 
-                    // popstate event not working for me
-                    setTimeout(function()
-                    {
-                        facebook.updateLikeCount2(gBrowser.currentURI.spec, null);
-                    }, 1000);
-                }
-
-                if (fbSvc.loggedIn)
-                {
-                    // set a timeout to check if user is logged out of facebook.com site
-                    clearTimeout(facebook.loggedOutTimeout);
-                    facebook.loggedOutTimeout = setTimeout(facebook.checkForFBLogin, 1000 * 60 * 1);
                 }
             }
 
@@ -242,7 +205,9 @@ var facebook = {
                 && event.originalTarget.location.toString().substring(0,4) == "http"
                 ) {
 
-                facebook.updateLikeCount2(event.originalTarget.location.toString(), event.originalTarget);
+                //fbLib.debug("onPageLoad: have a likeable url");
+
+                facebook.updateLikeCount2(event.originalTarget.location.toString());
             }
         }
         catch (e) {  fbLib.debug("pageload error: " + e);}
@@ -262,19 +227,21 @@ var facebook = {
     },
 
     onTabSelect2: function(e) {
-        facebook.updateLikeCount2(gBrowser.currentURI.spec, null);
+        facebook.updateLikeCount2(gBrowser.currentURI.spec);
     },
 
-    updateLikeCount2: function(url, doc) {
+    updateLikeCount2: function(url) {
 
-        //fbLib.debug("in updateLikeCount2 with url = '" + url + "'");
+        fbLib.debug("updateLikeCount2: have url = '" + url + "'");
 
         fbLib.setAttributeById('facebook-like-iframe', 'collapsed', 'true');
 
         if (url != null && url.match(/^http/))
         {
+            fbLib.setAttributeById('facebook-like-iframe', 'src', 'about:blank');
+
             fbLib.setAttributeById('facebook-like-iframe', 'src',
-                (url?'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb':'about:blank'));
+                'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb');
         }
 
         //document.getElementById('facebook-like-iframe').addProgressListener(facebook.likeProgListener);
@@ -320,7 +287,75 @@ var facebook = {
         });
     },
 
-    onLikeIframeLoad: function(event) {
+    onAuthIframeLoad: function(event)
+    {
+        fbLib.debug("onAuthIframeLoad: with url: " + event.originalTarget.location);
+
+        if ((event.originalTarget.location.hostname != "www.facebook.com")
+            || (event.originalTarget.defaultView.parent != event.originalTarget.defaultView)
+            || (!event.originalTarget instanceof HTMLDocument)
+            || (event.originalTarget.location.toString().substring(0,4) != "http"))
+        {
+            fbLib.debug("onAuthIframeLoad: doing nothing");
+            return;
+        }
+
+        if (event.originalTarget.location.href.indexOf("access_token") > 0)
+        {
+            // if the auth frame loads to a facebook.com/#access_token=xx then we've authenticated successfully
+
+            var bits = event.originalTarget.location.hash.substring(1).split('&');
+
+            for (var i=0; i<bits.length; i++)
+            {
+                var tup = bits[i].split('=');
+
+                if (tup[0] == "access_token")
+                {
+                    fbLib.debug( "onAuthIframeLoad: have access token : "  + tup[1]);
+                    fbSvc.sessionStartOAuth(tup[1]);
+                    fbLib.debug( "onAuthIframeLoad: finished session start");
+                }
+            }
+        }
+        else
+        {
+            // if the auth frame loads to something else, then 
+
+            if (!fbSvc.wrappedJSObject.hasSiteCookie())
+            {
+                // if FF has no facebook cookie, then we're logged out, do nothing
+                fbLib.debug( "onAuthIframeLoad: no login cookie; doing nothing");
+            }
+            else if (event.originalTarget.location.toString().indexOf("uiserver.php") > 0)
+            {
+                // if FF has a facebook user cookie, then we're logged in, but the user needs to give us permissions - open an auth tab
+                fbLib.debug( "onAuthIframeLoad: have uiserver.php dialog in auth iframe: opening auth tab");
+
+                var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                    .getService(Components.interfaces.nsIWindowMediator);
+                var browserEnumerator = wm.getEnumerator("navigator:browser");
+
+                while (browserEnumerator.hasMoreElements())
+                {
+                    var brow = browserEnumerator.getNext().gBrowser;
+
+                    var matches = brow.currentURI.spec.match(/(uiserver.php)/);
+
+                    if (matches)
+                    {
+                        gBrowser.selectedTab = brow;
+                        return;
+                    }
+                }
+
+                gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
+            }
+        }
+    },
+
+    onLikeIframeLoad: function(event)
+    {
 
         if (!fbSvc.loggedIn)
         {
@@ -362,8 +397,9 @@ var facebook = {
         gBrowser.tabContainer.addEventListener("TabOpen", facebook.onTabSelect2, false);
         gBrowser.tabContainer.addEventListener("TabClose", facebook.onTabSelect2, false);
         document.getElementById("facebook-like-iframe").addEventListener("DOMContentLoaded", facebook.onLikeIframeLoad, true);
+        document.getElementById("facebook-auth-iframe").addEventListener("DOMContentLoaded", facebook.onAuthIframeLoad, true);
 
-        facebook.updateLikeCount2(null, null);
+        facebook.updateLikeCount2(null);
 
         facebook.fStringBundle = fbLib.GetFBStringBundle();
         fbLib.debug(facebook.fStringBundle.src);
@@ -415,93 +451,15 @@ var facebook = {
         fbLib.debug('facebook toolbar loaded.');
         },
 
-    checkForFBLogin: function(openPermsWin)
+
+    checkForFBLogin: function()
     {
-          var requrl = "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token";
+        fbLib.debug("checkForFBLogin: will load auth dialog in iframe");
+        // load the oauth dialog in the hidden auth iframe, the load listener there will grab the access token 
 
-          //if (this._prefService.getCharPref('extensions.facebook.access_token'))
-          //    return;
+        fbLib.setAttributeById('facebook-auth-iframe', 'src', "about:blank");
 
-          fbLib.debug('no saved session, checking facebook.com for currently logged in user: ' + requrl);
-
-          var req = new XMLHttpRequest();
-
-          req.mozBackgroundRequest = true;
-
-          req.onreadystatechange = function (event) {
-                if (req.readyState == 4) {
-                    var status;
-                    try {
-                        status = req.status;
-                    } catch (e) {
-                        status = 0;
-                    }
-
-                    if (status == 200) {
-
-                      var matches = req.responseText.match(/access_token=(.*)&/)
-
-                      if (!matches)
-                      {
-                          fbLib.debug('user does not have auth permissions');
-
-                          if (openPermsWin)
-                          {
-                              if (facebook.authTabTimeout)
-                              {
-                                  return;
-                              }
-
-                              facebook.authTabTimeout = setTimeout(function()
-                              {
-                                  // check that a perms window isn't already open
-                                  var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-                                      .getService(Components.interfaces.nsIWindowMediator);
-                                  var browserEnumerator = wm.getEnumerator("navigator:browser");
-
-                                  while (browserEnumerator.hasMoreElements())
-                                  {
-                                      var brow = browserEnumerator.getNext().gBrowser;
-
-                                      var matches = brow.currentURI.spec.match(/(uiserver.php|oauth|dialog)/);
-
-                                      if (matches)
-                                      {
-                                          gBrowser.selectedTab = brow;
-                                          return;
-                                      }
-                                  }
-
-                                  gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
-
-                                  facebook.authTabTimeout = null;
-                              }, 2000);
-                          }
-                      }
-                      else
-                      {
-                          var myjson = '{"accessToken": "' + matches[1] + '"}';
-                          fbLib.debug('going to parse myjson "' + myjson + '"');
-
-                          try 
-                          {
-                              var obj = JSON.parse(myjson);
-
-                              fbLib.debug('user is logged into facebook, access_token = ' + obj.accessToken);
-
-                              fbSvc.sessionStartOAuth(obj.accessToken);
-                          }
-                          catch (e)
-                          {
-                              fbLib.debug('error parsing access token: ' + e);
-                          }
-                      }
-                    }
-                }
-            };
-     
-          req.open('get', requrl);
-          req.send();
+        fbLib.setAttributeById('facebook-auth-iframe', 'src', "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
     },
 
     unload: function() {
@@ -510,6 +468,7 @@ var facebook = {
         gBrowser.tabContainer.removeEventListener("TabOpen", facebook.onTabSelect2, false);
         gBrowser.tabContainer.removeEventListener("TabClose", facebook.onTabSelect2, false);
         document.getElementById("facebook-like-iframe").removeEventListener("DOMContentLoaded", facebook.onLikeIframeLoad, true);
+        document.getElementById("facebook-auth-iframe").removeEventListener("DOMContentLoaded", facebook.onAuthIframeLoad, true);
 
         for each (var topic in facebook.topics_of_interest)
             facebook.obsSvc.removeObserver(facebook.fbToolbarObserver, topic);
