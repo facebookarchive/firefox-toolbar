@@ -49,7 +49,7 @@
                      tooltiptext="&toolbar.button.share.tooltip;"
                      oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { facebook.share() }"/>
 
-      <toolbaritem id="facebook-like" align="center" pack="center">
+      <toolbaritem id="facebook-like" align="center" pack="center" hidden="true">
         <iframe id="facebook-like-iframe" src="about:blank" type="content"
                 height="20" flex="1" />
       </toolbaritem>

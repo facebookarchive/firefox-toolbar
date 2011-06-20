@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!DOCTYPE dialog SYSTEM "chrome://facebook/locale/toolbar.dtd">
+
+<dialog id="facebook-toolbar-firstrun"
+        windowtype="facebooktoolbar:firstrun"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        title="&toolbar.facebook.name;"
+        style="padding: 0"
+        buttons=","
+        height="600"
+        width="800">
+
+    <script type="application/x-javascript">
+        <![CDATA[
+            var Cc = Components.classes;
+            var Ci = Components.interfaces;
+
+            var fbFirstrun = {
+              fbFirstrunListener: function(evt) {
+                var like = evt.target.getAttribute("like");
+                var enableLike = (like == "true") ? true : false;
+                var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+                prefSvc.setBoolPref('extensions.facebook.like.enabled', enableLike);
+                window.close();
+              }
+            }
+            document.addEventListener("fbFirstrunEvent", function(e) { fbFirstrun.fbFirstrunListener(e); }, false, true);
+        ]]>
+    </script>
+
+    <iframe id="facebook-firstrun-iframe"
+            src="chrome://facebook/content/firstrun/firstrun.htm"
+            type="content"
+            flex="1"/>
+
+</dialog>

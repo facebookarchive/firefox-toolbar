@@ -27,3 +27,8 @@ pref("extensions.facebook.access_token", "" );
 //  1: open album page
 //  2: do nothing
 pref("extensions.facebook.postuploadaction", 0);
+// firstrun prefs
+pref("extensions.facebook.first_run_dialog", false);
+pref("extensions.facebook.not_first_run", false);
+// Like
+pref("extensions.facebook.like.enabled", false);

@@ -402,16 +402,13 @@ var facebook = {
         facebook.updateLikeCount2(null);
 
         facebook.fStringBundle = fbLib.GetFBStringBundle();
-        fbLib.debug(facebook.fStringBundle.src);
-        var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
-        if (!prefSvc.prefHasUserValue('extensions.facebook.not_first_run')) {
-          // unfortunately if we create any tabs here, session store overrides
-          // them, so instead we'll create a tab in 250 ms, hopefully after
-          // session store does its business.
-          window.setTimeout("getBrowser().loadOneTab('chrome://facebook/content/welcome.html', null, null, null, false, false)", 250);
-          prefSvc.setBoolPref('extensions.facebook.not_first_run', true);
-          prefSvc.lockPref('extensions.facebook.not_first_run');
-        }
+
+        setTimeout(function() {
+                    facebook.firstrun();}, 250
+        );
+
+        facebook.prefWatcher.startup();
+
         document.getElementById('facebook-search').addEventListener('keypress', fbLib.HandleKeyPress, true);
         for each ( var topic in facebook.topics_of_interest ) {
             fbLib.debug( "observer added", topic );
@@ -449,8 +446,69 @@ var facebook = {
         facebook.loadFriends();
         getBrowser().addProgressListener(facebook.progListener);
         fbLib.debug('facebook toolbar loaded.');
-        },
+    },
 
+    prefWatcher: {
+      prefs: null,
+      startup: function() {
+        this.prefs = Components.classes["@mozilla.org/preferences-service;1"]
+          .getService(Components.interfaces.nsIPrefService)
+          .getBranch("extensions.facebook");
+        this.prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
+        this.prefs.addObserver("", this, false);
+      },
+      shutdown: function()
+      {
+        this.prefs.removeObserver("", this);
+      },
+      observe: function(subject, topic, data) {
+        if (topic != "nsPref:changed")
+          return;
+
+        if (data.match(/like.enabled/))
+        {
+            facebook.toggleLike();
+        }
+      }
+    },
+
+    toggleLike: function()
+    {
+        try {
+            var likeItem = document.getElementById("facebook-like");
+            var isHidden = likeItem.getAttribute("hidden");
+            fbLib.setAttributeById('facebook-like', 'hidden', (isHidden == 'true') ? 'false' : 'true');
+        }
+        catch(e) {
+        }
+    },
+
+    firstrun: function()
+    {
+        var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+
+        // Should we launch the first-run dialog
+        if (!prefSvc.getBoolPref('extensions.facebook.first_run_dialog')) {
+          var firstwin = window.openDialog("chrome://facebook/content/firstrun/firstrun.xul",
+                            "FacebookFirstrun",
+                            "chrome,centerscreen");
+          prefSvc.setBoolPref('extensions.facebook.first_run_dialog', true);
+          //prefSvc.lockPref('extensions.facebook.first_run_dialog');
+        }
+
+        // First-run page
+        facebook.firstrunpage();
+    },
+
+    firstrunpage: function()
+    {
+        var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+        if (!prefSvc.getBoolPref('extensions.facebook.not_first_run')) {
+          getBrowser().loadOneTab('chrome://facebook/content/welcome.html', null, null, null, false, false);
+          prefSvc.setBoolPref('extensions.facebook.not_first_run', true);
+          //prefSvc.lockPref('extensions.facebook.not_first_run');
+        }
+    },
 
     checkForFBLogin: function()
     {
