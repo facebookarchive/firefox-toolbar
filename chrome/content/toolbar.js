@@ -403,11 +403,11 @@ var facebook = {
 
         facebook.fStringBundle = fbLib.GetFBStringBundle();
 
+        facebook.prefWatcher.startup();
+
         setTimeout(function() {
                     facebook.firstrun();}, 250
         );
-
-        facebook.prefWatcher.startup();
 
         document.getElementById('facebook-search').addEventListener('keypress', fbLib.HandleKeyPress, true);
         for each ( var topic in facebook.topics_of_interest ) {
@@ -472,6 +472,13 @@ var facebook = {
       }
     },
 
+    startupLike: function()
+    {
+        var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+        if (prefSvc.getBoolPref('extensions.facebook.like.enabled')) 
+            fbLib.setAttributeById('facebook-like', 'hidden', 'false');
+    },
+
     toggleLike: function()
     {
         try {
@@ -494,6 +501,9 @@ var facebook = {
                             "chrome,centerscreen");
           prefSvc.setBoolPref('extensions.facebook.first_run_dialog', true);
           //prefSvc.lockPref('extensions.facebook.first_run_dialog');
+        }
+        else {
+            facebook.startupLike();
         }
 
         // First-run page
