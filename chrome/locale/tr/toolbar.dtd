@@ -6,7 +6,7 @@
 <!ENTITY  toolbar.search.label                      "Facebook'ta Ara">
 <!ENTITY  toolbar.button.home.tooltip               "Facebook'a Git">
 <!ENTITY  toolbar.button.share.label                "Paylaş">
-<!ENTITY  toolbar.button.like.label                 "Like">
+<!ENTITY  toolbar.button.like.label                 "Beğen">
 <!ENTITY  toolbar.button.share.tooltip              "Bu sayfayı Facebook'ta paylaş">
 <!ENTITY  toolbar.button.upload.tooltip             "Facebook’a fotoğraflar yükle">
 

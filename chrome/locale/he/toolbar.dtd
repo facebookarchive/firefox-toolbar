@@ -6,7 +6,7 @@
 <!ENTITY  toolbar.search.label                      "חפש בפייסבוק">
 <!ENTITY  toolbar.button.home.tooltip               "עבור אל פייסבוק">
 <!ENTITY  toolbar.button.share.label                "שיתוף">
-<!ENTITY  toolbar.button.like.label                 "Like">
+<!ENTITY  toolbar.button.like.label                 "אהבתי">
 <!ENTITY  toolbar.button.share.tooltip              "שתף בדף הנוכחי בפייסבוק">
 <!ENTITY  toolbar.button.upload.tooltip             "העלה תמונות לפייסבוק">
 
