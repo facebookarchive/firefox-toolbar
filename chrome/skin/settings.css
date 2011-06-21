@@ -1,10 +1,5 @@
-/* bug-fix for incorrect declatation in xul.css:
- * from http://fixunix.com/mozilla/407908-description-box-wrap-messes-up-groupboxes.html
+/* indent everything inside a top-level groupbox, for visual clue to grouping
  */
-prefpane > .content-box {
-    overflow: -moz-hidden-unscrollable !important;
-}
-
-.prefWindow-dlgbuttons {
-    align: center !important;
+.indent {
+    margin-left: 10px;
 }

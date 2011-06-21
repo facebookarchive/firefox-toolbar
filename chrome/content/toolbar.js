@@ -496,9 +496,7 @@ var facebook = {
 
         // Should we launch the first-run dialog
         if (!prefSvc.getBoolPref('extensions.facebook.first_run_dialog')) {
-          var firstwin = window.openDialog("chrome://facebook/content/firstrun/firstrun.xul",
-                            "FacebookFirstrun",
-                            "chrome,centerscreen");
+          fbLib.launchLikeWindow();
           prefSvc.setBoolPref('extensions.facebook.first_run_dialog', true);
           //prefSvc.lockPref('extensions.facebook.first_run_dialog');
         }

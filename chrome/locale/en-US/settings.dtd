@@ -32,3 +32,7 @@
 <!ENTITY  settings.notification.type.label                "What do notifications look like?">
 <!ENTITY  settings.notification.native.label              "Use Facebook Toolbar notification windows">
 <!ENTITY  settings.notification.firefox.label             "Use built-in Firefox notifications (on Mac OS X, Growl is used)">
+
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "Enable Like">
+<!ENTITY  settings.like.more.label                        "More information...">

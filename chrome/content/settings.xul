@@ -13,6 +13,8 @@
             dlgbuttons="cancel,accept"
             onload="var btnAccept=document.documentElement.getButton('accept');btnAccept.hidden = btnAccept.disabled = false;"
             >
+  <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
+
   <prefpane id="facebook-you-pane" label="&settings.panel.title;"
             selected="true">
     <preferences>
@@ -86,11 +88,28 @@
                   id="upload-complete"
                   />
 
+      <!-- Like Preferences -->
+      <preference name="extensions.facebook.like.enabled"
+                  type="bool"
+                  id="like"
+                  />
+
     </preferences>
 
-    <vbox>
+    <groupbox>
+      <hbox align="center">
+        <checkbox preference="like" label="&settings.like.enable.label;"/>
+        <vbox class="indent">
+          <label class="text-link"
+                 value="&settings.like.more.label;"
+                 onclick="fbLib.launchLikeWindow();"/>
+        </vbox>
+      </hbox>
+    </groupbox>
+
+    <groupbox>
       <checkbox preference="toggle" label="&settings.notificationmes.enable.label;"/>
-      <groupbox>
+      <vbox class="indent">
         <label class="header" value="&settings.notificationme.header.label;" />
         <hbox>
           <groupbox id="facebook-notifications-youbox">
@@ -121,9 +140,9 @@
           </groupbox>
           </vbox>
         </hbox>
-      </groupbox>
+      </vbox>
 
-      <groupbox id="facebook-notifications-method">
+      <vbox id="facebook-notifications-method" class="indent">
         <label class="header" value="&settings.notification.type.label;" />
         <radiogroup preference="growl">
           <radio label="&settings.notification.native.label;"
@@ -148,8 +167,8 @@
                        style="font-size: 9px;">What is Growl</label>).
              </description>
              -->
-      </groupbox>
-    </vbox>
+      </vbox>
+    </groupbox>
   </prefpane>
 
 </prefwindow>

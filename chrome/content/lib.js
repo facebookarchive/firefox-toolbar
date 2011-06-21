@@ -575,6 +575,12 @@ var fbLib = {
         sb = document.getElementById('sidebar').contentDocument.getElementById('facebook-strings');
       }
       return sb;
+    },
+
+    launchLikeWindow: function() {
+      var firstwin = window.openDialog("chrome://facebook/content/firstrun/firstrun.xul",
+                      "FacebookFirstrun",
+                      "chrome,centerscreen");
     } // EOF
 
 }
