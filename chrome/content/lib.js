@@ -578,9 +578,10 @@ var fbLib = {
     },
 
     launchLikeWindow: function() {
-      var firstwin = window.openDialog("chrome://facebook/content/firstrun/firstrun.xul",
+      var likewin = window.openDialog("chrome://facebook/content/firstrun/firstrun.xul",
                       "FacebookFirstrun",
                       "chrome,centerscreen,resizable=no,dialog=no");
+      return likewin;
     } // EOF
 
 }

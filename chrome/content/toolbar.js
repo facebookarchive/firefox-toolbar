@@ -500,10 +500,6 @@ var facebook = {
             var isHidden = likeItem.getAttribute("hidden");
             fbLib.setAttributeById('facebook-like', 'hidden', (isHidden == 'true') ? 'false' : 'true');
 
-            // We are going to try first run page here, because we might be toggling like from first-run dialog
-            // The pref check will make sure it will not run all the time
-            facebook.firstrunpage();
-
             // Activiate like immediately on current page
             facebook.updateLikeCount(gBrowser.currentURI.spec);
         }
@@ -517,15 +513,20 @@ var facebook = {
 
         // Should we launch the first-run dialog
         if (!prefSvc.getBoolPref('extensions.facebook.first_run_dialog')) {
-          fbLib.launchLikeWindow();
+          var likewin = fbLib.launchLikeWindow();
+          /* Not working ...
+          likewin.onclose = function() {
+            facebook.firstrunpage();
+          }
+          */
           prefSvc.setBoolPref('extensions.facebook.first_run_dialog', true);
           //prefSvc.lockPref('extensions.facebook.first_run_dialog');
         }
         else {
             facebook.startupLike();
-            // First-run page
-            facebook.firstrunpage();
         }
+        // First-run page
+        facebook.firstrunpage();
     },
 
     firstrunpage: function()
