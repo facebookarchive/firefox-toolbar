@@ -395,7 +395,7 @@ var facebook = {
 
             if (countElt.textContent.length > 1)
             {
-                x.setAttribute("style", "width: " + (48 + (countElt.textContent.length * 12)) + "px !important;");
+                x.setAttribute("style", "width: " + (48 + (countElt.textContent.length * 14)) + "px !important;");
             }
 
             x.setAttribute("collapsed", "false");
