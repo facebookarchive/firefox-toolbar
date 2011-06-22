@@ -4,7 +4,7 @@
  * the Apache License, Version 2.0.  Accordingly, the following notice
  * applies to the source code included in this file:
  *
- * Copyright © 2009 Facebook, Inc.
+ * Copyright © 2009-2011 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
@@ -498,6 +498,7 @@ var facebook = {
             var likeItem = document.getElementById("facebook-like");
             var isHidden = likeItem.getAttribute("hidden");
             fbLib.setAttributeById('facebook-like', 'hidden', (isHidden == 'true') ? 'false' : 'true');
+            facebook.updateLikeCount2(gBrowser.currentURI.spec);
         }
         catch(e) {
         }
