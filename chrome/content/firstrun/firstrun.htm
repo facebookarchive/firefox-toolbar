@@ -1,10 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <title>Facebook Toolbar for Firefox</title>
     <meta charset="utf-8" />
-    <style>
 
+    <style>
         body {
             background: none repeat scroll 0 0 #FFFFFF;
             color: #333333;
@@ -13,9 +16,14 @@
             margin: 0;
             padding: 10px;
             text-align: left;
-            clear: both;
             margin: 0 auto;
             border: none;
+        }
+
+        body,
+        #divContent
+        {
+            height: 100%;
         }
 
         header,
@@ -85,7 +93,14 @@
             visibility: hidden;
         }
     </style>
+
     <script>
+        function sendLoadEvent() {
+            var element = document.getElementById("bod");
+            var evt = document.createEvent("Events");
+            evt.initEvent("fbLoadEvent", true, false);
+            element.dispatchEvent(evt);
+        }
 
         function sendLikeEvent(aValue) {
             var element = document.getElementById("hidden");
@@ -102,51 +117,46 @@
     </script>
 </head>
 
-<body id="index" class="home">
-    
+<body id="bod" onload="sendLoadEvent();">
+
     <header id="banner">
         <h1><img src="http://profile.ak.fbcdn.net/hprofile-ak-snc4/174597_20531316728_2866555_q.jpg" style="vertical-align: middle; padding: 0 0.5em;"/>Facebook Toolbar for Firefox</h1>
     </header>
 
-    <section id="content">
-        <div>
+    <div id="divContent">
 
-        <p>To interact with this add-on, you can create a Facebook account or to log into your existing Facebook account.
-        While the add-on is installed and the Like feature enabled, it will display the total number of likes for the page
-        you are viewing. In order to provide a personalized experience, Facebook will see some technical information such
-        as the URL of the page you are on, your IP address and the date and time you visited the site. All information 
-        collected before you log into Facebook is anonymous or aggregated and will not identify you.</p>
-
-        <div id="like-buttons" align="center">
-            <FORM NAME="theForm">
-            <INPUT TYPE="button" VALUE="Activate Like" class="inputsubmit" onClick="LikeOrNoLike(1)">
-            <INPUT TYPE="button" VALUE="Skip" class="inputsubmit inputsubmitcancel" onClick="LikeOrNoLike(2)">
-            </FORM>
-        </div>
+        <p/>
 
         <h3>PLEASE READ:</h3>
         <p>
-        By downloading and installing this add-on, you acknowledge and have reviewed our Privacy Policy
-        ( <a target="_blank" href="http://www.facebook.com/policy.php">http://www.facebook.com/policy.php</a> )
-        and agree to our Terms
-        ( <a target="_blank" href="http://www.facebook.com/terms.php">http://www.facebook.com/terms.php</a> ).
+            By downloading and installing this add-on, you acknowledge and have reviewed our Privacy Policy
+            ( <a target="_blank" href="http://www.facebook.com/policy.php">http://www.facebook.com/policy.php</a> )
+            and agree to our Terms
+            ( <a target="_blank" href="http://www.facebook.com/terms.php">http://www.facebook.com/terms.php</a> ).
         </p>
 
-        <!--
         <p>
-        Our Terms ( <a target="_blank" href="http://www.facebook.com/terms.php">http://www.facebook.com/terms.php</a> ) apply to installation and use of this add-on.
-        Please be sure to read our Privacy Policy ( <a target="_blank" href="http://www.facebook.com/policy.php">http://www.facebook.com/policy.php</a> ).
+            While the add-on is installed and the Like feature enabled, it will display the total number of likes for the page
+            you are viewing. In order to provide a personalized experience, Facebook will see some technical information such
+            as the URL of the page you are on, your IP address and the date and time you visited the site.
+            All information collected before you log into Facebook is anonymous or aggregated and will not identify you.
         </p>
-        -->
 
-        </div>
-        
-    </section>
+        <div id="like-buttons" align="center">
+            <FORM NAME="theForm">
+                <INPUT TYPE="button" VALUE="Activate Like" class="inputsubmit" onClick="LikeOrNoLike(1)">
+                <INPUT TYPE="button" VALUE="Skip" class="inputsubmit inputsubmitcancel" onClick="LikeOrNoLike(2)">
+            </FORM>
+        </div
 
-    <footer style="text-align: center;">
+    </div>
+
+    <footer id="ooter">
         <p>Facebook &copy; 2011. </p>
     </footer>
 
     <div id="hidden"/>
+
 </body>
+
 </html>

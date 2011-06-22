@@ -461,6 +461,7 @@ var facebook = {
         fbLib.debug('facebook toolbar loaded.');
     },
 
+    /* Preferences observer */
     prefWatcher: {
       prefs: null,
       startup: function() {
@@ -498,7 +499,13 @@ var facebook = {
             var likeItem = document.getElementById("facebook-like");
             var isHidden = likeItem.getAttribute("hidden");
             fbLib.setAttributeById('facebook-like', 'hidden', (isHidden == 'true') ? 'false' : 'true');
-            facebook.updateLikeCount2(gBrowser.currentURI.spec);
+
+            // We are going to try first run page here, because we might be toggling like from first-run dialog
+            // The pref check will make sure it will not run all the time
+            facebook.firstrunpage();
+
+            // Activiate like immediately on current page
+            facebook.updateLikeCount(gBrowser.currentURI.spec);
         }
         catch(e) {
         }
@@ -516,10 +523,9 @@ var facebook = {
         }
         else {
             facebook.startupLike();
+            // First-run page
+            facebook.firstrunpage();
         }
-
-        // First-run page
-        facebook.firstrunpage();
     },
 
     firstrunpage: function()
