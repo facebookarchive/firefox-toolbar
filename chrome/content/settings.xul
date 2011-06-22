@@ -98,12 +98,12 @@
 
     <groupbox>
       <hbox align="center">
-        <checkbox preference="like" label="&settings.like.enable.label;"/>
-        <vbox class="indent">
-          <label class="text-link"
-                 value="&settings.like.more.label;"
-                 onclick="fbLib.launchLikeWindow();"/>
-        </vbox>
+        <checkbox preference="like"
+                  disabled="true"/>
+        <label value="&settings.like.enable.label;" class="left-flat"/>
+        <label class="text-link"
+               value="&settings.like.more.label;"
+               onclick="fbLib.launchLikeWindow();"/>
       </hbox>
     </groupbox>
 

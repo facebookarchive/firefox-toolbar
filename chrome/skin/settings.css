@@ -3,3 +3,7 @@
 .indent {
     margin-left: 10px;
 }
+
+.left-flat {
+    margin-left: -5px;
+}
