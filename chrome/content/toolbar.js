@@ -84,8 +84,8 @@ var facebook = {
                     }
                     fbLib.SetHint(true, fStrings.getString('loadingfriends'), '');
 
-                    //fbLib.debug("currentURI is '" + gBrowser.currentURI.spec  + "'");
-                    facebook.updateLikeCount2(gBrowser.currentURI.spec);
+                    facebook.updateLikeCount();
+
                     break;
                 case 'facebook-session-end':
                     fbLib.debug('ending session...');
@@ -97,7 +97,8 @@ var facebook = {
                     for each( var top in facebook.topicToXulId )
                         fbLib.setAttributeById( top, 'label', '?');
                     facebook.clearFriends(true);
-                    facebook.updateLikeCount2(null);
+
+                    facebook.clearLikeCount();
 
                     // redirect all open facebook pages
 
@@ -191,7 +192,7 @@ var facebook = {
 
                         setTimeout(function()
                         {
-                            facebook.updateLikeCount2(gBrowser.currentURI.spec);
+                            facebook.updateLikeCount();
                         }, 1000);
                     }
                 }
@@ -203,16 +204,16 @@ var facebook = {
                 && event.originalTarget.defaultView.parent == event.originalTarget.defaultView
                 && event.originalTarget instanceof HTMLDocument
                 && event.originalTarget.location.toString().substring(0,4) == "http"
+                && event.originalTarget.location.toString() == gBrowser.currentURI.spec.toString()
                 ) {
 
-                //fbLib.debug("onPageLoad: have a likeable url");
-
-                facebook.updateLikeCount2(event.originalTarget.location.toString());
+                facebook.updateLikeCount();
             }
         }
         catch (e) {  fbLib.debug("pageload error: " + e);}
     },
 
+    /* XX USING LIKE API 
     onTabSelect: function(e) {
         //fbLib.debug("on tab select, like count =  " + gBrowser.contentDocument._fbLikeCount);
 
@@ -225,21 +226,29 @@ var facebook = {
             fbLib.setAttributeById('facebook-like', 'tooltiptext', '');
         }
     },
+    */
 
-    onTabSelect2: function(e) {
-        facebook.updateLikeCount2(gBrowser.currentURI.spec);
+    onTabSelect: function(e) {
+        if (fbSvc.loggedIn)
+            facebook.updateLikeCount();
     },
 
-    updateLikeCount2: function(url) {
-
-        fbLib.debug("updateLikeCount2: have url = '" + url + "'");
+    clearLikeCount: function() {
 
         fbLib.setAttributeById('facebook-like-iframe', 'collapsed', 'true');
+        fbLib.setAttributeById('facebook-like-iframe', 'src', 'about:blank');
+    },
+
+    updateLikeCount: function() {
+
+        var url = gBrowser.currentURI.spec;
+
+        fbLib.debug("updateLikeCount: have url = '" + url + "'");
+
+        facebook.clearLikeCount();
 
         if (url != null && url.match(/^http/))
         {
-            fbLib.setAttributeById('facebook-like-iframe', 'src', 'about:blank');
-
             fbLib.setAttributeById('facebook-like-iframe', 'src',
                 'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb');
         }
@@ -248,6 +257,7 @@ var facebook = {
         //document.getElementById('facebook-like-iframe').contentDocument.addProgressListener(facebook.likeProgListener);
     },
 
+    /* XX USING LIKE API
     updateLikeCount: function(url, doc) {
         fbLib.setAttributeById('facebook-like', 'tooltiptext', '');
 
@@ -286,6 +296,7 @@ var facebook = {
             }
         });
     },
+    */
 
     onAuthIframeLoad: function(event)
     {
@@ -327,7 +338,11 @@ var facebook = {
                 // if FF has no facebook cookie, then we're logged out, do nothing
                 fbLib.debug( "onAuthIframeLoad: no login cookie; doing nothing");
             }
-            else if (event.originalTarget.location.toString().indexOf("uiserver.php") > 0)
+            else if (event.originalTarget.location.toString().indexOf("login.php") > 0)
+            {
+                fbLib.debug( "onAuthIframeLoad: redirect to login page; doing nothing");
+            }
+            else
             {
                 // if FF has a facebook user cookie, then we're logged in, but the user needs to give us permissions - open an auth tab
                 fbLib.debug( "onAuthIframeLoad: have uiserver.php dialog in auth iframe: opening auth tab");
@@ -393,13 +408,11 @@ var facebook = {
         fbLib.debug( "loading toolbar..." );
 
         gBrowser.addEventListener("DOMContentLoaded", facebook.onPageLoad, true);
-        gBrowser.tabContainer.addEventListener("TabSelect", facebook.onTabSelect2, false);
-        gBrowser.tabContainer.addEventListener("TabOpen", facebook.onTabSelect2, false);
-        gBrowser.tabContainer.addEventListener("TabClose", facebook.onTabSelect2, false);
+        gBrowser.tabContainer.addEventListener("TabSelect", facebook.onTabSelect, false);
         document.getElementById("facebook-like-iframe").addEventListener("DOMContentLoaded", facebook.onLikeIframeLoad, true);
         document.getElementById("facebook-auth-iframe").addEventListener("DOMContentLoaded", facebook.onAuthIframeLoad, true);
 
-        facebook.updateLikeCount2(null);
+        facebook.clearLikeCount();
 
         facebook.fStringBundle = fbLib.GetFBStringBundle();
 
@@ -530,9 +543,7 @@ var facebook = {
 
     unload: function() {
         gBrowser.removeEventListener("DOMContentLoaded", facebook.onPageLoad, true);
-        gBrowser.tabContainer.removeEventListener("TabSelect", facebook.onTabSelect2, false);
-        gBrowser.tabContainer.removeEventListener("TabOpen", facebook.onTabSelect2, false);
-        gBrowser.tabContainer.removeEventListener("TabClose", facebook.onTabSelect2, false);
+        gBrowser.tabContainer.removeEventListener("TabSelect", facebook.onTabSelect, false);
         document.getElementById("facebook-like-iframe").removeEventListener("DOMContentLoaded", facebook.onLikeIframeLoad, true);
         document.getElementById("facebook-auth-iframe").removeEventListener("DOMContentLoaded", facebook.onAuthIframeLoad, true);
 
