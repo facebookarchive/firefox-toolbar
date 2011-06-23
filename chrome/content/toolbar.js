@@ -448,7 +448,9 @@ var facebook = {
             facebook.onStatusBoxBlur(statusBox); // change color for emptyText
         } else {
           var hasSavedSession = fbSvc.savedSessionStart();
-          fbLib.setAttributeById('facebook-login-status', 'status', hasSavedSession?'waiting':'');
+
+          fbLib.setAttributeById('facebook-login-status', 'status', (fbSvc.wrappedJSObject.hasSiteCookie()||hasSavedSession?'waiting':''));
+          setTimeout(function() { fbLib.setAttributeById('facebook-login-status', 'status', ''); }, 60*1000);
 
           if (!hasSavedSession)
           {
