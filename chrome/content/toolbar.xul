@@ -40,7 +40,7 @@
                      tooltiptext="&toolbar.button.home.tooltip;"
                      text="Facebook"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="openUILink('http://www.facebook.com/home.php?src=fftb', event)"
+                     oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/home.php?src=fftb', event) }"
                      />
 
       <toolbarbutton id="facebook-share"
@@ -57,61 +57,61 @@
       <toolbarbutton id="facebook-photoupload"
                      class="facebook-icon-photoupload button"
                      tooltiptext="&toolbar.button.upload.tooltip;"
-                     oncommand="facebook.photoupload();"/>
+                     oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { facebook.photoupload(); }"/>
 
       <toolbarbutton id="facebook-notification-poke"
                      class="facebook-icon-poke facebook-notification button"
                      label="?"
                      tooltiptext="&toolbar.button.pokes.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); openUILink('http://www.facebook.com/home.php?src=fftb', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/home.php?src=fftb', event); }"/>
       <toolbarbutton id="facebook-notification-reqs"
                      class="facebook-icon-reqs facebook-notification button"
                      label="?"
                      tooltiptext="&toolbar.button.friends.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); openUILink('http://www.facebook.com/reqs.php?src=fftb#friend', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/reqs.php?src=fftb#friend', event); }"/>
       <toolbarbutton id="facebook-notification-group-invs"
                      class="facebook-icon-grps facebook-notification button"
                      label="?"
                      tooltiptext="&toolbar.button.groups.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); openUILink('http://www.facebook.com/reqs.php?src=fftb#group', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/reqs.php?src=fftb#group', event);}"/>
       <toolbarbutton id="facebook-notification-event-invs"
                      class="facebook-icon-evts facebook-notification button"
                      label="?"
                      tooltiptext="&toolbar.button.events.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); openUILink('http://www.facebook.com/?sk=events&amp;src=fftb', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/?sk=events&amp;src=fftb', event); }"/>
       <toolbarbutton id="facebook-notification-msgs"
                      class="facebook-icon-msgs facebook-notification button"
                      label="?"
                      tooltiptext="&toolbar.button.messages.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) fbLib.FacebookLogin(); openUILink('http://www.facebook.com/inbox/?src=fftb', event)"/>
+                     oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/inbox/?src=fftb', event); }"/>
       <toolbaritem id = "facebook-notification-separator">
         <toolbarseparator />
       </toolbaritem>
       <toolbarbutton id="facebook-link-menu"
                      label="&toolbar.button.links.label;"
-                     onmousedown="if (!fbSvc.loggedIn) fbLib.FacebookLogin();"
                      type="menu">
+                     <!--onmousedown="if (!fbSvc.loggedIn) fbLib.FacebookLogin();"-->
         <menupopup id="facebook-link-popup">
 
           <!-- The Top Nav -->
           <menuitem label="&toolbar.links.profile.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="fbLib.OpenFBUrl('profile.php', this.getAttribute('userid'), event)"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { fbLib.OpenFBUrl('profile.php', this.getAttribute('userid'), event); }"
                     id="facebook-menu-my-profile"
                     />
           <menuitem label="&toolbar.links.friends.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/friends/?src=fftb', event);"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/friends/?src=fftb', event); }"
                     id="facebook-menu-my-profile"
                     />
           <menuitem label="&toolbar.links.inbox.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/inbox/?src=fftb', event)"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/inbox/?src=fftb', event); }"
                     />
 
           <menuseparator />
@@ -119,28 +119,28 @@
           <!-- The Side Nav -->
           <menuitem label="&toolbar.links.photos.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/photos.php?src=fftb', event)"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/photos.php?src=fftb', event); }"
                     />
           <menuitem label="&toolbar.links.notes.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/notes.php?src=fftb', event)"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/notes.php?src=fftb', event); }"
                     />
           <menuitem label="&toolbar.links.groups.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/groups.php?src=fftb', event)"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/groups.php?src=fftb', event); }"
                     />
           <menuitem label="&toolbar.links.events.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/?sk=events&amp;src=fftb', event)"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/?sk=events&amp;src=fftb', event); }"
                     />
           <menuitem label="&toolbar.links.linkies.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/posted.php?src=fftb', event)"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/posted.php?src=fftb', event); }"
                     />
 
           <menuitem label="&toolbar.links.videos.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/video/?src=fftb', event)"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/video/?src=fftb', event); }"
                     />
 
           <menuseparator />
@@ -148,15 +148,15 @@
           <!-- Settings Menu -->
           <menuitem label="&toolbar.settings.account.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/editaccount.php?src=fftb', event)"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/editaccount.php?src=fftb', event); }"
                     />
           <menuitem label="&toolbar.settings.privacy.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/privacy.php?src=fftb', event)"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/privacy.php?src=fftb', event); }"
                     />
           <menuitem label="&toolbar.settings.application.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="openUILink('http://www.facebook.com/editapps.php?src=fftb', event)"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/editapps.php?src=fftb', event); }"
                     />
 
           <menuseparator />

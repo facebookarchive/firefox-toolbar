@@ -314,56 +314,14 @@ var fbLib = {
       if (fbSvc.loggedIn) {
         dump('logging out\n');
 
-        /*
-        // Some methods require us to get the wrapped object (namely getCommonParams())
-        var facebookSvc =  Cc['@facebook.com/facebook-service;1'].
-                        getService(Ci.fbIFacebookService).
-                        wrappedJSObject;
-
-        var req = new XMLHttpRequest();
-        req.open('post', 'http://www.facebook.com/toolbar_logout.php');
-        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        req.send('api_key=' + facebookSvc.apiKey + 
-             '&uid=' + facebookSvc.loggedInUser.id + 
-             '&session_key=' + facebookSvc.getCommonParams().session_key);
-        */
-
         fbSvc.sessionEnd();
       } else {
 
-       //gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
-       gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/");
+       fbLib.openAndReuseOneTabPerURL("https://www.facebook.com/login.php");
 
-      fbLib.setAttributeById('facebook-login-status', 'status', 'waiting');
+       fbLib.setAttributeById('facebook-login-status', 'status', 'waiting');
 
-      /*
-      fbLib.debug('opening auth window, app id = ' + fbSvc.wrappedJSObject._appId);
-
-
-       var authwin = window.open(
-        "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token",
-        "facebook-toolbar-login",
-        "centerscreen,width=1024,height=600,modal=no,dialog=no,close=yes"
-        );
-
-       var cleanup = function()
-       {
-           if (!authwin || authwin.closed)
-           {
-               fbLib.setAttributeById('facebook-login-status', 'status', '');
-           }
-           else
-           {
-               Application.storage.set("authWindowCloseTimeout", setTimeout(cleanup, 1000));
-           }
-       };
-
-       Application.storage.set("authWindowCloseTimeout", setTimeout(cleanup, 1000));
-       */
-
-        // popup login page height is at most 500, but add 20 pixels for the
-        // button we show at the bottom of the page
-        //window.open('chrome://facebook/content/login.xul', '','chrome,centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes');
+       setTimeout(function() { fbLib.setAttributeById('facebook-login-status', 'status', ''); }, 60*1000);
       }
     },
 
@@ -582,7 +540,52 @@ var fbLib = {
                       "FacebookFirstrun",
                       "chrome,centerscreen,resizable=no,dialog=no");
       return likewin;
-    } // EOF
+    },
+    
+    openAndReuseOneTabPerURL: function(url) {
+      var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                         .getService(Components.interfaces.nsIWindowMediator);
+      var browserEnumerator = wm.getEnumerator("navigator:browser");
+
+      // Check each browser instance for our URL
+      var found = false;
+      while (!found && browserEnumerator.hasMoreElements()) {
+        var browserWin = browserEnumerator.getNext();
+        var tabbrowser = browserWin.gBrowser;
+
+        // Check each tab of this browser instance
+        var numTabs = tabbrowser.browsers.length;
+        for (var index = 0; index < numTabs; index++) {
+          var currentBrowser = tabbrowser.getBrowserAtIndex(index);
+          if (url == currentBrowser.currentURI.spec) {
+
+            // The URL is already opened. Select this tab.
+            tabbrowser.selectedTab = tabbrowser.tabContainer.childNodes[index];
+
+            // Focus *this* browser-window
+            browserWin.focus();
+
+            found = true;
+            break;
+          }
+        }
+      }
+
+      // Our URL isn't open. Open it now.
+      if (!found) {
+        var recentWindow = wm.getMostRecentWindow("navigator:browser");
+        if (recentWindow) {
+          // Use an existing browser window
+          recentWindow.delayedOpenTab(url, null, null, null, null);
+        }
+        else {
+          // No browser windows are open, so open a new one.
+          window.open(url);
+        }
+      }
+    }
+    
+    // EOF
 
 }
 
