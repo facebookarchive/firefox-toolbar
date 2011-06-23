@@ -10,7 +10,7 @@
         title="&toolbar.facebook.name;"
         style="padding: 0"
         width="500"
-        height="200">
+        height="350">
 
     <script type="application/x-javascript">
         <![CDATA[
@@ -31,7 +31,7 @@
                     var f = document.getElementById("facebook-firstrun-iframe");
                     var h = f.contentWindow.document.body.scrollHeight;
                     var d = document.getElementById("facebook-toolbar-firstrun");
-                    window.resizeTo("500", h+50);
+                    window.resizeTo("500", h+40);
                 }, 100
                 );
               }
