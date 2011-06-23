@@ -384,8 +384,13 @@ var facebook = {
             var x = document.getElementById("facebook-like-iframe");
             var y = x.contentDocument;
 
+            var likeElt = y.getElementsByClassName('liketext')[0];
+
+            if (!likeElt)
+                return;
+
             x.setAttribute("collapsed", "true");
-            x.setAttribute("style", "width: 48px !important;");
+            x.setAttribute("style", "width: " + (likeElt.textContent.length + 0.5) + "em !important;");
             //y.body.setAttribute("style", "background-color: blue !important;");
 
             var countElt = y.getElementsByClassName('connect_widget_button_count_count')[0];
@@ -393,9 +398,10 @@ var facebook = {
             if (!countElt)
                 return;
 
-            if (countElt.textContent.length > 1)
+            if (parseInt(countElt.textContent) > 1)
             {
-                x.setAttribute("style", "width: " + (48 + (countElt.textContent.length * 14)) + "px !important;");
+                //x.setAttribute("style", "width: " + (48 + (countElt.textContent.length * 14)) + "px !important;");
+                x.setAttribute("style", "width: " + ((countElt.textContent.length + likeElt.textContent.length) + 2)+ "em !important;");
             }
 
             x.setAttribute("collapsed", "false");
