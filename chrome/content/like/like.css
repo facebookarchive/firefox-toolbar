@@ -1,88 +1,90 @@
-        body {
-            background: none repeat scroll 0 0 #FFFFFF;
-            color: #333333;
-            font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
-            font-size: 12px;
-            margin: 0;
-            padding: 10px;
-            text-align: left;
-            margin: 0 auto;
-            border: none;
-        }
+/* Stylesheet for HTML loaded into the Like window */
 
-        body,
-        #divContent
-        {
-            height: 100%;
-        }
+body {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #333333;
+    font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+    font-size: 12px;
+    margin: 0;
+    padding: 10px;
+    text-align: left;
+    margin: 0 auto;
+    border: none;
+}
 
-        header,
-        footer {
-            background-color: #3B5998;
-            color: #FFFFFF;
-            font-weight: bold;
-            padding-top: 5px;
-            padding-bottom: 5px;
-        }
+body,
+#divContent
+{
+    height: 100%;
+}
 
-        #copyright {
-            padding-left: 5px;
-        }
+header,
+footer {
+    background-color: #3B5998;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
 
-        h3 {
-            color: #333333;
-            font-size: 13px;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            font-size: 14px;
-        }
-        p {
-            margin: 1em 0;
-        }
-        a {
-            color: #3B5998;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
+#copyright {
+    padding-left: 5px;
+}
 
-        .inputsubmit {
-            background-color: #3B5998;
-            border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
-            border-style: solid;
-            border-width: 1px;
-            color: #FFFFFF;
-            padding: 2px 15px 3px;
-            text-align: center;
-        }
+h3 {
+    color: #333333;
+    font-size: 13px;
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    font-size: 14px;
+}
+p {
+    margin: 1em 0;
+}
+a {
+    color: #3B5998;
+    cursor: pointer;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
 
-        .inputsubmitcancel {
-            -moz-border-bottom-colors: none;
-            -moz-border-image: none;
-            -moz-border-left-colors: none;
-            -moz-border-right-colors: none;
-            -moz-border-top-colors: none;
-            background-color: #EEEEEE;
-            background-image: url("http://static.ak.fbcdn.net/rsrc.php/v1/zl/r/6N9FQPpTHCy.png");
-            background-position: 0 0;
-            background-repeat: no-repeat;
-            border-color: #999999 #999999 #888888;
-            border-style: solid;
-            border-width: 1px;
-            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-            color: #000000;
-            /*font-weight: bold;*/
-        }
+.inputsubmit {
+    background-color: #3B5998;
+    border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
+    border-style: solid;
+    border-width: 1px;
+    color: #FFFFFF;
+    padding: 2px 15px 3px;
+    text-align: center;
+}
 
-        #like-buttons {
-            padding-top: 5px;
-            padding-bottom: 15px;
-        }
+.inputsubmitcancel {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #EEEEEE;
+    background-image: url("http://static.ak.fbcdn.net/rsrc.php/v1/zl/r/6N9FQPpTHCy.png");
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    border-color: #999999 #999999 #888888;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    color: #000000;
+    /*font-weight: bold;*/
+}
 
-        #hidden {
-            visibility: hidden;
-        }
+#like-buttons {
+    padding-top: 5px;
+    padding-bottom: 15px;
+}
+
+#hidden {
+    visibility: hidden;
+}
