@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Facebook Toolbar for Firefox</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="chrome://facebook/content/like/like.css" />
+</head>
+
+<script src="chrome://facebook/content/like/like.js"></script>
+
+<body id="bod" onload="sendLoadEvent();">
+
+    <header id="banner">
+        <h1><img src="chrome://facebook/skin/images/likeF.jpg" style="vertical-align: middle; padding: 0 0.5em;"/>Facebook Toolbar for Firefox</h1>
+    </header>
+
+    <div id="divContent">
+
+        <p/>
+
+        <p>
+            By downloading and installing this add-on, you acknowledge and have reviewed our
+            <a target="_blank" href="http://www.facebook.com/policy.php">Privacy Policy</a>
+            and agree to our
+            <a target="_blank" href="http://www.facebook.com/terms.php">Terms</a>.
+        </p>
+
+        <p>
+            While the add-on is installed and the Like feature enabled, it will display the total
+            number of likes for the page you are viewing. In order to provide a personalized experience,
+            Facebook will see some technical information such as the URL of the page you are on, your IP
+            address and the date and time you visited the site. All information collected by you simply
+            browsing the web while this add-on is installed will only be used in anonymous or aggregate
+            form and will not identify you. If you want to like something using this add-on's Like button,
+            you'll have to log into your Facebook account and as with other likes they'll be posted to your
+            profile.
+        </p>
+
+        <div id="like-buttons" align="center">
+            <form NAME="likeForm">
+                <input type="button" value="Activate Like" class="inputsubmit" onclick="LikeOrNoLike(1)">
+                <input type="button" value="Disable" class="inputsubmit inputsubmitcancel" onclick="LikeOrNoLike(2)">
+            </form>
+        </div
+
+    </div>
+
+    <footer id="footer">
+        <p id="copyright">Facebook &copy; 2011. </p>
+    </footer>
+
+    <div id="hidden"/>
+
+</body>
+
+</html>

@@ -536,7 +536,7 @@ var fbLib = {
     },
 
     launchLikeWindow: function() {
-      var likewin = window.openDialog("chrome://facebook/content/firstrun/firstrun.xul",
+      var likewin = window.openDialog("chrome://facebook/content/like/like.xul",
                       "FacebookFirstrun",
                       "chrome,centerscreen,resizable=no,dialog=no");
       return likewin;

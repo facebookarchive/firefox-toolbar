@@ -42,7 +42,7 @@
     </script>
 
     <iframe id="facebook-firstrun-iframe"
-            src="chrome://facebook/content/firstrun/firstrun.htm"
+            src="chrome://facebook/locale/like.htm"
             type="content"
             flex="1"/>
 
