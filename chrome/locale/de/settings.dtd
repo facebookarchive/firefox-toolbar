@@ -33,3 +33,6 @@
 <!ENTITY  settings.notification.native.label              "Benachrichtigungsfenster der Facebook-Symbolleiste verwenden">
 <!ENTITY  settings.notification.firefox.label             "Firefox-Benachrichtigungen verwenden (Mac OS X verwendet Growl)">
 
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "Gefällt mir">
+<!ENTITY  settings.like.more.label                        "Change Setting...">

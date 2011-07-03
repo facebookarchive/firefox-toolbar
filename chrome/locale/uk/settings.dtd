@@ -32,3 +32,7 @@
 <!ENTITY  settings.notification.type.label                "На що подібне сповіщення?">
 <!ENTITY  settings.notification.native.label              "Використовувати вікно сповіщень Фейсбук Тулбару">
 <!ENTITY  settings.notification.firefox.label             "Використовувати вікно сповіщень вбудованого у Firefox (Mac OS X, Growl використовується)">
+
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "Like">
+<!ENTITY  settings.like.more.label                        "Change Setting...">

@@ -33,3 +33,6 @@
 <!ENTITY  settings.notification.native.label              "使用 Facebook 工具列的通知視窗">
 <!ENTITY  settings.notification.firefox.label             "使用 Firefox 內建的通知 (Max OS X 使用 Growl)">
 
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "讚">
+<!ENTITY  settings.like.more.label                        "Change Setting...">

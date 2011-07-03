@@ -33,3 +33,6 @@
 <!ENTITY  settings.notification.native.label              "使用 Facebook 工具条通知窗口模板">
 <!ENTITY  settings.notification.firefox.label             "使用Firefox 内置的通知 (在Mac OS X 上使用 Growl)模板">
 
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "赞">
+<!ENTITY  settings.like.more.label                        "Change Setting...">

@@ -33,3 +33,6 @@
 <!ENTITY  settings.notification.native.label              "Utiliser les fenêtres de notification de la barre d'outils Facebook">
 <!ENTITY  settings.notification.firefox.label             "Utiliser la fonction de notification intégrée à Firefox (sur Mac OS X, c'est Growl qui est utilisé)">
 
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "J'aime">
+<!ENTITY  settings.like.more.label                        "Change Setting...">

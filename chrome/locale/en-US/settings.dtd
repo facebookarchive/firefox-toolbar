@@ -34,5 +34,5 @@
 <!ENTITY  settings.notification.firefox.label             "Use built-in Firefox notifications (on Mac OS X, Growl is used)">
 
 <!-- Like -->
-<!ENTITY  settings.like.enable.label                      "Like Button">
+<!ENTITY  settings.like.enable.label                      "Like">
 <!ENTITY  settings.like.more.label                        "Change Setting...">

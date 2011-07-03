@@ -33,3 +33,6 @@
 <!ENTITY  settings.notification.native.label              "Meldingsvensters van de Facebook Toolbar gebruiken">
 <!ENTITY  settings.notification.firefox.label             "Geïntegreerde Firefox-meldingen gebruiken (op Mac OS wordt Growl gebruikt)">
 
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "Vind ik leuk">
+<!ENTITY  settings.like.more.label                        "Change Setting...">

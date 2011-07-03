@@ -33,3 +33,6 @@
 <!ENTITY  settings.notification.native.label              "השתמש בחלונות ההודעה של סרגל הכלים של פייסבוק">
 <!ENTITY  settings.notification.firefox.label             "השתמש בהודעות המובנות של Firefox (לגבי Mac OS X, נעשה שימוש ב-Growl)">
 
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "אהבתי">
+<!ENTITY  settings.like.more.label                        "Change Setting...">

@@ -33,3 +33,6 @@
 <!ENTITY  settings.notification.native.label              "Facebookツールバーのお知らせウィンドウを使用する">
 <!ENTITY  settings.notification.firefox.label             "Firefoxのお知らせを使用する(Mac OS XではGrowl)">
 
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "いいね！">
+<!ENTITY  settings.like.more.label                        "Change Setting...">

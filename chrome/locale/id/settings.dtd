@@ -33,3 +33,6 @@
 <!ENTITY  settings.notification.native.label              "Gunakan jendela pemberitahuan Bilah Alat Facebook">
 <!ENTITY  settings.notification.firefox.label             "Gunakan pemberitahuan tertanam pada Firefox (pada Mac OS X, gunakan Growl)">
 
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "Suka">
+<!ENTITY  settings.like.more.label                        "Change Setting...">

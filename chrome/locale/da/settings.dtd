@@ -33,3 +33,6 @@
 <!ENTITY  settings.notification.native.label              "Brug vinduet Facebook-værktøjslinjenotifikationer">
 <!ENTITY  settings.notification.firefox.label             "Brug indbyggede Firefox-notifikationer (på Mac OS X bruges Growl)">
 
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "Synes godt om">
+<!ENTITY  settings.like.more.label                        "Change Setting...">

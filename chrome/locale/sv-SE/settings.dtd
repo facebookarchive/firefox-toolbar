@@ -57,3 +57,6 @@ meddelandefönstren för Facebook-verktygsfältet">
 <!ENTITY  settings.notification.firefox.label             "Använd 
 inbyggda Firefox-meddelanden (på Mac OS X används Growl)">
 
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "Gilla">
+<!ENTITY  settings.like.more.label                        "Change Setting...">

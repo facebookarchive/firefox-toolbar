@@ -33,3 +33,6 @@
 <!ENTITY  settings.notification.native.label              "Facebook Araç Çubuğu bildirim pencerelerini kullan">
 <!ENTITY  settings.notification.firefox.label             "Yerleşik Firefox bildirimlerini kullan (Mac OS X için Growl kullanılır)">
 
+<!-- Like -->
+<!ENTITY  settings.like.enable.label                      "Beğen">
+<!ENTITY  settings.like.more.label                        "Change Setting...">
