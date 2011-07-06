@@ -20,9 +20,11 @@ locale facebook nl     chrome/locale/nl/
 locale facebook pt-BR  chrome/locale/pt-BR/
 locale facebook sv-SE  chrome/locale/sv-SE/
 locale facebook tr     chrome/locale/tr/
-locale facebook uk     chrome/locale/uk/
 locale facebook zh-CN  chrome/locale/zh-CN/
 locale facebook zh-TW  chrome/locale/zh-TW/
+
+# Ukranian is no longer being updated
+#locale facebook uk     chrome/locale/uk/
 
 interfaces components/facebook.xpt
 component {e983db0e-05fc-46e7-9fba-a22041c894ac} components/facebook.js
