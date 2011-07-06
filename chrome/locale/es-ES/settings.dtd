@@ -34,5 +34,5 @@
 <!ENTITY  settings.notification.firefox.label             "Usar las notificaciones de Firefox (en Mac OS X se utiliza Growl)">
 
 <!-- Like -->
-<!ENTITY  settings.like.enable.label                      "Me gusta">
-<!ENTITY  settings.like.more.label                        "Change Setting...">
+<!ENTITY  settings.like.enable.label                      "‎Botón 'Me gusta'">
+<!ENTITY  settings.like.more.label                        "‎Cambiar la configuración">

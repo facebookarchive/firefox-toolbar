@@ -34,5 +34,5 @@
 <!ENTITY  settings.notification.firefox.label             "Firefoxのお知らせを使用する(Mac OS XではGrowl)">
 
 <!-- Like -->
-<!ENTITY  settings.like.enable.label                      "いいね！">
-<!ENTITY  settings.like.more.label                        "Change Setting...">
+<!ENTITY  settings.like.enable.label                      "「いいね！」ボタン">
+<!ENTITY  settings.like.more.label                        "設定を変更">

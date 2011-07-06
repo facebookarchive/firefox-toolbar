@@ -34,5 +34,5 @@
 <!ENTITY  settings.notification.firefox.label             "Usar notificações incorporadas do Firefox (no Mac OS X, o Growl é usado)">
 
 <!-- Like -->
-<!ENTITY  settings.like.enable.label                      "Curtir">
-<!ENTITY  settings.like.more.label                        "Change Setting...">
+<!ENTITY  settings.like.enable.label                      "Botão Curtir">
+<!ENTITY  settings.like.more.label                        "‎Alterar configurações">

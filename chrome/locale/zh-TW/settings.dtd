@@ -34,5 +34,5 @@
 <!ENTITY  settings.notification.firefox.label             "使用 Firefox 內建的通知 (Max OS X 使用 Growl)">
 
 <!-- Like -->
-<!ENTITY  settings.like.enable.label                      "讚">
-<!ENTITY  settings.like.more.label                        "Change Setting...">
+<!ENTITY  settings.like.enable.label                      "「讚」鈕">
+<!ENTITY  settings.like.more.label                        "更改設定">

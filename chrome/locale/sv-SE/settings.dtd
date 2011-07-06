@@ -58,5 +58,5 @@ meddelandefönstren för Facebook-verktygsfältet">
 inbyggda Firefox-meddelanden (på Mac OS X används Growl)">
 
 <!-- Like -->
-<!ENTITY  settings.like.enable.label                      "Gilla">
-<!ENTITY  settings.like.more.label                        "Change Setting...">
+<!ENTITY  settings.like.enable.label                      "‎Gilla-knapp">
+<!ENTITY  settings.like.more.label                        "‎Ändra inställningar">

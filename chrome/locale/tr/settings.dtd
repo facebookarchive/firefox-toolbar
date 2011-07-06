@@ -34,5 +34,5 @@
 <!ENTITY  settings.notification.firefox.label             "Yerleşik Firefox bildirimlerini kullan (Mac OS X için Growl kullanılır)">
 
 <!-- Like -->
-<!ENTITY  settings.like.enable.label                      "Beğen">
-<!ENTITY  settings.like.more.label                        "Change Setting...">
+<!ENTITY  settings.like.enable.label                      "‎Beğen Düğmesi">
+<!ENTITY  settings.like.more.label                        "‎Ayarları Değiştir">

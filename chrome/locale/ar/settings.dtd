@@ -34,5 +34,5 @@
 <!ENTITY  settings.notification.firefox.label             " استخدام إشعارات Firefox المضمنة (مع نظام التشغيل Mac OS X، يتم استخدام Growl‏)">
 
 <!-- Like -->
-<!ENTITY  settings.like.enable.label                      "أعجبني">
-<!ENTITY  settings.like.more.label                        "Change Setting...">
+<!ENTITY  settings.like.enable.label                      "الزر 'أعجبني'">
+<!ENTITY  settings.like.more.label                        "تغيير الإعدادات">
