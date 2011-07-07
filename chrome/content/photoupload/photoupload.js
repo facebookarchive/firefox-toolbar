@@ -393,10 +393,8 @@ var PhotoSet = {
 
     var params = {};
 
-    /*
     // method specific:
-    params.method = "facebook.photos.upload";
-    params.aid = albumId;
+
     if (photo.caption)
       params.caption = photo.caption;
 
@@ -410,7 +408,6 @@ var PhotoSet = {
       paramsForSig.push(name + "=" + value);
     }
     params.sig = gFacebookService.generateSig(paramsForSig);
-    */
 
     //const RESTSERVER = 'http://api.facebook.com/restserver.php';
 
@@ -455,7 +452,7 @@ var PhotoSet = {
         onError("Server returned an error: " + data.error_msg);
         return;
       }
-      onComplete(data.pid);
+      onComplete(data.id);
     }
     xhr.onerror = function(event) {
       onError("XMLHttpRequest error");
@@ -465,31 +462,44 @@ var PhotoSet = {
   },
 
   _tagPhoto: function(photo, photoId, onComplete, onError) {
-    if (photo.tags.length == 0) {
-      onComplete()
-      return;
-    }
-    var tagUploadObjects = [tag.getUploadObject() for each (tag in photo.tags)];
+    for each (tag in photo.tags)
+    {
+        var xhr = new XMLHttpRequest();
 
-    gFacebookService.callMethod('facebook.photos.addTag',
-      [
-        "pid=" + photoId,
-        "uid=" + gFacebookServiceUnwrapped.loggedInUser.id,
-        "tags=" + JSON.stringify(tagUploadObjects)
-      ],
-      function(data) {
-        if (data !== true) {
-          onError("Error during tagging " + data);
-          return;
+        var postURL = "https://graph.facebook.com/" + photoId + "/tags/" + tag.friend.uid  + "?access_token=" + gFacebookService.accessToken;
+        //fbLib.debug("tag url = " + postURL);
+
+        xhr.open("POST", postURL);
+
+        xhr.onreadystatechange = function(event) {
+          if (xhr.readyState != 4)
+            return;
+
+          //fbLib.debug("tag api response: " + xhr.responseText);
+
+          try {
+            var data = JSON.parse(xhr.responseText);
+          } catch(e) {
+            onError("Failed to parse JSON");
+            return;
+          }
+          // Duplicated from facebook.js::callMethod
+          if (typeof data.error_code != "undefined") {
+            onError("Server returned an error: " + data.error_msg);
+            return;
+          }
         }
-        onComplete();
-      }
-    );
+
+        xhr.send("x="+tag.x+"&y="+tag.y);
+    }
+
+    onComplete();
   },
 
   _uploadAndTagPhoto: function(albumId, objectId, photo, onProgress, onComplete, onError) {
     this._uploadPhoto(albumId, objectId, photo, onProgress,
       function(photoId) { // onComplete callback
+        fbLib.debug("finished upload photo (id= " + photoId + "), will tag");
         PhotoSet._tagPhoto(photo, photoId, onComplete, onError);
       },
     onError);

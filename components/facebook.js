@@ -1203,6 +1203,7 @@ facebookService.prototype = {
     // calls are done in the chrome layer because they are in direct response to user actions.
     // Also note that this is synchronous so you should not call it from the UI.
     callMethod: function (method, params, callback, secondTry) {
+        debug("in callMethod: " + method + " \n");
         if (!this._loggedIn) return null;
 
         var origParams = params.slice(0); // easy way to make a deep copy of the array
