@@ -247,6 +247,12 @@ var facebook = {
 
         facebook.clearLikeCount();
 
+        var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+        if (!prefSvc.getBoolPref('extensions.facebook.like.enabled'))
+        {
+            return;
+        }
+
         if (url != null && url.match(/^http/))
         {
             fbLib.setAttributeById('facebook-like-iframe', 'src',
