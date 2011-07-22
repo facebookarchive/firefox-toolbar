@@ -309,19 +309,21 @@ var fbLib = {
     },
 
     FacebookLogin: function() {
-
-
       if (fbSvc.loggedIn) {
-        dump('logging out\n');
-
         fbSvc.sessionEnd();
-      } else {
-
-       fbLib.openAndReuseOneTabPerURL("https://www.facebook.com/login.php");
-
-       fbLib.setAttributeById('facebook-login-status', 'status', 'waiting');
-
-       setTimeout(function() { fbLib.setAttributeById('facebook-login-status', 'status', ''); }, 60*1000);
+      }
+      else {
+        var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+        var accessToken = prefSvc.getCharPref('extensions.facebook.access_token');
+        if (accessToken) {
+          fbLib.openAndReuseOneTabPerURL("https://www.facebook.com/login.php");
+          fbLib.setAttributeById('facebook-login-status', 'status', 'waiting');
+          setTimeout(function() { fbLib.setAttributeById('facebook-login-status', 'status', ''); }, 60*1000);
+        }
+        else {
+          var askUrl = "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token";
+          gBrowser.selectedTab = gBrowser.addTab(askUrl);
+        }
       }
     },
 

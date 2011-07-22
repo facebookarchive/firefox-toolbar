@@ -28,9 +28,6 @@ fbLib.debug( "toolbar.js" );
 
 var facebook = {
 
-    loggedOutTimeout: 0,
-    authTabTimeout: null,
-
     obsSvc: Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService),
 
     topicToXulId: { 'facebook-msgs-updated':      'facebook-notification-msgs'
@@ -39,6 +36,21 @@ var facebook = {
                     , 'facebook-event-invs-updated':'facebook-notification-event-invs'
                     , 'facebook-group-invs-updated':'facebook-notification-group-invs'
                     },
+
+    /* Items that need to be enabled/disabled based on logged in state or permissions state */
+    toolbarItemsIds: [ "facebook-sidebar-toggle",
+                       "facebook-search",
+                       "facebook-home",
+                       "facebook-share",
+                       //"facebook-like",
+                       "facebook-photoupload",
+                       "facebook-notification-poke",
+                       "facebook-notification-reqs",
+                       "facebook-notification-group-invs",
+                       "facebook-notification-event-invs",
+                       "facebook-notification-msgs",
+                       "facebook-link-menu"
+    ],
 
     checkSeparator: function(data) {
         var showSep = false;
@@ -66,6 +78,8 @@ var facebook = {
                 var statusBox;
                 switch (topic) {
                 case 'facebook-session-start':
+                    fbLib.debug('starting session...');
+                    facebook.toggleToolbarState(false);
                     subject = subject.QueryInterface(Ci.fbIFacebookUser);
                     fbLib.setAttributeById('facebook-name-info', 'label', subject.name);
                     statusBox = document.getElementById('facebook-toolbar-status');
@@ -89,16 +103,7 @@ var facebook = {
                     break;
                 case 'facebook-session-end':
                     fbLib.debug('ending session...');
-                    fbLib.setAttributeById('facebook-login-status', 'label', fStrings.getString('login'));
-                    fbLib.setAttributeById('facebook-login-status', 'tooltiptext', fStrings.getString('login'));
-                    fbLib.setAttributeById('facebook-name-info', 'label', '');
-                    statusBox = document.getElementById('facebook-toolbar-status');
-                    statusBox.style.display="none";
-                    for each( var top in facebook.topicToXulId )
-                        fbLib.setAttributeById( top, 'label', '?');
-                    facebook.clearFriends(true);
-
-                    facebook.clearLikeCount();
+                    facebook.forceUIOff(false);
 
                     // redirect all open facebook pages
 
@@ -150,7 +155,7 @@ var facebook = {
         onStatusChange: function(webProgress, request, status, message) {  }
     },
 
-     topics_of_interest:    [ 'facebook-session-start'
+    topics_of_interest:     [ 'facebook-session-start'
                             , 'facebook-friends-updated'
                             , 'facebook-friend-updated'
                             , 'facebook-new-friend'
@@ -213,6 +218,29 @@ var facebook = {
         catch (e) {  fbLib.debug("pageload error: " + e);}
     },
 
+    forceUIOff: function(aAuthNeeded) {
+        var loginButtonString = aAuthNeeded ?
+                                facebook.fStringBundle.getString('approve') :
+                                facebook.fStringBundle.getString('login');
+        fbLib.setAttributeById('facebook-login-status', 'label', loginButtonString);
+        fbLib.setAttributeById('facebook-login-status', 'status', '');
+        fbLib.setAttributeById('facebook-login-status', 'tooltiptext', loginButtonString);
+        fbLib.setAttributeById('facebook-name-info', 'label', '');
+        statusBox = document.getElementById('facebook-toolbar-status');
+        statusBox.style.display="none";
+        for each( var top in facebook.topicToXulId )
+            fbLib.setAttributeById( top, 'label', '?');
+        facebook.clearFriends(true);
+        facebook.clearLikeCount();
+        facebook.toggleToolbarState(true);
+    },
+
+    toggleToolbarState: function(aDisable) {
+        for (var i = 0; i < facebook.toolbarItemsIds.length; i++) {
+            fbLib.setAttributeById(facebook.toolbarItemsIds[i], "disabled", aDisable);
+        }
+    },
+
     /* XX USING LIKE API 
     onTabSelect: function(e) {
         //fbLib.debug("on tab select, like count =  " + gBrowser.contentDocument._fbLikeCount);
@@ -248,16 +276,24 @@ var facebook = {
         facebook.clearLikeCount();
 
         var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
-        if (!prefSvc.getBoolPref('extensions.facebook.like.enabled'))
+        if (prefSvc.getBoolPref('extensions.facebook.like.enabled'))
         {
-            return;
+            if (url != null && url.match(/^http/))
+            {
+                fbLib.setAttributeById('facebook-like-iframe', 'src',
+                    'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb');
+            }
         }
+        return;
 
-        if (url != null && url.match(/^http/))
-        {
-            fbLib.setAttributeById('facebook-like-iframe', 'src',
-                'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb');
-        }
+        // XX Not working yet
+        // We will check if we still have permissions
+        var query = ' SELECT read_stream'
+                  + ' FROM permissions WHERE uid = :user ';
+        query = query.replace( /:user/g, this._uid );
+        fbSvc.wrappedJSObject.callMethod('facebook.fql.query', ['query='+query], function(data) {
+            fbLib.debug("Permissions check returning : "+data);
+        });
 
         //document.getElementById('facebook-like-iframe').addProgressListener(facebook.likeProgListener);
         //document.getElementById('facebook-like-iframe').contentDocument.addProgressListener(facebook.likeProgListener);
@@ -350,6 +386,13 @@ var facebook = {
             }
             else
             {
+                var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+                fbLib.debug("Checking if we have asked for permissions before");
+                if (prefSvc.getBoolPref('extensions.facebook.permissions.asked')) {
+                    facebook.forceUIOff(true);
+                    return;
+                }
+
                 // if FF has a facebook user cookie, then we're logged in, but the user needs to give us permissions - open an auth tab
                 fbLib.debug( "onAuthIframeLoad: have uiserver.php dialog in auth iframe: opening auth tab");
 
@@ -371,6 +414,9 @@ var facebook = {
                 }
 
                 gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
+
+                facebook.forceUIOff(true);
+                prefSvc.setBoolPref('extensions.facebook.permissions.asked', true);
             }
         }
     },
@@ -445,6 +491,9 @@ var facebook = {
             statusBox.style.display="block";
             facebook.onStatusBoxBlur(statusBox); // change color for emptyText
         } else {
+          // Disable the toolbar until we figure out if we are logged in/authorized or not
+          facebook.toggleToolbarState(true);
+
           var hasSavedSession = fbSvc.savedSessionStart();
 
           fbLib.setAttributeById('facebook-login-status', 'status', (fbSvc.wrappedJSObject.hasSiteCookie()||hasSavedSession?'waiting':''));

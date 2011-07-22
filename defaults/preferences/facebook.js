@@ -32,3 +32,5 @@ pref("extensions.facebook.first_run_dialog", false);
 pref("extensions.facebook.not_first_run", false);
 // Like
 pref("extensions.facebook.like.enabled", false);
+// Toolbar permissions
+pref("extensions.facebook.permissions.asked", false);

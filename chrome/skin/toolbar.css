@@ -24,11 +24,21 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   color: #2f4778;
 }
 
+/* Disabled state for all buttons */
+toolbarbutton.facebook-toolbar-button[disabled=true] {
+  list-style-image: url('chrome://facebook/skin/toolbar-disabled.png');
+}
+
 /* .facebook-share,*/
 .facebook-notification,
-#facebook-searchbox, .facebook-sidebar-icon image {
+#facebook-searchbox,
+.facebook-sidebar-icon image {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding: 0px;
+}
+
+.facebook-sidebar-icon[disabled=true] image {
+  list-style-image: url('chrome://facebook/skin/toolbar-disabled.png');
 }
 
 #facebook-login-status[status="waiting"] {
@@ -174,7 +184,7 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
 }
 
 /* -- Home -- */
-#facebook-home {
+.facebook-icon-home {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
   padding: 0px;
   padding-left: 4px;
@@ -182,14 +192,15 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   margin: 0;
   -moz-image-region: rect(0px 424px 16px 409px);
 }
-#facebook-home:active,
-#facebook-home:hover
+
+.facebook-icon-home:active,
+.facebook-icon-home:hover
 {
   -moz-image-region: rect(0px 440px 16px 425px);
 }
 
-#facebook-home .toolbarbutton-text,
-#facebook-home label
+.facebook-icon-home .toolbarbutton-text,
+.facebook-icon-home label
 {
   margin: 0;
   padding: 0;

@@ -20,7 +20,7 @@
             class="chromeclass-toolbar-additional toolbarbutton-1"
             id="facebook-toolbar-toggle" tooltiptext="&toolbar.facebook.name;" oncommand="fbLib.facebook_toggleToolbar()" />
       <toolbarbutton id="facebook-sidebar-toggle"
-                     class="facebook-sidebar-icon"
+                     class="facebook-sidebar-icon facebook-toolbar-button"
                      tooltiptext="&toolbar.button.sidebar.tooltip;"
                      dir = "reverse"
                      persist = "checked"
@@ -36,7 +36,7 @@
       </toolbaritem>
 
       <toolbarbutton id="facebook-home"
-                     class="button"
+                     class="facebook-icon-home button facebook-toolbar-button"
                      tooltiptext="&toolbar.button.home.tooltip;"
                      text="Facebook"
                      onclick="checkForMiddleClick(this, event);"
@@ -44,7 +44,7 @@
                      />
 
       <toolbarbutton id="facebook-share"
-                     class="button"
+                     class="button facebook-toolbar-button"
                      label="&toolbar.button.share.label;"
                      tooltiptext="&toolbar.button.share.tooltip;"
                      oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { facebook.share() }"/>
@@ -55,36 +55,36 @@
       </toolbaritem>
 
       <toolbarbutton id="facebook-photoupload"
-                     class="facebook-icon-photoupload button"
+                     class="facebook-icon-photoupload button facebook-toolbar-button"
                      tooltiptext="&toolbar.button.upload.tooltip;"
                      oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { facebook.photoupload(); }"/>
 
       <toolbarbutton id="facebook-notification-poke"
-                     class="facebook-icon-poke facebook-notification button"
+                     class="facebook-icon-poke facebook-notification button facebook-toolbar-button"
                      label="?"
                      tooltiptext="&toolbar.button.pokes.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/home.php?src=fftb', event); }"/>
       <toolbarbutton id="facebook-notification-reqs"
-                     class="facebook-icon-reqs facebook-notification button"
+                     class="facebook-icon-reqs facebook-notification button facebook-toolbar-button"
                      label="?"
                      tooltiptext="&toolbar.button.friends.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/reqs.php?src=fftb#friend', event); }"/>
       <toolbarbutton id="facebook-notification-group-invs"
-                     class="facebook-icon-grps facebook-notification button"
+                     class="facebook-icon-grps facebook-notification button facebook-toolbar-button"
                      label="?"
                      tooltiptext="&toolbar.button.groups.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/reqs.php?src=fftb#group', event);}"/>
       <toolbarbutton id="facebook-notification-event-invs"
-                     class="facebook-icon-evts facebook-notification button"
+                     class="facebook-icon-evts facebook-notification button facebook-toolbar-button"
                      label="?"
                      tooltiptext="&toolbar.button.events.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/?sk=events&amp;src=fftb', event); }"/>
       <toolbarbutton id="facebook-notification-msgs"
-                     class="facebook-icon-msgs facebook-notification button"
+                     class="facebook-icon-msgs facebook-notification button facebook-toolbar-button"
                      label="?"
                      tooltiptext="&toolbar.button.messages.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
