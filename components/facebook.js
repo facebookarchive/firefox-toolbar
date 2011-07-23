@@ -563,7 +563,7 @@ facebookService.prototype = {
             }
 
             fbSvc._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-            fbSvc._timer.initWithCallback(fbSvc._checker, BASE_CHECK_INTERVAL/5, Ci.nsITimer.TYPE_REPEATING_SLACK);
+            fbSvc._timer.initWithCallback(fbSvc._checker, BASE_CHECK_INTERVAL/10, Ci.nsITimer.TYPE_REPEATING_SLACK);
 
             // fire off another thread to get things started
             fbSvc._oneShotTimer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
@@ -612,7 +612,7 @@ facebookService.prototype = {
         }
 
         this._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
-        this._timer.initWithCallback(this._checker, BASE_CHECK_INTERVAL/5, Ci.nsITimer.TYPE_REPEATING_SLACK);
+        this._timer.initWithCallback(this._checker, BASE_CHECK_INTERVAL/10, Ci.nsITimer.TYPE_REPEATING_SLACK);
 
         // fire off another thread to get things started
         this._oneShotTimer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
