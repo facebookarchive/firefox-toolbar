@@ -236,8 +236,13 @@ var facebook = {
     },
 
     toggleToolbarState: function(aDisable) {
+        // Watch out, disabled=false does not enable everything, e.g. search box
+        // Best to remove the attribute
         for (var i = 0; i < facebook.toolbarItemsIds.length; i++) {
-            fbLib.setAttributeById(facebook.toolbarItemsIds[i], "disabled", aDisable);
+            if (aDisable)
+                fbLib.setAttributeById(facebook.toolbarItemsIds[i], "disabled", aDisable);
+            else
+                fbLib.removeAttributeById(facebook.toolbarItemsIds[i], "disabled");
         }
     },
 

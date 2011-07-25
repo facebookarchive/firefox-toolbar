@@ -80,6 +80,14 @@ var fbLib = {
         return false;
     },
 
+    removeAttributeById: function(id, attrib) {
+        var el = document.getElementById(id);
+        if (el) {
+          return el.removeAttribute(attrib);
+        }
+        return false;
+    },
+
     SetFacebookStatus: function(status) {
         if (fbSvc.canSetStatus) {
             fbSvc.setStatus(status.value);
