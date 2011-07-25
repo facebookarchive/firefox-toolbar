@@ -10,7 +10,7 @@ Downloading
 
 Releases of the toolbar are available from:
 
-* [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/3794/)
+* [addons.mozilla.org](https://addons.mozilla.org/addon/facebook-toolbar/)
 * [facebook.com](http://www.facebook.com/toolbar?v=app_4949752878)
 
 Building
