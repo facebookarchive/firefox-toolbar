@@ -44,7 +44,7 @@
       <column flex="4"/>
     </columns>
     <rows>
-      <row>
+      <row align="center">
         <label value="&upload.albumname.label;"/>
         <textbox id="name" onchange="CreateNewAlbumDialog.invalidate();"/>
       </row>
@@ -52,11 +52,11 @@
         <label value="&upload.album.description.label;"/>
         <textbox id="description" multiline="true"/>
       </row>
-      <row>
+      <row align="center">
         <label value="&upload.album.location.label;"/>
         <textbox id="location"/>
       </row>
-      <row>
+      <row align="center">
         <label value="&upload.visibleto.label;"/>
         <menulist id="visibility">
           <menupopup>
