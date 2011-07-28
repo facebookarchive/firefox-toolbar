@@ -44,7 +44,7 @@
                      />
 
       <toolbarbutton id="facebook-share"
-                     class="button facebook-toolbar-button"
+                     class="facebook-icon-share button facebook-toolbar-button"
                      label="&toolbar.button.share.label;"
                      tooltiptext="&toolbar.button.share.tooltip;"
                      oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { facebook.share() }"/>
@@ -95,7 +95,6 @@
       <toolbarbutton id="facebook-link-menu"
                      label="&toolbar.button.links.label;"
                      type="menu">
-                     <!--onmousedown="if (!fbSvc.loggedIn) fbLib.FacebookLogin();"-->
         <menupopup id="facebook-link-popup">
 
           <!-- The Top Nav -->
@@ -200,7 +199,7 @@
              context="toolbar-context-menu"
              toolbarname="&toolbar.facebook.name;"
              crop="end"
-            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-event-invs,facebook-notification-group-invs,facebook-notification-separator,facebook-like,facebook-photoupload,spring,facebook-login-info">
+            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-event-invs,facebook-notification-group-invs,facebook-notification-separator,facebook-like,facebook-share,facebook-photoupload,spring,facebook-login-info">
 
             <iframe id="facebook-auth-iframe" src="about:blank" type="content" collapsed="true"/>
     </toolbar>

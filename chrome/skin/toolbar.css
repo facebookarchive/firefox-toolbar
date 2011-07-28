@@ -16,8 +16,16 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   display: -moz-box;
 }
 
+.button {
+  padding-right: 4px !important;
+}
+
 .button:hover label {
   color: #3b5998;
+}
+
+.button[disabled=true]:hover label {
+  color: inherit;
 }
 
 .button:active label {
@@ -29,7 +37,7 @@ toolbarbutton.facebook-toolbar-button[disabled=true] {
   list-style-image: url('chrome://facebook/skin/toolbar-disabled.png');
 }
 
-/* .facebook-share,*/
+.facebook-icon-share ,
 .facebook-notification,
 #facebook-searchbox,
 .facebook-sidebar-icon image {
@@ -186,10 +194,8 @@ toolbarbutton.facebook-toolbar-button[disabled=true] {
 /* -- Home -- */
 .facebook-icon-home {
   list-style-image: url('chrome://facebook/skin/toolbar.png');
-  padding: 0px;
   padding-left: 4px;
   border: 0;
-  margin: 0;
   -moz-image-region: rect(0px 424px 16px 409px);
 }
 
@@ -220,19 +226,15 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
   color: #000!important;
 }
 
-/*
 .facebook-icon-share {
   padding-left: 4px;
-  margin-left: 0px;
-  -moz-image-region: rect(0px 109px 14px 64px);
+  margin-left: 2px;
+  -moz-image-region: rect(0px 109px 14px 97px);
 }
 
 .facebook-icon-share:hover {
-  padding-left: 4px;
-  margin-left: 0px;
-  -moz-image-region: rect(0px 154px 14px 109px);
+  -moz-image-region: rect(0px 154px 14px 142px);
 }
-*/
 
 /* Upload */
 .facebook-icon-photoupload {
@@ -267,7 +269,6 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
 
 #facebook-login-status {
   margin: 0px;
-  padding-right: 4px;
   margin-right: 4px;
 }
 
