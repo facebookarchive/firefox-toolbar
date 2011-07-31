@@ -178,7 +178,18 @@ var facebook = {
 
         try
         {
-            if (event.originalTarget.location.hostname == "www.facebook.com")
+            var doc = event ? event.originalTarget : null;
+            if (!doc || doc.defaultView.frameElement)
+            {
+                // frame in document, do not process
+                fbLib.debug("Frame in page loading, not processing");
+                return;
+            }
+
+            if (facebook.filterURL(event))
+                return;
+
+            if (doc.location.hostname == "www.facebook.com")
             {
                 if (!fbSvc.loggedIn)
                 {
@@ -266,29 +277,78 @@ var facebook = {
             facebook.updateLikeCount();
     },
 
-    clearLikeCount: function() {
-
-        fbLib.setAttributeById('facebook-like-iframe', 'collapsed', 'true');
-        fbLib.setAttributeById('facebook-like-iframe', 'src', 'about:blank');
+    /**
+     * Check a url for irregular types (about:, chrome:)
+     * @parameter aEvent - load event that carries the target page to extract the url from
+     * @return boolean true to filter out (not use the url), false to let it through
+     */
+    filterURL: function(aEvent) {
+        var url = aEvent.originalTarget.location;
+        if (url) {
+            var ioService = Components.classes["@mozilla.org/network/io-service;1"]
+                            .getService(Components.interfaces.nsIIOService);
+            var scheme = ioService.extractScheme(url);
+            // Weed out about and chrome urls
+            fbLib.debug("Loading " + scheme + "url...");
+            if (scheme == "about" || scheme == "chrome")
+                return true;
+        }
+        return false;
     },
 
+    /**
+     * The like bug can not in the toolbarpalette because it does not appear in the DOM because
+     *   of a bug in Firefox 3.6 where the localstore cache overrides any new items. And Like
+     *   is a new item introduced recently.
+     * This function moves the Like item from being a clild of the toolbar to being a child of
+     *   the palette where it then appers in the DOM and is visible in the toolbar
+     */
+    moveLike: function() {
+        try {
+            var fBar = document.getElementById("facebook-toolbar");
+            var likeItem = document.getElementById("facebook-like");
+            var fns = document.getElementById("facebook-notification-separator");
+            var newLike = fBar.removeChild(likeItem);
+            fBar.insertBefore(newLike, fns.nextSibling);
+        }
+        catch(e) {
+            fbLib.debug("Error moving like : "+e);
+        }
+    },
+
+    /**
+     * Reset the Like page
+     */
+    clearLikeCount: function() {
+        try {
+            fbLib.setAttributeById('facebook-like-iframe', 'collapsed', 'true');
+            fbLib.setAttributeById('facebook-like-iframe', 'src', 'about:blank');
+        }
+        catch(e) {}
+    },
+
+    /**
+     * Refresh the Like page
+     */
     updateLikeCount: function() {
-
-        var url = gBrowser.currentURI.spec;
-
-        fbLib.debug("updateLikeCount: have url = '" + url + "'");
-
-        facebook.clearLikeCount();
-
-        var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
-        if (prefSvc.getBoolPref('extensions.facebook.like.enabled'))
-        {
-            if (url != null && url.match(/^http/))
+        try {
+            var url = gBrowser.currentURI.spec;
+    
+            fbLib.debug("updateLikeCount: have url = '" + url + "'");
+    
+            facebook.clearLikeCount();
+    
+            var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+            if (prefSvc.getBoolPref('extensions.facebook.like.enabled'))
             {
-                fbLib.setAttributeById('facebook-like-iframe', 'src',
-                    'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb');
+                if (url != null && url.match(/^http/))
+                {
+                    fbLib.setAttributeById('facebook-like-iframe', 'src',
+                        'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb');
+                }
             }
         }
+        catch(e) {}
         return;
 
         // XX Not working yet
@@ -435,6 +495,9 @@ var facebook = {
             return;
         }
 
+        if (facebook.filterURL(event))
+            return;
+
         if (event.originalTarget.location.hostname == "www.facebook.com" &&
                 event.originalTarget.location.href.indexOf("plugins/like.php") > 0)
         {
@@ -454,11 +517,16 @@ var facebook = {
     },
 
     load: function() {
-        fbLib.debug( "loading toolbar..." );
-
         gBrowser.addEventListener("DOMContentLoaded", facebook.onPageLoad, true);
         gBrowser.tabContainer.addEventListener("TabSelect", facebook.onTabSelect, false);
-        document.getElementById("facebook-like-iframe").addEventListener("DOMContentLoaded", facebook.onLikeIframeLoad, true);
+        try {
+            facebook.moveLike();
+            document.getElementById("facebook-like-iframe").addEventListener("DOMContentLoaded", facebook.onLikeIframeLoad, true);
+        }
+        catch(e) {
+            // We did not find the Like button ... lets not stop because of it
+            fbLib.debug( "Like button not found. This feature will not be activated" );
+        }
         document.getElementById("facebook-auth-iframe").addEventListener("DOMContentLoaded", facebook.onAuthIframeLoad, true);
 
         facebook.clearLikeCount();
@@ -542,9 +610,12 @@ var facebook = {
 
     startupLike: function()
     {
-        var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
-        if (prefSvc.getBoolPref('extensions.facebook.like.enabled')) 
-            fbLib.setAttributeById('facebook-like', 'hidden', 'false');
+        try {
+            var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+            if (prefSvc.getBoolPref('extensions.facebook.like.enabled')) 
+                fbLib.setAttributeById('facebook-like', 'hidden', 'false');
+        }
+        catch(e) {}
     },
 
     toggleLike: function()
@@ -574,7 +645,6 @@ var facebook = {
           }
           */
           prefSvc.setBoolPref('extensions.facebook.first_run_dialog', true);
-          //prefSvc.lockPref('extensions.facebook.first_run_dialog');
         }
         else {
             facebook.startupLike();
@@ -589,7 +659,6 @@ var facebook = {
         if (!prefSvc.getBoolPref('extensions.facebook.not_first_run')) {
           getBrowser().loadOneTab('chrome://facebook/content/firstrun/welcome.html', null, null, null, false, false);
           prefSvc.setBoolPref('extensions.facebook.not_first_run', true);
-          //prefSvc.lockPref('extensions.facebook.not_first_run');
         }
     },
 
@@ -606,7 +675,10 @@ var facebook = {
     unload: function() {
         gBrowser.removeEventListener("DOMContentLoaded", facebook.onPageLoad, true);
         gBrowser.tabContainer.removeEventListener("TabSelect", facebook.onTabSelect, false);
-        document.getElementById("facebook-like-iframe").removeEventListener("DOMContentLoaded", facebook.onLikeIframeLoad, true);
+        try {
+            document.getElementById("facebook-like-iframe").removeEventListener("DOMContentLoaded", facebook.onLikeIframeLoad, true);
+        }
+        catch(e) {}
         document.getElementById("facebook-auth-iframe").removeEventListener("DOMContentLoaded", facebook.onAuthIframeLoad, true);
 
         for each (var topic in facebook.topics_of_interest)

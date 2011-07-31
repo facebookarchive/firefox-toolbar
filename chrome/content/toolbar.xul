@@ -4,7 +4,8 @@
 
 <!DOCTYPE window SYSTEM "chrome://facebook/locale/toolbar.dtd">
 
-<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="facebook">
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+         id="facebook">
 
   <script type="application/x-javascript" src="chrome://browser/content/utilityOverlay.js"/>
   <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
@@ -48,11 +49,6 @@
                      label="&toolbar.button.share.label;"
                      tooltiptext="&toolbar.button.share.tooltip;"
                      oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { facebook.share() }"/>
-
-      <toolbaritem id="facebook-like" align="center" pack="center" hidden="true">
-        <iframe id="facebook-like-iframe" src="about:blank" type="content"
-                height="20" flex="1" />
-      </toolbaritem>
 
       <toolbarbutton id="facebook-photoupload"
                      class="facebook-icon-photoupload button facebook-toolbar-button"
@@ -199,9 +195,14 @@
              context="toolbar-context-menu"
              toolbarname="&toolbar.facebook.name;"
              crop="end"
-            defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-event-invs,facebook-notification-group-invs,facebook-notification-separator,facebook-like,facebook-share,facebook-photoupload,spring,facebook-login-info">
+             defaultset="facebook-sidebar-toggle,separator,facebook-searchbox,facebook-link-menu,separator,facebook-home,separator,facebook-notification-poke,facebook-notification-reqs,facebook-notification-msgs,facebook-notification-event-invs,facebook-notification-group-invs,facebook-notification-separator,facebook-like,facebook-share,facebook-photoupload,spring,facebook-login-info">
 
             <iframe id="facebook-auth-iframe" src="about:blank" type="content" collapsed="true"/>
+
+            <toolbaritem id="facebook-like" pack="center" align="center">
+                <iframe id="facebook-like-iframe" src="about:blank" type="content"
+                        height="20" flex="1" collapsed="true" />
+            </toolbaritem>
     </toolbar>
     <popupset>
         <popup position="after_start"
