@@ -75,12 +75,14 @@ var facebook = {
                 facebook.checkSeparator(data);
             }
             else {
-                var statusBox;
+                var statusBox, nameButton;
                 switch (topic) {
                 case 'facebook-session-start':
                     fbLib.debug('starting session...');
                     facebook.toggleToolbarState(false);
                     subject = subject.QueryInterface(Ci.fbIFacebookUser);
+                    nameButton = document.getElementById('facebook-name-info');
+                    nameButton.style.display="block";
                     fbLib.setAttributeById('facebook-name-info', 'label', subject.name);
                     statusBox = document.getElementById('facebook-toolbar-status');
                     statusBox.style.display="block";
@@ -236,6 +238,8 @@ var facebook = {
         fbLib.setAttributeById('facebook-login-status', 'label', loginButtonString);
         fbLib.setAttributeById('facebook-login-status', 'status', '');
         fbLib.setAttributeById('facebook-login-status', 'tooltiptext', loginButtonString);
+        var nameButton = document.getElementById('facebook-name-info');
+        nameButton.style.display="none";
         fbLib.setAttributeById('facebook-name-info', 'label', '');
         statusBox = document.getElementById('facebook-toolbar-status');
         statusBox.style.display="none";
@@ -548,6 +552,8 @@ var facebook = {
         var loggedInUser = fbSvc.loggedInUser;
         if (loggedInUser) {
             loggedInUser = loggedInUser.QueryInterface(Ci.fbIFacebookUser);
+            var nameButton = document.getElementById('facebook-name-info');
+            nameButton.style.display="block";
             fbLib.setAttributeById('facebook-name-info', 'label', loggedInUser.name);
             fbLib.setAttributeById('facebook-name-info', 'userid', loggedInUser.id);
             fbLib.setAttributeById('facebook-toolbar-status', 'value', loggedInUser.status);

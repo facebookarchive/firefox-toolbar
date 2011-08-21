@@ -166,7 +166,8 @@
         <toolbarbutton id="facebook-name-info"
                        class="button"
                        onclick="checkForMiddleClick(this, event);"
-                       oncommand="if (this.label!='') fbLib.OpenFBUrl('profile.php', this.getAttribute('userid'), event)" />
+                       oncommand="if (this.label!='') fbLib.OpenFBUrl('profile.php', this.getAttribute('userid'), event)"
+                       style="display:none;" />
         <textbox id="facebook-toolbar-status"
                  type="timed" timeout="5000" flex="10"
                  onfocus="facebook.onStatusBoxFocus(this);"
