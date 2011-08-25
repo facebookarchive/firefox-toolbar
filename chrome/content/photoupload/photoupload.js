@@ -388,7 +388,7 @@ var PhotoSet = {
     return mis;
   },
 
-  _uploadPhoto: function(albumId, objectId, photo, onProgress, onComplete, onError) {
+  _uploadPhoto: function(albumId, photo, onProgress, onComplete, onError) {
     fbLib.debug("Uploading photo: " + photo);
 
     var params = {};
@@ -427,7 +427,7 @@ var PhotoSet = {
       xhr.upload.onprogress = updateProgress;
     }
 
-    var postURL = "https://graph.facebook.com/" + objectId + "/photos?access_token=" + gFacebookService.accessToken;
+    var postURL = "https://graph.facebook.com/" + albumId + "/photos?access_token=" + gFacebookService.accessToken;
     fbLib.debug("post url = " + postURL);
 
     xhr.open("POST", postURL);
@@ -496,8 +496,8 @@ var PhotoSet = {
     onComplete();
   },
 
-  _uploadAndTagPhoto: function(albumId, objectId, photo, onProgress, onComplete, onError) {
-    this._uploadPhoto(albumId, objectId, photo, onProgress,
+  _uploadAndTagPhoto: function(albumId, photo, onProgress, onComplete, onError) {
+    this._uploadPhoto(albumId, photo, onProgress,
       function(photoId) { // onComplete callback
         fbLib.debug("finished upload photo (id= " + photoId + "), will tag");
         PhotoSet._tagPhoto(photo, photoId, onComplete, onError);
@@ -505,7 +505,7 @@ var PhotoSet = {
     onError);
   },
 
-  upload: function(albumId, objectId, onProgress, onComplete, onError) {
+  upload: function(albumId, onProgress, onComplete, onError) {
     this._cancelled = false;
     var toUpload = this._photos;
     var total = toUpload.length;
@@ -534,7 +534,7 @@ var PhotoSet = {
       var photoSize = photo.sizeInBytes;
 
       try {
-        self._uploadAndTagPhoto(albumId, objectId, photo,
+        self._uploadAndTagPhoto(albumId, photo,
           function(photoPercent) { // onProgress callback
             fbLib.debug("on progress from photo upload " + photoPercent);
             var donePercent = (uploadedBytes / totalSizeBytes) * 100;
@@ -1148,73 +1148,85 @@ var PhotoUpload = {
     return true;
   },
 
-  _fillAlbumList: function(onComplete) {
+  _fillAlbumList: function(callback) {
+
     var self = this;
+    var albumsPopup = document.getElementById("albumsPopup");
 
-    var getAlbums = function(ignoreAID) {
-        gFacebookService.callMethod('facebook.photos.getAlbums',
-          ["uid=" + gFacebookServiceUnwrapped.loggedInUser.id],
-          function(albums) {
-            // Remove albums not of type 'normal'
-            // This includes "Profile Pictures". "Mobile Uploads" and "Wall Photos"
-            // Uploading to some of these albums generates errors.
-            albums = albums.filter(function(a) {
-              fbLib.debug("album '" + a.name + "' has a aid of '" + a.aid + "'; album type = " + a.type);
-              return a.type == "normal";
-            });
+    while (albumsPopup.getElementsByTagName("menuitem").length > 2)
+    {
+        albumsPopup.removeChild(albumsPopup.firstChild);
+    }
 
-            if (albums.length == 0) {
-              fbLib.debug("No albums");
-              var newAlbumRadio = document.getElementById("newAlbumRadio");
-              document.getElementById("albumSelectionGroup").selectedItem = newAlbumRadio;
-              self.onAlbumSelectionModeChange()
-              document.getElementById("existingAlbumRadio").disabled = true;
-              return;
-            }
-            var albumsPopup = document.getElementById("albumsPopup");
-            var albumsPopupPlaceHolder = document.getElementById("albumsPopupPlaceHolder");
-            var lastAlbumId = document.getElementById("albumsList")
-                                      .getAttribute("lastalbumid");
+    var handleResponse = function(response)
+    {
+        // Remove albums not of type 'normal'
+        // This includes "Profile Pictures". "Mobile Uploads" and "Wall Photos"
+        // Uploading to some of these albums generates errors.
 
-            while (albumsPopup.getElementsByTagName("menuitem").length > 2)
-            {
-                albumsPopup.removeChild(albumsPopup.firstChild);
-            }
+        var albums = response.data;
 
-            var selectedItem;
-            for each (var album in albums) {
-              var menuitem = document.createElement("menuitem");
-              menuitem.setAttribute("label", album.name);
-              menuitem.setAttribute("albumid", album.aid);
-              menuitem.setAttribute("objectid", album.object_id);
-              if (album.aid == lastAlbumId)
-                selectedItem = menuitem;
-              fbLib.debug("Album name: " + album.name + " object id: " + album.object_id + " album id: " + album.aid);
-              albumsPopup.insertBefore(menuitem, albumsPopupPlaceHolder);
-            }
-            var albumsList = document.getElementById("albumsList");
-            if (selectedItem) {
-              albumsList.selectedItem = selectedItem;
-            } else {
-              albumsList.selectedIndex = 0;
-            }
-            //document.getElementById("existingAlbumPanel").className = "";
-            if (onComplete)
-                onComplete();
+        albums = albums.filter(function(a) {
+          fbLib.debug("album '" + a.name + "' has an id of '" + a.id + "'; album type = " + a.type);
+          return a.type == "normal";
+        });
+
+        if (albums.length == 0) {
+          fbLib.debug("No albums");
+          if (callback)
+              callback();
+          return;
+        }
+        var albumsPopupPlaceHolder = document.getElementById("albumsPopupPlaceHolder");
+        var lastAlbumId = document.getElementById("albumsList")
+                                  .getAttribute("lastalbumid");
+
+        var selectedItem;
+        for each (var album in albums) {
+
+          var dupe = false;
+
+          for (var i=0; i<albumsPopup.getElementsByTagName("menuitem").length; i++)
+          {
+              if (albumsPopup.getElementsByTagName("menuitem")[i].hasAttribute("id")
+                  && albumsPopup.getElementsByTagName("menuitem")[i].getAttribute("id") == album.id)
+              {
+                  dupe = true;
+              }
           }
-        );
-    };
 
-    var query = "SELECT aid FROM album WHERE owner = :user AND type = 'profile'";
-    query = query.replace( /:user/g, gFacebookServiceUnwrapped.loggedInUser.id);
+          if (dupe)
+              continue;
 
-    gFacebookService.callMethod('facebook.fql.query', ['query='+query], function(data) {
-        for each( var album in data) {
-            profilePicturesAID = Number(album.aid);
+          var menuitem = document.createElement("menuitem");
+          menuitem.setAttribute("label", album.name);
+          menuitem.setAttribute("id", album.id);
+          menuitem.setAttribute("link", album.link);
+          if (album.id == lastAlbumId)
+            selectedItem = menuitem;
+          fbLib.debug("Album name: " + album.name + " id: " + album.id );
+          albumsPopup.insertBefore(menuitem, albumsPopupPlaceHolder);
+        }
+        var albumsList = document.getElementById("albumsList");
+        if (selectedItem) {
+          albumsList.selectedItem = selectedItem;
+        } else {
+          albumsList.selectedIndex = 0;
         }
 
-        getAlbums(profilePicturesAID);
-    });
+        if (response.paging.next)
+        {
+            fbLib.debug("fillAlbumList: getting next page of data from '" + response.paging.next +  "'");
+            fbSvc.wrappedJSObject.fetchGraphObject(response.paging.next, handleResponse);
+        }
+        else
+        {
+            if (callback)
+                callback();
+        }
+      };
+
+    fbSvc.wrappedJSObject.fetchGraphObject("me/albums", handleResponse);
   },
 
   _checkPhotoUploadPermission: function(callback) {
@@ -1280,34 +1292,6 @@ var PhotoUpload = {
     }
   },
 
-  /*
-  getAlbumSelectionMode: function() {
-    var albumSelectionGroup = document.getElementById("albumSelectionGroup");
-    var existingAlbumRadio = document.getElementById("existingAlbumRadio");
-    var newAlbumRadio = document.getElementById("newAlbumRadio");
-
-    if (albumSelectionGroup.selectedItem == existingAlbumRadio)
-      return EXISTING_ALBUM;
-    if (albumSelectionGroup.selectedItem == newAlbumRadio)
-      return NEW_ALBUM;
-
-    throw "Unknown album selection mode";
-  },
-
-  onAlbumSelectionModeChange: function() {
-    var albumSelectionDeck = document.getElementById("albumSelectionDeck");
-    var selectionMode = this.getAlbumSelectionMode();
-
-    if (selectionMode == EXISTING_ALBUM) {
-      albumSelectionDeck.selectedPanel =
-        document.getElementById("existingAlbumPanel");
-    } else if (selectionMode == NEW_ALBUM) {
-      albumSelectionDeck.selectedPanel =
-        document.getElementById("newAlbumPanel");
-    }
-  },
-    */
-
   addPhotos: function() {
     var fp = Cc["@mozilla.org/filepicker;1"].
              createInstance(Ci.nsIFilePicker);
@@ -1361,10 +1345,14 @@ var PhotoUpload = {
   _showUploadCompleteNotification: function(albumId) {
     try {
       let upText = this._stringBundle.getString("uploadCompleteAlert");
-      let aid = "aid=" + this._albumIdToUrlAlbumId(albumId) + "&";
-      let postUploadUrl = "http://www.facebook.com/editalbum.php?" + aid + "org=1";
+      //let aid = "aid=" + this._albumIdToUrlAlbumId(albumId) + "&";
+      //let postUploadUrl = "http://www.facebook.com/editalbum.php?" + aid + "org=1";
+
+      if (document.getElementById("albumsList").selectedItem)
+          var link = document.getElementById("albumsList").selectedItem.getAttribute("link");
+
       gFacebookService.showPopup('upload.complete', 'chrome://facebook/skin/photo.gif',
-                                 upText, postUploadUrl);
+                                 upText, link);
     }
     catch(e) {
       fbLib.debug("Error showing upload complete alert: " + e);
@@ -1399,10 +1387,21 @@ var PhotoUpload = {
       return;
 
     if (postUploadAction == POST_UPLOAD_OPENALBUM) {
+        /*
       var aid = "";
       aid = "aid=" + this._albumIdToUrlAlbumId(albumId) + "&";
       Application.activeWindow.open(
         this._url("http://www.facebook.com/editphoto.php?" + aid + "org=1")).focus();
+        */
+
+      if (document.getElementById("albumsList").selectedItem)
+      {
+          var link = document.getElementById("albumsList").selectedItem.getAttribute("link");
+
+          if (link)
+              Application.activeWindow.open(this._url(link)).focus();
+      }
+
       window.close();
     }
   },
@@ -1464,7 +1463,7 @@ var PhotoUpload = {
           this._uploadComplete(UPLOAD_ERROR, null, "Unexpected state");
         return;
       }
-      this._uploadToAlbum(albumsList.selectedItem.getAttribute("albumid"), albumsList.selectedItem.getAttribute("objectid"));
+      this._uploadToAlbum(albumsList.selectedItem.getAttribute("id"));
   },
 
   /**
@@ -1498,19 +1497,19 @@ var PhotoUpload = {
    * in a separate method in order to be called asynchronously when creating
    * a new album
    */
-  _uploadToAlbum: function(albumId, objectId) {
+  _uploadToAlbum: function(id) {
     if (this._uploadCancelled) {
-      this._uploadComplete(UPLOAD_CANCELLED, albumId);
+      this._uploadComplete(UPLOAD_CANCELLED, id);
       return;
     }
 
     var self = this;
-    PhotoSet.upload(albumId, objectId,
+    PhotoSet.upload(id,
       function(percent) { // onProgress callback
         fbLib.debug("Got progress " + percent);
         self._uploadProgress.value = percent;
       }, function(cancelled) { // onComplete callback
-        self._uploadComplete(cancelled ? UPLOAD_CANCELLED : UPLOAD_COMPLETE, albumId);
+        self._uploadComplete(cancelled ? UPLOAD_CANCELLED : UPLOAD_COMPLETE, id);
       }, function(message) { // onError callback
         self._uploadComplete(UPLOAD_ERROR, null, message);
     });

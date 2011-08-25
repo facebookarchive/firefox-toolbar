@@ -48,36 +48,28 @@ var CreateNewAlbumDialog = {
         return false;
     },
 
-  _createAlbum: function(albumName, albumDescription, albumLocation, albumVisibility) {
-    var params = [
-      "uid=" + gFacebookServiceUnwrapped.loggedInUser.id,
-      "name=" + albumName,
-      "visible=" + albumVisibility
-    ];
-    if (albumLocation)
-      params.push("location=" + albumLocation);
-    if (albumDescription)
-      params.push("description=" + albumDescription);
+    _createAlbum: function(albumName, albumDescription, albumLocation, albumVisibility) {
 
-    gFacebookService.callMethod('facebook.photos.createAlbum',
-      params,
-      function(data) {
-        if (!data.aid) {
-          LOG("Error while creating album");
-          alert("Error while creating album");
-          return;
-        }
-        window.opener.document.getElementById("albumsList").setAttribute("lastalbumid", data.aid);
-        window.opener.PhotoUpload._fillAlbumList(function() {});
-        close();
-      }
-    );
-  },
+        var params = {
+            "name": albumName,
+            "visible": albumVisibility,
+            "location": albumLocation,
+            "description": albumDescription
+            };
 
- 
-
-    
-
+        gFacebookService.postGraphObject("me/albums", params, function(response)
+        {
+            if (response.id)
+            {
+                window.opener.document.getElementById("albumsList").setAttribute("lastalbumid", response.id);
+                window.opener.PhotoUpload._fillAlbumList(function() { window.close(); });
+            }
+            else
+            {
+                alert("Error while creating album.");
+            }
+        });
+    }
 };
 
 

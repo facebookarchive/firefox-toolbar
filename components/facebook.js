@@ -19,8 +19,8 @@
  */
 
 const BASE_CHECK_INTERVAL = 5*60*1000; // 5 minutes
-const DEBUG     = false;
-const VERBOSITY = 0; // 0: no dumping, 1: normal dumping, 2: massive dumping
+const DEBUG     = true;
+const VERBOSITY = 2; // 0: no dumping, 1: normal dumping, 2: massive dumping
 
 var debug = ( VERBOSITY < 1 )
   ? function() {}
@@ -1116,7 +1116,7 @@ facebookService.prototype = {
         };
     },
 
-    postGraphObject: function(method, callback)
+    postGraphObject: function(method, params, callback)
     {
         if (!this._accessToken)
         {
@@ -1159,6 +1159,17 @@ facebookService.prototype = {
 
         var url = "https://graph.facebook.com/" + method;
         var data = "access_token=" + this._accessToken;
+
+        if (params)
+        {
+            data += "&";
+
+            for (var id in params)
+            {
+                data += id + "=" + encodeURIComponent(params[id]) + "&";
+            }
+        }
+
         debug("going to POST to '" + url + "' with data = '" + data  + "'");
 
         req.open("POST", url, true);
@@ -1203,9 +1214,14 @@ facebookService.prototype = {
                 debug("graph error: " + e);
                 return;
             }
-
         };
-        req.open("GET", "https://graph.facebook.com/" + method + "?access_token=" + this._accessToken, true);
+
+        if (method.indexOf("http") == -1)
+            method = "https://graph.facebook.com/" + method + "?access_token=" + this._accessToken;
+
+        debug ("GETting graph method '" + method  + "'");
+
+        req.open("GET", method, true);
         req.send(null);
     },
 
