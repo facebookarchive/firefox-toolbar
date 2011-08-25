@@ -291,6 +291,7 @@ function facebookService() {
     }
 
     this._observerService.addObserver(this, "final-ui-startup", false);
+    this._observerService.addObserver(this, "cookie-changed", false);
 }
 
 function AlertObserver() { }
@@ -371,6 +372,16 @@ facebookService.prototype = {
 
     // nsIObserver
     observe: function(subject, topic, data) {
+
+        if (topic == 'cookie-changed' 
+            && data == 'deleted'
+            && subject instanceof Components.interfaces.nsICookie
+            && (subject.host == "facebook.com" || subject.host == ".facebook.com")
+            && subject.name == "c_user")
+        {
+            this.sessionEnd();
+        }
+
         if (topic != "final-ui-startup")
             return;
         this.migrate();
