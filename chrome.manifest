@@ -31,3 +31,6 @@ component {e983db0e-05fc-46e7-9fba-a22041c894ac} components/facebook.js
 contract @facebook.com/facebook-service;1 {e983db0e-05fc-46e7-9fba-a22041c894ac}
 category profile-after-change Facebook @facebook.com/facebook-service;1
 
+# XPCOM - about.js
+component {e0ac3100-952a-46d9-83c0-dbe161a59a69} components/about.js
+contract @mozilla.org/network/protocol/about;1?what=facebooktoolbar {e0ac3100-952a-46d9-83c0-dbe161a59a69}

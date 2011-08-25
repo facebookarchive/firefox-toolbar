@@ -663,7 +663,7 @@ var facebook = {
     {
         var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
         if (!prefSvc.getBoolPref('extensions.facebook.not_first_run')) {
-          getBrowser().loadOneTab('chrome://facebook/content/firstrun/welcome.html', null, null, null, false, false);
+          getBrowser().loadOneTab('about:facebooktoolbar', null, null, null, false, false);
           prefSvc.setBoolPref('extensions.facebook.not_first_run', true);
         }
     },
