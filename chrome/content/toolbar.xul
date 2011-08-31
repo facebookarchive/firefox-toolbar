@@ -206,7 +206,7 @@
             </toolbaritem>
     </toolbar>
     <popupset>
-        <popup position="after_start"
+        <menupopup position="after_start"
                id="PopupFacebookFriends"
                ignorekeys="true"
                onpopuphidden="content.focus()"
@@ -236,7 +236,8 @@
                           onmouseover="fbLib.SelectItemInList(this, this.parentNode)"
                           oncommand="fbLib.OpenFBUrl('wallpost.php', this.getAttribute('userid'), event)"/>
           </richlistbox>
-        </popup>
+          <spacer flex="1"/>
+        </menupopup>
     </popupset>
   </toolbox>
   <broadcasterset id="mainBroadcasterSet">

@@ -178,6 +178,7 @@ var fbLib = {
       fbLib.debug('searching for: ' + search);
       var sidebar = fbLib.IsSidebarOpen();
       var list = fbLib.GetFriendsListElement();
+      list.setAttribute("height", "19px");
       if (list.firstChild.id == 'FacebookHint') return; // not logged in
       var numMatched = 0;
       var lastDisplayed = null;
@@ -205,7 +206,7 @@ var fbLib = {
           node.style.display = 'none';
         }
       }
-      fbLib.debug('matched', numMatched);
+      fbLib.debug('matched: ' + numMatched);
       if (search && numMatched == 0) {
         fbLib.SetHint(true, 'Press enter to search for "' + search + '" on Facebook',
                 "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");
@@ -250,6 +251,48 @@ var fbLib = {
           list.ensureElementIsVisible(item);
         }
       }
+
+
+      if (!sidebar) {
+          fbLib._maxSizePopupFacebookFriendsList();
+      }
+
+    },
+
+    _maxSizePopupFacebookFriendsList: function()
+    {
+        var list = top.document.getElementById('PopupFacebookFriendsList');
+        var style = window.getComputedStyle(list);
+
+        var anonChildren = list.ownerDocument.getAnonymousNodes(list);
+        var realh;
+
+        for (var i = 0; i < anonChildren.length; i++)
+        {
+            if (anonChildren[i].nodeType == 1)
+            {
+                var anonChildren2 = list.ownerDocument.getAnonymousNodes(anonChildren[i]);
+
+                for (var j = 0; j < anonChildren2.length; j++)
+                {
+                    if (anonChildren2[j].nodeType == 1)
+                    {
+                        var style2 = window.getComputedStyle(anonChildren2[j]);
+                        fbLib.debug("PopupFacebookFriendsList anon box computed height  = " + style2.getPropertyValue("height"));
+                        realh = style2.getPropertyValue("height");
+                    }
+                }
+            }
+        }
+
+        if (realh)
+        {
+            realh = parseInt(realh.substring(0, realh.indexOf("px")));
+            fbLib.debug("list height now: " + realh);
+            list.setAttribute("height", (realh + 2) + "px");
+            top.document.getElementById('PopupFacebookFriends').sizeTo("300", (realh + 20));
+        }
+
     },
 
     HandleKeyPress: function(e) {

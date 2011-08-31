@@ -20,7 +20,7 @@
       <xul:hbox flex="5" style="/*background-color:blue;*/">
         <xul:vbox flex="0" style="width: 56px !important; /*background-color: cyan;*/" pack="center">
           <xul:image xbl:inherits="src=pic,onclick=oncommand" class="facebook-link friend-image"
-                       style="border: 1px solid black;" />
+                       style="border: 1px solid black;" onload="fbLib._maxSizePopupFacebookFriendsList();"/>
         </xul:vbox>
         <xul:vbox flex="1" style="padding: 0px; /*background-color: red;*/" pack="start" align="start">
           <xul:label xbl:inherits="onclick=oncommand" class="facebook-link user_name" value="John Doe" />

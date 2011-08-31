@@ -379,3 +379,9 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
     color: HighlightText;
 }
 
+#PopupFacebookFriendsList,
+#PopupFacebookFriends
+{
+    overflow: hidden;
+}
+
