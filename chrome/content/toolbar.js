@@ -337,6 +337,9 @@ var facebook = {
     updateLikeCount: function() {
         try {
             var url = gBrowser.currentURI.spec;
+
+            if (gBrowser.currentURI.ref != "")
+                url = url.substring(0, url.indexOf('#'));
     
             fbLib.debug("updateLikeCount: have url = '" + url + "'");
     
