@@ -178,7 +178,10 @@ var fbLib = {
       fbLib.debug('searching for: ' + search);
       var sidebar = fbLib.IsSidebarOpen();
       var list = fbLib.GetFriendsListElement();
-      list.setAttribute("height", "19px");
+
+      if (!sidebar)
+          list.setAttribute("height", "19px");
+
       if (list.firstChild.id == 'FacebookHint') return; // not logged in
       var numMatched = 0;
       var lastDisplayed = null;
@@ -278,7 +281,6 @@ var fbLib = {
                     if (anonChildren2[j].nodeType == 1)
                     {
                         var style2 = window.getComputedStyle(anonChildren2[j]);
-                        fbLib.debug("PopupFacebookFriendsList anon box computed height  = " + style2.getPropertyValue("height"));
                         realh = style2.getPropertyValue("height");
                     }
                 }
@@ -288,7 +290,6 @@ var fbLib = {
         if (realh)
         {
             realh = parseInt(realh.substring(0, realh.indexOf("px")));
-            fbLib.debug("list height now: " + realh);
             list.setAttribute("height", (realh + 2) + "px");
             top.document.getElementById('PopupFacebookFriends').sizeTo("300", (realh + 20));
         }

@@ -268,6 +268,7 @@ function SidebarLoad() {
     sorter.setAttribute('label', friendSort.label );
     document.getElementById(friendSort.eltId).setAttribute('checked', 'true');
 
+    fbLib.SIDEBAR_AVAILABLE = true;
     LoadFriends();
     for each( var topic in _sidebar_topics )
       obsSvc.addObserver(observer, topic, false);
@@ -283,6 +284,8 @@ function SidebarLoad() {
     }
     // top.document.getElementById('sidebar-splitter').addEventListener('mouseup', SidebarResize, false);
     // SidebarResize();
+
+    
 }
 function SidebarUnload() {
     fbLib.debug('SidebarUnload');
