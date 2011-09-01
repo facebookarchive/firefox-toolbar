@@ -274,6 +274,7 @@ var fbLib = {
         {
             if (anonChildren[i].nodeType == 1)
             {
+                anonChildren[i].setAttribute("style", "overflow: hidden;");
                 var anonChildren2 = list.ownerDocument.getAnonymousNodes(anonChildren[i]);
 
                 for (var j = 0; j < anonChildren2.length; j++)
