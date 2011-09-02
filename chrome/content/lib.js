@@ -27,6 +27,7 @@ var fbSvc = Cc['@facebook.com/facebook-service;1'].getService(Ci.fbIFacebookServ
 var fbLib = {
 
     SIDEBAR_AVAILABLE: !!window.toggleSidebar,
+    TypeaheadSearchTimeout: 0,
 
     debug: function() {
       if (fbLib.debug.caller && fbLib.debug.caller.name) {
@@ -129,6 +130,13 @@ var fbLib = {
       return list || top.document.getElementById('PopupFacebookFriendsList');
     },
 
+    GetASearchResultsElement: function(id) {
+      var list = fbLib.IsSidebarOpen()
+          ? top.document.getElementById('sidebar').contentDocument.getElementById(id)
+          : null;
+      return list || top.document.getElementById(id);
+    },
+
     GetFBSearchBox: function() {
       var box = top.document.getElementById('facebook-search');
       if (!box && fbLib.SIDEBAR_AVAILABLE) {
@@ -174,6 +182,190 @@ var fbLib = {
       fbLib.SetSpecificHint(document, visible, text, oncommand);
     },
 
+    TypeaheadSearch: function(search) {
+
+        fbLib.debug("in typeaheadsearch with: " + search);
+
+        if (fbLib.TypeaheadSearchTimeout)
+            clearTimeout(fbLib.TypeaheadSearchTimeout);
+
+        var list = fbLib.GetFriendsListElement();
+
+        list.selectedIndex = -1;
+
+        while (list.getElementsByAttribute("class", "facebook-search-result").length > 0)
+        {
+            list.removeChild(list.getElementsByAttribute("class", "facebook-search-result")[0]);
+        }
+
+        var headers = list.getElementsByAttribute("class", "facebook-listheader");
+        for (var i=0; i<headers.length; i++)
+        {
+            headers[i].collapsed = true;
+            headers[i].style.display = 'none';
+            headers[i].disabled = true;
+        }
+
+        if (search)
+        {
+            fbLib.GetASearchResultsElement("FacebookSearchAllText").setAttribute("value", 'Press enter to search for "' + search + '" on Facebook');
+            fbLib.GetASearchResultsElement("FacebookSearchAll").setAttribute("oncommand", "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");
+            fbLib.GetASearchResultsElement("FacebookSearchAll").collapsed = false;
+        }
+        else
+        {
+            fbLib.GetASearchResultsElement("FacebookSearchAll").collapsed = true;
+        }
+
+        fbLib.TypeaheadSearchTimeout = setTimeout(function()
+        {
+            fbLib.TypeaheadSearchTimeout = 0;
+
+            var sidebar = fbLib.IsSidebarOpen();
+
+            var graphSearch = function(q, type)
+            {
+                // remove all richlistitems with this type
+                /*while (list.getElementsByAttribute("type", type).length > 0)
+                {
+                    list.removeChild(list.getElementsByAttribute("type", type)[0]);
+                }*/
+
+                var headerElem = fbLib.GetASearchResultsElement("facebook-listheader-" + type);
+
+                // hide header with this type
+                /*
+                if (type != 'user')
+                    headerElem.collapsed = true;
+                 */
+
+                var callback = function(response)
+                {
+                    if (!response.data || response.data.length == 0)
+                        return;
+
+                    // if we have items, show header of this type
+                    //if (!(sidebar && type == 'user'))
+                    {
+                        headerElem.collapsed = false;
+                        headerElem.style.display = 'block';
+                    }
+
+                    var c=-1;
+
+                    // create richlistitems with response's name and id
+                    for (var i=0; i<response.data.length; i++)
+                    {
+                        if ((sidebar?top.document.getElementById('sidebar').contentDocument:top.document).getElementById("facebook-search-result-" + response.data[i].id))
+                        {
+                            c++;
+                            continue;
+                        }
+
+                        var item = (sidebar?top.document.getElementById('sidebar').contentDocument:top.document).createElement("richlistitem");
+                        item.setAttribute("id", "facebook-search-result-" + response.data[i].id);
+                        item.setAttribute("class", "facebook-search-result");
+                        item.setAttribute("type", type);
+
+                        if (!sidebar)
+                        item.setAttribute('onmouseover', "fbLib.SelectItemInList(this, this.parentNode)");
+
+                        item.setAttribute("name", response.data[i].name);
+
+                        if (sidebar)
+                        {
+                            item.setAttribute("style", "max-width: " + (top.document.getElementById('sidebar').contentWindow.innerWidth-10) + "px; overflow: hidden;");
+
+                            // ALSO TODO: hide sort options if have search results?
+                        }
+
+                        // if type == 'user', don't re-add existing friends
+                        if (type == 'user' && fbLib.GetASearchResultsElement('sidebar-' + response.data[i].id))
+                            continue;
+
+                        c++;
+
+                        item.collapsed = true;
+
+                        // add to richlistbox under header
+                        if (type == 'user')
+                            list.insertBefore(item, fbLib.GetASearchResultsElement("facebook-listheader-page"));
+                        else
+                            list.insertBefore(item, headerElem.nextSibling);
+
+                        fbSvc.wrappedJSObject.fetchGraphObject(response.data[i].id, null, function(obj)
+                        {
+                            var searchResult =
+                                (sidebar?top.document.getElementById('sidebar').contentDocument:top.document).getElementById(
+                                    "facebook-search-result-" + obj.id);
+
+                            if (obj.link && obj.link.indexOf("facebook.com")>-1)
+                                searchResult.setAttribute("oncommand","openUILink('" + obj.link + "')");
+                            else
+                                searchResult.setAttribute("oncommand","fbLib.OpenFBUrl('" + obj.id + "')");
+
+                            if (obj.picture)
+                                searchResult.setAttribute("pic",obj.picture);
+                            else if (obj.icon)
+                                searchResult.setAttribute("pic",obj.icon);
+                            else
+                                searchResult.nopic();
+
+                            var desc = "";
+
+                            if (obj.description)
+                                desc = obj.description;
+                            else if (obj.bio)
+                                desc = obj.bio;
+
+                            if (desc)
+                            {
+                                if (desc.length > 100)
+                                    desc = desc.substring(0, 100) + "...";
+                                searchResult.appendChild((sidebar?top.document.getElementById('sidebar').contentDocument:top.document).createTextNode(desc));
+                            }
+
+                            searchResult.collapsed = false;
+
+                        });
+
+                        // if sidebar, add 5. if popup, just add first
+                        if (!sidebar || c>=4)
+                            break;
+
+                    }
+
+                    if (!sidebar)
+                        fbLib._maxSizePopupFacebookFriendsList();
+                };
+
+                fbSvc.wrappedJSObject.fetchGraphObject("search", {"q": q, "type": type}, callback);
+            };
+
+            if (sidebar)
+                graphSearch(search, "user");
+
+            graphSearch(search, "page");
+            graphSearch(search, "event");
+            graphSearch(search, "group");
+            graphSearch(search, "place");
+
+        }, 1000);
+
+        fbLib.SearchFriends(search);
+    },
+
+    searchBoxSelect: function(event)
+    {
+        return;
+        fbLib.debug("in searchBoxSelect");
+        var list = fbLib.GetFriendsListElement();
+        if (list.selectedItem && list.selectedItem.getAttribute("class") == "facebook-listheader")
+        {
+            list.selectedItem = list.selectedItem.nextSibling;
+        }
+    },
+
     SearchFriends: function(search) {
       fbLib.debug('searching for: ' + search);
       var sidebar = fbLib.IsSidebarOpen();
@@ -182,7 +374,8 @@ var fbLib = {
       if (!sidebar)
           list.setAttribute("height", "19px");
 
-      if (list.firstChild.id == 'FacebookHint') return; // not logged in
+      if (!fbSvc.loggedIn) return;
+
       var numMatched = 0;
       var lastDisplayed = null;
       var searches = [];
@@ -210,19 +403,32 @@ var fbLib = {
         }
       }
       fbLib.debug('matched: ' + numMatched);
+      if (numMatched > 0)
+      {
+          document.getElementById("facebook-listheader-user").collapsed = false;
+          document.getElementById("facebook-listheader-user").style.display = 'block';
+      }
       if (search && numMatched == 0) {
-        fbLib.SetHint(true, 'Press enter to search for "' + search + '" on Facebook',
-                "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");
+        /*fbLib.SetHint(true, 'Press enter to search for "' + search + '" on Facebook',
+                "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");*/
+        fbLib.SetHint(false, '', '');
       } else if (!sidebar && (numMatched > 4 || !search)) {
         var str = 'See all ' + numMatched + ' friends';
         if (search)
           str += ' matching "' + search + '"';
+        else
+        {
+          document.getElementById("facebook-listheader-user").collapsed = true;
+          document.getElementById("facebook-listheader-user").style.display = 'none';
+        }
         str += '...';
         fbLib.SetHint(true, str, "toggleSidebar('viewFacebookSidebar');");
       } else {
         fbLib.SetHint(false, '', '');
       }
+
       if (!sidebar) {
+
           try
           {
               var msger = document.getElementById('PopupMessager'),
@@ -362,7 +568,7 @@ var fbLib = {
     },
 
     FacebookLogin: function() {
-      if (fbSvc.loggedIn) {
+      if (fbSvc.aoggedIn) {
         fbSvc.sessionEnd();
       }
       else {
@@ -395,7 +601,7 @@ var fbLib = {
     SetStatus: function(item, status, time) {
         if (status) {
             var firstName = item.getAttribute('firstname');
-            var msg = firstName + ' ' + fbLib.RenderStatusMsg(status);
+            var msg = /*firstName + ' ' + */fbLib.RenderStatusMsg(status);
             if (item.firstChild) {
                 item.firstChild.nodeValue = msg;
             } else {

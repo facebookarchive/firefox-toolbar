@@ -495,7 +495,6 @@ var facebook = {
 
     onLikeIframeLoad: function(event)
     {
-
         if (!fbSvc.loggedIn)
         {
             document.getElementById("facebook-like-iframe").setAttribute("collapsed", "true");
@@ -505,22 +504,24 @@ var facebook = {
         if (facebook.filterURL(event))
             return;
 
-        if (event.originalTarget.location.hostname == "www.facebook.com" &&
-                event.originalTarget.location.href.indexOf("plugins/like.php") > 0)
+        try
         {
-            var x = document.getElementById("facebook-like-iframe");
-            var y = x.contentDocument;
+            if (event.originalTarget.location.hostname == "www.facebook.com" &&
+                    event.originalTarget.location.href.indexOf("plugins/like.php") > 0)
+            {
+                var x = document.getElementById("facebook-like-iframe");
+                var y = x.contentDocument;
 
-            var iframewidth = y.getElementsByClassName('connect_widget_interactive_area')[0].offsetWidth;
+                var iframewidth = y.getElementsByClassName('connect_widget_interactive_area')[0].offsetWidth;
 
-            if (iframewidth == 0)
-                return;
+                if (iframewidth == 0)
+                    return;
 
-            x.setAttribute("style", "width: " + (iframewidth+1) + "px !important;");
-            x.setAttribute("collapsed", "false");
+                x.setAttribute("style", "width: " + (iframewidth+1) + "px !important;");
+                x.setAttribute("collapsed", "false");
 
-        }
-
+            }
+        } catch (e) {}
     },
 
     load: function() {
@@ -589,6 +590,9 @@ var facebook = {
         }
         facebook.loadFriends();
         getBrowser().addProgressListener(facebook.progListener);
+    
+        document.getElementById("PopupFacebookFriendsList").addEventListener("select", fbLib.searchBoxSelect, true);
+
         fbLib.debug('facebook toolbar loaded.');
     },
 
@@ -694,6 +698,8 @@ var facebook = {
             facebook.obsSvc.removeObserver(facebook.fbToolbarObserver, topic);
         if( fbSvc.loggedInUser )
 
+        document.getElementById("PopupFacebookFriendsList").removeEventListener("select", fbLib.searchBoxSelect, true);
+
         fbLib.debug('facebook toolbar unloaded.');
     },
     sortFriends: function(f1, f2) {
@@ -706,9 +712,16 @@ var facebook = {
   loadFriends: function() {
     fbLib.debug('loadFriends()');
     var list = document.getElementById('PopupFacebookFriendsList');
+
+    if (list._hasLoadedFriends)
+        return;
+
+    /*
     if (list.firstChild && list.firstChild.id != 'FacebookHint') {
       return;
     }
+    */
+
     list.selectedIndex = -1;
     var count = {};
     var friends = fbSvc.getFriends(count);
@@ -723,6 +736,7 @@ var facebook = {
       for each (var friend in friends) {
         this.createFriendNode(list, friend, null);
       }
+      list._hasLoadedFriends = true;
       if (!fbLib.IsSidebarOpen()) {
         fbLib.SearchFriends(fbLib.GetFBSearchBox().value);
       }
@@ -776,7 +790,7 @@ var facebook = {
       }
       // if the sidebar was just open then we would be out of sync, so let's just filter the list to be safe
       if (fbSvc.loggedIn) {
-        fbLib.SearchFriends(searchBox.value);
+        fbLib.TypeaheadSearch(searchBox.value);
       }
     }
   },

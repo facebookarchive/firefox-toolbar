@@ -63,6 +63,30 @@
     </implementation>
   </binding>
 
+  <binding id="searchResultBox" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
+    <content>
+      <xul:hbox flex="5" style="/*background-color:blue;*/">
+        <xul:vbox flex="0" pack="center">
+          <xul:image anonid="pic" xbl:inherits="src=pic,onclick=oncommand" class="facebook-link"
+                       style="border: 1px solid black;" onload="fbLib._maxSizePopupFacebookFriendsList();"/>
+        </xul:vbox>
+        <xul:vbox flex="1" style="padding: 0px; /*background-color: red;*/" pack="start" align="start">
+          <xul:label xbl:inherits="onclick=oncommand,value=name" class="facebook-link user_name" />
+          <xul:label class="status"><children /></xul:label>
+          <xul:label value=" "/>
+        </xul:vbox>
+      </xul:hbox>
+    </content>
+    <implementation>
+        <method name="nopic">
+        <body>
+          document.getAnonymousElementByAttribute(this, "anonid", "pic").collapsed = true;
+        </body>
+        </method>
+    </implementation>
+  </binding>
+
+
   <binding id="popupMessager" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
     <content>
       <xul:toolbarbutton class="facebook-icon-msgs facebook-link" />

@@ -556,7 +556,7 @@ facebookService.prototype = {
 
         var fbSvc = this;
 
-        this.fetchGraphObject("me", function(response)
+        this.fetchGraphObject("me", null, function(response)
         {
             if (response.id)
             {
@@ -1176,7 +1176,7 @@ facebookService.prototype = {
         req.send(data);
     },
 
-    fetchGraphObject: function(method, callback)
+    fetchGraphObject: function(method, params, callback)
     {
         if (!this._accessToken)
         {
@@ -1217,7 +1217,19 @@ facebookService.prototype = {
         };
 
         if (method.indexOf("http") == -1)
+        {
             method = "https://graph.facebook.com/" + method + "?access_token=" + this._accessToken;
+
+            if (params)
+            {
+                method += "&";
+
+                for (var id in params)
+                {
+                    method += id + "=" + encodeURIComponent(params[id]) + "&";
+                }
+            }
+        }
 
         debug ("GETting graph method '" + method  + "'");
 

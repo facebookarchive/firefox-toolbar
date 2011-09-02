@@ -286,6 +286,14 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
   padding: 5px;
 }
 
+.facebook-search-result {
+  -moz-binding: url('chrome://facebook/content/bindings.xml#searchResultBox');
+  padding: 6px;
+  margin: 0px;
+  -moz-box-align: start;
+  -moz-box-pack: start;
+}
+
 .popupFriendBox, .friendBox {
   -moz-binding: url('chrome://facebook/content/bindings.xml#friendBox');
   -moz-box-align: start;
@@ -348,7 +356,7 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
    margin: 0px;
 }
 
-#FacebookHint {
+#FacebookHint, #FacebookSearchAll {
   overflow:hidden;
   color: #808080;
   padding: 5px;
@@ -374,7 +382,8 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
 #SidebarFriendsList richlistitem[selected=true] .facebook-link,
 #SidebarFriendsList richlistitem[selected=true] .stime,
 #SidebarFriendsList richlistitem[selected=true] .status,
-#FacebookHint[selected=true] {
+#FacebookHint[selected=true],
+#FacebookSearchAll[selected=true] {
     background-color: Highlight;
     color: HighlightText;
 }
@@ -385,3 +394,15 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
     overflow: hidden;
 }
 
+.facebook-search-result-label
+{
+    max-width: 180px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.facebook-listheader
+{
+    background-color: #CCCCCC;
+}

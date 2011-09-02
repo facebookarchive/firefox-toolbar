@@ -27,9 +27,19 @@
              style="display: none;"/>
   </hbox>
   <richlistbox id="SidebarFriendsList" flex="1">
+     <richlistitem class="facebook-listheader" id="facebook-listheader-user" collapsed="true" disabled="true"><label class="header" value="&toolbar.search.user.label;"/></richlistitem>
     <richlistitem id="FacebookHint" onclick="this.doCommand()">
       <label id="FacebookHintText"/>
     </richlistitem>
+            <richlistitem class="facebook-listheader" id="facebook-listheader-page" collapsed="true" disabled="true"><label class="header" value="&toolbar.search.page.label;"/></richlistitem>
+            <richlistitem class="facebook-listheader" id="facebook-listheader-event" collapsed="true" disabled="true"><label class="header" value="&toolbar.search.event.label;"/></richlistitem>
+            <richlistitem class="facebook-listheader" id="facebook-listheader-group" collapsed="true" disabled="true"><label class="header" value="&toolbar.search.group.label;"/></richlistitem>
+            <richlistitem class="facebook-listheader" id="facebook-listheader-place" collapsed="true" disabled="true"><label class="header" value="&toolbar.search.place.label;"/></richlistitem>
+            <richlistitem id="FacebookSearchAll"
+                          onmousedown="this.doCommand()"
+                          >
+              <label id="FacebookSearchAllText"/>
+            </richlistitem>
   </richlistbox>
   <hbox>
     <toolbarbutton label="&sidebar.settings.label;" oncommand="OpenSettings();" />

@@ -1217,7 +1217,7 @@ var PhotoUpload = {
         if (response.paging.next)
         {
             fbLib.debug("fillAlbumList: getting next page of data from '" + response.paging.next +  "'");
-            fbSvc.wrappedJSObject.fetchGraphObject(response.paging.next, handleResponse);
+            fbSvc.wrappedJSObject.fetchGraphObject(response.paging.next, null, handleResponse);
         }
         else
         {
@@ -1226,7 +1226,7 @@ var PhotoUpload = {
         }
       };
 
-    fbSvc.wrappedJSObject.fetchGraphObject("me/albums", handleResponse);
+    fbSvc.wrappedJSObject.fetchGraphObject("me/albums", null, handleResponse);
   },
 
   _checkPhotoUploadPermission: function(callback) {

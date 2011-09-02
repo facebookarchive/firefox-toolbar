@@ -145,8 +145,9 @@ function SortBy(selSort) {
 function ClearFriends(sessionEnded) {
     fbLib.debug( "ClearFriends" );
     var list = document.getElementById('SidebarFriendsList');
-    while (list.firstChild && list.firstChild.id != 'FacebookHint') {
-        list.removeChild(list.firstChild);
+    while (list.getElementsByAttribute("class", "friendBox"))
+    {
+        list.removeChild(list.getElementsByAttribute("class", "friendBox")[0]);
     }
     if (sessionEnded) {
         fbLib.SetHint(true, fbStringBundle.getString('loadFriends'), 'fbLib.FacebookLogin()');
@@ -175,7 +176,7 @@ function LoadFriends() {
         }
         var searchTerm = fbLib.GetFBSearchBox().value;
         if (searchTerm != fbStringBundle.getString('searchplaceholder')) {
-            fbLib.SearchFriends(searchTerm);
+            fbLib.TypeaheadSearch(searchTerm);
         } else {
             fbLib.SetHint(false, '', '');
         }
@@ -186,12 +187,12 @@ var friendsToUpdate = [];
 function UpdateFriends() {
     fbLib.debug('UpdateFriends');
     var list = document.getElementById('SidebarFriendsList');
-    if (!list.firstChild || list.firstChild.id == 'FacebookHint') {
+    if (list.getElementsByAttribute("class", "friendBox").length == 0) {
         return LoadFriends();
     }
     var sorter = GetFriendSort();
     friendsToUpdate.sort(sorter.sortFunc);
-    var first = list.firstChild;
+    var first = list.getElementsByAttribute("class", "friendBox")[0];
     for each (var friend in friendsToUpdate) {
         var toRemove = document.getElementById('sidebar-' + friend.id);
         fbLib.debug('remove:', toRemove, friend.id, friend.name);
@@ -207,7 +208,7 @@ function UpdateFriends() {
     friendsToUpdate = [];
     var searchTerm = fbLib.GetFBSearchBox().value;
     if (searchTerm != fbStringBundle.getString('searchplaceholder')) {
-        fbLib.SearchFriends(searchTerm);
+        fbLib.TypeaheadSearch(searchTerm);
     }
 }
 
@@ -285,6 +286,13 @@ function SidebarLoad() {
     // top.document.getElementById('sidebar-splitter').addEventListener('mouseup', SidebarResize, false);
     // SidebarResize();
 
+    document.getElementById("facebook-listheader-user").collapsed = true;
+    document.getElementById("facebook-listheader-user").style.display = 'none';
+
+    if (fbLib.GetFBSearchBox().value && fbLib.GetFBSearchBox().value != fbStringBundle.getString('searchplaceholder'))
+    {
+        fbLib.TypeaheadSearch(fbLib.GetFBSearchBox().value);
+    }
     
 }
 function SidebarUnload() {
