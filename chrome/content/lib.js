@@ -182,7 +182,120 @@ var fbLib = {
       fbLib.SetSpecificHint(document, visible, text, oncommand);
     },
 
-    TypeaheadSearch: function(search) {
+    TypeaheadSearchExtensionService: function(search) {
+
+        var list = fbLib.GetFriendsListElement();
+        var sidebar = fbLib.IsSidebarOpen();
+
+        if (fbLib.TypeaheadSearchTimeout)
+            clearTimeout(fbLib.TypeaheadSearchTimeout);
+
+        list.selectedIndex = -1;
+
+        while (list.getElementsByAttribute("class", "facebook-search-result").length > 0)
+        {
+            list.removeChild(list.getElementsByAttribute("class", "facebook-search-result")[0]);
+        }
+
+        var listHeaderOther = fbLib.GetASearchResultsElement("facebook-listheader-other");
+        listHeaderOther.collapsed = true;
+        listHeaderOther.style.display = 'none';
+
+        var searchAll = fbLib.GetASearchResultsElement("FacebookSearchAll");
+
+        if (search)
+        {
+            fbLib.GetASearchResultsElement("FacebookSearchAllText").setAttribute("value", 'Press enter to search for "' + search + '" on Facebook');
+            searchAll.setAttribute("oncommand", "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");
+            searchAll.collapsed = false;
+        }
+        else
+        {
+            searchAll.collapsed = true;
+        }
+
+        fbLib.TypeaheadSearchTimeout = setTimeout(function()
+        {
+            fbLib.TypeaheadSearchTimeout = 0;
+
+            var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
+                .createInstance(Components.interfaces.nsIXMLHttpRequest);
+            req.onreadystatechange = function(e)
+            {
+                try
+                {
+                    if (req.readyState != 4) { return; }
+
+                    fbLib.debug("finished search call, status = " + req.status);
+
+                    if (req.status != 200)
+                        return;
+
+                    var response = req.responseText.replace(/for \(;;\);/,'');
+
+                    fbLib.debug("finished search call, response = " + response);
+
+                    var data = JSON.parse(response);
+
+                    if (!data[1])
+                    {
+                        throw "no data";
+                    }
+
+                    var doc = (sidebar?top.document.getElementById('sidebar').contentDocument:top.document);
+                    var resultC = 0;
+
+                    for (var i=0;i<data[1].length;i++)
+                    {
+                        if (list.getElementsByAttribute("friendname", data[1][i]).length>0)
+                            continue;
+
+                        if (!sidebar && resultC>=5)
+                            break;
+
+                        var item = doc.createElement("richlistitem");
+                        item.setAttribute("class", "facebook-search-result");
+
+                        if (!sidebar)
+                            item.setAttribute('onmouseover', "fbLib.SelectItemInList(this, this.parentNode)");
+
+                        item.setAttribute("name", data[1][i]);
+                        item.setAttribute("oncommand", "openUILink('" + data[3][i] + "')");
+                        item.setAttribute("pic", data[4][i]);
+                        item.appendChild(doc.createTextNode(data[2][i]));
+
+                        list.appendChild(item);
+
+                        resultC++;
+                    }
+
+                    if (resultC)
+                    {
+                        list.appendChild(searchAll);
+                        listHeaderOther.collapsed = false;
+                        listHeaderOther.style.display = 'block';
+                    }
+                }
+                catch (e)
+                {
+                    fbLib.debug("search error: " + e);
+                    return;
+                }
+            };
+
+            var method = "http://www.facebook.com/search/extension_typeahead.php?max=20&q="+encodeURIComponent(search);
+            fbLib.debug("initiating search call, request = " + method);
+
+            req.open("GET", method, true);
+            req.send(null);
+        }, 1000);
+
+        fbLib.SearchFriends(search);
+        document.getElementById("facebook-listheader-user").collapsed = true;
+        document.getElementById("facebook-listheader-user").style.display = 'none';
+    },
+
+    TypeaheadSearchGraphAPI: function(search) {
 
         fbLib.debug("in typeaheadsearch with: " + search);
 
@@ -851,5 +964,9 @@ var fbLib = {
 }
 
 fbLib.dates_in_seconds = new fbLib.DatesInSeconds();
+
+var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
+fbLib.TypeaheadSearch = (prefSvc.getBoolPref('extensions.facebook.search.usegraphapi')
+        ?fbLib.TypeaheadSearchGraphAPI:fbLib.TypeaheadSearchExtensionService);
 
 

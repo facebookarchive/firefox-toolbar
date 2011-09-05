@@ -10,3 +10,10 @@
 <!ENTITY  sidebar.friendpoke.label          "نكزة">
 <!ENTITY  sidebar.friendpost.label          "منشور حائط">
 
+<!ENTITY  toolbar.search.user.label                      "People">
+<!ENTITY  toolbar.search.page.label                      "Pages">
+<!ENTITY  toolbar.search.event.label                     "Events">
+<!ENTITY  toolbar.search.group.label                     "Groups">
+<!ENTITY  toolbar.search.place.label                     "Places">
+<!ENTITY  toolbar.search.other.label                     "Other Results">
+

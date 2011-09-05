@@ -43,4 +43,5 @@
 <!ENTITY  toolbar.search.event.label                     "Events">
 <!ENTITY  toolbar.search.group.label                     "Groups">
 <!ENTITY  toolbar.search.place.label                     "Places">
+<!ENTITY  toolbar.search.other.label                     "Other Results">
 
