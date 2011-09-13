@@ -88,7 +88,7 @@ toolbarbutton.facebook-toolbar-button[disabled=true] {
   border: none !important;
 }
 
-/* Doesn't appear to be working OR the border is somewhere else, e.g. item nested in textbox binding
+/* Doesn't appear to be working OR the border is somewhere else, e.g. item nested in textbox binding */
 textbox[focused="true"] #facebook-toolbar-status {
   border: none !important;
 }
