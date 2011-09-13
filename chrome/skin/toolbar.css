@@ -68,6 +68,7 @@ toolbarbutton.facebook-toolbar-button[disabled=true] {
   -moz-image-region: rect(0px 287px 16px 268px);
   margin-left: 5px;
 }
+
 .facebook-sidebar-icon .toolbarbutton-text {
   margin: 0;
   padding: 0;
@@ -76,11 +77,24 @@ toolbarbutton.facebook-toolbar-button[disabled=true] {
 #facebook-toolbar-status {
   max-width: 400px;
   min-width: 100px;
-  border: 0;
+  border: none !important;
+}
+
+#facebook-toolbar-status .textbox-input-box {
+  padding: 0px;
 }
 
 #facebook-toolbar-status .textbox-input {
-  margin: 2px !important;
+  border: none !important;
+}
+
+/* Doesn't appear to be working OR the border is somewhere else, e.g. item nested in textbox binding
+textbox[focused="true"] #facebook-toolbar-status {
+  border: none !important;
+}
+
+#facebook-search {
+  color: #808080
 }
 
 #facebook-search .textbox-input-box {
@@ -96,7 +110,7 @@ toolbarbutton.facebook-toolbar-button[disabled=true] {
 }
 
 #facebook-search .textbox-input {
-  border: none!important;
+  border: none !important;
   padding-left: 3px!important;
 }
 

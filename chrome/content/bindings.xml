@@ -9,7 +9,7 @@
           xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
   <binding id="facebook-search-hbox">
-    <content>
+    <content align="center">
       <xul:image />
       <children />
     </content>

@@ -26,11 +26,10 @@
                      dir = "reverse"
                      persist = "checked"
                      oncommand="this.checked=!this.checked; toggleSidebar('viewFacebookSidebar');"/>
-      <toolbaritem id="facebook-searchbox">
+      <toolbaritem id="facebook-searchbox" align="center">
         <textbox id="facebook-search"
                  maxlength="50"
                  value="&toolbar.search.label;"
-                 style="color: #808080"
                  onfocus="facebook.searchBoxFocus(this);"
                  onblur="facebook.searchBoxBlur(this);"
                  oninput="fbLib.TypeaheadSearch(this.value);"
@@ -87,7 +86,7 @@
                      tooltiptext="&toolbar.button.messages.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
                      oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/inbox/?src=fftb', event); }"/>
-      <toolbaritem id = "facebook-notification-separator">
+      <toolbaritem id="facebook-notification-separator">
         <toolbarseparator />
       </toolbaritem>
       <toolbarbutton id="facebook-link-menu"
@@ -164,7 +163,7 @@
         </menupopup>
       </toolbarbutton>
 
-      <toolbaritem id="facebook-login-info">
+      <toolbaritem id="facebook-login-info" align="center">
         <toolbarbutton id="facebook-name-info"
                        class="button"
                        onclick="checkForMiddleClick(this, event);"
