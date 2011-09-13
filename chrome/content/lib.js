@@ -250,6 +250,9 @@ var fbLib = {
 
                     fbLib.TypeaheadSearchLastSearch = search;
 
+                    if (!sidebar)
+                        facebook.searchBoxFocus(document.getElementById('facebook-search'));
+
                     var doc = (sidebar?top.document.getElementById('sidebar').contentDocument:top.document);
                     var resultC = 0;
 
@@ -361,6 +364,9 @@ var fbLib = {
                         return;
 
                     fbLib.TypeaheadSearchLastSearch = search;
+
+                    if (!sidebar)
+                        facebook.searchBoxFocus(document.getElementById('facebook-search'));
 
                     headerElem.collapsed = false;
                     headerElem.style.display = 'block';
