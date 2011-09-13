@@ -784,6 +784,7 @@ var facebook = {
     if (!this.ignoreBlur && !fbLib.IsSidebarOpen()) {
       var popupElt = document.getElementById('PopupFacebookFriends');
       if (popupElt.openPopup) {
+        popupElt.popupBoxObject.setConsumeRollupEvent(2); /* don't consume the rollup event */
         popupElt.openPopup(searchBox, 'after_start', 0, 0, false, true);
       } else {
         popupElt.showPopup(searchBox, -1, -1, 'popup', 'bottomleft', 'topleft');
@@ -794,6 +795,11 @@ var facebook = {
       }
     }
   },
+
+  popupHidden: function(e) {
+   content.focus();
+  },
+
   searchBoxBlur: function(searchBox) {
     if (!this.ignoreBlur) {
       document.getElementById('PopupFacebookFriends').hidePopup();
@@ -888,8 +894,9 @@ var facebook = {
   },
   clearFriends: function(sessionEnded) {
     var list = document.getElementById('PopupFacebookFriendsList');
-    while (list.firstChild && list.firstChild.id != 'FacebookHint') {
-      list.removeChild(list.firstChild);
+    while (list.getElementsByAttribute("class", "friendBox"))
+    {
+        list.removeChild(list.getElementsByAttribute("class", "friendBox")[0]);
     }
     document.getElementById('PopupMessager').style.display = 'none';
     document.getElementById('PopupPoker').style.display = 'none';

@@ -211,7 +211,7 @@
         <menupopup position="after_start"
                id="PopupFacebookFriends"
                ignorekeys="true"
-               onpopuphidden="content.focus()"
+               onpopuphidden="facebook.popupHidden(event);"
                style="width: 300px;" >
           <richlistbox id="PopupFacebookFriendsList">
             <richlistitem class="facebook-listheader" id="facebook-listheader-user" collapsed="true" disabled="true"><label class="header" value="&toolbar.search.user.label;"/></richlistitem>

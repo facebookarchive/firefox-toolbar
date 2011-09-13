@@ -159,6 +159,7 @@ var fbLib = {
         fbLib.GetFBSearchBox().focus();
         facebook.ignoreBlur = false;
       }
+      list.ensureElementIsVisible(list.selectedItem);
     },
 
     SetSpecificHint: function(doc, visible, text, oncommand) {
@@ -271,7 +272,7 @@ var fbLib = {
 
                     if (resultC)
                     {
-                        list.appendChild(searchAll);
+                        list.insertBefore(searchAll, list.firstChild);
                         listHeaderOther.collapsed = false;
                         listHeaderOther.style.display = 'block';
                     }
@@ -319,15 +320,19 @@ var fbLib = {
             headers[i].disabled = true;
         }
 
+        var searchAll = fbLib.GetASearchResultsElement("FacebookSearchAll");
+
+        searchAll.parentNode.insertBefore(searchAll, searchAll.parentNode.firstChild);
+
         if (search)
         {
             fbLib.GetASearchResultsElement("FacebookSearchAllText").setAttribute("value", 'Press enter to search for "' + search + '" on Facebook');
-            fbLib.GetASearchResultsElement("FacebookSearchAll").setAttribute("oncommand", "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");
-            fbLib.GetASearchResultsElement("FacebookSearchAll").collapsed = false;
+            searchAll.setAttribute("oncommand", "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");
+            searchAll.collapsed = false;
         }
         else
         {
-            fbLib.GetASearchResultsElement("FacebookSearchAll").collapsed = true;
+            searchAll.collapsed = true;
         }
 
         fbLib.TypeaheadSearchTimeout = setTimeout(function()
@@ -338,31 +343,15 @@ var fbLib = {
 
             var graphSearch = function(q, type)
             {
-                // remove all richlistitems with this type
-                /*while (list.getElementsByAttribute("type", type).length > 0)
-                {
-                    list.removeChild(list.getElementsByAttribute("type", type)[0]);
-                }*/
-
                 var headerElem = fbLib.GetASearchResultsElement("facebook-listheader-" + type);
-
-                // hide header with this type
-                /*
-                if (type != 'user')
-                    headerElem.collapsed = true;
-                 */
 
                 var callback = function(response)
                 {
                     if (!response.data || response.data.length == 0)
                         return;
 
-                    // if we have items, show header of this type
-                    //if (!(sidebar && type == 'user'))
-                    {
-                        headerElem.collapsed = false;
-                        headerElem.style.display = 'block';
-                    }
+                    headerElem.collapsed = false;
+                    headerElem.style.display = 'block';
 
                     var c=-1;
 
@@ -405,6 +394,8 @@ var fbLib = {
                             list.insertBefore(item, fbLib.GetASearchResultsElement("facebook-listheader-page"));
                         else
                             list.insertBefore(item, headerElem.nextSibling);
+
+                        searchAll.parentNode.insertBefore(searchAll, searchAll.parentNode.firstChild);
 
                         fbSvc.wrappedJSObject.fetchGraphObject(response.data[i].id, null, function(obj)
                         {
@@ -621,11 +612,15 @@ var fbLib = {
       switch (e.keyCode) {
         case e.DOM_VK_UP:
           fbLib.MoveInList('previousSibling');
+          if (list.selectedItem && list.selectedItem.getAttribute("class") == "facebook-listheader")
+              fbLib.MoveInList('previousSibling');
           e.stopPropagation();
           e.preventDefault();
           return;
         case e.DOM_VK_DOWN:
           fbLib.MoveInList('nextSibling');
+          if (list.selectedItem && list.selectedItem.getAttribute("class") == "facebook-listheader")
+              fbLib.MoveInList('nextSibling');
           e.stopPropagation();
           e.preventDefault();
           return;
