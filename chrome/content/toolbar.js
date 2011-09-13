@@ -782,6 +782,7 @@ var facebook = {
       searchBox.style.color='#000000';
     }
     if (!this.ignoreBlur && !fbLib.IsSidebarOpen()) {
+      if (fbSvc.loggedIn) {
       var popupElt = document.getElementById('PopupFacebookFriends');
       if (popupElt.openPopup) {
         popupElt.popupBoxObject.setConsumeRollupEvent(2); /* don't consume the rollup event */
@@ -790,7 +791,6 @@ var facebook = {
         popupElt.showPopup(searchBox, -1, -1, 'popup', 'bottomleft', 'topleft');
       }
       // if the sidebar was just open then we would be out of sync, so let's just filter the list to be safe
-      if (fbSvc.loggedIn) {
         fbLib.TypeaheadSearch(searchBox.value);
       }
     }

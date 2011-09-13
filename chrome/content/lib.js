@@ -28,6 +28,7 @@ var fbLib = {
 
     SIDEBAR_AVAILABLE: !!window.toggleSidebar,
     TypeaheadSearchTimeout: 0,
+    TypeaheadSearchLastSearch: "",
 
     debug: function() {
       if (fbLib.debug.caller && fbLib.debug.caller.name) {
@@ -188,6 +189,9 @@ var fbLib = {
         var list = fbLib.GetFriendsListElement();
         var sidebar = fbLib.IsSidebarOpen();
 
+        if (search != "" && search == fbLib.TypeaheadSearchLastSearch)
+            return;
+
         if (fbLib.TypeaheadSearchTimeout)
             clearTimeout(fbLib.TypeaheadSearchTimeout);
 
@@ -203,6 +207,7 @@ var fbLib = {
         listHeaderOther.style.display = 'none';
 
         var searchAll = fbLib.GetASearchResultsElement("FacebookSearchAll");
+        searchAll.parentNode.insertBefore(searchAll, searchAll.parentNode.firstChild);
 
         if (search)
         {
@@ -242,6 +247,8 @@ var fbLib = {
                     {
                         throw "no data";
                     }
+
+                    fbLib.TypeaheadSearchLastSearch = search;
 
                     var doc = (sidebar?top.document.getElementById('sidebar').contentDocument:top.document);
                     var resultC = 0;
@@ -300,6 +307,9 @@ var fbLib = {
 
         fbLib.debug("in typeaheadsearch with: " + search);
 
+        if (search != "" && search == fbLib.TypeaheadSearchLastSearch)
+            return;
+
         if (fbLib.TypeaheadSearchTimeout)
             clearTimeout(fbLib.TypeaheadSearchTimeout);
 
@@ -349,6 +359,8 @@ var fbLib = {
                 {
                     if (!response.data || response.data.length == 0)
                         return;
+
+                    fbLib.TypeaheadSearchLastSearch = search;
 
                     headerElem.collapsed = false;
                     headerElem.style.display = 'block';
