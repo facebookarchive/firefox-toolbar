@@ -446,7 +446,7 @@ var fbLib = {
                         });
 
                         // if sidebar, add 5. if popup, just add first
-                        if (!sidebar || c>=4)
+                        if (/*!sidebar || */c>=4)
                             break;
 
                     }
@@ -596,7 +596,7 @@ var fbLib = {
         {
             if (anonChildren[i].nodeType == 1)
             {
-                anonChildren[i].setAttribute("style", "overflow: hidden;");
+                anonChildren[i].setAttribute("style", "overflow-x: hidden; overflow-y: auto;");
                 var anonChildren2 = list.ownerDocument.getAnonymousNodes(anonChildren[i]);
 
                 for (var j = 0; j < anonChildren2.length; j++)
@@ -613,6 +613,12 @@ var fbLib = {
         if (realh)
         {
             realh = parseInt(realh.substring(0, realh.indexOf("px")));
+
+            if (realh > 600)
+            {
+                realh = 600;
+            }
+
             list.setAttribute("height", (realh + 2) + "px");
             top.document.getElementById('PopupFacebookFriends').sizeTo("300", (realh + 20));
         }
