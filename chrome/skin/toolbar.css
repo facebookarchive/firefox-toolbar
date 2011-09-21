@@ -123,6 +123,10 @@ textbox[focused="true"] #facebook-toolbar-status {
   margin-right: 0px;
 }
 
+#facebook-link-menu > .toolbarbutton-menu-dropmarker {
+  padding-left: 5px;
+}
+
 .facebook-notification {
   padding: 0px 5px;
   margin: 0px;
