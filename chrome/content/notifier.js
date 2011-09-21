@@ -29,7 +29,7 @@ var _winService = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.ns
 function NotifierLoad() {
     fbLib.debug('NotifierLoad', _label, _url);
     document.getElementById('pic').setAttribute('src', _src );
-    document.getElementById('label').appendChild(document.createTextNode(_label));
+    document.getElementById('label').textContent = _label;
     window.setTimeout('window.close();', 10000);
     window.addEventListener('mouseup', NotifierClick, false);
 }

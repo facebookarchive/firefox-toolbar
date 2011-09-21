@@ -7,7 +7,8 @@
 
 <window id="facebook-notifier"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        windowtype="facebook:notify">
+        windowtype="facebook:notify"
+        hidechrome="true">
 
     <script type="application/x-javascript" src="chrome://facebook/content/lib.js"/>
     <script type="application/x-javascript" src="chrome://facebook/content/notifier.js"/>
@@ -18,8 +19,7 @@
             <vbox>
                 <image id="pic" class="notifier-image"/>
             </vbox>
-            <description id="label" class="notifier-text">
-            </description>
+            <description id="label" class="notifier-text"/>
         </hbox>
     </vbox>
 
