@@ -196,8 +196,18 @@ var fbLib = {
             headers[i].style.display = 'none';
         }
 
-        document.getElementById('FacebookSearchAll').collapsed = true;
-        document.getElementById('FacebookSearchAll').style.display = 'none';
+        var searchAll = fbLib.GetASearchResultsElement("FacebookSearchAll");
+
+        if (search)
+        {
+            fbLib.GetASearchResultsElement("FacebookSearchAllText").setAttribute("value", 'Press enter to search for "' + search + '" on Facebook');
+            searchAll.setAttribute("oncommand", "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");
+            searchAll.collapsed = false;
+        }
+        else
+        {
+            searchAll.collapsed = true;
+        }
     },
 
     TypeaheadSearchExtensionService: function(search) {
