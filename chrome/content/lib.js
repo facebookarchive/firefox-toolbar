@@ -726,7 +726,7 @@ var fbLib = {
     },
 
     FacebookLogin: function() {
-      if (fbSvc.aoggedIn) {
+      if (fbSvc.loggedIn) {
         fbSvc.sessionEnd();
       }
       else {
