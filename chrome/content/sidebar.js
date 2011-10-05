@@ -144,11 +144,14 @@ function SortBy(selSort) {
 
 function ClearFriends(sessionEnded) {
     fbLib.debug( "ClearFriends" );
-    var list = document.getElementById('SidebarFriendsList');
-    while (list.getElementsByAttribute("class", "friendBox"))
+    try
     {
-        list.removeChild(list.getElementsByAttribute("class", "friendBox")[0]);
-    }
+        var list = document.getElementById('SidebarFriendsList');
+        while (list.getElementsByAttribute("class", "friendBox"))
+        {
+            list.removeChild(list.getElementsByAttribute("class", "friendBox")[0]);
+        }
+    } catch (e) { fbLib.debug(e); }
     if (sessionEnded) {
         fbLib.SetHint(true, fbStringBundle.getString('loadFriends'), 'fbLib.FacebookLogin()');
     }

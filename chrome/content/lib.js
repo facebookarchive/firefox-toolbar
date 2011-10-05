@@ -184,6 +184,23 @@ var fbLib = {
       fbLib.SetSpecificHint(document, visible, text, oncommand);
     },
 
+    TypeaheadSearchFriendsOnly: function(search) {
+
+        fbLib.SearchFriends(search);
+
+        var headers = document.getElementsByClassName('facebook-listheader');
+
+        for (var i=0; i<headers.length; i++)
+        {
+            fbLib.debug('hiding a list header');
+            headers[i].collapsed = true;
+            headers[i].style.display = 'none';
+        }
+
+        document.getElementById('FacebookSearchAll').collapsed = true;
+        document.getElementById('FacebookSearchAll').style.display = 'none';
+    },
+
     TypeaheadSearchExtensionService: function(search) {
 
         var list = fbLib.GetFriendsListElement();
@@ -984,8 +1001,22 @@ var fbLib = {
 
 fbLib.dates_in_seconds = new fbLib.DatesInSeconds();
 
-var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
-fbLib.TypeaheadSearch = (prefSvc.getBoolPref('extensions.facebook.search.usegraphapi')
-        ?fbLib.TypeaheadSearchGraphAPI:fbLib.TypeaheadSearchExtensionService);
+var toolbarSearchMethod = Cc['@mozilla.org/preferences-service;1'].
+    getService(Ci.nsIPrefBranch).
+    getCharPref('extensions.facebook.toolbar_search_method');
+
+
+if (toolbarSearchMethod == "graphapi")
+{
+    fbLib.TypeaheadSearch = fbLib.TypeaheadSearchGraphAPI;
+}
+else if (toolbarSearchMethod == "extensionservice")
+{
+    fbLib.TypeaheadSearch = fbLib.TypeaheadSearchExtensionService;
+}
+else
+{
+    fbLib.TypeaheadSearch = fbLib.TypeaheadSearchFriendsOnly;
+}
 
 

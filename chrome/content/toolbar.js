@@ -893,11 +893,14 @@ var facebook = {
     }
   },
   clearFriends: function(sessionEnded) {
-    var list = document.getElementById('PopupFacebookFriendsList');
-    while (list.getElementsByAttribute("class", "friendBox"))
+    try
     {
-        list.removeChild(list.getElementsByAttribute("class", "friendBox")[0]);
-    }
+        var list = document.getElementById('PopupFacebookFriendsList');
+        while (list.getElementsByAttribute("class", "friendBox"))
+        {
+            list.removeChild(list.getElementsByAttribute("class", "friendBox")[0]);
+        }
+    } catch (e) { fbLib.debug(e); }
     document.getElementById('PopupMessager').style.display = 'none';
     document.getElementById('PopupPoker').style.display = 'none';
     document.getElementById('PopupPoster').style.display = 'none';
