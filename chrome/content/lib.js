@@ -192,7 +192,6 @@ var fbLib = {
 
         for (var i=0; i<headers.length; i++)
         {
-            fbLib.debug('hiding a list header');
             headers[i].collapsed = true;
             headers[i].style.display = 'none';
         }

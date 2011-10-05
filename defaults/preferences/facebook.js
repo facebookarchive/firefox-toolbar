@@ -36,4 +36,5 @@ pref("extensions.facebook.like.enabled", false);
 pref("extensions.facebook.permissions.asked", false);
 
 // toolbar search type "friendsonly", "graphapi", "extensionservice"
-pref("extensions.facebook.toolbar_search_method", "graphapi");
+pref("extensions.facebook.toolbar_search_method", "friendsonly");
+pref("extensions.facebook.awesomebar_search_method", "extensionservice");

@@ -914,3 +914,45 @@ window.addEventListener('load', facebook.load, false);
 window.addEventListener('unload', facebook.unload, false);
 
 fbLib.debug('loaded toolbar.js');
+
+
+var awesomebarSearchMethod = Cc['@mozilla.org/preferences-service;1'].
+    getService(Ci.nsIPrefBranch).
+    getCharPref('extensions.facebook.awesomebar_search_method');
+
+if (awesomebarSearchMethod == "extensionservice")
+{
+    (function() {
+      var urlbar = document.getElementById('urlbar');
+      if (!urlbar) {
+          return;
+      }
+       
+      // Add the fb autocomplete so we get to provid results
+      var new_attr = urlbar.getAttribute('autocompletesearch') + ' facebook-toolbar-remote-autocomplete';
+      urlbar.setAttribute('autocompletesearch', new_attr);
+      
+      // Listen for selections so we can set the referrer to the toolbar
+      var observer = {
+          observe: function(subject, topic, data) {
+          if (topic != "http-on-modify-request") {
+              return;
+          }
+
+          subject.QueryInterface(Components.interfaces.nsIHttpChannel);
+          if (-1 == subject.URI.host.search(/\.facebook\.com$/)) {
+              return;
+          }
+          
+          subject.setRequestHeader('X_FB_EXT', '1', false);
+          //Components.utils.reportError(subject.URI.host);
+          }
+      };
+
+      Components.classes["@mozilla.org/observer-service;1"]
+          .getService(Components.interfaces.nsIObserverService)
+          .addObserver(observer, "http-on-modify-request", false);
+
+    })();
+}
+

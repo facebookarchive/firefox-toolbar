@@ -34,3 +34,7 @@ category profile-after-change Facebook @facebook.com/facebook-service;1
 # XPCOM - about.js
 component {e0ac3100-952a-46d9-83c0-dbe161a59a69} components/about.js
 contract @mozilla.org/network/protocol/about;1?what=facebooktoolbar {e0ac3100-952a-46d9-83c0-dbe161a59a69}
+
+# XPCOM - typeahead search in awesome bar
+component {d9b6cb20-ef5c-11e0-be50-0800200c9a66} components/fbRemoteAutoComplete.js
+contract @mozilla.org/autocomplete/search;1?name=facebook-toolbar-remote-autocomplete {d9b6cb20-ef5c-11e0-be50-0800200c9a66}
