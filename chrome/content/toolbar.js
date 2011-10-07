@@ -654,7 +654,7 @@ var facebook = {
           var likewin = fbLib.launchLikeWindow();
           /* Not working ...
           likewin.onclose = function() {
-            facebook.firstrunpage();
+            facebook.aboutpage();
           }
           */
           prefSvc.setBoolPref('extensions.facebook.first_run_dialog', true);
@@ -663,16 +663,19 @@ var facebook = {
             facebook.startupLike();
         }
         // First-run page
-        facebook.firstrunpage();
-    },
-
-    firstrunpage: function()
-    {
-        var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
         if (!prefSvc.getBoolPref('extensions.facebook.not_first_run')) {
-          getBrowser().loadOneTab('about:facebooktoolbar', null, null, null, false, false);
+          facebook.aboutpage();
           prefSvc.setBoolPref('extensions.facebook.not_first_run', true);
         }
+    },
+
+    aboutpage: function()
+    {
+        // If we load about, the images and styles are not allowed because of security restrictions.
+        // Continue to load the chrome url for now.
+        //var aPage = "about:facebooktoolbar";
+        var aPage = "chrome://facebook/locale/about.html";
+        getBrowser().loadOneTab(aPage, null, null, null, false, false);
     },
 
     checkForFBLogin: function()

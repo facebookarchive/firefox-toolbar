@@ -30,6 +30,7 @@
 <!ENTITY  toolbar.settings.privacy.label            "Privacy Settings">
 <!ENTITY  toolbar.settings.application.label        "Application Settings">
 <!ENTITY  toolbar.settings.toolbar.label            "Toolbar Settings">
+<!ENTITY  toolbar.about.toolbar.label               "About">
 
 <!ENTITY  toolbar.status.emptytext.label            "set your status...">
 <!ENTITY  toolbar.status.emptytext.tooltip          "Change your Facebook status">

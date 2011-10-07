@@ -1,0 +1,39 @@
+/* establish some defaults */
+
+body, html, div, span, form, h1, h2, h3, h4, h5, h6, a, img {
+	border:0; padding:0; margin:0; font-family: Tahoma, sans-serif;
+	}
+
+img {margin: 0; padding: 0;}
+input, textarea {
+	margin:0; }
+
+/* Common styles */
+body {background: url("chrome://facebook/skin/images/about/back.png") repeat-x; background-color: #EBEBEB; font-size: 14px; line-height: 20px;}
+.wrap {width: 800px; position: relative; margin: 0 auto;}
+
+h1 {font-size: 24px; font-weight: bold; color: white; margin-bottom: 0; text-align: center; padding-top: 10px;}
+h2 {font-size: 20px; font-weight: bold; color: #333; text-align: center;}
+
+p {font-size: 14px; color: #1A1A1A; margin: 0;}
+span {color: #3B5998; font-weight: bold;}
+
+.header {background: url("chrome://facebook/skin/images/about/back-header.png") repeat-x; height: 40px; padding: 20px; margin-top: 40px; background-color: #3B5998; border: 1px solid #05153B;}
+
+.footer {text-align: center; clear: left; border-top:1px solid #b3b3b3; padding:10px 0;}
+.footer a {color: #3B5998; font-size: 12px; text-decoration: none; font-weight: bold;}
+
+.login {width: 750px; margin: 0 auto; padding-bottom: 30px; border-bottom: 1px solid #b3b3b3;}
+.login h2 {padding: 40px 0 30px;}
+
+.right {float: right;}
+.arrowr {padding-left: 20px;}
+
+.use {text-align: center; margin-bottom: 60px;}
+.use h2 {padding-top: 30px;}
+.arrowd {margin: 20px 0;}
+
+.column1, .column2 {width: 250px; margin:0 25px 30px 0; float: left;}
+.column3 {width: 250px; float: left; margin-bottom: 40px;}
+
+.column1 img, .column2 img, .column3 img {float: left; margin: 0 10px 50px 0;}

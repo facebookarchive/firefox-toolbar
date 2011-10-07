@@ -160,6 +160,12 @@
           <menuitem label="&toolbar.settings.toolbar.label;"
                     onclick="checkForMiddleClick(this, event);"
                     oncommand="openDialog('chrome://facebook/content/settings.xul', '', 'chrome,titlebar,toolbar,centerscreen,dialog=yes');" />
+
+          <menuseparator />
+
+          <menuitem label="&toolbar.about.toolbar.label;"
+                    onclick="checkForMiddleClick(this, event);"
+                    oncommand="facebook.aboutpage();" />
         </menupopup>
       </toolbarbutton>
 
