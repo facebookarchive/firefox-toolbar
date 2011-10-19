@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://facebook/skin/toolbar.css" type="text/css"?>
+<?xml-stylesheet href="chrome://facebook/skin/notifier.css" type="text/css"?>
 
 <!DOCTYPE window SYSTEM "chrome://facebook/locale/toolbar.dtd">
 
@@ -258,6 +259,7 @@
         </menupopup>
     </popupset>
   </toolbox>
+
   <broadcasterset id="mainBroadcasterSet">
     <broadcaster id="viewFacebookSidebar" autoCheck="false"
                  label="&toolbar.sidebar.label;"
@@ -266,6 +268,7 @@
                  sidebartitle="&toolbar.sidebar.label;"
                  oncommand="toggleSidebar('viewFacebookSidebar');event.stopPropagation();" />
   </broadcasterset>
+
   <menupopup id="viewSidebarMenu">
     <menuitem key="viewFacebookSidebarKb" observes="viewFacebookSidebar" label="&toolbar.facebook.label;" accesskey=""/>
   </menupopup>

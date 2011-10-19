@@ -264,7 +264,7 @@ function facebookService() {
             this.set(timer);
         }
     };
-    this._numAlertsObj = { value: 0 };
+    this._lastAlertPosition = 1;
 
     this._winService      = Cc["@mozilla.org/appshell/window-mediator;1"]
         .getService(Ci.nsIWindowMediator);
@@ -1389,16 +1389,102 @@ facebookService.prototype = {
             debug('caught', e);
         }
 
-        // either native FF alerts are not available or they aren't being used
-        this._numAlertsObj.value++;
-        var win = Cc["@mozilla.org/appshell/appShellService;1"]
-        .getService(Ci.nsIAppShellService).hiddenDOMWindow;
-        var left = win.screen.width - 215;
-        var top  = win.screen.height - 105*this._numAlertsObj.value;
-        win.openDialog('chrome://facebook/content/notifier.xul', '_blank',
-                       'chrome,titlebar=no,popup=yes,left=' + left + ',top=' + top + ',width=210,height=100',
-                       pic, label, url, this._numAlertsObj);
+        var win = fbSvc._winService.getMostRecentWindow( "navigator:browser" );
+        var doc = win ? win.document : null;
+        if (doc) {
+            dump('NotifierLoad', label, url);
+            try {
+                var NotifierClick = function(aPanel) {
+                    debug('NotifierClick', label, url );
+                    aPanel.hidePopup();
+
+                    if (url) { // open
+                        var win = fbSvc._winService.getMostRecentWindow( "navigator:browser" );
+                        var browser = win ? win.getBrowser() : null;
+                        if( browser
+                          && 2 != fbSvc._prefService.getIntPref('browser.link.open_newwindow') )
+                          // 1 => current Firefox window;
+                          // 2 => new window;
+                          // 3 => a new tab in the current window;
+                        { // open in a focused tab
+                          var tab = browser.addTab(url);
+                          browser.selectedTab = tab;
+                          win.content.focus();
+                        }
+                        else {
+                          window.open(url); // Works here?
+                        }
+                    }
+                }
+
+                var NotifierUnload = function(aPanel) {
+                    debug('NotifierUnload');
+                    fbSvc._lastAlertPosition = aPanel.getAttribute("lposition");
+                }
+
+                // Some assurance than panels do not overlap
+                var panels = doc.getElementsByTagName("lposition");
+                for (var i=0; i<panels.length; i++) {
+                    if (panels[i].getAttribute("lposition") == this._lastAlertPosition) {
+                        this._lastAlertPosition = panels.length;
+                    }
+                }
+                var panel = this._createPopup(doc, this._lastAlertPosition, pic, label);
+                var left = win.screen.width - 215;
+                var top  = win.screen.height - 105*this._lastAlertPosition;
+                this._lastAlertPosition++;
+                panel.openPopupAtScreen(left, top);
+
+                win.setTimeout(function() { panel.hidePopup(); }, 10000);
+                panel.addEventListener('popuphiding', function(){NotifierUnload(panel)}, false);
+                panel.addEventListener('click', function(){NotifierClick(panel)}, false);
+            }
+            catch (e) {
+                debug('Notifier Exception : '+e);
+            }
+        }
+        else {
+            // ??
+            debug('Notifier NOT loaded');
+        }
         return true;
+    },
+    _createPopup : function(doc, lastPos, picVal, labelVal)
+    {
+      var panel = doc.createElement("panel");
+      panel.setAttribute("level", "floating");
+      panel.setAttribute("noautohide", "true");
+      panel.setAttribute("width", "210");
+      panel.setAttribute("height", "100");
+      panel.setAttribute("lposition", lastPos);
+
+      var vbox = doc.createElement("vbox");
+      vbox.setAttribute("style", "max-width: 300px;");
+
+      var label = doc.createElement("label");
+      label.className = "notifier-title";
+      label.setAttribute("value", "Facebook Notification"); // XX TODO - move to string bundle
+
+      var hbox = doc.createElement("hbox");
+
+      var vbox2 = doc.createElement("vbox");
+
+      var image = doc.createElement("image");
+      image.className = "notifier-image";
+      image.setAttribute('src', picVal);
+
+      var description = doc.createElement("description");
+      description.className = "notifier-text";
+      description.textContent = labelVal;
+
+      vbox2.appendChild(image);
+      hbox.appendChild(vbox2);
+      hbox.appendChild(description);
+      vbox.appendChild(label);
+      vbox.appendChild(hbox);
+      panel.appendChild(vbox);
+      doc.documentElement.appendChild(panel);
+      return panel;
     }
 };
 
