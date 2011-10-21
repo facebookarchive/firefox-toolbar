@@ -126,7 +126,7 @@ textbox[focused="true"] #facebook-toolbar-status {
 
 #facebook-link-menu[open="true"],
 #facebook-link-menu:active {
-  padding-right: 5px;
+  padding-right: 6px;
   margin-right: 0px;
 }
 
