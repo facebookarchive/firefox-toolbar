@@ -172,7 +172,7 @@
 
       <toolbaritem id="facebook-login-info" align="center">
         <toolbarbutton id="facebook-name-info"
-                       class="button"
+                       class="facebook-login-button button"
                        onclick="checkForMiddleClick(this, event);"
                        oncommand="if (this.label!='') fbLib.OpenFBUrl('profile.php', this.getAttribute('userid'), event)"
                        style="display:none;" />
@@ -189,7 +189,7 @@
         <toolbarseparator/>
         <toolbarbutton id="facebook-login-status"
                        status=""
-                       class="button"
+                       class="facebook-login-button button"
                        label="&toolbar.login.label;"
                        tooltiptext="&toolbar.login.label;"
                        oncommand="fbLib.FacebookLogin()" />

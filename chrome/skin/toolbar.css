@@ -88,10 +88,11 @@ toolbarbutton.facebook-toolbar-button[disabled=true] {
   border: none !important;
 }
 
-/* Doesn't appear to be working OR the border is somewhere else, e.g. item nested in textbox binding */
+/* Doesn't appear to be working OR the border is somewhere else, e.g. item nested in textbox binding 
 textbox[focused="true"] #facebook-toolbar-status {
   border: none !important;
 }
+*/
 
 #facebook-search {
   color: #808080
@@ -120,6 +121,12 @@ textbox[focused="true"] #facebook-toolbar-status {
 
 #facebook-link-menu {
   padding-right: 6px;
+  margin-right: 0px;
+}
+
+#facebook-link-menu[open="true"],
+#facebook-link-menu:active {
+  padding-right: 5px;
   margin-right: 0px;
 }
 
@@ -275,14 +282,13 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
   -moz-image-region: rect(0px 317px 16px 302px);
 }
 
-#facebook-login-info-name {
-  padding: 0px;
-  margin: 0px;
-  border: solid 1px #546324;
+.facebook-login-button .toolbarbutton-text {
+  padding-right: 5px;
 }
 
 #facebook-name-info {
-  margin: 0px;
+  padding-right: 6px;
+  margin-right: 0px;
 }
 
 #facebook-login-status {
