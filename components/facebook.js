@@ -778,7 +778,7 @@ facebookService.prototype = {
                     , function( msgCount ) {
                         vdebug( "msgCount", msgCount );
                         var text = 'You have ' + ( msgCount==1 ? 'a new message' : 'new messages.' );
-                        fbSvc.showPopup('you.msg', 'chrome://facebook/content/mail_request.gif',
+                        fbSvc.showPopup('you.msg', 'chrome://facebook/skin/images/mail_request.gif',
                                          text, 'http://www.facebook.com/inbox/');
                     } );
                 fbSvc._pokes = new CountedNotif( data.pokes, 'facebook-pokes-updated', fbSvc
@@ -793,7 +793,7 @@ facebookService.prototype = {
                           else
                             text += 'poked many times.';
 
-                          fbSvc.showPopup('you.poke', 'chrome://facebook/content/poke.gif',
+                          fbSvc.showPopup('you.poke', 'chrome://facebook/skin/images/poke.gif',
                                           text, 'http://www.facebook.com/home.php');
                         }
                     } );
@@ -866,7 +866,7 @@ facebookService.prototype = {
                                   + '"' + notification.body_text + '"';
                               }
                               var app_icon = application_icons[notification.app_id]
-                                || 'chrome://facebook/content/wall_post.gif';
+                                || 'chrome://facebook/skin/images/wall_post.gif';
                               fbSvc.showPopup('you.site', app_icon,
                                               notification_contents,
                                               notification.href);

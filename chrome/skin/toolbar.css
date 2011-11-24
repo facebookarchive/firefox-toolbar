@@ -1,13 +1,13 @@
 #facebook-toolbar-toggle
 {
     -moz-image-region: rect(0 16px 16px 0);
-    list-style-image: url("chrome://facebook/content/fbfavicon.png");
+    list-style-image: url("chrome://facebook/skin/images/fbfavicon.png");
 }
 
 toolbar[iconsize="small"] #facebook-toolbar-toggle
 {
     -moz-image-region: rect(0 16px 16px 0);
-    list-style-image: url("chrome://facebook/content/fbfavicon.png");
+    list-style-image: url("chrome://facebook/skin/images/fbfavicon.png");
 }
 
 /* Toolbar buttons */
