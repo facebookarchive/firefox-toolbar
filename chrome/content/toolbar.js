@@ -325,7 +325,6 @@ var facebook = {
     clearLikeCount: function() {
         try {
             fbLib.setAttributeById('facebook-like-deck', 'selectedIndex', '1');
-            fbLib.setAttributeById('facebook-like-iframe', 'src', 'about:blank');
         }
         catch(e) {}
     },
@@ -339,22 +338,30 @@ var facebook = {
 
             if (gBrowser.currentURI.ref != "")
                 url = url.substring(0, url.indexOf('#'));
-    
+
             fbLib.debug("updateLikeCount: have url = '" + url + "'");
-    
+
             facebook.clearLikeCount();
-    
+
             var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
             if (prefSvc.getBoolPref('extensions.facebook.like.enabled'))
             {
                 if (url != null && url.match(/^http/))
                 {
-                    fbLib.setAttributeById('facebook-like-iframe', 'src',
-                        'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb');
+                    // Bypass the cache if the url is the same (e.g. reload) so Like is not stuck in load limbo
+                    var lif = document.getElementById('facebook-like-iframe');
+                    var curUrl = lif.contentWindow.location;
+                    var loadFlags = (curUrl == url) ? Ci.nsIWebNavigation.LOAD_FLAGS_BYPASS_CACHE : Ci.nsIWebNavigation.LOAD_FLAGS_NONE;
+                    lif.webNavigation.loadURI(
+                        'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb',
+                        loadFlags,
+                        null, null, null);
                 }
             }
         }
-        catch(e) {}
+        catch(e) {
+            fbLib.debug( "updateLikeCount failure : " + e );
+        }
         return;
 
         // XX Not working yet
@@ -523,7 +530,9 @@ var facebook = {
                 fbLib.setAttributeById('facebook-like-deck', 'selectedIndex', '0');
 
             }
-        } catch (e) {}
+        } catch (e) {
+            fbLib.debug( "onLikeIframeLoad failure : " + e );
+        }
     },
 
     load: function() {
