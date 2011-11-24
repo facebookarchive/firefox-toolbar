@@ -944,13 +944,13 @@ facebookService.prototype = {
             if( album_owner ) {
               if( pvs_album ) { // album already existed
                 if( size > pvs_album.size ) {
-                  fbSvc.showPopup( 'friend.album', 'chrome://facebook/skin/photo.gif',
+                  fbSvc.showPopup( 'friend.album', 'chrome://facebook/skin/images/photo.gif',
                                    album_owner.name + ' added new photos to "' + name + '"',
                                    link + "&src=fftb" );
                 }
               }
               else {
-                fbSvc.showPopup( 'friend.album', 'chrome://facebook/skin/photo.gif',
+                fbSvc.showPopup( 'friend.album', 'chrome://facebook/skin/images/photo.gif',
                                  album_owner.name + ' created the album "' + album.name + '"',
                                  link + "&src=fftb" );
               }

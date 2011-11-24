@@ -19,7 +19,7 @@
     <em:developer>Sylvain Pasche</em:developer>
     <em:developer>Brian King</em:developer>
     <em:developer>David McNamara</em:developer>
-    <em:iconURL>chrome://facebook/skin/fb32.png</em:iconURL>
+    <em:iconURL>chrome://facebook/skin/images/fb32.png</em:iconURL>
     <em:optionsURL>chrome://facebook/content/settings.xul</em:optionsURL>
     <em:homepageURL>http://developers.facebook.com/toolbar/</em:homepageURL>
 

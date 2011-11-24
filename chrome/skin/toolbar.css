@@ -34,19 +34,19 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
 
 /* Disabled state for all buttons */
 toolbarbutton.facebook-toolbar-button[disabled=true] {
-  list-style-image: url('chrome://facebook/skin/toolbar-disabled.png');
+  list-style-image: url('chrome://facebook/skin/images/toolbar-disabled.png');
 }
 
 .facebook-icon-share ,
 .facebook-notification,
 #facebook-searchbox,
 .facebook-sidebar-icon image {
-  list-style-image: url('chrome://facebook/skin/toolbar.png');
+  list-style-image: url('chrome://facebook/skin/images/toolbar.png');
   padding: 0px;
 }
 
 .facebook-sidebar-icon[disabled=true] image {
-  list-style-image: url('chrome://facebook/skin/toolbar-disabled.png');
+  list-style-image: url('chrome://facebook/skin/images/toolbar-disabled.png');
 }
 
 #facebook-login-status[status="waiting"],
@@ -60,7 +60,7 @@ toolbarbutton.facebook-toolbar-button[disabled=true] {
 
 .facebook-friendlinks toolbarbutton {
   border: 0px;
-  list-style-image: url('chrome://facebook/skin/toolbar.png');
+  list-style-image: url('chrome://facebook/skin/images/toolbar.png');
   margin: 0px;
   padding: 0px;
 }
@@ -223,7 +223,7 @@ textbox[focused="true"] #facebook-toolbar-status {
 
 /* -- Home -- */
 .facebook-icon-home {
-  list-style-image: url('chrome://facebook/skin/toolbar.png');
+  list-style-image: url('chrome://facebook/skin/images/toolbar.png');
   padding-left: 4px;
   border: 0;
   -moz-image-region: rect(0px 424px 16px 409px);
@@ -268,7 +268,7 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
 
 /* Upload */
 .facebook-icon-photoupload {
-  list-style-image: url('chrome://facebook/skin/toolbar.png');
+  list-style-image: url('chrome://facebook/skin/images/toolbar.png');
   padding: 0px 5px;
   border: 0;
   margin: 0;

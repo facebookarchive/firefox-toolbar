@@ -1351,7 +1351,7 @@ var PhotoUpload = {
       if (document.getElementById("albumsList").selectedItem)
           var link = document.getElementById("albumsList").selectedItem.getAttribute("link");
 
-      gFacebookService.showPopup('upload.complete', 'chrome://facebook/skin/photo.gif',
+      gFacebookService.showPopup('upload.complete', 'chrome://facebook/skin/images/photo.gif',
                                  upText, link);
     }
     catch(e) {
