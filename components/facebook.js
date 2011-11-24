@@ -895,7 +895,7 @@ facebookService.prototype = {
             pic_sq = user.pic_square ? String(decodeURI(user.pic_square)) : null
             ;
             if (!pic) {
-                pic = pic_sq = 'chrome://facebook/content/t_default.jpg';
+                pic = pic_sq = 'chrome://facebook/skin/images/t_default.jpg';
             }
             debug ("User status = "+status);
             users[id] = new facebookUser(id, name, pic, pic_sq, status, stime, ptime, notes, wall);

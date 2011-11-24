@@ -177,7 +177,6 @@ var facebook = {
         //fbLib.debug("onPageLoad: event with url: " + event.originalTarget.location);
 
         // here we are notified about any page load events in the main browser
-
         try
         {
             var doc = event ? event.originalTarget : null;
@@ -325,7 +324,7 @@ var facebook = {
      */
     clearLikeCount: function() {
         try {
-            fbLib.setAttributeById('facebook-like-iframe', 'collapsed', 'true');
+            fbLib.setAttributeById('facebook-like-deck', 'selectedIndex', '1');
             fbLib.setAttributeById('facebook-like-iframe', 'src', 'about:blank');
         }
         catch(e) {}
@@ -497,12 +496,14 @@ var facebook = {
     {
         if (!fbSvc.loggedIn)
         {
-            document.getElementById("facebook-like-iframe").setAttribute("collapsed", "true");
+            fbLib.setAttributeById('facebook-like-deck', 'selectedIndex', '2');
             return;
         }
 
-        if (facebook.filterURL(event))
+        if (facebook.filterURL(event)) {
+            fbLib.setAttributeById('facebook-like-deck', 'selectedIndex', '2');
             return;
+        }
 
         try
         {
@@ -519,6 +520,7 @@ var facebook = {
 
                 x.setAttribute("style", "width: " + (iframewidth+1) + "px !important;");
                 x.setAttribute("collapsed", "false");
+                fbLib.setAttributeById('facebook-like-deck', 'selectedIndex', '0');
 
             }
         } catch (e) {}

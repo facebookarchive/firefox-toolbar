@@ -49,8 +49,13 @@ toolbarbutton.facebook-toolbar-button[disabled=true] {
   list-style-image: url('chrome://facebook/skin/toolbar-disabled.png');
 }
 
-#facebook-login-status[status="waiting"] {
-  list-style-image: url('chrome://facebook/skin/throbber.gif');
+#facebook-login-status[status="waiting"],
+#facebook-like-loading {
+  list-style-image: url('chrome://facebook/skin/images/throbber.gif');
+}
+
+#facebook-like-noload {
+  list-style-image: url('chrome://facebook/skin/images/t_small.jpg');
 }
 
 .facebook-friendlinks toolbarbutton {

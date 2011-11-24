@@ -209,8 +209,18 @@
             <iframe id="facebook-auth-iframe" src="about:blank" type="content" collapsed="true"/>
 
             <toolbaritem id="facebook-like" pack="center" align="center">
-                <iframe id="facebook-like-iframe" src="about:blank" type="content"
-                        height="20" flex="1" collapsed="true" />
+                <deck id="facebook-like-deck">
+                    <iframe id="facebook-like-iframe" src="about:blank" type="content"
+                            height="20" flex="1" collapsed="true" />
+                    <hbox align="center" pack="center">
+                        <image id="facebook-like-loading"
+                               width='16' height='11' />
+                    </hbox>
+                    <hbox align="center" pack="center">
+                        <image id="facebook-like-noload"
+                               width='16' height='16'/>
+                    </hbox>
+                </deck>
             </toolbaritem>
     </toolbar>
     <popupset>
