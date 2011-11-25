@@ -100,7 +100,10 @@ var facebook = {
                     }
                     fbLib.SetHint(true, fStrings.getString('loadingfriends'), '');
 
-                    facebook.updateLikeCount();
+                    if (facebook.filterURL(gBrowser.selectedBrowser.currentURI.spec))
+                        facebook.toggleLikeWidget("2");
+                    else
+                        facebook.updateLikeCount();
 
                     break;
                 case 'facebook-session-end':
@@ -187,8 +190,10 @@ var facebook = {
                 return;
             }
 
-            if (facebook.filterURL(event))
+            if (facebook.filterURL(event.originalTarget.location)) {
+                facebook.toggleLikeWidget("2");
                 return;
+            }
 
             if (doc.location.hostname == "www.facebook.com")
             {
@@ -245,7 +250,7 @@ var facebook = {
         for each( var top in facebook.topicToXulId )
             fbLib.setAttributeById( top, 'label', '?');
         facebook.clearFriends(true);
-        facebook.clearLikeCount();
+        facebook.toggleLikeWidget("2");
         facebook.toggleToolbarState(true);
     },
 
@@ -275,22 +280,30 @@ var facebook = {
     },
     */
 
-    onTabSelect: function(e) {
+    onTabSelect: function(event) {
         if (fbSvc.loggedIn)
-            facebook.updateLikeCount();
+        {
+            var tabUrl = gBrowser.selectedBrowser.currentURI.spec;
+            if (tabUrl != "about:blank" && facebook.filterURL(tabUrl))
+                facebook.toggleLikeWidget("2");
+            else if (tabUrl != "about:blank")
+                facebook.updateLikeCount();
+            else
+                facebook.toggleLikeWidget("2");
+        }
     },
 
     /**
      * Check a url for irregular types (about:, chrome:)
-     * @parameter aEvent - load event that carries the target page to extract the url from
+     * @parameter aUrl - the url to check
      * @return boolean true to filter out (not use the url), false to let it through
      */
-    filterURL: function(aEvent) {
-        var url = aEvent.originalTarget.location;
-        if (url) {
+    filterURL: function(aUrl) {
+        //var url = aEvent.originalTarget.location;
+        if (aUrl) {
             var ioService = Components.classes["@mozilla.org/network/io-service;1"]
                             .getService(Components.interfaces.nsIIOService);
-            var scheme = ioService.extractScheme(url);
+            var scheme = ioService.extractScheme(aUrl);
             // Weed out about and chrome urls
             fbLib.debug("Loading " + scheme + "url...");
             if (scheme == "about" || scheme == "chrome")
@@ -320,11 +333,15 @@ var facebook = {
     },
 
     /**
-     * Reset the Like page
+     * Toggle the Like widget
+     * @parameter aLayer - the layer of the deck to show
+     *   0 = make the clickable Like 'button' visible
+     *   1 = Set the Like widget to loading (a throbber)
+     *   2 = Set the Like widget to not supported (a question mark icon)
      */
-    clearLikeCount: function() {
+    toggleLikeWidget: function(aLayer) {
         try {
-            fbLib.setAttributeById('facebook-like-deck', 'selectedIndex', '1');
+            fbLib.setAttributeById('facebook-like-deck', 'selectedIndex', aLayer);
         }
         catch(e) {}
     },
@@ -339,7 +356,7 @@ var facebook = {
             if (gBrowser.currentURI.ref && gBrowser.currentURI.ref != "")
                 url = url.substring(0, url.indexOf('#'));
 
-            facebook.clearLikeCount();
+            facebook.toggleLikeWidget("1");
 
             var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
             if (prefSvc.getBoolPref('extensions.facebook.like.enabled'))
@@ -501,12 +518,12 @@ var facebook = {
     {
         if (!fbSvc.loggedIn)
         {
-            fbLib.setAttributeById('facebook-like-deck', 'selectedIndex', '2');
+            facebook.toggleLikeWidget("2");
             return;
         }
 
-        if (facebook.filterURL(event)) {
-            fbLib.setAttributeById('facebook-like-deck', 'selectedIndex', '2');
+        if (facebook.filterURL(event.originalTarget.location)) {
+            facebook.toggleLikeWidget("2");
             return;
         }
 
@@ -526,7 +543,6 @@ var facebook = {
                 x.setAttribute("style", "width: " + (iframewidth+1) + "px !important;");
                 x.setAttribute("collapsed", "false");
                 fbLib.setAttributeById('facebook-like-deck', 'selectedIndex', '0');
-
             }
         } catch (e) {
             fbLib.debug( "onLikeIframeLoad failure : " + e );
@@ -535,7 +551,7 @@ var facebook = {
 
     load: function() {
         gBrowser.addEventListener("DOMContentLoaded", facebook.onPageLoad, true);
-        gBrowser.tabContainer.addEventListener("TabSelect", facebook.onTabSelect, false);
+        gBrowser.tabContainer.addEventListener("TabSelect", facebook.onTabSelect, true);
         try {
             facebook.moveLike();
             document.getElementById("facebook-like-iframe").addEventListener("DOMContentLoaded", facebook.onLikeIframeLoad, true);
@@ -546,7 +562,7 @@ var facebook = {
         }
         document.getElementById("facebook-auth-iframe").addEventListener("DOMContentLoaded", facebook.onAuthIframeLoad, true);
 
-        facebook.clearLikeCount();
+        facebook.toggleLikeWidget("1");
 
         facebook.fStringBundle = fbLib.GetFBStringBundle();
 
@@ -699,7 +715,7 @@ var facebook = {
 
     unload: function() {
         gBrowser.removeEventListener("DOMContentLoaded", facebook.onPageLoad, true);
-        gBrowser.tabContainer.removeEventListener("TabSelect", facebook.onTabSelect, false);
+        gBrowser.tabContainer.removeEventListener("TabSelect", facebook.onTabSelect, true);
         try {
             document.getElementById("facebook-like-iframe").removeEventListener("DOMContentLoaded", facebook.onLikeIframeLoad, true);
         }
