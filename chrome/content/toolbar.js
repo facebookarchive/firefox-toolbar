@@ -636,8 +636,8 @@ var facebook = {
     {
         try {
             var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
-            if (prefSvc.getBoolPref('extensions.facebook.like.enabled')) 
-                fbLib.setAttributeById('facebook-like', 'hidden', 'false');
+            let showLike = (prefSvc.getBoolPref('extensions.facebook.like.enabled')) ? 'false' : 'true';
+            fbLib.setAttributeById('facebook-like', 'hidden', showLike);
         }
         catch(e) {}
     },
