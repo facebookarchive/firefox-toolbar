@@ -289,6 +289,7 @@ FacebookRemoteAutoCompleteSearch.prototype = {
 };
 
 // The following line is what XPCOM uses to create components
-const NSGetFactory =
-  XPCOMUtils.generateNSGetFactory([ FacebookRemoteAutoCompleteSearch ]);
-
+if (XPCOMUtils.generateNSGetFactory)
+    const NSGetFactory = XPCOMUtils.generateNSGetFactory( [FacebookRemoteAutoCompleteSearch] );
+else
+    const NSGetModule = XPCOMUtils.generateNSGetModule( [FacebookRemoteAutoCompleteSearch] );

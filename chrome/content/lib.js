@@ -619,7 +619,7 @@ var fbLib = {
     _maxSizePopupFacebookFriendsList: function()
     {
         var list = top.document.getElementById('PopupFacebookFriendsList');
-        var style = window.getComputedStyle(list);
+        var style = window.getComputedStyle(list, null);
 
         var anonChildren = list.ownerDocument.getAnonymousNodes(list);
         var realh;
@@ -635,7 +635,7 @@ var fbLib = {
                 {
                     if (anonChildren2[j].nodeType == 1)
                     {
-                        var style2 = window.getComputedStyle(anonChildren2[j]);
+                        var style2 = window.getComputedStyle(anonChildren2[j], null);
                         realh = style2.getPropertyValue("height");
                     }
                 }

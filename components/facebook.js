@@ -1401,11 +1401,12 @@ facebookService.prototype = {
                 var left = win.screen.width - 215;
                 var top  = win.screen.height - 105*this._lastAlertPosition;
                 this._lastAlertPosition++;
-                panel.openPopupAtScreen(left, top);
 
-                win.setTimeout(function() { panel.hidePopup(); }, 10000);
                 panel.addEventListener('popuphiding', function(){NotifierUnload(panel)}, false);
                 panel.addEventListener('click', function(){NotifierClick(panel)}, false);
+                panel.openPopupAtScreen(left, top, false);
+
+                win.setTimeout(function() { panel.hidePopup(); }, 10000);
             }
             catch (e) {
                 debug('Notifier Exception : '+e);
@@ -1420,8 +1421,9 @@ facebookService.prototype = {
     _createPopup : function(doc, lastPos, picVal, labelVal)
     {
       var panel = doc.createElement("panel");
-      panel.setAttribute("level", "floating");
+      //panel.setAttribute("level", "floating");
       panel.setAttribute("noautohide", "true");
+      //panel.setAttribute("noautofocus", "true");
       panel.setAttribute("width", "210");
       panel.setAttribute("height", "100");
       panel.setAttribute("lposition", lastPos);
@@ -1451,7 +1453,7 @@ facebookService.prototype = {
       vbox.appendChild(label);
       vbox.appendChild(hbox);
       panel.appendChild(vbox);
-      doc.documentElement.appendChild(panel);
+      doc.getElementById("main-window").appendChild(panel);
       return panel;
     }
 };
