@@ -69,13 +69,6 @@ Cc['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Ci.mozIJSSubScriptLoader)
     .loadSubScript('chrome://facebook/content/md5.js');
 
-// Compatibility with Firefox 3.0 that doesn't have native JSON.
-if (typeof(JSON) == "undefined") {
-  Components.utils.import("resource://gre/modules/JSON.jsm");
-  JSON.parse = JSON.fromString;
-  JSON.stringify = JSON.toString;
-}
-
 /** class SetNotif:
  * Encapsulates notifs for a set of ids delivered as a JSON array.
  * Watcher for "size" property notifies the observer when the size value
@@ -279,16 +272,7 @@ function facebookService() {
       this._alertService = null;
     }
 
-    this._ff3Login = false;
-    if ("@mozilla.org/passwordmanager;1" in Cc) {
-      // Password Manager exists so this is not Firefox 3 (could be Firefox 2, Netscape, SeaMonkey, etc).
-      this._pwdService      = Cc['@mozilla.org/passwordmanager;1'].getService(Ci.nsIPasswordManager);
-      this._pwdServiceInt   = Cc['@mozilla.org/passwordmanager;1'].getService(Ci.nsIPasswordManagerInternal);
-    } else if ("@mozilla.org/login-manager;1" in Cc) {
-      // Login Manager exists so this is Firefox 3
-      this._ff3Login = true;
-      this._loginManager = Cc["@mozilla.org/login-manager;1"].getService(Ci.nsILoginManager);
-    }
+    this._loginManager = Cc["@mozilla.org/login-manager;1"].getService(Ci.nsILoginManager);
 
     this._observerService.addObserver(this, "final-ui-startup", false);
     this._observerService.addObserver(this, "cookie-changed", false);
@@ -506,6 +490,7 @@ facebookService.prototype = {
         debug("Can Set Status", this._canSetStatus);
         return Boolean(this._canSetStatus);
     },
+
     savedSessionStart: function() {
         var accessToken = this._prefService.getCharPref('extensions.facebook.access_token');
 
@@ -520,35 +505,27 @@ facebookService.prototype = {
         return false;
 
         var uid = this._prefService.getCharPref('extensions.facebook.uid');
-        if (!uid) {return;}
+        if (!uid) {return false;}
         debug( 'SAVED SESSION', uid );
 
-        if (this._ff3Login) {
-          var hostname = PASSWORD_URL;
-          var formSubmitURL = PASSWORD_URL;
-          var session_secret = null,
-              session_key = null;
+        var hostname = PASSWORD_URL;
+        var formSubmitURL = PASSWORD_URL;
+        var session_secret = null,
+            session_key = null;
 
-          // Find users for the given parameters
-          var logins = this._loginManager.findLogins({}, hostname, formSubmitURL, null);
+        // Find users for the given parameters
+        var logins = this._loginManager.findLogins({}, hostname, formSubmitURL, null);
 
-          // Find user from returned array of nsILoginInfo objects
-          for (var i = 0; i < logins.length; i++) {
-              session_key    = logins[i].username;
-              session_secret = logins[i].password;
-              break;
-          }
-          this.sessionStart(session_key, session_secret, uid, true);
-        } else {
-          var session_secret = { value: "" },
-              session_key    = { value: "" },
-              throwaway      = { value: "" };
-
-          this._pwdServiceInt.findPasswordEntry( PASSWORD_URL, null /* username */, null /* password */,
-              throwaway /* hostURIFound */, session_key /* usernameFound */, session_secret /*pwdFound*/ );
-          this.sessionStart( session_key.value, session_secret.value, uid, true );
+        // Find user from returned array of nsILoginInfo objects
+        for (var i = 0; i < logins.length; i++) {
+            session_key    = logins[i].username;
+            session_secret = logins[i].password;
+            break;
         }
+        this.sessionStart(session_key, session_secret, uid, true);
+        return true;
     },
+
     sessionStartOAuth: function(accessToken) {
         debug('sessionStartOAuth: ' + accessToken);
 
@@ -599,27 +576,22 @@ facebookService.prototype = {
           // persist API sessions across the Firefox shutdown
           // by saving them in the password store
           this.savePref( 'extensions.facebook.uid', this._uid );
-          if (this._ff3Login) {
-            var hostname = PASSWORD_URL;
-            var formSubmitURL = PASSWORD_URL;
+          var hostname = PASSWORD_URL;
+          var formSubmitURL = PASSWORD_URL;
 
-            // Clear out saved information for this extension
-            var logins = this._loginManager.findLogins({}, hostname, formSubmitURL, null);
-            for (var i = 0; i < logins.length; i++) {
-              this._loginManager.removeLogin(logins[i]);
-            }
-
-            var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",
-                                                         Components.interfaces.nsILoginInfo,
-                                                         "init");
-            var extLoginInfo = new nsLoginInfo(hostname, formSubmitURL, null,
-                                               this._sessionKey, this._sessionSecret,
-                                               '' /*usernameField*/, '' /*passwordField*/);
-            this._loginManager.addLogin(extLoginInfo);
-          } else {
-            this._pwdServiceInt.addUserFull(PASSWORD_URL, this._sessionKey, this._sessionSecret,
-                                           'key', 'secret'); // last two values don't matter
+          // Clear out saved information for this extension
+          var logins = this._loginManager.findLogins({}, hostname, formSubmitURL, null);
+          for (var i = 0; i < logins.length; i++) {
+            this._loginManager.removeLogin(logins[i]);
           }
+
+          var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",
+                                                       Components.interfaces.nsILoginInfo,
+                                                       "init");
+          var extLoginInfo = new nsLoginInfo(hostname, formSubmitURL, null,
+                                             this._sessionKey, this._sessionSecret,
+                                             '' /*usernameField*/, '' /*passwordField*/);
+          this._loginManager.addLogin(extLoginInfo);
         }
 
         this._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
@@ -655,17 +627,13 @@ facebookService.prototype = {
         // or because they didn't work
         this.savePref( 'extensions.facebook.uid', '' );
         this.savePref( 'extensions.facebook.access_token', '' );
-        if (this._ff3Login) { // Clear out saved information for this extension
-          var hostname = PASSWORD_URL;
-          var formSubmitURL = PASSWORD_URL;
+        // Clear out saved information for this extension
+        var hostname = PASSWORD_URL;
+        var formSubmitURL = PASSWORD_URL;
 
-          var logins = this._loginManager.findLogins({}, hostname, formSubmitURL, null);
-          for (var i = 0; i < logins.length; i++) {
-            this._loginManager.removeLogin(logins[i]);
-          }
-        } else if (this._sessionKey && this._sessionSecret) {
-          debug('Removing sessionKey from passwords', this._sessionKey);
-          this._pwdService.removeUser(PASSWORD_URL, this._sessionKey);
+        var logins = this._loginManager.findLogins({}, hostname, formSubmitURL, null);
+        for (var i = 0; i < logins.length; i++) {
+          this._loginManager.removeLogin(logins[i]);
         }
 
         var cookieMgr = Components.classes["@mozilla.org/cookiemanager;1"]

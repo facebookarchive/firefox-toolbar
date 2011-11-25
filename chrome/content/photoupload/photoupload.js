@@ -41,14 +41,6 @@ var gFacebookService =  Cc['@facebook.com/facebook-service;1'].
 var gFacebookServiceUnwrapped =  Cc['@facebook.com/facebook-service;1'].
                                  getService(Ci.fbIFacebookService);
 
-
-// Compatibility with Firefox 3.0 that doesn't have native JSON.
-if (typeof(JSON) == "undefined") {
-  Components.utils.import("resource://gre/modules/JSON.jsm");
-  JSON.parse = JSON.fromString;
-  JSON.stringify = JSON.toString;
-}
-
 var QuitObserver = {
   observe: function(subject, topic, data) {
     switch (topic) {
