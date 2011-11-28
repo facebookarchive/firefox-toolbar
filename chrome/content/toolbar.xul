@@ -177,7 +177,7 @@
                        oncommand="if (this.label!='') fbLib.OpenFBUrl('profile.php', this.getAttribute('userid'), event)"
                        style="display:none;" />
         <textbox id="facebook-toolbar-status"
-                 type="timed" timeout="5000" flex="10"
+                 type="timed" timeout="5000" flex="1"
                  onfocus="facebook.onStatusBoxFocus(this);"
                  onblur="facebook.onStatusBoxBlur(this);"
                  oncommand="return fbLib.SetFacebookStatus(this);"

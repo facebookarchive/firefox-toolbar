@@ -58,15 +58,15 @@ toolbarbutton.facebook-toolbar-button[disabled=true] {
   list-style-image: url('chrome://facebook/skin/images/t_small.jpg');
 }
 
+.facebook-friendlinks {
+  padding-left: 6px;
+}
+
 .facebook-friendlinks toolbarbutton {
   border: 0px;
   list-style-image: url('chrome://facebook/skin/images/toolbar.png');
   margin: 0px;
   padding: 0px;
-}
-
-.facebook-friendlinks {
-  padding-left: 6px;
 }
 
 .facebook-sidebar-icon {
@@ -124,19 +124,8 @@ textbox[focused="true"] #facebook-toolbar-status {
   color: #777;
 }
 
-#facebook-link-menu {
-  padding-right: 6px;
-  margin-right: 0px;
-}
-
-#facebook-link-menu[open="true"],
-#facebook-link-menu:active {
-  padding-right: 6px;
-  margin-right: 0px;
-}
-
 #facebook-link-menu > .toolbarbutton-menu-dropmarker {
-  padding-left: 5px;
+  padding: 0 5px 0 5px;
 }
 
 .facebook-notification {
@@ -297,6 +286,8 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
 }
 
 #facebook-login-status {
+  padding-left: 4px;
+  padding-right: 4px;
   margin: 0px;
   margin-right: 4px;
 }
