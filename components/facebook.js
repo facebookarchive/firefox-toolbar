@@ -257,8 +257,6 @@ function facebookService() {
             this.set(timer);
         }
     };
-    this._lastAlertPosition = 1;
-
     this._winService      = Cc["@mozilla.org/appshell/window-mediator;1"]
         .getService(Ci.nsIWindowMediator);
     this._observerService = Cc["@mozilla.org/observer-service;1"]
@@ -1387,20 +1385,18 @@ facebookService.prototype = {
 
                 var NotifierUnload = function(aPanel) {
                     debug('NotifierUnload');
-                    fbSvc._lastAlertPosition = aPanel.getAttribute("lposition");
                 }
 
-                // Some assurance than panels do not overlap
+                // Line up the panels one on top of the other
+                var lastAlertPosition = 1;
                 var panels = doc.getElementsByTagName("lposition");
-                for (var i=0; i<panels.length; i++) {
-                    if (panels[i].getAttribute("lposition") == this._lastAlertPosition) {
-                        this._lastAlertPosition = panels.length;
-                    }
+                if (panels.length > 0) {
+                    lastAlertPosition = panels[panels.length-1].getAttribute("lposition");
                 }
-                var panel = this._createPopup(doc, this._lastAlertPosition, pic, label);
+
+                var panel = this._createPopup(doc, lastAlertPosition, pic, label);
                 var left = win.screen.width - 215;
-                var top  = win.screen.height - 105*this._lastAlertPosition;
-                this._lastAlertPosition++;
+                var top  = win.screen.height - 105*lastAlertPosition;
 
                 panel.addEventListener('popuphiding', function(){NotifierUnload(panel)}, false);
                 panel.addEventListener('click', function(){NotifierClick(panel)}, false);
@@ -1433,7 +1429,7 @@ facebookService.prototype = {
 
       var label = doc.createElement("label");
       label.className = "notifier-title";
-      label.setAttribute("value", "Facebook Notification"); // XX TODO - move to string bundle
+      label.setAttribute("value", this.stringBundle.GetStringFromName("notificationtitle"));
 
       var hbox = doc.createElement("hbox");
 
