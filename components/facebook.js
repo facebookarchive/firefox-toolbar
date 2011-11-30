@@ -1423,7 +1423,7 @@ facebookService.prototype = {
       var panel = doc.createElement("panel");
       //panel.setAttribute("level", "floating");
       panel.setAttribute("noautohide", "true");
-      //panel.setAttribute("noautofocus", "true");
+      panel.setAttribute("noautofocus", "true");
       panel.setAttribute("width", "210");
       panel.setAttribute("height", "100");
       panel.setAttribute("lposition", lastPos);
