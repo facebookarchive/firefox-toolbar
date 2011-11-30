@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "Hızlı Bağlantılar">
 <!ENTITY  toolbar.links.profile.label               "Profil">
 <!ENTITY  toolbar.links.friends.label               "Arkadaşlar">
-<!ENTITY  toolbar.links.inbox.label                 "Gelen Kutusu">
+<!ENTITY  toolbar.links.inbox.label                 "Messages">
 <!ENTITY  toolbar.links.photos.label                "Fotoğraflar">
 <!ENTITY  toolbar.links.notes.label                 "Notlar">
 <!ENTITY  toolbar.links.groups.label                "Gruplar">

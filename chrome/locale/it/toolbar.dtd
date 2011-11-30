@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "Link rapidi">
 <!ENTITY  toolbar.links.profile.label               "Profilo">
 <!ENTITY  toolbar.links.friends.label               "Amici">
-<!ENTITY  toolbar.links.inbox.label                 "Posta">
+<!ENTITY  toolbar.links.inbox.label                 "Messages">
 <!ENTITY  toolbar.links.photos.label                "Foto">
 <!ENTITY  toolbar.links.notes.label                 "Note">
 <!ENTITY  toolbar.links.groups.label                "Gruppi">

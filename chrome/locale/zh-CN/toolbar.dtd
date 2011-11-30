@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "快速链接">
 <!ENTITY  toolbar.links.profile.label               "个人主页">
 <!ENTITY  toolbar.links.friends.label               "朋友">
-<!ENTITY  toolbar.links.inbox.label                 "收件箱">
+<!ENTITY  toolbar.links.inbox.label                 "Messages">
 <!ENTITY  toolbar.links.photos.label                "照片">
 <!ENTITY  toolbar.links.notes.label                 "博客">
 <!ENTITY  toolbar.links.groups.label                "圈子">

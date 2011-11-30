@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "Hurtige link">
 <!ENTITY  toolbar.links.profile.label               "Profil">
 <!ENTITY  toolbar.links.friends.label               "Venner">
-<!ENTITY  toolbar.links.inbox.label                 "Indbakke">
+<!ENTITY  toolbar.links.inbox.label                 "Messages">
 <!ENTITY  toolbar.links.photos.label                "Billeder">
 <!ENTITY  toolbar.links.notes.label                 "Noter">
 <!ENTITY  toolbar.links.groups.label                "Grupper">

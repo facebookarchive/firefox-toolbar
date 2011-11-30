@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "捷徑">
 <!ENTITY  toolbar.links.profile.label               "個人檔案">
 <!ENTITY  toolbar.links.friends.label               "朋友">
-<!ENTITY  toolbar.links.inbox.label                 "收件匣">
+<!ENTITY  toolbar.links.inbox.label                 "Messages">
 <!ENTITY  toolbar.links.photos.label                "相片">
 <!ENTITY  toolbar.links.notes.label                 "網誌">
 <!ENTITY  toolbar.links.groups.label                "社團">

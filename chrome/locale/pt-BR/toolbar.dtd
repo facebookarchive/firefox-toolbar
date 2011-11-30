@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "Links rápidos">
 <!ENTITY  toolbar.links.profile.label               "Perfil">
 <!ENTITY  toolbar.links.friends.label               "Amigos">
-<!ENTITY  toolbar.links.inbox.label                 "Caixa de entrada">
+<!ENTITY  toolbar.links.inbox.label                 "Messages">
 <!ENTITY  toolbar.links.photos.label                "Fotos">
 <!ENTITY  toolbar.links.notes.label                 "Notas">
 <!ENTITY  toolbar.links.groups.label                "Grupos">

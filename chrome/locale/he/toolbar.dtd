@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "קישורים מהירים">
 <!ENTITY  toolbar.links.profile.label               "פרופיל">
 <!ENTITY  toolbar.links.friends.label               "חברים">
-<!ENTITY  toolbar.links.inbox.label                 "תיבת דואר נכנס">
+<!ENTITY  toolbar.links.inbox.label                 "Messages">
 <!ENTITY  toolbar.links.photos.label                "תמונות">
 <!ENTITY  toolbar.links.notes.label                 "פתקים">
 <!ENTITY  toolbar.links.groups.label                "קבוצות">

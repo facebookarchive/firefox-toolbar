@@ -28,7 +28,7 @@ meddelanden">
 <!ENTITY  toolbar.button.links.label                "Snabblänkar">
 <!ENTITY  toolbar.links.profile.label               "Profil">
 <!ENTITY  toolbar.links.friends.label               "Vänner">
-<!ENTITY  toolbar.links.inbox.label                 "Inkorg">
+<!ENTITY  toolbar.links.inbox.label                 "Messages">
 <!ENTITY  toolbar.links.photos.label                "Foton">
 <!ENTITY  toolbar.links.notes.label                 
 "Anteckningar">

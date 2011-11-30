@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "الروابط السريعة">
 <!ENTITY  toolbar.links.profile.label               "الصفحة الشخصية ">
 <!ENTITY  toolbar.links.friends.label               "الأصدقاء">
-<!ENTITY  toolbar.links.inbox.label                 "البريد الوارد">
+<!ENTITY  toolbar.links.inbox.label                 "Messages">
 <!ENTITY  toolbar.links.photos.label                "الصور">
 <!ENTITY  toolbar.links.notes.label                 "الملاحظات">
 <!ENTITY  toolbar.links.groups.label                "المجموعات">

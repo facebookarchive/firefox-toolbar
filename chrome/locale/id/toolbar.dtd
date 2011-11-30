@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "Tautan Cepat">
 <!ENTITY  toolbar.links.profile.label               "Profil">
 <!ENTITY  toolbar.links.friends.label               "Teman">
-<!ENTITY  toolbar.links.inbox.label                 "Pesan Masuk">
+<!ENTITY  toolbar.links.inbox.label                 "Messages">
 <!ENTITY  toolbar.links.photos.label                "Koleksi Foto">
 <!ENTITY  toolbar.links.notes.label                 "Catatan">
 <!ENTITY  toolbar.links.groups.label                "Grup">
