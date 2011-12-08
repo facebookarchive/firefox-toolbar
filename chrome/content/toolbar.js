@@ -294,7 +294,7 @@ var facebook = {
     },
 
     /**
-     * Check a url for irregular types (about:, chrome:)
+     * Check a url for irregular types (about:, chrome:, resource:)
      * @parameter aUrl - the url to check
      * @return boolean true to filter out (not use the url), false to let it through
      */
@@ -306,7 +306,7 @@ var facebook = {
             var scheme = ioService.extractScheme(aUrl);
             // Weed out about and chrome urls
             fbLib.debug("Loading " + scheme + "url...");
-            if (scheme == "about" || scheme == "chrome")
+            if (scheme == "about" || scheme == "chrome" || scheme == "resource")
                 return true;
         }
         return false;
