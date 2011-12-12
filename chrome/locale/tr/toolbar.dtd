@@ -30,6 +30,7 @@
 <!ENTITY  toolbar.settings.privacy.label            "Gizlilik Ayarları">
 <!ENTITY  toolbar.settings.application.label        "Uygulama Ayarları">
 <!ENTITY  toolbar.settings.toolbar.label            "Araç Çubuğu Ayarları">
+<!ENTITY  toolbar.about.toolbar.label               "About">
 
 <!ENTITY  toolbar.status.emptytext.label            "durumunu belirle...">
 <!ENTITY  toolbar.status.emptytext.tooltip          "Facebook durumunu değiştir">

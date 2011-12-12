@@ -30,6 +30,7 @@
 <!ENTITY  toolbar.settings.privacy.label            "إعدادات الخصوصية ">
 <!ENTITY  toolbar.settings.application.label        "إعدادات التطبيق ">
 <!ENTITY  toolbar.settings.toolbar.label            "إعدادات شريط الأدوات">
+<!ENTITY  toolbar.about.toolbar.label               "About">
 
 <!ENTITY  toolbar.status.emptytext.label            "تحديد حالتك...">
 <!ENTITY  toolbar.status.emptytext.tooltip          " تغيير حالتك في فيس بوك">

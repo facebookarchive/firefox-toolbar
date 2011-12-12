@@ -30,6 +30,7 @@
 <!ENTITY  toolbar.settings.privacy.label            "Indstillinger for Beskyttelse af personlige oplysninger">
 <!ENTITY  toolbar.settings.application.label        "Applikationsindstillinger">
 <!ENTITY  toolbar.settings.toolbar.label            "Indstillinger for værktøjslinje">
+<!ENTITY  toolbar.about.toolbar.label               "About">
 
 <!ENTITY  toolbar.status.emptytext.label            "angiv din status...">
 <!ENTITY  toolbar.status.emptytext.tooltip          "Skift din Facebook-status">

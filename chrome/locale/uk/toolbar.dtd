@@ -30,6 +30,7 @@
 <!ENTITY  toolbar.settings.privacy.label            "Налаштування конфіденційності">
 <!ENTITY  toolbar.settings.application.label        "Налаштування програми">
 <!ENTITY  toolbar.settings.toolbar.label            "Налаштування тулбару">
+<!ENTITY  toolbar.about.toolbar.label               "About">
 
 <!ENTITY  toolbar.status.emptytext.label            "вкажіть статус...">
 <!ENTITY  toolbar.status.emptytext.tooltip          "Замініть свій Фейсбук статус">
