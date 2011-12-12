@@ -94,7 +94,20 @@
                   id="like"
                   />
 
+      <!-- Search in Location Bar -->
+      <preference name="extensions.facebook.awesomebar_search.enabled"
+                  type="bool"
+                  id="awesome-search"
+                  />
+
     </preferences>
+
+    <groupbox>
+      <hbox align="center">
+        <checkbox preference="awesome-search"/>
+        <label value="&settings.awesomesearch.enable.label;" class="left-flat"/>
+      </hbox>
+    </groupbox>
 
     <groupbox>
       <hbox align="center">

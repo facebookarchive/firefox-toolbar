@@ -36,3 +36,6 @@
 <!-- Like -->
 <!ENTITY  settings.like.enable.label                      "‎Beğen Düğmesi">
 <!ENTITY  settings.like.more.label                        "‎Ayarları Değiştir">
+
+<!-- Location Bar Search -->
+<!ENTITY  settings.awesomesearch.enable.label             "Enable search in the Firefox location bar">

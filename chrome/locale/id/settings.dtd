@@ -36,3 +36,6 @@
 <!-- Like -->
 <!ENTITY  settings.like.enable.label                      "‎Tombol Suka‎">
 <!ENTITY  settings.like.more.label                        "‎Ubah Pengaturan">
+
+<!-- Location Bar Search -->
+<!ENTITY  settings.awesomesearch.enable.label             "Enable search in the Firefox location bar">

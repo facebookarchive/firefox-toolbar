@@ -36,3 +36,6 @@
 <!-- Like -->
 <!ENTITY  settings.like.enable.label                      "「讚」鈕">
 <!ENTITY  settings.like.more.label                        "更改設定">
+
+<!-- Location Bar Search -->
+<!ENTITY  settings.awesomesearch.enable.label             "Enable search in the Firefox location bar">

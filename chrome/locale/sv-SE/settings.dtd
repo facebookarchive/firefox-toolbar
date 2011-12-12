@@ -60,3 +60,6 @@ inbyggda Firefox-meddelanden (på Mac OS X används Growl)">
 <!-- Like -->
 <!ENTITY  settings.like.enable.label                      "‎Gilla-knapp">
 <!ENTITY  settings.like.more.label                        "‎Ändra inställningar">
+
+<!-- Location Bar Search -->
+<!ENTITY  settings.awesomesearch.enable.label             "Enable search in the Firefox location bar">
