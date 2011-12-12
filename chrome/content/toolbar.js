@@ -696,10 +696,7 @@ var facebook = {
 
     aboutpage: function()
     {
-        // If we load about, the images and styles are not allowed because of security restrictions.
-        // Continue to load the chrome url for now.
-        //var aPage = "about:facebooktoolbar";
-        var aPage = "chrome://facebook/locale/about.html";
+        var aPage = "about:facebooktoolbar";
         getBrowser().loadOneTab(aPage, null, null, null, false, false);
     },
 

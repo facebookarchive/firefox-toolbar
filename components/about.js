@@ -14,12 +14,12 @@ AboutFBToolbar.prototype = {
     
     QueryInterface: XPCOMUtils.generateQI( [Ci.nsIAboutModule] ),
     getURIFlags: function(aURI) {
-        return Ci.nsIAboutModule.HIDE_FROM_ABOUTABOUT;
+        return 0;
     },
     newChannel: function(aURI) {
         
         var ios = Cc["@mozilla.org/network/io-service;1"].getService( Ci.nsIIOService );
-        var channel = ios.newChannel( 'chrome://facebook/locale/about.html', null, null );
+        var channel = ios.newChannel( 'chrome://facebook/content/about.xul', null, null );
         channel.originalURI = aURI;
         
         return channel;
