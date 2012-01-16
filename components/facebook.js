@@ -62,6 +62,9 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 const PASSWORD_URL = 'chrome://facebook/';
 
+const TOPIC_SESSION_START= "facebook-session-start-oauth";
+const TOPIC_SESSION_END= "facebook-session-end";
+
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 // Load MD5 code...
@@ -545,8 +548,13 @@ facebookService.prototype = {
             else
             {
                 debug("missing id in 'me' graph call :(");
+                fbSvc.sessionEnd();
                 return;
             }
+
+            Components.classes["@mozilla.org/observer-service;1"]  
+                .getService(Components.interfaces.nsIObserverService)  
+                .notifyObservers(null, TOPIC_SESSION_START, response.id);  
 
             fbSvc._timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
             fbSvc._timer.initWithCallback(fbSvc._checker, BASE_CHECK_INTERVAL/10, Ci.nsITimer.TYPE_REPEATING_SLACK);
@@ -625,6 +633,11 @@ facebookService.prototype = {
         // or because they didn't work
         this.savePref( 'extensions.facebook.uid', '' );
         this.savePref( 'extensions.facebook.access_token', '' );
+
+        Components.classes["@mozilla.org/observer-service;1"]  
+            .getService(Components.interfaces.nsIObserverService)  
+            .notifyObservers(null, TOPIC_SESSION_END, null);  
+
         // Clear out saved information for this extension
         var hostname = PASSWORD_URL;
         var formSubmitURL = PASSWORD_URL;
