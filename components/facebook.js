@@ -19,8 +19,8 @@
  */
 
 const BASE_CHECK_INTERVAL = 5*60*1000; // 5 minutes
-const DEBUG     = true;
-const VERBOSITY = 2; // 0: no dumping, 1: normal dumping, 2: massive dumping
+const DEBUG     = false;
+const VERBOSITY = 0; // 0: no dumping, 1: normal dumping, 2: massive dumping
 
 var debug = ( VERBOSITY < 1 )
   ? function() {}
@@ -538,12 +538,15 @@ facebookService.prototype = {
         {
             if (response.id)
             {
-                //debug("SAVING ACCESS TOKEN: " + accessToken);
+                debug("XX SAVING ACCESS TOKEN: " + accessToken);
+                //debug("XX SAVING UID: " + response.id);
 
                 fbSvc._uid = response.id;
                 fbSvc._loggedIn      = true;
                 fbSvc._prefService.setCharPref('extensions.facebook.access_token', accessToken)
                 fbSvc._prefService.setCharPref('extensions.facebook.uid', response.id)
+
+                debug("XX ACCESS TOKEN PREF NOW: " + fbSvc._prefService.getCharPref('extensions.facebook.access_token'));
             }
             else
             {
@@ -581,7 +584,8 @@ facebookService.prototype = {
         if( !saved ) {
           // persist API sessions across the Firefox shutdown
           // by saving them in the password store
-          this.savePref( 'extensions.facebook.uid', this._uid );
+          if (this._uid)
+              this.savePref( 'extensions.facebook.uid', this._uid );
           var hostname = PASSWORD_URL;
           var formSubmitURL = PASSWORD_URL;
 

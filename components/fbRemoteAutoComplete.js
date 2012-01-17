@@ -239,6 +239,8 @@ FacebookRemoteAutoCompleteSearch.prototype = {
 
   bootstrap: function()
   {
+      debug('bootstrapping');
+
       this.sid = Math.random();
       this.resultCache = {};
       this.bootstrapped = false;
@@ -247,7 +249,11 @@ FacebookRemoteAutoCompleteSearch.prototype = {
         this.fbSvc = Cc['@facebook.com/facebook-service;1'].getService(Ci.fbIFacebookService);
 
       if (!this.uid || this.uid == "" || !this.fbSvc.loggedIn)
+      {
+          debug('no user id');
+          //this.fbSvc.sessionEnd();
           return;
+      }
 
       var opts = [
         //{filter: ['event'], no_cache: 1},
@@ -273,9 +279,9 @@ FacebookRemoteAutoCompleteSearch.prototype = {
 
                       if (res)
                       {
-                          for (var i=0; i<res.length; i++)
+                          for (var id in res)
                           {
-                              self.resultCache[res[i].uid] = res[i];
+                              self.resultCache[id] = res[id];
                           }
 
                           self.bootstrapped = true;
@@ -349,8 +355,12 @@ FacebookRemoteAutoCompleteSearch.prototype = {
               {
                   var queryResults = self.parsePayload(self.queryRequest.responseText.substr(9));
 
+                  //debug("XX finished ajax query for '" + searchString + "'");
+
                   if (queryResults)
                   {
+                      //debug("XX some results from that ");
+
                       if (cachedResults && cachedResults.matchCount > 0)
                       {
                           newResult = cachedResults;
@@ -360,28 +370,42 @@ FacebookRemoteAutoCompleteSearch.prototype = {
                           newResult = new FacebookRemoteAutoCompleteResult(searchString, Ci.nsIAutoCompleteResult.RESULT_SUCCESS, 0, "", [], null, null);
                       }
 
-                      for (var i=0; i<cachedResults.length; i++)
+                      //queryResults = queryResults.sort(function(a, b) { return a.index - b.index; });
+
+                      for (var id in queryResults)
                       {
-                          newResult.appendMatch(
-                                  cachedResults[i].path,
-                                  cachedResults[i].text,
-                                  cachedResults[i].photo);
+                          var existing = false;
+
+                          for (var j=0; j<cachedResults.matchCount; j++) 
+                          {
+                              if (cachedResults.getValueAt(j) == queryResults[id].path)
+                              {
+                                  existing = true;
+                                  break;
+                              }
+                          }
+
+                          if (existing)
+                          {
+                              //self.resultCache[queryResults[i].uid].query = searchString.toLowerCase();
+                              continue;
+                          }
+                          else
+                          {
+                              newResult.appendMatch(
+                                      queryResults[id].path,
+                                      queryResults[id].text,
+                                      queryResults[id].photo);
+                              //queryResults[i].query = searchString.toLowerCase();
+                              //self.resultCache[queryResults[i].uid] = queryResults[i];
+                          }
+
                       }
-
-                      queryResults = queryResults.sort(function(a, b) { return a.index - b.index; });
-
-                      for (var i=0; i<queryResults.length; i++)
-                      {
-                          newResult.appendMatch(
-                                  queryResults[i].path,
-                                  queryResults[i].text,
-                                  queryResults[i].photo);
-                      }
-
-                      self._lastResult = newResult;
-                      listener.onSearchResult(self, newResult);
 
                       self.queryCache[searchString.toLowerCase()] = queryResults;
+
+                      //self._lastResult = newResult;
+                      listener.onSearchResult(self, newResult);
                   }
               }
           }
@@ -393,7 +417,8 @@ FacebookRemoteAutoCompleteSearch.prototype = {
   parsePayload: function(pltext)
   {
       //debug("XX Payload: " + pltext);
-      var queryResults = [];
+
+      var queryResults = {};
 
       try
       {
@@ -401,6 +426,11 @@ FacebookRemoteAutoCompleteSearch.prototype = {
 
           if (pl.error)
           {
+              if (pl.error == 1357001)
+              {
+                  this.fbSvc.sessionEnd();
+              }
+
               debug("Error in payload: " + pl.error);
               return null;
           }
@@ -421,11 +451,11 @@ FacebookRemoteAutoCompleteSearch.prototype = {
                   continue;
               }
 
-              if (this.resultCache[entry.uid])
+              /*if (this.resultCache[entry.uid])
               {
                   debug("XX hit cache on " + entry.uid);
                   continue;
-              }
+              }*/
 
               var path = (entry.path.toString().substring(0,1) == "/"?
                 "https://www.facebook.com" + entry.path.toString():
@@ -445,7 +475,8 @@ FacebookRemoteAutoCompleteSearch.prototype = {
               };
 
               //this.resultCache[entry.uid] = result;
-              queryResults.push(result);
+              //queryResults.push(result);
+              queryResults[entry.uid] = result;
           }
       }
       catch (e)
@@ -461,50 +492,71 @@ FacebookRemoteAutoCompleteSearch.prototype = {
   {
       var tmpResults = [];
       var search_lc = searchString.toLowerCase();
+      var newResult = new FacebookRemoteAutoCompleteResult(searchString, Ci.nsIAutoCompleteResult.RESULT_SUCCESS, 0, "", [], null, null);
 
-      for (var id in this.resultCache)
+      function searchACache(q, c)
       {
-          if (this.resultCache[id]._text_lc.indexOf(search_lc) > -1
-              || (this.resultCache[id].alias && this.resultCache[id].alias.indexOf(search_lc) > -1)
-              )
+          var r = [];
+
+          for (var id in c)
           {
-              tmpResults.push(this.resultCache[id]);
-          }
-          else if (this.resultCache[id].tokens)
-          {
-              for (var i=0; i<this.resultCache[id].tokens.length; i++)
+              if (c[id]._text_lc.indexOf(q) > -1
+                  || (c[id].alias && c[id].alias.indexOf(q) > -1)
+                  )
               {
-                  if (this.resultCache[id].tokens[i].indexOf(search_lc) > -1)
+                  r.push(c[id]);
+                  //debug("XX searchString '" + q + "' found in cache");
+              }
+              else if (c[id].tokens)
+              {
+                  for (var i=0; i<c[id].tokens.length; i++)
                   {
-                      tmpResults.push(this.resultCache[id]);
-                      break;
+                      if (c[id].tokens[i].indexOf(q) > -1)
+                      {
+                          r.push(c[id]);
+                          //debug("XX searchString '" + q + "' found in cache");
+                          break;
+                      }
                   }
               }
           }
+
+          return r;
       }
 
-      var foundCachedSearchString = "";
+      var tmpResults = searchACache(search_lc, this.resultCache);
+      tmpResults = tmpResults.sort(function(a, b) { return a.index - b.index; });
 
-      for (var cachedSearchString in this.queryCache)
+      //debug("XX have " + tmpResults.length + " result from bootstrap cache matches");
+
+      if (this.queryCache[search_lc])
       {
-          if (cachedSearchString.indexOf(search_lc) > -1 && cachedSearchString.length > foundCachedSearchString.length)
+          //debug("XX found cached query for '" + search_lc + "'");
+          newResult.hitQueryCache = true;
+
+          //tmpResults = tmpResults.concat(searchACache(search_lc, this.queryCache[search_lc]));
+          for (var id in this.queryCache[search_lc])
           {
-              foundCachedSearchString = cachedSearchString;
+              var existing = false;
+
+              for (var i=0; i<tmpResults.length; i++)
+              {
+                  if (tmpResults[i].uid == id)
+                  {
+                      existing = true;
+                      break;
+                  }
+              }
+
+              if (!existing)
+                  tmpResults.push(this.queryCache[search_lc][id]);
           }
+
+          //debug("XX have " + tmpResults.length + " results from bootstrap cache matches + query cache matches");
       }
-
-      if (foundCachedSearchString != "")
-      {
-          var foundQueryCache = this.queryCache[foundCachedSearchString];
-
-          tmpResults = tmpResults.concat(foundQueryCache);
-      }
-
-      var newResult = new FacebookRemoteAutoCompleteResult(searchString, Ci.nsIAutoCompleteResult.RESULT_SUCCESS, 0, "", [], null, null);
 
       if (tmpResults.length > 0)
       {
-          tmpResults = tmpResults.sort(function(a, b) { return a.index - b.index; });
           for (var i=0; i<tmpResults.length; i++)
           {
               newResult.appendMatch(
@@ -513,9 +565,6 @@ FacebookRemoteAutoCompleteSearch.prototype = {
                       tmpResults[i].photo);
           }
       }
-
-      if (foundCachedSearchString != "")
-          newResult.hitQueryCache = true;
 
       return newResult;
   },
@@ -533,6 +582,8 @@ FacebookRemoteAutoCompleteSearch.prototype = {
   {
     var self = this;
     var newResult = new FacebookRemoteAutoCompleteResult(searchString, Ci.nsIAutoCompleteResult.RESULT_NOMATCH, 0, "", [], null, null);
+
+    debug("in startSearch with '" + searchString + "'");
 
     if (!this.fbSvc.loggedIn)
     {
@@ -557,38 +608,42 @@ FacebookRemoteAutoCompleteSearch.prototype = {
         return listener.onSearchResult(this, newResult);
     }
 
-	oldResult = this._lastResult;
+	//oldResult = this._lastResult;
 
 	// If the user has just added a space, just give them the old results
+    /*
 	if (oldResult && oldResult._searchString == searchString.trim())
     {
 	    oldResult._searchString = searchString;
 	    this._lastResult = oldResult;
 	    return listener.onSearchResult(this, oldResult);
 	}
+    */
 
-	this._lastResult = newResult;
-	this._last       = searchString;
+	//this._lastResult = newResult;
+	//this._last       = searchString;
 
     var res = this.searchResultCache(searchString);
 
+    debug("results found in cache = " + res.matchCount);
+
+    if (self.queryTimeout)
+    {
+        try
+        {
+            self.queryTimeout.cancel();
+        } catch(e) {}
+
+        self.queryTimeout = null;
+    }
+
     if (res.matchCount > 5 || res.hitQueryCache)
     {
-        this._lastResult = res;
+        //this._lastResult = res;
         return listener.onSearchResult(this, res);
     }
     else
     {
-        if (self.queryTimeout)
-        {
-            try
-            {
-                self.queryTimeout.cancel();
-            } catch(e) {}
-
-            self.queryTimeout = null;
-        }
-
         var event = {
             notify: function(timer) {
                 self.query(searchString, res, listener);
