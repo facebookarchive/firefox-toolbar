@@ -12,9 +12,13 @@ const FB_UID_PREF = "extensions.facebook.uid";
 const FB_BOOTSTRAP_ENDPOINT = "https://www.facebook.com/ajax/typeahead/search/bootstrap.php";
 const FB_QUERY_ENDPOINT = "https://www.facebook.com/ajax/typeahead/search.php";
 
+var aConsoleService = Components.classes["@mozilla.org/consoleservice;1"].
+     getService(Components.interfaces.nsIConsoleService);
+
 var debug = function(msg)
 {
   dump("fbRemoteAutoComplete: " + msg + "\n");
+  aConsoleService.logStringMessage("fbRemoteAutoComplete: " + msg);
 }
 
 function XMLHttpRequest()
@@ -355,11 +359,11 @@ FacebookRemoteAutoCompleteSearch.prototype = {
               {
                   var queryResults = self.parsePayload(self.queryRequest.responseText.substr(9));
 
-                  //debug("XX finished ajax query for '" + searchString + "'");
+                  debug("XX finished ajax query for '" + searchString + "'");
 
                   if (queryResults)
                   {
-                      //debug("XX some results from that ");
+                      debug("XX adding " + cachedResults.matchCount + " cached results to query results");
 
                       if (cachedResults && cachedResults.matchCount > 0)
                       {
@@ -392,6 +396,7 @@ FacebookRemoteAutoCompleteSearch.prototype = {
                           }
                           else
                           {
+                              debug("XX have a query result '" +  queryResults[id].text + "'");
                               newResult.appendMatch(
                                       queryResults[id].path,
                                       queryResults[id].text,
@@ -527,11 +532,11 @@ FacebookRemoteAutoCompleteSearch.prototype = {
       var tmpResults = searchACache(search_lc, this.resultCache);
       tmpResults = tmpResults.sort(function(a, b) { return a.index - b.index; });
 
-      //debug("XX have " + tmpResults.length + " result from bootstrap cache matches");
+      debug("XX have " + tmpResults.length + " results from bootstrap cache ");
 
       if (this.queryCache[search_lc])
       {
-          //debug("XX found cached query for '" + search_lc + "'");
+          debug("XX found cached query for '" + search_lc + "'");
           newResult.hitQueryCache = true;
 
           //tmpResults = tmpResults.concat(searchACache(search_lc, this.queryCache[search_lc]));
@@ -552,7 +557,7 @@ FacebookRemoteAutoCompleteSearch.prototype = {
                   tmpResults.push(this.queryCache[search_lc][id]);
           }
 
-          //debug("XX have " + tmpResults.length + " results from bootstrap cache matches + query cache matches");
+          debug("XX have " + tmpResults.length + " results from bootstrap cache matches + query cache matches");
       }
 
       if (tmpResults.length > 0)
@@ -625,8 +630,6 @@ FacebookRemoteAutoCompleteSearch.prototype = {
 
     var res = this.searchResultCache(searchString);
 
-    debug("results found in cache = " + res.matchCount);
-
     if (self.queryTimeout)
     {
         try
@@ -640,10 +643,14 @@ FacebookRemoteAutoCompleteSearch.prototype = {
     if (res.matchCount > 5 || res.hitQueryCache)
     {
         //this._lastResult = res;
+        debug("results found in cache = " + res.matchCount + " , will show results now");
+
         return listener.onSearchResult(this, res);
     }
     else
     {
+        debug("results found in cache = " + res.matchCount + " , will fetch more results");
+
         var event = {
             notify: function(timer) {
                 self.query(searchString, res, listener);

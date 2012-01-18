@@ -528,6 +528,7 @@ facebookService.prototype = {
     },
 
     sessionStartOAuth: function(accessToken) {
+        accessToken = "" + accessToken.toString();
         debug('sessionStartOAuth: ' + accessToken);
 
         this._accessToken   = accessToken;
@@ -541,12 +542,10 @@ facebookService.prototype = {
                 debug("XX SAVING ACCESS TOKEN: " + accessToken);
                 //debug("XX SAVING UID: " + response.id);
 
-                fbSvc._uid = response.id;
+                fbSvc._uid = "" + response.id.toString();
                 fbSvc._loggedIn      = true;
-                fbSvc._prefService.setCharPref('extensions.facebook.access_token', accessToken)
-                fbSvc._prefService.setCharPref('extensions.facebook.uid', response.id)
-
-                debug("XX ACCESS TOKEN PREF NOW: " + fbSvc._prefService.getCharPref('extensions.facebook.access_token'));
+                fbSvc._prefService.setCharPref('extensions.facebook.access_token', accessToken);
+                fbSvc._prefService.setCharPref('extensions.facebook.uid', fbSvc._uid);
             }
             else
             {
@@ -585,7 +584,10 @@ facebookService.prototype = {
           // persist API sessions across the Firefox shutdown
           // by saving them in the password store
           if (this._uid)
+          {
+              debug("XX saving uid");
               this.savePref( 'extensions.facebook.uid', this._uid );
+          }
           var hostname = PASSWORD_URL;
           var formSubmitURL = PASSWORD_URL;
 
@@ -635,8 +637,11 @@ facebookService.prototype = {
         debug('sessionEnd');
         // remove session info from prefs because of explicit logout
         // or because they didn't work
-        this.savePref( 'extensions.facebook.uid', '' );
-        this.savePref( 'extensions.facebook.access_token', '' );
+        debug('XX RESETTING ACCESS PREFS');
+        this._prefService.unlockPref('extensions.facebook.uid');
+        this._prefService.clearUserPref('extensions.facebook.uid');
+        this._prefService.unlockPref('extensions.facebook.access_token');
+        this._prefService.clearUserPref('extensions.facebook.access_token');
 
         Components.classes["@mozilla.org/observer-service;1"]  
             .getService(Components.interfaces.nsIObserverService)  
