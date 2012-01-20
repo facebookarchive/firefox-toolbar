@@ -691,9 +691,9 @@ var facebook = {
             facebook.startupLike();
         }
         // First-run page
-        if (!prefSvc.getBoolPref('extensions.facebook.not_first_run')) {
+        if (!prefSvc.getBoolPref('extensions.facebook.firstrun')) {
           facebook.aboutpage();
-          prefSvc.setBoolPref('extensions.facebook.not_first_run', true);
+          prefSvc.setBoolPref('extensions.facebook.firstrun', true);
         }
     },
 
