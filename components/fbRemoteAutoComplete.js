@@ -9,6 +9,7 @@ const CLASS_NAME = "Facebook Toolbar Remote AutoComplete";
 const CONTRACT_ID = '@mozilla.org/autocomplete/search;1?name=facebook-toolbar-remote-autocomplete';
 
 const FB_UID_PREF = "extensions.facebook.uid";
+const FB_ENABLED_PREF = "extensions.facebook.awesomebar_search.enabled";
 const FB_BOOTSTRAP_ENDPOINT = "https://www.facebook.com/ajax/typeahead/search/bootstrap.php";
 const FB_QUERY_ENDPOINT = "https://www.facebook.com/ajax/typeahead/search.php";
 
@@ -205,6 +206,24 @@ myObserver.prototype = {
 }  
 
 
+var prefsObserver = function(fbca)
+{  
+    this.register(fbca);  
+}
+
+prefsObserver.prototype = {  
+  observe: function(subject, topic, data) {  
+      this.fbca.init();
+  },  
+  register: function(fbca) {  
+      this.fbca = fbca;
+      Services.prefs.addObserver(FB_ENABLED_PREF, this, false);
+  },  
+  unregister: function() {  
+      Services.prefs.removeObserver(FB_ENABLED_PREF, this);
+  }  
+}  
+
 /**
  * @constructor
  *
@@ -224,6 +243,9 @@ FacebookRemoteAutoCompleteSearch.prototype = {
   resultCache: {},
   queryCache: {},
   bootstrapped: false,
+  enabled: false,
+  observer: null,
+  prefsObserver: null,
 
   get uid() {
     return Services.prefs.getCharPref(FB_UID_PREF);
@@ -232,14 +254,21 @@ FacebookRemoteAutoCompleteSearch.prototype = {
   init: function()
   {
     debug('init');
+    this.enabled = false;
+
+    if (!Services.prefs.getBoolPref(FB_ENABLED_PREF))
+        return;
+
     try
     {
-    observer = new myObserver(this);  
+        this.observer = new myObserver(this);  
+        this.prefsObserver = new prefsObserver(this);  
     } catch (e)
     {
         debug("Error registering observer: " + e);
     }
     this.bootstrap();
+    this.enabled = true;
     debug('done init');
   },
 
@@ -476,7 +505,7 @@ FacebookRemoteAutoCompleteSearch.prototype = {
                   _text_lc: entry.text.toLowerCase(),
                   photo: entry.photo.toString(),
                   //category: (entry.category?entry.category.toString():""),
-                  tokens: (entry.tokens?entry.tokens.split(" "):null),
+                  tokens: (entry.tokens?entry.tokens.toString().split(" "):null),
                   alias: entry.alias,
                   index: entry.index
               };
@@ -587,6 +616,9 @@ FacebookRemoteAutoCompleteSearch.prototype = {
    */
   startSearch: function(searchString, searchParam, previousResult, listener)
   {
+    if (!this.enabled)
+        return null;
+
     var self = this;
     var newResult = new FacebookRemoteAutoCompleteResult(searchString, Ci.nsIAutoCompleteResult.RESULT_NOMATCH, 0, "", [], null, null);
 
