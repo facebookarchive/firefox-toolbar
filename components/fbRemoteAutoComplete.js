@@ -645,7 +645,14 @@ FacebookRemoteAutoCompleteSearch.prototype = {
         //this._lastResult = res;
         debug("results found in cache = " + res.matchCount + " , will show results now");
 
-        return listener.onSearchResult(this, res);
+        var event = {
+            notify: function(timer) {
+                listener.onSearchResult(self, res);
+            }
+        };
+
+        self.queryTimeout = Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);  
+        self.queryTimeout.initWithCallback(event, 500, Components.interfaces.nsITimer.TYPE_ONE_SHOT); 
     }
     else
     {

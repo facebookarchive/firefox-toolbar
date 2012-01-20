@@ -118,10 +118,13 @@ var facebook = {
 
                     while (browserEnumerator.hasMoreElements())
                     {
-                        var brow = browserEnumerator.getNext().gBrowser;
-                        var host = brow.currentURI.host;
-                        if (host == "www.facebook.com")
-                            brow.loadURI("http://www.facebook.com/");
+                        try
+                        {
+                            var brow = browserEnumerator.getNext().gBrowser;
+                            var host = brow.currentURI.host;
+                            if (host == "www.facebook.com")
+                                brow.loadURI("http://www.facebook.com/");
+                        } catch (e) {}
                     }
 
                     break;
