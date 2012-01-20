@@ -17,8 +17,10 @@ var aConsoleService = Components.classes["@mozilla.org/consoleservice;1"].
 
 var debug = function(msg)
 {
+  /*
   dump("fbRemoteAutoComplete: " + msg + "\n");
   aConsoleService.logStringMessage("fbRemoteAutoComplete: " + msg);
+  */
 }
 
 function XMLHttpRequest()
