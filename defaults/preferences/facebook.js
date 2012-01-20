@@ -29,7 +29,9 @@ pref("extensions.facebook.access_token", "" );
 pref("extensions.facebook.postuploadaction", 0);
 // firstrun prefs
 pref("extensions.facebook.first_run_dialog", false);
-pref("extensions.facebook.not_first_run", false);
+pref("extensions.facebook.not_first_run", false); // deprecated
+pref("extensions.facebook.firstrun", false);
+
 // Like
 pref("extensions.facebook.like.enabled", false);
 // Toolbar permissions
