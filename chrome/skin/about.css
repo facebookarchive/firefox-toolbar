@@ -1,12 +1,13 @@
 /* establish some defaults */
 
 body, html, div, span, form, h1, h2, h3, h4, h5, h6, a, img {
-	border:0; padding:0; margin:0; font-family: Tahoma, sans-serif;
-	}
+    border:0; padding:0; margin:0; font-family: Tahoma, sans-serif;
+}
 
 img {margin: 0; padding: 0;}
 input, textarea {
-	margin:0; }
+    margin:0;
+}
 
 /* Common styles */
 body {background: url("chrome://facebook/skin/images/about/back.png") repeat-x; background-color: #EBEBEB; font-size: 14px; line-height: 20px;}
