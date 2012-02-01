@@ -19,7 +19,7 @@ AboutFBToolbar.prototype = {
     newChannel: function(aURI) {
         
         var ios = Cc["@mozilla.org/network/io-service;1"].getService( Ci.nsIIOService );
-        var channel = ios.newChannel( 'chrome://facebook/content/about.xul', null, null );
+        var channel = ios.newChannel( 'chrome://facebook/content/about/about.xul', null, null );
         channel.originalURI = aURI;
         
         return channel;
