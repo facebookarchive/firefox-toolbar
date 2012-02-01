@@ -8,7 +8,7 @@
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
     <vbox flex="1">
-        <browser src="chrome://facebook/locale/about.html" flex="1"/>
+        <browser src="chrome://facebook/content/about/about.xhtml" flex="1"/>
     </vbox>
 
 </page>

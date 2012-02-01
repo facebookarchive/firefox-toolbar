@@ -1,0 +1,43 @@
+<!ENTITY  about.title              "About Facebook Toolbar">
+
+<!ENTITY  about.thanks.label       "Thanks for installing the Facebook Toolbar!">
+<!ENTITY  about.start.label        "Log In and Authenticate to Start">
+
+<!ENTITY  about.first.label        "First Log in and Authorize the application!">
+<!ENTITY  about.then.label         "Then start having fun using it!">
+
+<!-- Following 3 will be grouped together in 1 sentence, second has emphasis -->
+<!ENTITY  about.sidebar1.label     "Open the">
+<!ENTITY  about.sidebar2.label     "Friends Sidebar">
+<!ENTITY  about.sidebar3.label     ", a list of your friends with their latest status updates.">
+
+<!ENTITY  about.search.title       "Search Facebook">
+<!ENTITY  about.search.label       "Search as you type right from the Firefox location bar, or from the Facebook toolbar.">
+
+<!ENTITY  about.links.title        "Quick Links">
+<!ENTITY  about.links.label        "Easily access your Facebook pages or change your toolbar settings.">
+
+<!ENTITY  about.home.title         "Home">
+<!ENTITY  about.home.label         "Go to your profile.">
+
+<!ENTITY  about.notifications.title         "Notifications">
+<!ENTITY  about.notifications.label         "Tells you how many unseen requests you have.">
+
+<!ENTITY  about.like.title         "Like">
+<!ENTITY  about.like.label         "Like a page as you browse, and see the number of Likes for a page.">
+
+<!-- Following 2 will be grouped together in 1 sentence, first has emphasis -->
+<!ENTITY  about.share1.label       "Share">
+<!ENTITY  about.share2.label       "the current page you're viewing with your Facebook friends!">
+
+<!-- Following 2 will be grouped together in 1 sentence, first has emphasis -->
+<!ENTITY  about.upload1.label      "Upload">
+<!ENTITY  about.upload2.label      "photos.">
+
+<!ENTITY  about.status.title       "Status update">
+<!ENTITY  about.status.label       "Share what you're doing.">
+
+<!ENTITY  about.logout.title       "Log out">
+<!ENTITY  about.logout.label       "Log out when you're done.">
+
+<!ENTITY  about.copyright.label    "Facebook &copy; 2012.">

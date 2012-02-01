@@ -1,104 +1,106 @@
-<!DOCTYPE html>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" [
+<!ENTITY % aboutDTD SYSTEM "chrome://facebook/locale/about.dtd">
+%aboutDTD;
+]>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 
 <head>
-    <title>About Facebook Toolbar</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" type="text/css" href="chrome://facebook/skin/about.css" />
+    <title>&about.title;</title>
+    <link rel="stylesheet" type="text/css" href="chrome://facebook/skin/about.css"></link>
 </head>
 
 <body>
 
     <div class="arrow">
         <img src="chrome://facebook/skin/images/about/arrow.png" alt="Click to start" />
-        <span>Log In and<br/>
-              Authenticate<br/>
-              to Start
-        </span>
+        <span>&about.start.label;</span>
     </div>
 
     <div class="wrap">
 
         <div class="header">
-                <h1>Thanks for installing the Facebook Toolbar!</h1>
+                <h1>&about.thanks.label;</h1>
         </div>
 
         <div class="login">
-            <h2>First Log in and Authorize the application!</h2>
+            <h2>&about.first.label;</h2>
             <img src="chrome://facebook/skin/images/about/fb-login.png" alt="Login" />
             <img class="arrowr" src="chrome://facebook/skin/images/about/fb-arrow01.png" alt="Arrow Right" />
             <img class="right" src="chrome://facebook/skin/images/about/fb-authorize.png" alt="Authorize" />
         </div>
 
         <div class="use">
-            <h2>Then start having fun using it!</h2>
+            <h2>&about.then.label;</h2>
             <img class="arrowd" src="chrome://facebook/skin/images/about/fb-arrow02.png" alt="Arrow Down" />
             <img src="chrome://facebook/skin/images/about/fb-use.png" alt="Use" />
         </div>
 
         <div class="column1">
             <div class="listpoint">1</div>
-            <p>Open the <span>Friends Sidebar</span>, a list of your friends with their latest status updates.</p>
+            <p>&about.sidebar1.label; <span>&about.sidebar2.label;</span>&about.sidebar3.label;</p>
         </div>
 
         <div class="column2">
             <div class="listpoint">2</div>
-            <span>Search Facebook</span>
-            <p>Search as you type right from the Firefox location bar, or from the Facebook toolbar.
+            <span>&about.search.title;</span>
+            <p>&about.search.label;
             </p>
         </div>
 
         <div class="column3">
             <div class="listpoint">3</div>
-            <span>Quick Links</span>
-            <p>Easily access your Facebook pages or change your toolbar settings.</p>
+            <span>&about.links.title;</span>
+            <p>&about.links.label;</p>
         </div>
 
         <div class="column1">
             <div class="listpoint">4</div>
-            <span>Home</span>
-            <p>Go to your profile.</p>
+            <span>&about.home.title;</span>
+            <p>&about.home.label;</p>
         </div>
 
         <div class="column2">
             <div class="listpoint">5</div>
-            <span>Notifications</span>
-            <p>Tells you how many unseen requests you have.</p>
+            <span>&about.notifications.title;</span>
+            <p>&about.notifications.label;</p>
         </div>
 
         <div class="column3">
             <div class="listpoint">6</div>
-            <span>Like</span>
-            <p>Like a page as you browse, and see the number of Likes for a page.</p>
+            <span>&about.like.title;</span>
+            <p>&about.like.label;</p>
         </div>
 
         <div class="column1">
             <div class="listpoint">7</div>
-            <p><span>Share</span> the current page you're viewing with your Facebook friends!</p>
+            <p><span>&about.share1.label;</span> &about.share2.label;</p>
         </div>
 
         <div class="column2">
             <div class="listpoint">8</div>
-            <p><span>Upload</span> photos.</p>
+            <p><span>&about.upload1.label;</span> &about.upload2.label;</p>
         </div>
 
         <div class="column3">
             <div class="listpoint">9</div>
-            <span>Status update</span>
-            <p>Share what you're doing.</p>
+            <span>&about.status.title;</span>
+            <p>&about.status.label;</p>
         </div>
 
         <div class="column1">
             <div class="listpoint">10</div>
-            <span>Log out</span>
-            <p>Log out when you're done.</p>
+            <span>&about.logout.title;</span>
+            <p>&about.logout.label;</p>
         </div>
 
         <hr/>
 
         <div class="footer">
-            <p id="copyright">Facebook &copy; 2012. </p>
+            <p id="copyright">&about.copyright.label;</p>
         </div>
 
     </div>
