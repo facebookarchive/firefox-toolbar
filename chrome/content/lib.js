@@ -103,6 +103,14 @@ var fbLib = {
         return false;
     },
 
+    OpenNewStyleFBUrl: function(page, uid, e) {
+      var url = 'http://www.facebook.com/' + page + '/' + uid;
+      fbLib.debug('Opening ' + url);
+      openUILink(url, e);
+      e.stopPropagation();
+      return false;
+    },
+
     OpenFBUrl: function(page, uid, e, params) {
       var url = 'http://www.facebook.com/' + page + '?id=' + uid + '&src=fftb';
       if (uid == "events")

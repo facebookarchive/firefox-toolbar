@@ -62,7 +62,7 @@
                      label="?"
                      tooltiptext="&toolbar.button.pokes.tooltip;"
                      onclick="checkForMiddleClick(this, event);"
-                     oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/home.php?src=fftb', event); }"/>
+                     oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/pokes?src=fftb', event); }"/>
       <toolbarbutton id="facebook-notification-reqs"
                      class="facebook-icon-reqs facebook-notification button facebook-toolbar-button"
                      label="?"
@@ -241,7 +241,7 @@
                           style="display: none;"
                           onmousedown="this.doCommand()"
                           onmouseover="fbLib.SelectItemInList(this, this.parentNode)"
-                          oncommand="fbLib.OpenFBUrl('message.php', this.getAttribute('userid'), event)"/>
+                          oncommand="fbLib.OpenNewStyleFBUrl('messages', this.getAttribute('userid'), event)"/>
             <richlistitem id="PopupPoker"
                           class="facebook-friendlinks"
                           style="display: none;"

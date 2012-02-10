@@ -230,11 +230,9 @@ function CreateFriendNode(list, friend, insertBefore) {
     item.setAttribute('ptime', fbLib.getProfileTime(friend.ptime) );
     item.setAttribute('oncommand', "fbLib.OpenFBUrl('profile.php', '" + friend.id + "', event, null )");
     item.setAttribute('viewUpdCmd', "fbLib.OpenFBUrl('profile.php', '" + friend.id + "', event, {highlight: null} ); return false;");
-    item.setAttribute('msgCmd', "fbLib.OpenFBUrl('message.php', '" + friend.id + "', event, null )");
+    item.setAttribute('msgCmd', "fbLib.OpenNewStyleFBUrl('messages', '" + friend.id + "', event, null )");
     item.setAttribute('pokeCmd', "fbLib.OpenFBUrl('poke.php', '" + friend.id + "', event, null )");
     item.setAttribute('postCmd', "fbLib.OpenFBUrl('wallpost.php', '" + friend.id + "', event, null )");
-    //item.setAttribute('wallCmd', "fbLib.OpenFBUrl('wall.php', '" + friend.id + "', event)");
-    //item.setAttribute('notesCmd', "fbLib.OpenFBUrl('notes.php', '" + friend.id + "', event)");
     item.setAttribute('pic', friend.pic);
     list.insertBefore(item, insertBefore);
 }
