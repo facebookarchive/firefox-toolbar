@@ -13,7 +13,7 @@ input, textarea {
 body {background: url("chrome://facebook/skin/images/about/back.png") repeat-x; background-color: #EBEBEB; font-size: 14px; line-height: 20px;}
 .wrap {width: 800px; position: relative; margin: 0 auto;}
 
-h1 {font-size: 24px; font-weight: bold; color: white; margin-bottom: 0; text-align: center; padding-top: 10px;}
+h1 {font-size: 22px; font-weight: bold; color: white; margin-bottom: 0; text-align: center; padding-top: 10px;}
 h2 {font-size: 20px; font-weight: bold; color: #333; text-align: center;}
 
 p {font-size: 14px; color: #1A1A1A; margin: 0;}
@@ -24,7 +24,12 @@ span {color: #3B5998; font-weight: bold;}
 .footer {text-align: center; clear: left; border-top:1px solid #b3b3b3; padding:10px 0;}
 .footer a {color: #3B5998; font-size: 12px; text-decoration: none; font-weight: bold;}
 
-.login {width: 750px; margin: 0 auto; padding-bottom: 30px; border-bottom: 1px solid #b3b3b3;}
+.login {
+  width: 750px;
+  margin: 0 auto;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #b3b3b3;
+}
 .login h2 {padding: 40px 0 30px;}
 
 .right {float: right;}
@@ -39,7 +44,9 @@ span {color: #3B5998; font-weight: bold;}
 
 .column1 img, .column2 img, .column3 img {float: left; margin: 0 10px 50px 0;}
 
-.arrow {position: absolute; width: 100px; top: 10px; right:10px; text-align: center; z-index: 50000; padding-right: 10px;}
+.column1 p, .column2 p, .column3 p {overflow:hidden;}
+
+.arrow {position: absolute; width: 130px; top: 10px; right:10px; text-align: center; z-index: 50000; padding-right: 10px;}
 .arrow img {position: absolute; top: 10px; right:10px;}
 .arrow span {display: block;
              position: absolute;
