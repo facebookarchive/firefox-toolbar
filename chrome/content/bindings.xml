@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE bindings SYSTEM "chrome://facebook/locale/sidebar.dtd">
+<!DOCTYPE bindings [
+ <!ENTITY % sidebarDTD SYSTEM "chrome://facebook/locale/sidebar.dtd">
+ %sidebarDTD;
+ <!ENTITY % toolbarDTD SYSTEM "chrome://facebook/locale/toolbar.dtd">
+ %toolbarDTD;
+]>
 
 <bindings id="textboxBindings"
           xmlns="http://www.mozilla.org/xbl"
@@ -29,14 +34,11 @@
             <children />
           </xul:label>
           <xul:label xbl:inherits="value=stime" class="stime" />
-          <xul:hbox pack="start" class="facebook-friendlinks" >
+          <xul:hbox pack="start" align="center" class="facebook-friendlinks" >
+            <xul:label value="&toolbar.links.profile.label;" xbl:inherits="onclick=profileCmd"
+                       class="facebook-link mini-link" />
+            <xul:label value="-" style="color:#808080; font-size:9px;" />
             <xul:label value="&sidebar.friendmessage.label;" xbl:inherits="onclick=msgCmd"
-                       class="facebook-link mini-link" />
-            <xul:label value="-" style="color:#808080; font-size:9px;" />
-            <xul:label value="&sidebar.friendpoke.label;" xbl:inherits="onclick=pokeCmd"
-                       class="facebook-link mini-link" />
-            <xul:label value="-" style="color:#808080; font-size:9px;" />
-            <xul:label value="&sidebar.friendpost.label;" xbl:inherits="onclick=postCmd"
                        class="facebook-link mini-link" />
           </xul:hbox>
         </xul:vbox>
