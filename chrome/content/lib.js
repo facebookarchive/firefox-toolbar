@@ -220,6 +220,10 @@ var fbLib = {
 
     TypeaheadSearchExtensionService: function(search) {
 
+        // This is no longer supported by Facebook, defaulting to Friends only
+        fbLib.TypeaheadSearchFriendsOnly(search);
+        return;
+
         var list = fbLib.GetFriendsListElement();
         var sidebar = fbLib.IsSidebarOpen();
 
