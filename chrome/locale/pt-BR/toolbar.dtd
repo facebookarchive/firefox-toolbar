@@ -30,7 +30,7 @@
 <!ENTITY  toolbar.settings.privacy.label            "Configurações de privacidade">
 <!ENTITY  toolbar.settings.application.label        "Configurações do aplicativo">
 <!ENTITY  toolbar.settings.toolbar.label            "Configurações da barra de ferramentas">
-<!ENTITY  toolbar.about.toolbar.label               "About">
+<!ENTITY  toolbar.about.toolbar.label               "Sobre">
 
 <!ENTITY  toolbar.status.emptytext.label            "definir seu status...">
 <!ENTITY  toolbar.status.emptytext.tooltip          "Alterar seu status do Facebook">

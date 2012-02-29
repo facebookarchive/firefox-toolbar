@@ -30,7 +30,7 @@
 <!ENTITY  toolbar.settings.privacy.label            "Privacy-instellingen">
 <!ENTITY  toolbar.settings.application.label        "Toepassingsinstellingen">
 <!ENTITY  toolbar.settings.toolbar.label            "Werkbalkinstellingen">
-<!ENTITY  toolbar.about.toolbar.label               "About">
+<!ENTITY  toolbar.about.toolbar.label               "Info">
 
 <!ENTITY  toolbar.status.emptytext.label            "status instellen...">
 <!ENTITY  toolbar.status.emptytext.tooltip          "Je Facebook-status wijzigen">

@@ -30,7 +30,7 @@
 <!ENTITY  toolbar.settings.privacy.label            "隱私設定">
 <!ENTITY  toolbar.settings.application.label        "應用程式設定">
 <!ENTITY  toolbar.settings.toolbar.label            "工具列設定">
-<!ENTITY  toolbar.about.toolbar.label               "About">
+<!ENTITY  toolbar.about.toolbar.label               "關於">
 
 <!ENTITY  toolbar.status.emptytext.label            "更新你的近況‧‧‧‧‧‧">
 <!ENTITY  toolbar.status.emptytext.tooltip          "更改你的近況‧‧‧‧‧‧">

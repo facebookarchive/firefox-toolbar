@@ -30,7 +30,7 @@
 <!ENTITY  toolbar.settings.privacy.label            "Paramètres de confidentialité">
 <!ENTITY  toolbar.settings.application.label        "Paramètres des applications">
 <!ENTITY  toolbar.settings.toolbar.label            "Paramètres de la barre d'outils">
-<!ENTITY  toolbar.about.toolbar.label               "About">
+<!ENTITY  toolbar.about.toolbar.label               "À propos">
 
 <!ENTITY  toolbar.status.emptytext.label            "actualisez votre statut...">
 <!ENTITY  toolbar.status.emptytext.tooltip          "Changez votre statut Facebook">

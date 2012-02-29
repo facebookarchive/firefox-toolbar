@@ -30,7 +30,7 @@
 <!ENTITY  toolbar.settings.privacy.label            "Pengaturan Privasi">
 <!ENTITY  toolbar.settings.application.label        "Pengaturan Aplikasi">
 <!ENTITY  toolbar.settings.toolbar.label            "Pengaturan Bilah Alat">
-<!ENTITY  toolbar.about.toolbar.label               "About">
+<!ENTITY  toolbar.about.toolbar.label               "Tentang">
 
 <!ENTITY  toolbar.status.emptytext.label            "setel status Anda...">
 <!ENTITY  toolbar.status.emptytext.tooltip          "Ubah status Facebook Anda">

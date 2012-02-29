@@ -30,7 +30,7 @@
 <!ENTITY  toolbar.settings.privacy.label            "プライバシー設定">
 <!ENTITY  toolbar.settings.application.label        "アプリケーション設定">
 <!ENTITY  toolbar.settings.toolbar.label            "ツールバーの設定">
-<!ENTITY  toolbar.about.toolbar.label               "About">
+<!ENTITY  toolbar.about.toolbar.label               "ツールバーについて">
 
 <!ENTITY  toolbar.status.emptytext.label            "近況を設定...">
 <!ENTITY  toolbar.status.emptytext.tooltip          "Facebookの近況をアップデート">
