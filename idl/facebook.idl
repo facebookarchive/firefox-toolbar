@@ -42,10 +42,7 @@ interface fbIFacebookService : nsISupports
     readonly attribute AString secret;
     readonly attribute AString accessToken;
 
-    // login.xul is responsible for performing the login sequence.  Once that
-    // is finished, it should call sessionStart, which initiates the polling
-    // process.  If the session ever ends, the polling will stop until
-    // sessionStart is called again.  Aside from the facebook.auth methods,
+    // Aside from the facebook.auth methods,
     // all other Facebook API calls should be done inside this service.
     void sessionStartOAuth(in AString accessToken);
     void sessionStart(in AString sessionKey, in AString sessionSecret, in AString uid);
