@@ -30,7 +30,7 @@
 <!ENTITY  toolbar.settings.privacy.label            "הגדרות פרטיות">
 <!ENTITY  toolbar.settings.application.label        "הגדרות יישום">
 <!ENTITY  toolbar.settings.toolbar.label            "הגדרות סרגל הכלים">
-<!ENTITY  toolbar.about.toolbar.label               "About">
+<!ENTITY  toolbar.about.toolbar.label               "אודות">
 
 <!ENTITY  toolbar.status.emptytext.label            "הגדר את הסטטוס שלך...">
 <!ENTITY  toolbar.status.emptytext.tooltip          "שנה את הסטטוס שלך בפייסבוק">
