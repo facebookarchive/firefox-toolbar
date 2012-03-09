@@ -204,7 +204,10 @@ var facebook = {
                 {
                     // if this is a facebook page and we're not logged into the toolbar, then check can we get an access token now.
 
-                    setTimeout(facebook.checkForFBLogin, 1000);
+                    setTimeout(function()
+                        {
+                            facebook.checkForFBLogin();
+                        }, 1000);
                 }
                 else
                 {

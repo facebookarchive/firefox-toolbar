@@ -1407,6 +1407,8 @@ facebookService.prototype = {
 
                 var NotifierUnload = function(aPanel) {
                     debug('NotifierUnload');
+                    panel.removeEventListener('popuphiding', function(){NotifierUnload(panel)}, false);
+                    panel.removeEventListener('click', function(){NotifierClick(panel)}, false);
                 }
 
                 // Line up the panels one on top of the other
