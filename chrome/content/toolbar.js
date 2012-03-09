@@ -251,7 +251,7 @@ var facebook = {
         var nameButton = document.getElementById('facebook-name-info');
         nameButton.style.display="none";
         fbLib.setAttributeById('facebook-name-info', 'label', '');
-        statusBox = document.getElementById('facebook-toolbar-status');
+        var statusBox = document.getElementById('facebook-toolbar-status');
         statusBox.style.display="none";
         for each( var top in facebook.topicToXulId )
             fbLib.setAttributeById( top, 'label', '?');

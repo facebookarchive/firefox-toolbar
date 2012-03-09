@@ -864,7 +864,7 @@ facebookService.prototype = {
         }
     },
     parseUsers: function(user_data) {
-        users = {};
+        var users = {};
         for each (var user in user_data) {
             vdebug("user: " + user.uid, user);
 
