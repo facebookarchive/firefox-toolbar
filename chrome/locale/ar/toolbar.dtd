@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "الروابط السريعة">
 <!ENTITY  toolbar.links.profile.label               "الصفحة الشخصية ">
 <!ENTITY  toolbar.links.friends.label               "الأصدقاء">
-<!ENTITY  toolbar.links.inbox.label                 "Messages">
+<!ENTITY  toolbar.links.inbox.label                 "الرسائل">
 <!ENTITY  toolbar.links.photos.label                "الصور">
 <!ENTITY  toolbar.links.notes.label                 "الملاحظات">
 <!ENTITY  toolbar.links.groups.label                "المجموعات">
@@ -39,10 +39,10 @@
 
 <!ENTITY  toolbar.sidebar.label                     " شريط فيس بوك الجانبي">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "الأشخاص">
+<!ENTITY  toolbar.search.page.label                      "الصفحات">
+<!ENTITY  toolbar.search.event.label                     "المناسبات">
+<!ENTITY  toolbar.search.group.label                     "المجموعات">
+<!ENTITY  toolbar.search.place.label                     "الأماكن">
+<!ENTITY  toolbar.search.other.label                     "نتائج أخرى">
 

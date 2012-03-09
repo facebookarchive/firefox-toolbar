@@ -10,10 +10,10 @@
 <!ENTITY  sidebar.friendpoke.label          "dürt">
 <!ENTITY  sidebar.friendpost.label          "duvar yazısı">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "Kişiler">
+<!ENTITY  toolbar.search.page.label                      "Sayfalar">
+<!ENTITY  toolbar.search.event.label                     "Etkinlikler">
+<!ENTITY  toolbar.search.group.label                     "Gruplar">
+<!ENTITY  toolbar.search.place.label                     "Yerler">
+<!ENTITY  toolbar.search.other.label                     "Diğer Sonuçlar">
 

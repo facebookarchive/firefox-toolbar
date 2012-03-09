@@ -38,4 +38,4 @@
 <!ENTITY  settings.like.more.label                        "‎Skift indstillinger">
 
 <!-- Location Bar Search -->
-<!ENTITY  settings.awesomesearch.enable.label             "Enable search in the Firefox location bar">
+<!ENTITY  settings.awesomesearch.enable.label             "Aktiver søgning i Firefox-adressefeltet">

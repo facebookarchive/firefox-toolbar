@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "快速链接">
 <!ENTITY  toolbar.links.profile.label               "个人主页">
 <!ENTITY  toolbar.links.friends.label               "朋友">
-<!ENTITY  toolbar.links.inbox.label                 "Messages">
+<!ENTITY  toolbar.links.inbox.label                 "消息">
 <!ENTITY  toolbar.links.photos.label                "照片">
 <!ENTITY  toolbar.links.notes.label                 "博客">
 <!ENTITY  toolbar.links.groups.label                "圈子">
@@ -39,10 +39,10 @@
 
 <!ENTITY  toolbar.sidebar.label                     "Facebook 边栏">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "人名">
+<!ENTITY  toolbar.search.page.label                      "专页">
+<!ENTITY  toolbar.search.event.label                     "活动">
+<!ENTITY  toolbar.search.group.label                     "群">
+<!ENTITY  toolbar.search.place.label                     "地点">
+<!ENTITY  toolbar.search.other.label                     "其他结果">
 

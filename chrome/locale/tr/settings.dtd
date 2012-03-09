@@ -38,4 +38,4 @@
 <!ENTITY  settings.like.more.label                        "‎Ayarları Değiştir">
 
 <!-- Location Bar Search -->
-<!ENTITY  settings.awesomesearch.enable.label             "Enable search in the Firefox location bar">
+<!ENTITY  settings.awesomesearch.enable.label             "Firefox adres çubuğunda aramayı etkinleştir">

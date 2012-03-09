@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "Link rapidi">
 <!ENTITY  toolbar.links.profile.label               "Profilo">
 <!ENTITY  toolbar.links.friends.label               "Amici">
-<!ENTITY  toolbar.links.inbox.label                 "Messages">
+<!ENTITY  toolbar.links.inbox.label                 "Messaggi">
 <!ENTITY  toolbar.links.photos.label                "Foto">
 <!ENTITY  toolbar.links.notes.label                 "Note">
 <!ENTITY  toolbar.links.groups.label                "Gruppi">
@@ -39,10 +39,10 @@
 
 <!ENTITY  toolbar.sidebar.label                     "Barra laterale di Facebook">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "Persone">
+<!ENTITY  toolbar.search.page.label                      "Pagine">
+<!ENTITY  toolbar.search.event.label                     "Eventi">
+<!ENTITY  toolbar.search.group.label                     "Gruppi">
+<!ENTITY  toolbar.search.place.label                     "Luoghi">
+<!ENTITY  toolbar.search.other.label                     "Altri risultati">
 

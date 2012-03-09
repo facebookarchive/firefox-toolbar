@@ -10,10 +10,10 @@
 <!ENTITY  sidebar.friendpoke.label          "נדנד">
 <!ENTITY  sidebar.friendpost.label          "פרסום קיר">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "אנשים">
+<!ENTITY  toolbar.search.page.label                      "דפים">
+<!ENTITY  toolbar.search.event.label                     "אירועים">
+<!ENTITY  toolbar.search.group.label                     "קבוצות">
+<!ENTITY  toolbar.search.place.label                     "מקומות">
+<!ENTITY  toolbar.search.other.label                     "תוצאות אחרות">
 

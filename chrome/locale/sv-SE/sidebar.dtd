@@ -13,10 +13,10 @@ profiluppdateringen">
 <!ENTITY  sidebar.friendpoke.label          "puffa">
 <!ENTITY  sidebar.friendpost.label          "logginlägg">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "Personer">
+<!ENTITY  toolbar.search.page.label                      "Sidor">
+<!ENTITY  toolbar.search.event.label                     "Evenemang">
+<!ENTITY  toolbar.search.group.label                     "Grupper">
+<!ENTITY  toolbar.search.place.label                     "Platser">
+<!ENTITY  toolbar.search.other.label                     "Andra sökresultat">
 

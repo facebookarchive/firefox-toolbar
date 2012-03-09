@@ -10,10 +10,10 @@
 <!ENTITY  sidebar.friendpoke.label          "戳">
 <!ENTITY  sidebar.friendpost.label          "留言">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "人名">
+<!ENTITY  toolbar.search.page.label                      "粉絲專頁">
+<!ENTITY  toolbar.search.event.label                     "活動">
+<!ENTITY  toolbar.search.group.label                     "社團">
+<!ENTITY  toolbar.search.place.label                     "地點">
+<!ENTITY  toolbar.search.other.label                     "其他結果">
 

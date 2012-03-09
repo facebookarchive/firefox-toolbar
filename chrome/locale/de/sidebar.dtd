@@ -10,10 +10,10 @@
 <!ENTITY  sidebar.friendpoke.label          "anstupsen">
 <!ENTITY  sidebar.friendpost.label          "Pinnwandeintrag">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "Personen">
+<!ENTITY  toolbar.search.page.label                      "Seiten">
+<!ENTITY  toolbar.search.event.label                     "Veranstaltungen">
+<!ENTITY  toolbar.search.group.label                     "Gruppen">
+<!ENTITY  toolbar.search.place.label                     "Orte">
+<!ENTITY  toolbar.search.other.label                     "Sonstige Ergebnisse">
 

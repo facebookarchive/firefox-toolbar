@@ -38,4 +38,4 @@
 <!ENTITY  settings.like.more.label                        "更改設定">
 
 <!-- Location Bar Search -->
-<!ENTITY  settings.awesomesearch.enable.label             "Enable search in the Firefox location bar">
+<!ENTITY  settings.awesomesearch.enable.label             "啓動 Firefox 地址行的搜尋功能">

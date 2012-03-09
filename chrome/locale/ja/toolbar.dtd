@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "クイックリンク">
 <!ENTITY  toolbar.links.profile.label               "プロフィール">
 <!ENTITY  toolbar.links.friends.label               "友達">
-<!ENTITY  toolbar.links.inbox.label                 "Messages">
+<!ENTITY  toolbar.links.inbox.label                 "メッセージ">
 <!ENTITY  toolbar.links.photos.label                "写真">
 <!ENTITY  toolbar.links.notes.label                 "ノート">
 <!ENTITY  toolbar.links.groups.label                "グループ">
@@ -39,10 +39,10 @@
 
 <!ENTITY  toolbar.sidebar.label                     "Facebookサイドバー">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "ユーザー">
+<!ENTITY  toolbar.search.page.label                      "Facebookページ">
+<!ENTITY  toolbar.search.event.label                     "イベント">
+<!ENTITY  toolbar.search.group.label                     "グループ">
+<!ENTITY  toolbar.search.place.label                     "スポット">
+<!ENTITY  toolbar.search.other.label                     "その他の検索結果">
 

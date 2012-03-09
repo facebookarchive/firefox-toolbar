@@ -10,10 +10,10 @@
 <!ENTITY  sidebar.friendpoke.label          "toque">
 <!ENTITY  sidebar.friendpost.label          "publicación en el muro ">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "Personas">
+<!ENTITY  toolbar.search.page.label                      "Páginas">
+<!ENTITY  toolbar.search.event.label                     "Eventos">
+<!ENTITY  toolbar.search.group.label                     "Grupos">
+<!ENTITY  toolbar.search.place.label                     "Lugares">
+<!ENTITY  toolbar.search.other.label                     "Otros resultados">
 

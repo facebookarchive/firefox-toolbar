@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "Hurtige link">
 <!ENTITY  toolbar.links.profile.label               "Profil">
 <!ENTITY  toolbar.links.friends.label               "Venner">
-<!ENTITY  toolbar.links.inbox.label                 "Messages">
+<!ENTITY  toolbar.links.inbox.label                 "Beskeder">
 <!ENTITY  toolbar.links.photos.label                "Billeder">
 <!ENTITY  toolbar.links.notes.label                 "Noter">
 <!ENTITY  toolbar.links.groups.label                "Grupper">
@@ -39,10 +39,10 @@
 
 <!ENTITY  toolbar.sidebar.label                     "Facebook Sidebar">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "Personer">
+<!ENTITY  toolbar.search.page.label                      "Sider">
+<!ENTITY  toolbar.search.event.label                     "Begivenheder">
+<!ENTITY  toolbar.search.group.label                     "Grupper">
+<!ENTITY  toolbar.search.place.label                     "Steder">
+<!ENTITY  toolbar.search.other.label                     "Andre resultater">
 

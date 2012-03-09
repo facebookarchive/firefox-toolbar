@@ -10,10 +10,10 @@
 <!ENTITY  sidebar.friendpoke.label          "porren">
 <!ENTITY  sidebar.friendpost.label          "prikbordbericht">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "Personen">
+<!ENTITY  toolbar.search.page.label                      "Pagina's">
+<!ENTITY  toolbar.search.event.label                     "Evenementen">
+<!ENTITY  toolbar.search.group.label                     "Groepen">
+<!ENTITY  toolbar.search.place.label                     "Plaatsen">
+<!ENTITY  toolbar.search.other.label                     "Overige">
 

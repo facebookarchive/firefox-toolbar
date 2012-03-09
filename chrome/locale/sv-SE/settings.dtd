@@ -62,4 +62,4 @@ inbyggda Firefox-meddelanden (på Mac OS X används Growl)">
 <!ENTITY  settings.like.more.label                        "‎Ändra inställningar">
 
 <!-- Location Bar Search -->
-<!ENTITY  settings.awesomesearch.enable.label             "Enable search in the Firefox location bar">
+<!ENTITY  settings.awesomesearch.enable.label             "Aktivera sökning i Firefox adressfält">
