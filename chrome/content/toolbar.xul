@@ -124,7 +124,7 @@
                     />
           <menuitem label="&toolbar.links.groups.label;"
                     onclick="checkForMiddleClick(this, event);"
-                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/groups.php?src=fftb', event); }"
+                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/bookmarks/groups?src=fftb', event); }"
                     />
           <menuitem label="&toolbar.links.events.label;"
                     onclick="checkForMiddleClick(this, event);"
