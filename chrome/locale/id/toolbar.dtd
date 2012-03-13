@@ -19,7 +19,7 @@
 <!ENTITY  toolbar.button.links.label                "Tautan Cepat">
 <!ENTITY  toolbar.links.profile.label               "Profil">
 <!ENTITY  toolbar.links.friends.label               "Teman">
-<!ENTITY  toolbar.links.inbox.label                 "Messages">
+<!ENTITY  toolbar.links.inbox.label                 "Pesan">
 <!ENTITY  toolbar.links.photos.label                "Koleksi Foto">
 <!ENTITY  toolbar.links.notes.label                 "Catatan">
 <!ENTITY  toolbar.links.groups.label                "Grup">
@@ -39,10 +39,10 @@
 
 <!ENTITY  toolbar.sidebar.label                     "Bilah Sisi Facebook">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "Orang">
+<!ENTITY  toolbar.search.page.label                      "Halaman">
+<!ENTITY  toolbar.search.event.label                     "Acara">
+<!ENTITY  toolbar.search.group.label                     "Grup">
+<!ENTITY  toolbar.search.place.label                     "Tempat">
+<!ENTITY  toolbar.search.other.label                     "Hasil lain">
 

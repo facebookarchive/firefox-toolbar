@@ -6,6 +6,7 @@ style chrome://global/content/customizeToolbar.xul chrome://facebook/skin/toolba
 locale facebook ar     chrome/locale/ar/
 locale facebook da     chrome/locale/da/
 locale facebook de     chrome/locale/de/
+locale facebook de-DE  chrome/locale/de/
 locale facebook en-US  chrome/locale/en-US/
 locale facebook es-MX  chrome/locale/es-MX/
 locale facebook es-CL  chrome/locale/es-MX/
@@ -16,6 +17,7 @@ locale facebook he     chrome/locale/he/
 locale facebook id     chrome/locale/id/
 locale facebook it     chrome/locale/it/
 locale facebook ja     chrome/locale/ja/
+locale facebook ja-JP  chrome/locale/ja/
 locale facebook nl     chrome/locale/nl/
 locale facebook pt-BR  chrome/locale/pt-BR/
 locale facebook sv-SE  chrome/locale/sv-SE/

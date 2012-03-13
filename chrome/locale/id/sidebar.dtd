@@ -10,10 +10,10 @@
 <!ENTITY  sidebar.friendpoke.label          "colek">
 <!ENTITY  sidebar.friendpost.label          "kiriman dinding">
 
-<!ENTITY  toolbar.search.user.label                      "People">
-<!ENTITY  toolbar.search.page.label                      "Pages">
-<!ENTITY  toolbar.search.event.label                     "Events">
-<!ENTITY  toolbar.search.group.label                     "Groups">
-<!ENTITY  toolbar.search.place.label                     "Places">
-<!ENTITY  toolbar.search.other.label                     "Other Results">
+<!ENTITY  toolbar.search.user.label                      "Orang">
+<!ENTITY  toolbar.search.page.label                      "Halaman">
+<!ENTITY  toolbar.search.event.label                     "Acara">
+<!ENTITY  toolbar.search.group.label                     "Grup">
+<!ENTITY  toolbar.search.place.label                     "Tempat">
+<!ENTITY  toolbar.search.other.label                     "Hasil lain">
 
