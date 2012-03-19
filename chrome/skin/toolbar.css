@@ -16,6 +16,11 @@ toolbar[iconsize="small"] #facebook-toolbar-toggle
   display: -moz-box;
 }
 
+#facebook-toolbar[mode="text"] .toolbarbutton-icon {
+  /* don't let the customize toolbar settings blow away our icons */
+  display: -moz-box;
+}
+
 .button {
   padding-right: 4px !important;
 }
