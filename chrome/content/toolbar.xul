@@ -198,7 +198,6 @@
     <toolbar id="facebook-toolbar"
              class="chromeclass-toolbar-additional"
              oldclass="chromeclass-toolbar"
-             mode="full"
              iconsize="small"
              customizable="true"
              context="toolbar-context-menu"
