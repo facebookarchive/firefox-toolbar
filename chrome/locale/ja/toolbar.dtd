@@ -20,7 +20,7 @@
 <!ENTITY  toolbar.links.profile.label               "プロフィール">
 <!ENTITY  toolbar.links.friends.label               "友達">
 <!ENTITY  toolbar.links.inbox.label                 "メッセージ">
-<!ENTITY  toolbar.links.photos.label                "写真">
+<!ENTITY  toolbar.links.photos.label                "写真 / 動画">
 <!ENTITY  toolbar.links.notes.label                 "ノート">
 <!ENTITY  toolbar.links.groups.label                "グループ">
 <!ENTITY  toolbar.links.events.label                "イベント">

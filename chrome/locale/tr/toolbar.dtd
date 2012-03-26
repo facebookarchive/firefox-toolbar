@@ -20,7 +20,7 @@
 <!ENTITY  toolbar.links.profile.label               "Profil">
 <!ENTITY  toolbar.links.friends.label               "Arkadaşlar">
 <!ENTITY  toolbar.links.inbox.label                 "Mesajlar">
-<!ENTITY  toolbar.links.photos.label                "Fotoğraflar">
+<!ENTITY  toolbar.links.photos.label                "Fotoğraflar / Videolar">
 <!ENTITY  toolbar.links.notes.label                 "Notlar">
 <!ENTITY  toolbar.links.groups.label                "Gruplar">
 <!ENTITY  toolbar.links.events.label                "Etkinlikler">

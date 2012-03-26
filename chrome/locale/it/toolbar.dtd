@@ -20,7 +20,7 @@
 <!ENTITY  toolbar.links.profile.label               "Profilo">
 <!ENTITY  toolbar.links.friends.label               "Amici">
 <!ENTITY  toolbar.links.inbox.label                 "Messaggi">
-<!ENTITY  toolbar.links.photos.label                "Foto">
+<!ENTITY  toolbar.links.photos.label                "Foto / Video">
 <!ENTITY  toolbar.links.notes.label                 "Note">
 <!ENTITY  toolbar.links.groups.label                "Gruppi">
 <!ENTITY  toolbar.links.events.label                "Eventi">

@@ -20,7 +20,7 @@
 <!ENTITY  toolbar.links.profile.label               "الصفحة الشخصية ">
 <!ENTITY  toolbar.links.friends.label               "الأصدقاء">
 <!ENTITY  toolbar.links.inbox.label                 "الرسائل">
-<!ENTITY  toolbar.links.photos.label                "الصور">
+<!ENTITY  toolbar.links.photos.label                "الصور / مقاطع الفيديو">
 <!ENTITY  toolbar.links.notes.label                 "الملاحظات">
 <!ENTITY  toolbar.links.groups.label                "المجموعات">
 <!ENTITY  toolbar.links.events.label                "المناسبات">

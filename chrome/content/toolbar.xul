@@ -135,11 +135,6 @@
                     oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/posted.php?src=fftb', event); }"
                     />
 
-          <menuitem label="&toolbar.links.videos.label;"
-                    onclick="checkForMiddleClick(this, event);"
-                    oncommand="if (!fbSvc.loggedIn) { fbLib.FacebookLogin(); } else { openUILink('http://www.facebook.com/video/?src=fftb', event); }"
-                    />
-
           <menuseparator />
 
           <!-- Settings Menu -->

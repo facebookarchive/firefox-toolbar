@@ -20,7 +20,7 @@
 <!ENTITY  toolbar.links.profile.label               "Profil">
 <!ENTITY  toolbar.links.friends.label               "Teman">
 <!ENTITY  toolbar.links.inbox.label                 "Pesan">
-<!ENTITY  toolbar.links.photos.label                "Koleksi Foto">
+<!ENTITY  toolbar.links.photos.label                "Koleksi Foto / Video">
 <!ENTITY  toolbar.links.notes.label                 "Catatan">
 <!ENTITY  toolbar.links.groups.label                "Grup">
 <!ENTITY  toolbar.links.events.label                "Acara">

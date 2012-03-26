@@ -20,7 +20,7 @@
 <!ENTITY  toolbar.links.profile.label               "Обліковий запис">
 <!ENTITY  toolbar.links.friends.label               "Друзі">
 <!ENTITY  toolbar.links.inbox.label                 "Messages">
-<!ENTITY  toolbar.links.photos.label                "Фотографії">
+<!ENTITY  toolbar.links.photos.label                "Фотографії / Відео">
 <!ENTITY  toolbar.links.notes.label                 "Нотатки">
 <!ENTITY  toolbar.links.groups.label                "Групи">
 <!ENTITY  toolbar.links.events.label                "Події">

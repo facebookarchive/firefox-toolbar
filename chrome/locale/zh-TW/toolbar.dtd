@@ -20,7 +20,7 @@
 <!ENTITY  toolbar.links.profile.label               "個人檔案">
 <!ENTITY  toolbar.links.friends.label               "朋友">
 <!ENTITY  toolbar.links.inbox.label                 "訊息">
-<!ENTITY  toolbar.links.photos.label                "相片">
+<!ENTITY  toolbar.links.photos.label                "相片 / 影片">
 <!ENTITY  toolbar.links.notes.label                 "網誌">
 <!ENTITY  toolbar.links.groups.label                "社團">
 <!ENTITY  toolbar.links.events.label                "活動">
