@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://facebook/skin/toolbar.css" type="text/css"?>
-<?xml-stylesheet href="chrome://facebook/skin/notifier.css" type="text/css"?>
 
 <!DOCTYPE window SYSTEM "chrome://facebook/locale/toolbar.dtd">
 
