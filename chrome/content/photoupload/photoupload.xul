@@ -61,41 +61,31 @@
 
     <hbox align="center">
 
-          <hbox align="center" flex="1">
-            <label id="loadingAlbumsLabel" value="&upload.addtoalbum.label;"/>
-            <menulist id="albumsList"
-                      observes="uploadBroadcaster">
-              <menupopup id="albumsPopup">
-                <menuitem id="albumsPopupPlaceHolder" collapsed="true"/>
-                <menuseparator/>
-                <menuitem label="&upload.createnewalbum.label;" oncommand="PhotoUpload.doOpenCreateNewAlbumDialog();"/>
-              </menupopup>
-            </menulist>
-            <spacer flex="1"/>
-          </hbox>
+      <hbox align="center">
+        <label id="loadingAlbumsLabel" value="&upload.addtoalbum.label;"/>
+        <menulist id="albumsList"
+                  observes="uploadBroadcaster">
+          <menupopup id="albumsPopup">
+            <menuitem id="albumsPopupPlaceHolder" collapsed="true"/>
+            <menuseparator/>
+            <menuitem label="&upload.createnewalbum.label;" oncommand="PhotoUpload.doOpenCreateNewAlbumDialog();"/>
+          </menupopup>
+        </menulist>
+      </hbox>
 
       <deck id="uploadStatusDeck" flex="1">
-        <hbox align="center">
-          <button label="&upload.photos.remove.label;" icon="clear" id="removeAllButton"
-                  hidden="true"
-                  disabled="true"
-                  oncommand="PhotoUpload.removeAllPhotos();"
+        <hbox align="center" pack="end" flex="1">
+          <button label="&upload.all.label;" id="uploadButton" disabled="true"
+                  oncommand="PhotoUpload.upload();"
                   observes="uploadBroadcaster"/>
-          <!-- For debugging -->
-          <button id="reopenButton" label="close and reopen this window" hidden="true" oncommand="
-            window.close();
-            window.openDialog('chrome://facebook/content/photoupload/photoupload.xul',
-                              'facebook:photoupload', 'all');"/>
-          <label class="upload-status" id="uploadStatus"/>
         </hbox>
-        <hbox>
+        <hbox id="uploadStatusBox" align="center" pack="start" collapsed="true" flex="1">
+          <label class="upload-status" id="uploadStatus"/>
           <button label="&upload.cancel.label;" oncommand="PhotoUpload.cancelUpload()"/>
           <progressmeter id="uploadProgress" mode="determined" value="0" flex="1"/>
         </hbox>
       </deck>
-      <button label="&upload.all.label;" id="uploadButton" disabled="true"
-              oncommand="PhotoUpload.upload();"
-              observes="uploadBroadcaster"/>
+
     </hbox>
 
   </vbox>

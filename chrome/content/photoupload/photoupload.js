@@ -984,6 +984,7 @@ var PhotoUpload = {
   _uploadCancelled: false,
   _uploadStatus: null,
   _uploadStatusDeck: null,
+  _uploadStatusBox: null,
   _uploadProgress: null,
   _uploadBroadcaster: null,
   _observerService: null,
@@ -1025,6 +1026,7 @@ var PhotoUpload = {
 
     this._uploadStatus = document.getElementById("uploadStatus")
     this._uploadStatusDeck = document.getElementById("uploadStatusDeck");
+    this._uploadStatusBox = document.getElementById("uploadStatusBox");
     this._uploadProgress = document.getElementById("uploadProgress");
     this._uploadBroadcaster = document.getElementById("uploadBroadcaster");
 
@@ -1445,6 +1447,7 @@ var PhotoUpload = {
     }
     // TODO: store albumId in a field instead of passing it around.
 
+    this._uploadStatusBox.removeAttribute("collapsed");
     this._uploadStatusDeck.selectedIndex = 1;
     this._uploadBroadcaster.setAttribute("disabled", "true");
     this._uploadStatus.className = "upload-status";
@@ -1466,6 +1469,7 @@ var PhotoUpload = {
     this._uploadCancelled = false;
     this._uploadProgress.value = 0;
     this._uploadBroadcaster.setAttribute("disabled", "false");
+    this._uploadStatusBox.setAttribute("collapsed", "true");
     this._uploadStatusDeck.selectedIndex = 0;
 
     if (status == UPLOAD_CANCELLED) {
