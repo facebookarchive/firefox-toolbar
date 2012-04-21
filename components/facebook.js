@@ -795,7 +795,7 @@ facebookService.prototype = {
                             for each (var user in users) {
                                 self.items[user.id] = user;
                                 fbSvc.notify(user, 'facebook-new-req', user.id);
-                                fbSvc.showPopup('you.req', user.pic_sq, this.stringBundle.formatStringFromName("friendrequest", [user.name]),
+                                fbSvc.showPopup('you.req', user.pic_sq, this.stringBundle.formatStringFromName("friendrequest", [user.name], 1),
                                                'http://www.facebook.com/reqs.php');
                             }
                         });
@@ -934,13 +934,13 @@ facebookService.prototype = {
               if( pvs_album ) { // album already existed
                 if( size > pvs_album.size ) {
                   fbSvc.showPopup( 'friend.album', 'chrome://facebook/skin/images/photo.gif',
-                                   this.stringBundle.formatStringFromName("albumnewphotos", [album_owner.name, name]),
+                                   this.stringBundle.formatStringFromName("albumnewphotos", [album_owner.name, name], 2),
                                    link + "&src=fftb" );
                 }
               }
               else {
                 fbSvc.showPopup( 'friend.album', 'chrome://facebook/skin/images/photo.gif',
-                                 this.stringBundle.formatStringFromName("albumcreate", [album_owner.name, album.name]),
+                                 this.stringBundle.formatStringFromName("albumcreate", [album_owner.name, album.name], 2),
                                  link + "&src=fftb" );
               }
               fbSvc._albumDict[aid] = { 'modified': modified,
@@ -993,7 +993,7 @@ facebookService.prototype = {
                         fbSvc.notify(friend, 'facebook-new-friend', friend['id']);
                         fbSvc.showPopup('you.friend', 
                                         friend.pic_sq,
-                                        this.stringBundle.formatStringFromName("friendaccepted", [friend.name]),
+                                        this.stringBundle.formatStringFromName("friendaccepted", [friend.name], 1),
                                         'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb');
                         fbSvc._friendCount++; // increment the count
                         friendUpdate = true;
@@ -1026,7 +1026,7 @@ facebookService.prototype = {
                             fbSvc.notify(friend, 'facebook-friend-updated', 'wall');
                             notifyProf = notifyProf && !fbSvc.showPopup('friend.wall',
                                                             friend.pic_sq,
-                                                            this.stringBundle.formatStringFromName("wallpost", [friend.name]),
+                                                            this.stringBundle.formatStringFromName("wallpost", [friend.name], 1),
                                                             'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#wall');
                             vdebug('wall count updated', fbSvc._friendDict[friend.id].wall, friend.wall);
                         }
@@ -1034,7 +1034,7 @@ facebookService.prototype = {
                             fbSvc.notify(friend, 'facebook-friend-updated', 'notes');
                             notifyProf = notifyProf && !fbSvc.showPopup('friend.note',
                                                             friend.pic_sq,
-                                                            this.stringBundle.formatStringFromName("newnote", [friend.name]),
+                                                            this.stringBundle.formatStringFromName("newnote", [friend.name], 1),
                                                             'http://www.facebook.com/notes.php?id=' + friend.id + '&src=fftb');
                             vdebug('note count updated', fbSvc._friendDict[friend.id].notes, friend.notes);
                         }
@@ -1043,7 +1043,7 @@ facebookService.prototype = {
                             if (notifyProf) {
                               fbSvc.showPopup('friend.profile', 
                                               friend.pic_sq,
-                                              this.stringBundle.formatStringFromName("profilechange", [friend.name]),
+                                              this.stringBundle.formatStringFromName("profilechange", [friend.name], 1),
                                               'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb&highlight');
                             }
                             friendUpdate = true;
