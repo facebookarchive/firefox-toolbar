@@ -721,12 +721,12 @@ facebookService.prototype = {
                 var result; var msg;
                 debug('users.setStatus:', params, data);
                 if (data) {
-                    msg = is_clear ? this.stringBundle.GetStringFromName("statuscleared")
-                     : this.stringBundle.GetStringFromName("statussuccess");
+                    msg = is_clear ? fbSvc.stringBundle.GetStringFromName("statuscleared")
+                     : fbSvc.stringBundle.GetStringFromName("statussuccess");
                     result = is_clear ? 'clear' : 'set';
                 } else {
                     result = 'fail';
-                    msg = this.stringBundle.GetStringFromName("statusfail");
+                    msg = fbSvc.stringBundle.GetStringFromName("statusfail");
                 }
                 fbSvc.notify(null, 'facebook-status-set-result', result);
                 fbSvc._showPopup('you.status', fbSvc._loggedInUser.pic_sq, msg,
@@ -765,8 +765,8 @@ facebookService.prototype = {
                 fbSvc._messages = new CountedNotif( data.messages,'facebook-msgs-updated', fbSvc
                     , function( msgCount ) {
                         vdebug( "msgCount", msgCount );
-                        var text = msgCount==1 ? this.stringBundle.GetStringFromName("message") 
-                                                : this.stringBundle.GetStringFromName("messages");
+                        var text = msgCount==1 ? fbSvc.stringBundle.GetStringFromName("message") 
+                                                : fbSvc.stringBundle.GetStringFromName("messages");
                         fbSvc.showPopup('you.msg', 'chrome://facebook/skin/images/mail_request.gif',
                                          text, 'http://www.facebook.com/inbox/');
                     } );
@@ -776,11 +776,11 @@ facebookService.prototype = {
                         if( pokeCount > 0 ) {
                           var text = '';
                           if( 1 == pokeCount )
-                            text = this.stringBundle.GetStringFromName("poked");
+                            text = fbSvc.stringBundle.GetStringFromName("poked");
                           else if( 4 >= pokeCount )
-                            text = this.stringBundle.GetStringFromName("pokedfew");
+                            text = fbSvc.stringBundle.GetStringFromName("pokedfew");
                           else
-                            text = this.stringBundle.GetStringFromName("pokedmany");
+                            text = fbSvc.stringBundle.GetStringFromName("pokedmany");
 
                           fbSvc.showPopup('you.poke', 'chrome://facebook/skin/images/poke.gif',
                                           text, 'http://www.facebook.com/home.php');
@@ -795,7 +795,7 @@ facebookService.prototype = {
                             for each (var user in users) {
                                 self.items[user.id] = user;
                                 fbSvc.notify(user, 'facebook-new-req', user.id);
-                                fbSvc.showPopup('you.req', user.pic_sq, this.stringBundle.formatStringFromName("friendrequest", [user.name], 1),
+                                fbSvc.showPopup('you.req', user.pic_sq, fbSvc.stringBundle.formatStringFromName("friendrequest", [user.name], 1),
                                                'http://www.facebook.com/reqs.php');
                             }
                         });
@@ -934,13 +934,13 @@ facebookService.prototype = {
               if( pvs_album ) { // album already existed
                 if( size > pvs_album.size ) {
                   fbSvc.showPopup( 'friend.album', 'chrome://facebook/skin/images/photo.gif',
-                                   this.stringBundle.formatStringFromName("albumnewphotos", [album_owner.name, name], 2),
+                                   fbSvc.stringBundle.formatStringFromName("albumnewphotos", [album_owner.name, name], 2),
                                    link + "&src=fftb" );
                 }
               }
               else {
                 fbSvc.showPopup( 'friend.album', 'chrome://facebook/skin/images/photo.gif',
-                                 this.stringBundle.formatStringFromName("albumcreate", [album_owner.name, album.name], 2),
+                                 fbSvc.stringBundle.formatStringFromName("albumcreate", [album_owner.name, album.name], 2),
                                  link + "&src=fftb" );
               }
               fbSvc._albumDict[aid] = { 'modified': modified,
@@ -993,7 +993,7 @@ facebookService.prototype = {
                         fbSvc.notify(friend, 'facebook-new-friend', friend['id']);
                         fbSvc.showPopup('you.friend', 
                                         friend.pic_sq,
-                                        this.stringBundle.formatStringFromName("friendaccepted", [friend.name], 1),
+                                        fbSvc.stringBundle.formatStringFromName("friendaccepted", [friend.name], 1),
                                         'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb');
                         fbSvc._friendCount++; // increment the count
                         friendUpdate = true;
@@ -1026,7 +1026,7 @@ facebookService.prototype = {
                             fbSvc.notify(friend, 'facebook-friend-updated', 'wall');
                             notifyProf = notifyProf && !fbSvc.showPopup('friend.wall',
                                                             friend.pic_sq,
-                                                            this.stringBundle.formatStringFromName("wallpost", [friend.name], 1),
+                                                            fbSvc.stringBundle.formatStringFromName("wallpost", [friend.name], 1),
                                                             'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb#wall');
                             vdebug('wall count updated', fbSvc._friendDict[friend.id].wall, friend.wall);
                         }
@@ -1034,7 +1034,7 @@ facebookService.prototype = {
                             fbSvc.notify(friend, 'facebook-friend-updated', 'notes');
                             notifyProf = notifyProf && !fbSvc.showPopup('friend.note',
                                                             friend.pic_sq,
-                                                            this.stringBundle.formatStringFromName("newnote", [friend.name], 1),
+                                                            fbSvc.stringBundle.formatStringFromName("newnote", [friend.name], 1),
                                                             'http://www.facebook.com/notes.php?id=' + friend.id + '&src=fftb');
                             vdebug('note count updated', fbSvc._friendDict[friend.id].notes, friend.notes);
                         }
@@ -1043,7 +1043,7 @@ facebookService.prototype = {
                             if (notifyProf) {
                               fbSvc.showPopup('friend.profile', 
                                               friend.pic_sq,
-                                              this.stringBundle.formatStringFromName("profilechange", [friend.name], 1),
+                                              fbSvc.stringBundle.formatStringFromName("profilechange", [friend.name], 1),
                                               'http://www.facebook.com/profile.php?id=' + friend.id + '&src=fftb&highlight');
                             }
                             friendUpdate = true;
