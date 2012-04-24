@@ -104,8 +104,7 @@
 
     <groupbox>
       <hbox align="center">
-        <checkbox preference="awesome-search"/>
-        <label value="&settings.awesomesearch.enable.label;" class="left-flat"/>
+        <checkbox preference="awesome-search" label="&settings.awesomesearch.enable.label;"/>
       </hbox>
     </groupbox>
 

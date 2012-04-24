@@ -18,10 +18,10 @@ var aConsoleService = Components.classes["@mozilla.org/consoleservice;1"].
 
 var debug = function(msg)
 {
-  /*
+/*
   dump("fbRemoteAutoComplete: " + msg + "\n");
   aConsoleService.logStringMessage("fbRemoteAutoComplete: " + msg);
-  */
+*/
 }
 
 function XMLHttpRequest()
@@ -256,9 +256,6 @@ FacebookRemoteAutoCompleteSearch.prototype = {
     debug('init');
     this.enabled = false;
 
-    if (!Services.prefs.getBoolPref(FB_ENABLED_PREF))
-        return;
-
     try
     {
         this.observer = new myObserver(this);  
@@ -267,6 +264,10 @@ FacebookRemoteAutoCompleteSearch.prototype = {
     {
         debug("Error registering observer: " + e);
     }
+
+    if (!Services.prefs.getBoolPref(FB_ENABLED_PREF))
+        return;
+
     this.bootstrap();
     this.enabled = true;
     debug('done init');
