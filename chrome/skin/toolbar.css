@@ -336,11 +336,6 @@ toolbarpaletteitem[place="toolbar"] .facebook-notification[label="0"] {
   padding: 5px;
   margin: 0px;
 }
-#PopupPoker {
-  -moz-binding: url('chrome://facebook/content/bindings.xml#popupPoker');
-  padding: 5px;
-  margin: 0px;
-}
 #PopupPoster {
   -moz-binding: url('chrome://facebook/content/bindings.xml#popupPoster');
   padding: 5px;

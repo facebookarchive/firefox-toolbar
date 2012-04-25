@@ -208,7 +208,9 @@ var fbLib = {
 
         if (search)
         {
-            fbLib.GetASearchResultsElement("FacebookSearchAllText").setAttribute("value", 'Press enter to search for "' + search + '" on Facebook');
+            var sbundle = fbLib.GetFBStringBundle();
+            var str = sbundle.getFormattedString('searchEnter', [search]);
+            fbLib.GetASearchResultsElement("FacebookSearchAllText").setAttribute("value", str);
             searchAll.setAttribute("oncommand", "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");
             searchAll.collapsed = false;
         }
@@ -249,7 +251,9 @@ var fbLib = {
 
         if (search)
         {
-            fbLib.GetASearchResultsElement("FacebookSearchAllText").setAttribute("value", 'Press enter to search for "' + search + '" on Facebook');
+            var sbundle = fbLib.GetFBStringBundle();
+            var str = sbundle.getFormattedString('searchEnter', [search]);
+            fbLib.GetASearchResultsElement("FacebookSearchAllText").setAttribute("value", str);
             searchAll.setAttribute("oncommand", "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");
             searchAll.collapsed = false;
         }
@@ -377,7 +381,9 @@ var fbLib = {
 
         if (search)
         {
-            fbLib.GetASearchResultsElement("FacebookSearchAllText").setAttribute("value", 'Press enter to search for "' + search + '" on Facebook');
+            var sbundle = fbLib.GetFBStringBundle();
+            var str = sbundle.getFormattedString('searchEnter', [search]);
+            fbLib.GetASearchResultsElement("FacebookSearchAllText").setAttribute("value", str);
             searchAll.setAttribute("oncommand", "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");
             searchAll.collapsed = false;
         }
@@ -528,6 +534,7 @@ var fbLib = {
 
     SearchFriends: function(search) {
       fbLib.debug('searching for: ' + search);
+      var sbundle = fbLib.GetFBStringBundle();
       var sidebar = fbLib.IsSidebarOpen();
       var list = fbLib.GetFriendsListElement();
 
@@ -569,19 +576,21 @@ var fbLib = {
           document.getElementById("facebook-listheader-user").style.display = 'block';
       }
       if (search && numMatched == 0) {
-        /*fbLib.SetHint(true, 'Press enter to search for "' + search + '" on Facebook',
-                "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");*/
+        /*
+        var str = sbundle.getFormattedString('searchEnter', [search]);
+        fbLib.SetHint(true, str,
+                "openUILink('http://www.facebook.com/search/?src=fftb&q=' + encodeURIComponent(fbLib.GetFBSearchBox().value), event);");
+        */
         fbLib.SetHint(false, '', '');
       } else if (!sidebar && (numMatched > 4 || !search)) {
-        var str = 'See all ' + numMatched + ' friends';
-        if (search)
-          str += ' matching "' + search + '"';
-        else
-        {
+        var str = sbundle.getFormattedString('allFriends', [numMatched]);
+        if (search) {
+          str = sbundle.getFormattedString('allFriendsMatching', [numMatched, search]);
+        }
+        else {
           document.getElementById("facebook-listheader-user").collapsed = true;
           document.getElementById("facebook-listheader-user").style.display = 'none';
         }
-        str += '...';
         fbLib.SetHint(true, str, "toggleSidebar('viewFacebookSidebar');");
       } else {
         fbLib.SetHint(false, '', '');
@@ -592,23 +601,19 @@ var fbLib = {
           try
           {
               var msger = document.getElementById('PopupMessager'),
-                  poker = document.getElementById('PopupPoker'),
                   poster = document.getElementById('PopupPoster');
               if (1 == numMatched) {
                   var uid = lastDisplayed.getAttribute('userid'),
                       firstname = lastDisplayed.getAttribute('firstname');
                   msger.setAttribute('userid', uid );
-                  msger.setAttribute('value', 'Send ' + firstname + ' a message');
-
-                  poker.setAttribute('userid', uid );
-                  poker.setAttribute('value', 'Poke ' + firstname );
+                  msger.setAttribute('value', sbundle.getFormattedString('sendMessage', [firstname]));
 
                   poster.setAttribute('userid', uid);
-                  poster.setAttribute('value', 'Write on ' + firstname + "'s wall");
+                  poster.setAttribute('value', sbundle.getFormattedString('wallMessage', [firstname]));
 
-                  msger.style.display = poker.style.display = poster.style.display = '';
+                  msger.style.display = poster.style.display = '';
               } else {
-                  msger.style.display = poker.style.display = poster.style.display = 'none';
+                  msger.style.display = poster.style.display = 'none';
               }
           } catch (e) {}
       }

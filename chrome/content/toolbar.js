@@ -933,7 +933,6 @@ var facebook = {
         }
     } catch (e) { fbLib.debug(e); }
     document.getElementById('PopupMessager').style.display = 'none';
-    document.getElementById('PopupPoker').style.display = 'none';
     document.getElementById('PopupPoster').style.display = 'none';
     if (sessionEnded) {
       fbLib.SetHint(true, facebook.fStringBundle.getString('loadFriends'), 'fbLib.FacebookLogin()');
