@@ -374,7 +374,7 @@ var facebook = {
                     var curUrl = lif.contentWindow.location;
                     var loadFlags = (curUrl == url) ? Ci.nsIWebNavigation.LOAD_FLAGS_BYPASS_CACHE : Ci.nsIWebNavigation.LOAD_FLAGS_NONE;
                     lif.webNavigation.loadURI(
-                        'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb',
+                        'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb&skin=light',
                         loadFlags,
                         null, null, null);
                 }
@@ -538,10 +538,12 @@ var facebook = {
             if (event.originalTarget.location.hostname == "www.facebook.com" &&
                     event.originalTarget.location.href.indexOf("plugins/like.php") > 0)
             {
+            fbLib.debug("like iframe loaded with location = " + event.originalTarget.location.toString());
                 var x = document.getElementById("facebook-like-iframe");
                 var y = x.contentDocument;
 
-                var iframewidth = y.getElementsByClassName('connect_widget_interactive_area')[0].offsetWidth;
+                //var iframewidth = y.getElementsByClassName('connect_widget_interactive_area')[0].offsetWidth;
+                var iframewidth = y.getElementsByTagName('table')[0].offsetWidth;
 
                 if (iframewidth == 0)
                     return;
