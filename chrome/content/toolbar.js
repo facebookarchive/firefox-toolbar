@@ -374,7 +374,7 @@ var facebook = {
                     var curUrl = lif.contentWindow.location;
                     var loadFlags = (curUrl == url) ? Ci.nsIWebNavigation.LOAD_FLAGS_BYPASS_CACHE : Ci.nsIWebNavigation.LOAD_FLAGS_NONE;
                     lif.webNavigation.loadURI(
-                        'https://www.facebook.com/plugins/like.php?action=like&colorscheme=white&href='+url+'&layout=button_count&src=fftb&skin=light',
+                        'https://www.facebook.com/plugins/like.php?action=like&colorscheme=light&href='+url+'&layout=button_count&src=fftb',
                         loadFlags,
                         null, null, null);
                 }
