@@ -64,6 +64,7 @@ const PASSWORD_URL = 'chrome://facebook/';
 
 const TOPIC_SESSION_START= "facebook-session-start-oauth";
 const TOPIC_SESSION_END= "facebook-session-end";
+const PERMISSIONS_LEVEL= 2;
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
@@ -546,7 +547,6 @@ facebookService.prototype = {
                 fbSvc._loggedIn      = true;
                 fbSvc._prefService.setCharPref('extensions.facebook.access_token', accessToken);
                 fbSvc._prefService.setCharPref('extensions.facebook.uid', fbSvc._uid);
-                fbSvc._prefService.setIntPref('extensions.facebook.permissions.level', 1);
             }
             else
             {
@@ -554,6 +554,15 @@ facebookService.prototype = {
                 fbSvc.sessionEnd();
                 return;
             }
+
+            if (fbSvc._prefService.getIntPref('extensions.facebook.permissions.level') > 0
+                && fbSvc._prefService.getIntPref('extensions.facebook.permissions.level') < PERMISSIONS_LEVEL)
+            {
+                debug("need a permissions upgrade");
+                fbSvc.sessionEnd();
+                return;
+            }
+            fbSvc._prefService.setIntPref('extensions.facebook.permissions.level', PERMISSIONS_LEVEL);
 
             Components.classes["@mozilla.org/observer-service;1"]  
                 .getService(Components.interfaces.nsIObserverService)  
