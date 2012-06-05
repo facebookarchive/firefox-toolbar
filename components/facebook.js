@@ -546,7 +546,7 @@ facebookService.prototype = {
                 fbSvc._loggedIn      = true;
                 fbSvc._prefService.setCharPref('extensions.facebook.access_token', accessToken);
                 fbSvc._prefService.setCharPref('extensions.facebook.uid', fbSvc._uid);
-                fbSvc._prefService.setBoolPref('extensions.facebook.permissions.granted', true);
+                fbSvc._prefService.setIntPref('extensions.facebook.permissions.level', 1);
             }
             else
             {

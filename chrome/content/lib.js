@@ -749,8 +749,8 @@ var fbLib = {
       else {
         var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
         var accessToken = prefSvc.getCharPref('extensions.facebook.access_token');
-        var appIsAuthorized = prefSvc.getBoolPref('extensions.facebook.permissions.granted');
-        if (accessToken || appIsAuthorized) {
+        var permissionsLevel = prefSvc.getIntPref('extensions.facebook.permissions.level');
+        if (accessToken || permissionsLevel >= 1) {
           fbLib.openAndReuseOneTabPerURL("https://www.facebook.com/login.php");
           fbLib.setAttributeById('facebook-login-status', 'status', 'waiting');
           setTimeout(function() { fbLib.setAttributeById('facebook-login-status', 'status', ''); }, 60*1000);

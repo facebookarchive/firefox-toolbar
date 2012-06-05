@@ -34,9 +34,10 @@ pref("extensions.facebook.firstrun", false);
 
 // Like
 pref("extensions.facebook.like.enabled", false);
+
 // Toolbar permissions
 pref("extensions.facebook.permissions.asked", false);
-pref("extensions.facebook.permissions.granted", false);
+pref("extensions.facebook.permissions.level", 0); // 0 = not granted, 1+ = permission level depending on version of add-on
 
 // toolbar search type "friendsonly", "graphapi", "extensionservice"
 pref("extensions.facebook.toolbar_search_method", "friendsonly");
