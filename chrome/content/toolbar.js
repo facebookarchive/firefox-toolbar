@@ -512,7 +512,7 @@ var facebook = {
                     }
                 }
 
-                gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
+                gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=manage_notifications,user_photos,publish_stream,status_update,friends_status&response_type=token");
 
                 facebook.forceUIOff(true);
                 prefSvc.setBoolPref('extensions.facebook.permissions.asked', true);
@@ -715,7 +715,7 @@ var facebook = {
 
         fbLib.setAttributeById('facebook-auth-iframe', 'src', "about:blank");
 
-        fbLib.setAttributeById('facebook-auth-iframe', 'src', "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=user_photos,publish_stream,status_update,friends_status&response_type=token");
+        fbLib.setAttributeById('facebook-auth-iframe', 'src', "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=manage_notifications,user_photos,publish_stream,status_update,friends_status&response_type=token");
     },
 
     unload: function() {
@@ -933,7 +933,7 @@ var facebook = {
         {
             list.removeChild(list.getElementsByAttribute("class", "friendBox")[0]);
         }
-    } catch (e) { fbLib.debug(e); }
+    } catch (e) { /*fbLib.debug(e);*/ }
     document.getElementById('PopupMessager').style.display = 'none';
     document.getElementById('PopupPoster').style.display = 'none';
     if (sessionEnded) {
