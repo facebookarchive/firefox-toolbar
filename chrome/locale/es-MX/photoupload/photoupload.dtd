@@ -28,7 +28,7 @@
 <!ENTITY  upload.photos.remove.label        "Eliminar todas las fotos">
 
 <!ENTITY  upload.cancel.label               "Cancelar la carga de fotos">
-<!ENTITY  upload.all.label                  "Cargar todas las fotos">
+<!ENTITY  upload.all.label                  "Subir todas las fotos">
 
 <!ENTITY  upload.addtoalbum.label           "Agregar al álbum:">
 <!ENTITY  upload.createnewalbum.label       "Crear álbum nuevo…">
