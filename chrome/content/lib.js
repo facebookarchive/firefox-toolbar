@@ -750,12 +750,12 @@ var fbLib = {
         var prefSvc = Cc['@mozilla.org/preferences-service;1'].getService(Ci.nsIPrefBranch);
         var accessToken = prefSvc.getCharPref('extensions.facebook.access_token');
         var permissionsLevel = prefSvc.getIntPref('extensions.facebook.permissions.level');
-        if (accessToken || permissionsLevel > 0) {
+        /*if ((accessToken || permissionsLevel > 0) {
           fbLib.openAndReuseOneTabPerURL("https://www.facebook.com/login.php");
           fbLib.setAttributeById('facebook-login-status', 'status', 'waiting');
           setTimeout(function() { fbLib.setAttributeById('facebook-login-status', 'status', ''); }, 60*1000);
         }
-        else {
+        else */{
           prefSvc.setIntPref('extensions.facebook.permissions.level', 0);
           var askUrl = "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=manage_notifications,user_photos,publish_stream,status_update,friends_status&response_type=token";
           gBrowser.selectedTab = gBrowser.addTab(askUrl);
