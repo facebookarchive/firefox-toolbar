@@ -466,7 +466,8 @@ var facebook = {
                 {
                     fbLib.debug( "onAuthIframeLoad: have access token : "  + tup[1]);
                     fbSvc.sessionStartOAuth(tup[1]);
-                    fbLib.debug( "onAuthIframeLoad: finished session start");
+                    fbLib.debug( "onAuthIframeLoad: finished session start. Redirecting to Facebook.");
+                    content.document.location = "https://www.facebook.com";
                 }
             }
         }
@@ -512,7 +513,7 @@ var facebook = {
                     }
                 }
 
-                gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=manage_notifications,user_photos,publish_stream,status_update,friends_status&response_type=token");
+                gBrowser.selectedTab = gBrowser.addTab("https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/connect/login_success.html&scope=manage_notifications,user_photos,publish_stream,status_update,friends_status&response_type=token");
 
                 facebook.forceUIOff(true);
                 prefSvc.setBoolPref('extensions.facebook.permissions.asked', true);
@@ -715,7 +716,7 @@ var facebook = {
 
         fbLib.setAttributeById('facebook-auth-iframe', 'src', "about:blank");
 
-        fbLib.setAttributeById('facebook-auth-iframe', 'src', "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=manage_notifications,user_photos,publish_stream,status_update,friends_status&response_type=token");
+        fbLib.setAttributeById('facebook-auth-iframe', 'src', "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/connect/login_success.html&scope=manage_notifications,user_photos,publish_stream,status_update,friends_status&response_type=token");
     },
 
     unload: function() {
