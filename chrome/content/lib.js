@@ -757,7 +757,7 @@ var fbLib = {
         }
         else */{
           //prefSvc.setIntPref('extensions.facebook.permissions.level', 0);
-          var askUrl = "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/&scope=manage_notifications,user_photos,publish_stream,status_update,friends_status&response_type=token";
+          var askUrl = "https://www.facebook.com/dialog/oauth?client_id=" + fbSvc.wrappedJSObject._appId + "&redirect_uri=http://www.facebook.com/connect/login_success.html&scope=manage_notifications,user_photos,publish_stream,status_update,friends_status&response_type=token";
           gBrowser.selectedTab = gBrowser.addTab(askUrl);
         }
       }
